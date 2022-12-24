@@ -1,8 +1,9 @@
 <script setup>
 import { ref } from 'vue';
 import { Inertia } from '@inertiajs/inertia';
-import { Head, Link } from '@inertiajs/inertia-vue3';
-import ApplicationMark from '@/Components/ApplicationMark.vue';
+import { Link } from '@inertiajs/inertia-vue3';
+import AppHead from '@/Layouts/AppHead.vue';
+import LogoLetter from '@/Components/LogoLetter.vue';
 import Banner from '@/Components/Banner.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
@@ -30,7 +31,12 @@ const logout = () => {
 
 <template>
     <div>
-        <Head :title="title" />
+        <AppHead :title="title">
+            <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+            <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+            <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+            <link rel="manifest" href="/site.webmanifest">
+        </AppHead>
 
         <Banner />
 
@@ -43,7 +49,7 @@ const logout = () => {
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
                                 <Link :href="route('dashboard')">
-                                    <ApplicationMark class="block h-9 w-auto" />
+                                    <LogoLetter class="w-24 h-24" fill="#f00" />
                                 </Link>
                             </div>
 
