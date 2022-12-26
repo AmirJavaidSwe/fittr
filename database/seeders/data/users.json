@@ -1,0 +1,26 @@
+[
+    {
+        "role": "admin", 
+        "name": "Global Administrator", 
+        "email": "support@fittr.tech",
+        "password": "support"
+    },
+    {
+        "role": "admin", 
+        "name": "Leo Admin", 
+        "email": "leo@fittr.tech",
+        "password": "leo"
+    },
+    {
+        "role": "partner", 
+        "name": "Demo Partner1", 
+        "email": "dummy1@fittr.tech",
+        "password": "dummy1"
+    },
+    {
+        "role": "partner", 
+        "name": "Demo Partner2", 
+        "email": "dummy2@fittr.tech",
+        "password": "dummy2"
+    }
+]
