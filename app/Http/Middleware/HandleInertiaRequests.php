@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
 use Inertia\Middleware;
+use Route;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -37,8 +38,56 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         return array_merge(parent::share($request), [
-            'appName' => config('app.name'),
-            // 'jetstream.flash.banner' => config('app.name'),
+            'app_name' => config('app.name'),
+            'route_name' => Route::currentRouteName(),
+            'menu' => $this->navRoutes($request->user()),
         ]);
+    }
+
+    public function navRoutes($user): array
+    {
+        if(empty($user)){
+            return [];
+        }
+
+        if($user->is_partner){
+            return array(
+                [
+                    'title' => 'Dashboard',
+                    'icon' => 'dashboard',
+                    'route_name' => 'partner.dashboard',
+                ],
+            );
+        }
+
+        if($user->is_admin){
+            return array(
+                [
+                    'title' => 'Dashboard',
+                    'icon' => 'fa-solid fa-home',
+                    'route_name' => 'admin.dashboard',
+                ],
+                [
+                    'title' => 'Partner performance',
+                    'icon' => 'fa-solid fa-gauge-high',
+                    'route_name' => 'admin.partners.performance.index',
+                ],
+                [
+                    'title' => 'Partner management',
+                    'icon' => 'fa-solid fa-user-tie',
+                    'route_name' => 'admin.partners.index',
+                ],
+                [
+                    'title' => 'Settings',
+                    'icon' => 'fa-solid fa-gears',
+                    'route_name' => 'admin.settings',
+                ],
+                [
+                    'title' => 'Typography',
+                    'icon' => 'fa-solid fa-coffee',
+                    'route_name' => 'admin.demo',
+                ],
+            );
+        }
     }
 }

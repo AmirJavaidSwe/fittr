@@ -59,5 +59,33 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $appends = [
         'profile_photo_url',
+        'dashboard_route',
     ];
+
+    // Accessors
+    public function getIsPartnerAttribute()
+    {
+        return $this->role == 'partner';
+    }
+
+    public function getIsAdminAttribute()
+    {
+        return $this->role == 'admin';
+    }
+
+    public function getDashboardRouteAttribute()
+    {
+        return $this->is_admin ? 'admin.dashboard' : 'partner.dashboard';
+    }
+
+    //Local scopes
+    public function scopeAdmin($query)
+    {
+        $query->where('role', 'admin');
+    }
+
+    public function scopePartner($query)
+    {
+        $query->where('role', 'partner');
+    }
 }

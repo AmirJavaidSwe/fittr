@@ -1,13 +1,25 @@
 [
     {
         "role": "admin", 
-        "name": "Global Administrator", 
+        "name": "Default Administrator", 
         "email": "support@fittr.tech",
         "password": "support"
     },
     {
         "role": "admin", 
-        "name": "Leo Admin", 
+        "name": "Geoff Bamber", 
+        "email": "geoff@fittr.tech",
+        "password": "geoff"
+    },
+    {
+        "role": "admin", 
+        "name": "Phil Parker", 
+        "email": "phil@fittr.tech",
+        "password": "phil"
+    },
+    {
+        "role": "admin", 
+        "name": "Leo Studenikin", 
         "email": "leo@fittr.tech",
         "password": "leo"
     },
