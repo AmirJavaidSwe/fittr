@@ -7,6 +7,38 @@ import { InertiaProgress } from '@inertiajs/progress';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 
+/* import the fontawesome core */
+import { library } from '@fortawesome/fontawesome-svg-core';
+
+/* import font awesome icon component */
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+
+/* import specific icons */
+import { 
+    faUserSecret,
+    faHome,
+    faGaugeHigh,
+    faUserTie,
+    faGears,
+    faCoffee,
+    faHeart,
+    faPencil,
+    faChevronRight,
+} from '@fortawesome/free-solid-svg-icons';
+
+/* add icons to the library */
+library.add(
+    faUserSecret,
+    faHome,
+    faGaugeHigh,
+    faUserTie,
+    faGears,
+    faCoffee,
+    faHeart,
+    faPencil,
+    faChevronRight,
+);
+
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 
 createInertiaApp({
@@ -16,8 +48,22 @@ createInertiaApp({
         return createApp({ render: () => h(app, props) })
             .use(plugin)
             .use(ZiggyVue, Ziggy)
+            .component('font-awesome-icon', FontAwesomeIcon)
             .mount(el);
     },
 });
 
-InertiaProgress.init({ color: '#4B5563' });
+InertiaProgress.init({ 
+    // The delay after which the progress bar will
+    // appear during navigation, in milliseconds.
+    delay: 500,
+
+    // The color of the progress bar.
+    color: '#4B5563',
+
+    // Whether to include the default NProgress styles.
+    includeCSS: true,
+
+    // Whether the NProgress spinner will be shown.
+    showSpinner: false,
+});
