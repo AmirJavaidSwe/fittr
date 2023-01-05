@@ -1,9 +1,3 @@
-<script>
-import AppLayout from '@/Layouts/AppLayout.vue'; 
-export default {
-    layout: (h, page) => h(AppLayout, () => page),
-}
-</script>
 <script setup>
 import { ref, watch } from 'vue';
 import { Link } from '@inertiajs/inertia-vue3';

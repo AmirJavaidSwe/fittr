@@ -1,10 +1,3 @@
-<script>
-import AppLayout from '@/Layouts/AppLayout.vue'; 
-export default {
-    // Using a render function
-    layout: (h, page) => h(AppLayout, () => page),
-}
-</script>
 <script setup>
 import DeleteUserForm from '@/Pages/Profile/Partials/DeleteUserForm.vue';
 import LogoutOtherBrowserSessionsForm from '@/Pages/Profile/Partials/LogoutOtherBrowserSessionsForm.vue';

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Fortify\Fortify;
 use Laravel\Fortify\Contracts\LoginResponse;
+use Laravel\Fortify\Contracts\TwoFactorLoginResponse;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -23,6 +24,13 @@ class FortifyServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->instance(LoginResponse::class, new class implements LoginResponse {
+            public function toResponse($request)
+            {
+                return redirect()->route($request->user()->dashboard_route);
+            }
+        });
+
+        $this->app->instance(TwoFactorLoginResponse::class, new class implements TwoFactorLoginResponse {
             public function toResponse($request)
             {
                 return redirect()->route($request->user()->dashboard_route);

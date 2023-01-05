@@ -54,7 +54,12 @@ class HandleInertiaRequests extends Middleware
             return array(
                 [
                     'title' => 'Dashboard',
-                    'icon' => 'dashboard',
+                    'icon' => 'fa-solid fa-home',
+                    'route_name' => 'partner.dashboard',
+                ],
+                [
+                    'title' => 'Pricing',
+                    'icon' => 'fa-solid fa-gears',
                     'route_name' => 'partner.dashboard',
                 ],
             );
