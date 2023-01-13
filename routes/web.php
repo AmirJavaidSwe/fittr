@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\Admin\DemoController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\PackageController;
 use App\Http\Controllers\Admin\PartnerController;
 use App\Http\Controllers\Admin\SettingsController;
 
@@ -43,11 +44,22 @@ Route::middleware([
             Route::get('/partners/{id}', 'show')->name('show');
             Route::get('/partners/{id}/edit', 'edit')->name('edit');
             Route::put('/partners/{id}', 'update')->name('update');
-            Route::delete('/partners/{id}', 'update')->name('destroy');
+            Route::delete('/partners/{id}', 'destroy')->name('destroy');
             Route::post('/partners', 'store')->name('store');
         });
         Route::get('/partners-performance', [PartnerController::class, 'performanceIndex'])->name('partners.performance.index');
         Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
+        //this can be resource controller, listing methods for clarity
+        //implicit binding
+        Route::controller(PackageController::class)->name('packages.')->group(function () {
+            Route::get('/packages', 'index')->name('index');
+            Route::get('/packages/create', 'create')->name('create');
+            Route::post('/packages', 'store')->name('store');
+            Route::get('/packages/{package}', 'show')->name('show');
+            Route::get('/packages/{package}/edit', 'edit')->name('edit');
+            Route::put('/packages/{package}', 'update')->name('update');
+            Route::delete('/packages/{package}', 'destroy')->name('destroy');
+        });
     });
 
     //PARTNER

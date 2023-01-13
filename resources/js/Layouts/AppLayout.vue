@@ -5,6 +5,7 @@ import { Link } from '@inertiajs/inertia-vue3';
 import AppHead from '@/Layouts/AppHead.vue';
 import LogoLetter from '@/Components/LogoLetter.vue';
 import Banner from '@/Components/Banner.vue';
+import FlashMessage from '@/Components/FlashMessage.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
@@ -35,7 +36,7 @@ const logout = () => {
             <link rel="manifest" href="/site.webmanifest">
         </AppHead>
 
-        <Banner />
+        <FlashMessage :flash="$page.props.flash" />
 
         <div class="min-h-screen bg-gray-50">
             <!-- Desktop, flex -->
@@ -78,7 +79,7 @@ const logout = () => {
                             </template>
                         </Dropdown>
                     </div>
-                    <div class="md:text-md flex items-center justify-between p-4 w-full text-sm bg-white shadow md:px-6 md:py-0">
+                    <div class="bg-white flex items-center justify-between md:px-6 md:py-0 md:text-md p-4 shadow text-sm w-full z-0">
                         <!-- Page Heading / Menu item name-->
                         <header class="bg-white ">
                             <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">

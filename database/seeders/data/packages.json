@@ -1,0 +1,38 @@
+[
+    {
+        "status": "1", 
+        "title": "Free", 
+        "description": "Default package description", 
+        "tx_percent": "2.50",
+        "tx_fixed_fee": "0.2",
+        "fee_annually": "0",
+        "fee_monthly": "0",
+        "monthly_fee_sites": "0",
+        "admin_users": "2",
+        "max_sites": "1"
+    },
+    {
+        "status": "1", 
+        "title": "Standard", 
+        "description": "Default package description", 
+        "tx_percent": "1.99",
+        "tx_fixed_fee": "0.2",
+        "fee_annually": "249",
+        "fee_monthly": "374",
+        "monthly_fee_sites": "50",
+        "admin_users": "5",
+        "max_sites": "0"
+    },
+    {
+        "status": "1", 
+        "title": "Ultimate", 
+        "description": "Default package description", 
+        "tx_percent": "2.50",
+        "tx_fixed_fee": "0.2",
+        "fee_annually": "399",
+        "fee_monthly": "599",
+        "monthly_fee_sites": "50",
+        "admin_users": "0",
+        "max_sites": "0"
+    }
+]

@@ -2,15 +2,54 @@
 import { Link } from '@inertiajs/inertia-vue3';
 import Section from '@/Components/Section.vue';
 import SectionTitle from '@/Components/SectionTitle.vue';
+import SectionBorder from '@/Components/SectionBorder.vue';
+import ButtonLink from '@/Components/ButtonLink.vue';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+ 
+dayjs.extend(relativeTime);
+
+const props = defineProps({
+    partner: Object,
+});
 </script>
 
 <template>
-    <SectionTitle>
-        <template #title>
-            {{$page.props.parner.name}}
-        </template>
-    </SectionTitle>
     <Section>
-         {{$page.props.parner.email}}
+        <SectionTitle>
+            <template #title>
+                Partner details
+            </template>
+            <template #description>
+                User ID: {{partner.id}}
+            </template>
+            <template #aside>
+                <ButtonLink :href="route('admin.partners.edit', {id: partner.id})" type="primary">Edit</ButtonLink>
+            </template>
+        </SectionTitle>
+
+        <SectionBorder />
+
+        <dl class="max-w-md text-gray-900 divide-y divide-gray-200 dark:text-white dark:divide-gray-700">
+            <div class="flex flex-col pb-3">
+                <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Name</dt>
+                <dd class="text-lg font-semibold">{{partner.name}}</dd>
+            </div>
+            <div class="flex flex-col pb-3">
+                <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Email address</dt>
+                <dd class="text-lg font-semibold">{{partner.email}}</dd>
+            </div>
+            <div class="flex flex-col pb-3">
+                <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Email verified</dt>
+                <dd class="text-lg font-semibold">
+                    <span v-if="partner.email_verified_at">YES, {{ dayjs(partner.email_verified_at).fromNow() }}</span>
+                    <span v-else>NO</span>
+                </dd>
+            </div>
+            <div class="flex flex-col pb-3">
+                <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Date created</dt>
+                <dd class="text-lg font-semibold">{{ new Date(partner.created_at).toLocaleString() }} {{ dayjs(partner.created_at).fromNow() }}</dd>
+            </div>
+        </dl>
     </Section>
 </template>

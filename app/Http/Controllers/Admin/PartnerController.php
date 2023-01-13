@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use URL;
 
@@ -14,10 +15,12 @@ class PartnerController extends Controller
     {
         $this->search = $request->query('search', null);
         $this->per_page = $request->query('per_page', 10);
+        $this->order_by = $request->query('order_by', 'id');
+        $this->order_dir = $request->query('order_dir', 'desc');
 
         return Inertia::render('Admin/Partners', [
             'users' => User::partner()
-                ->orderBy('name')
+                ->orderBy($this->order_by, $this->order_dir)
                 ->when($this->search, function ($query) {
                     $query->where(function($query) {
                         $query->orWhere('id', intval($this->search))
@@ -27,7 +30,7 @@ class PartnerController extends Controller
                 })
                 ->paginate($this->per_page)
                 ->withQueryString()
-                //AbstractPaginator@through(), trnasforms chunk
+                //AbstractPaginator@through(), transforms chunk
                 ->through(fn ($user) => [
                     'id' => $user->id,
                     'name' => $user->name,
@@ -38,6 +41,9 @@ class PartnerController extends Controller
                 ])
                 ,
             'search' => $this->search,
+            'per_page' => intval($this->per_page),
+            'order_by' => $this->order_by,
+            'order_dir' => $this->order_dir,
             'page_title' => __('Partners'),
             'header' => __('Partners management'),
         ]);
@@ -45,38 +51,33 @@ class PartnerController extends Controller
 
     public function show(Request $request, $id)
     {
-        $parner = User::partner()->find($id);
+        $partner = User::partner()->findOrFail($id);
 
         return Inertia::render('Admin/PartnerShow', [
-            'parner' =>  [
-                'id' => $parner->id,
-                'name' => $parner->name,
-                'email' => $parner->email,
-                'created_at' => $parner->created_at->format('Y-m-d'),
-                'show_url' => URL::route('admin.partners.show', $parner),
-                'edit_url' => URL::route('admin.partners.edit', $parner),
-            ],
-            'page_title' => __('Partners'),
+            'partner' => $partner,
+            'page_title' => __('Partner details'),
             'header' => __('Partner details'),
         ]);
     }
 
     public function edit(Request $request, $id)
     {
-        $parner = User::partner()->find($id);
+        $partner = User::partner()->findOrFail($id);
 
         return Inertia::render('Admin/PartnerEdit', [
-            'parner' =>  [
-                'id' => $parner->id,
-                'name' => $parner->name,
-                'email' => $parner->email,
-                'created_at' => $parner->created_at->format('Y-m-d'),
-                'show_url' => URL::route('admin.partners.show', $parner),
-                'edit_url' => URL::route('admin.partners.edit', $parner),
-            ],
-            'page_title' => __('Partners'),
+            'partner' => $partner,
+            'page_title' => __('Partner details'),
             'header' => __('Update partner details'),
         ]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $validated = $request->validateWithBag('updateProfileInformation', [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($id)],
+        ]);
+        User::partner()->findOrFail($id)->update($validated);
     }
 
     public function performanceIndex(Request $request)

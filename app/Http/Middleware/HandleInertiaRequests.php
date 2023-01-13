@@ -41,6 +41,11 @@ class HandleInertiaRequests extends Middleware
             'app_name' => config('app.name'),
             'route_name' => Route::currentRouteName(),
             'menu' => $this->navRoutes($request->user()),
+            'flash' => [
+                'type' => $request->session()->get('flash_type'),
+                'message' => $request->session()->get('flash_message', __('OK')),
+                'timestamp' => $request->session()->get('flash_timestamp'),
+            ],
         ]);
     }
 

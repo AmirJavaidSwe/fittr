@@ -24,6 +24,12 @@
         "password": "leo"
     },
     {
+        "role": "admin",
+        "name": "Mishuk Adhikari",
+        "email": "mishuk.ad.bd@gmail.com",
+        "password": "mishuksecret"
+    },
+    {
         "role": "partner",
         "name": "Demo Partner1",
         "email": "dummy1@fittr.tech",
@@ -34,11 +40,5 @@
         "name": "Demo Partner2",
         "email": "dummy2@fittr.tech",
         "password": "dummy2"
-    },
-    {
-        "role": "admin",
-        "name": "Mishuk Adhikari",
-        "email": "mishuk.ad.bd@gmail.com",
-        "password": "mishuksecret"
     }
 ]
