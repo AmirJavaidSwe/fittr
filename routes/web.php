@@ -10,6 +10,8 @@ use App\Http\Controllers\Admin\PartnerController;
 use App\Http\Controllers\Admin\SettingsController;
 
 use App\Http\Controllers\Partner\DashboardController as PartnerDashboardController;
+use App\Http\Controllers\Partner\PricingController as PartnerPricingController;
+use App\Http\Controllers\Partner\SubscriptionController as PartnerSubscriptionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,6 +67,11 @@ Route::middleware([
     //PARTNER
     Route::middleware(['auth.role:partner'])->name('partner.')->group(function () {
         Route::get('/dashboard', [PartnerDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/pricing', [PartnerPricingController::class, 'index'])->name('pricing.index');
+
+        Route::get('/subscriptions', [PartnerSubscriptionController::class, 'index'])->name('subscriptions.index');
+        Route::put('/subscriptions/{subscription}/cancel', [PartnerSubscriptionController::class, 'cancel'])->name('subscriptions.cancel');
+        Route::post('/subscriptions/{package}/store', [PartnerSubscriptionController::class, 'store'])->name('subscriptions.store');
     });
 
 });

@@ -78,6 +78,8 @@ class PartnerController extends Controller
             'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($id)],
         ]);
         User::partner()->findOrFail($id)->update($validated);
+        session()->flash('flash_type', 'success');
+        session()->flash('flash_timestamp', time());
     }
 
     public function performanceIndex(Request $request)

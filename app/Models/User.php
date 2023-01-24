@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\User as Enum;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -63,6 +64,7 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $appends = [
         'profile_photo_url',
         'dashboard_route',
+        'active_subscription',
     ];
 
     /**
@@ -79,12 +81,12 @@ class User extends Authenticatable implements MustVerifyEmail
     // Accessors
     public function getIsPartnerAttribute()
     {
-        return $this->role == 'partner';
+        return $this->role == Enum::PARTNER->value;
     }
 
     public function getIsAdminAttribute()
     {
-        return $this->role == 'admin';
+        return $this->role == Enum::ADMIN->value;
     }
 
     public function getDashboardRouteAttribute()
@@ -92,14 +94,30 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->is_admin ? 'admin.dashboard' : 'partner.dashboard';
     }
 
+    public function getActiveSubscriptionAttribute()
+    {
+        return $this->subscriptions()->where('status', 1)->whereNull('cancelled_at')->first();
+    }
+
     //Local scopes
     public function scopeAdmin($query)
     {
-        $query->where('role', 'admin');
+        $query->where('role', Enum::ADMIN->value);
     }
 
     public function scopePartner($query)
     {
-        $query->where('role', 'partner');
+        $query->where('role', Enum::PARTNER->value);
+    }
+
+    //Relationships
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class, 'partner_id');
+    }
+
+    public function instance()
+    {
+        return $this->hasOne(Instance::class, 'partner_id');
     }
 }

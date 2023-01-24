@@ -25,6 +25,7 @@ class PackageRequest extends FormRequest
     {
         return [
             'status' => ['required', 'boolean'],
+            'is_private' => ['required', 'boolean'],
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'tx_percent' => ['required', 'numeric', 'min:0', 'max:100'],

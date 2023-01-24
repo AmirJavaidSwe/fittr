@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Session\TokenMismatchException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -46,5 +47,24 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    /**
+     * Render an exception into a response.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Exception  $e
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function render($request, Throwable $e)
+    {
+        // In case when session has expired and CSRF token mismatched or missing for POST routes lets redirect user back to login instead of throwing exception.
+        // When redirecting after a PUT, PATCH, or DELETE request, you must use a 303 response code [https://inertiajs.com/redirects]
+        if ($e instanceof TokenMismatchException){
+            // $message = $e->getMessage();
+            return redirect('login', 303);
+        }
+
+        return parent::render($request, $e);
     }
 }

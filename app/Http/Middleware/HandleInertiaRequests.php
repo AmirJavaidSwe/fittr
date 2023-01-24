@@ -65,7 +65,7 @@ class HandleInertiaRequests extends Middleware
                 [
                     'title' => 'Pricing',
                     'icon' => 'fa-solid fa-gears',
-                    'route_name' => 'partner.dashboard',
+                    'route_name' => 'partner.pricing.index',
                 ],
             );
         }

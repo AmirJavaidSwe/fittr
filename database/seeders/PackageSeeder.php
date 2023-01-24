@@ -24,6 +24,7 @@ class PackageSeeder extends Seeder
         foreach ($packages as $package) {
             DB::table('packages')->insert([
                 'status' => $package->status,
+                'is_private' => $package->is_private ?? 0,
                 'title' => $package->title,
                 'description' => $package->description,
                 'tx_percent' => $package->tx_percent,
