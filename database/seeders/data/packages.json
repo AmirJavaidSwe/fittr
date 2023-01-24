@@ -34,5 +34,18 @@
         "monthly_fee_sites": "50",
         "admin_users": "0",
         "max_sites": "0"
+    },
+    {
+        "status": "1", 
+        "is_private": "1", 
+        "title": "Custom", 
+        "description": "Private pack", 
+        "tx_percent": "0",
+        "tx_fixed_fee": "0",
+        "fee_annually": "0",
+        "fee_monthly": "0",
+        "monthly_fee_sites": "0",
+        "admin_users": "0",
+        "max_sites": "0"
     }
 ]
