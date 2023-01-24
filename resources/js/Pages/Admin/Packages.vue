@@ -6,7 +6,7 @@ const props = defineProps({
 </script>
 <template>
     <div class="flex flex-wrap gap-8 my-4">
-        <Package v-for="pack in packages" :pack="pack" :key="pack.id"/>
+        <Package v-for="pack in packages" :pack="pack" :key="pack.id" :admin="true" />
         <div v-if="!packages.length > 0">No packages found.</div>
     </div>
 </template>

@@ -24,6 +24,7 @@ const confirmDeletion = () => {
 const form = useForm({
     id: props.package.id,
     status: props.package.status,
+    is_private: props.package.is_private,
     title: props.package.title,
     description: props.package.description,
     tx_percent: props.package.tx_percent,
@@ -64,12 +65,22 @@ const deletePackage = () => {
         </template>
 
         <template #form>
-             <!-- Status -->
+            <!-- Status -->
             <div class="col-span-6 sm:col-span-4">
                 <label class="flex items-center">
                     <span class="mr-4 text-sm text-gray-700">Status</span>
                     <Checkbox v-model:checked="form.status" :value="form.status ? '1' : '0'" />
                     <span class="ml-4 text-sm text-gray-700" v-text="form.status ? 'On' : 'Off'"></span>
+                </label>
+                <InputError :message="form.errors.status" class="mt-2" />
+            </div>
+
+            <!-- Private -->
+            <div class="col-span-6 sm:col-span-4">
+                <label class="flex items-center">
+                    <span class="mr-4 text-sm text-gray-700">Private</span>
+                    <Checkbox v-model:checked="form.is_private" :value="form.is_private ? '1' : '0'" />
+                    <span class="ml-4 text-sm text-gray-700" v-text="form.is_private ? 'Yes' : 'No'"></span>
                 </label>
                 <InputError :message="form.errors.status" class="mt-2" />
             </div>

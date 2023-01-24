@@ -144,7 +144,7 @@ const logout = () => {
                     <main-menu class="hidden flex-shrink-0 p-4 w-56 bg-gray-100 overflow-y-auto md:block space-y-4" />
                     <!-- Page Content -->
                     <div class="md:flex-1 overflow-y-auto">
-                        <main class="py-8 sm:px-6 lg:px-8 space-y-4">
+                        <main class="py-8 sm:px-6 lg:px-8 space-y-8">
                             <slot />
                         </main>
                     </div>
