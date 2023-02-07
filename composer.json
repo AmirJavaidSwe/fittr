@@ -5,7 +5,7 @@
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "require": {
-        "php": "^8.0.2",
+        "php": "^8.2",
         "aws/aws-sdk-php": "^3.255",
         "doctrine/dbal": "^3.5",
         "guzzlehttp/guzzle": "^7.2",
@@ -13,6 +13,7 @@
         "laravel/framework": "^9.19",
         "laravel/jetstream": "^2.13",
         "laravel/sanctum": "^3.0",
+        "laravel/socialite": "^5.6",
         "laravel/tinker": "^2.7",
         "tightenco/ziggy": "^1.0"
     },

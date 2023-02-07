@@ -7,6 +7,7 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import GoogleIcon from '@/Icons/Google.vue';
 
 defineProps({
     canResetPassword: Boolean,
@@ -83,6 +84,18 @@ const submit = () => {
                 <PrimaryButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                     Log in
                 </PrimaryButton>
+            </div>
+
+            <div class="flex flex-col gap-4 mt-8">
+                <div class="flex items-center">
+                    <div class="flex-grow bg bg-gray-300 h-px"></div>
+                    <div class="flex-grow-0 mx-5 text">OR</div>
+                    <div class="flex-grow bg bg-gray-300 h-px"></div>
+                </div>
+                <a :href="route('auth.google')" class="bg-white border flex font-medium p-4 rounded text-center w-full">
+                    <GoogleIcon />
+                    <div class="flex-grow -ml-6">Continue with Google</div>
+                </a>
             </div>
         </form>
     </AuthenticationCard>

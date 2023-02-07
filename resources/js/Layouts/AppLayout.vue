@@ -36,6 +36,7 @@ const logout = () => {
             <link rel="manifest" href="/site.webmanifest">
         </AppHead>
 
+        <Banner />
         <FlashMessage :flash="$page.props.flash" />
 
         <div class="min-h-screen bg-gray-50">

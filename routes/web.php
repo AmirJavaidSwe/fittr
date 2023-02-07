@@ -3,12 +3,15 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Laravel\Socialite\Facades\Socialite;
+
 use App\Http\Controllers\Admin\DemoController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PackageController;
 use App\Http\Controllers\Admin\PartnerController;
 use App\Http\Controllers\Admin\SettingsController;
 
+use App\Http\Controllers\Shared\UserProfileController;
 use App\Http\Controllers\Partner\DashboardController as PartnerDashboardController;
 use App\Http\Controllers\Partner\PricingController as PartnerPricingController;
 use App\Http\Controllers\Partner\SubscriptionController as PartnerSubscriptionController;
@@ -24,12 +27,17 @@ use App\Http\Controllers\Partner\SubscriptionController as PartnerSubscriptionCo
 |
 */
 
+Route::get('/auth/google', function () {
+    return Socialite::driver('google')->redirect();
+})->name('auth.google');
+Route::get('/auth/google-callback', [UserProfileController::class, 'googleAuth']);
+
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
     ]);
-});
+})->name('root');
 
 Route::middleware([
     'auth:sanctum',

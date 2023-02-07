@@ -2,7 +2,7 @@
 const props = defineProps({
     bg: {
         type: String,
-        default: 'bg-white shadow-xl'
+        default: 'shadow-xl'
     }
 });
 </script>
