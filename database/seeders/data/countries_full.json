@@ -1,0 +1,1835 @@
+[
+    {
+        "iso": "AF",
+        "name": "Afghanistan",
+        "currency": "AFN",
+        "dial_code": "+93",
+        "mask": "##-###-####"
+    },
+    {
+        "iso": "AX",
+        "name": "Aland Islands",
+        "currency": "EUR",
+        "dial_code": "+358",
+        "mask": "(###)###-##-##"
+    },
+    {
+        "iso": "AL",
+        "name": "Albania",
+        "currency": "ALL",
+        "dial_code": "+355",
+        "mask": "(###)###-###"
+    },
+    {
+        "iso": "DZ",
+        "name": "Algeria",
+        "currency": "DZD",
+        "dial_code": "+213",
+        "mask": "##-###-####"
+    },
+    {
+        "iso": "AS",
+        "name": "American Samoa",
+        "currency": "USD",
+        "dial_code": "+1",
+        "mask": "(684)###-####"
+    },
+    {
+        "iso": "AD",
+        "name": "Andorra",
+        "currency": "EUR",
+        "dial_code": "+376",
+        "mask": "###-###"
+    },
+    {
+        "iso": "AO",
+        "name": "Angola",
+        "currency": "AOA",
+        "dial_code": "+244",
+        "mask": "(###)###-###"
+    },
+    {
+        "iso": "AI",
+        "name": "Anguilla",
+        "currency": "XCD",
+        "dial_code": "+1",
+        "mask": "(264)###-####"
+    },
+    {
+        "iso": "AG",
+        "name": "Antigua and Barbuda",
+        "currency": "XCD",
+        "dial_code": "+1",
+        "mask": "(268)###-####"
+    },
+    {
+        "iso": "AR",
+        "name": "Argentina",
+        "currency": "ARS",
+        "dial_code": "+54",
+        "mask": "(###)###-####"
+    },
+    {
+        "iso": "AM",
+        "name": "Armenia",
+        "currency": "AMD",
+        "dial_code": "+374",
+        "mask": "##-###-###"
+    },
+    {
+        "iso": "AW",
+        "name": "Aruba",
+        "currency": "AWG",
+        "dial_code": "+297",
+        "mask": "###-####"
+    },
+    {
+        "iso": "AU",
+        "name": "Australia",
+        "currency": "AUD",
+        "dial_code": "+61",
+        "mask": "#-####-####"
+    },
+    {
+        "iso": "AT",
+        "name": "Austria",
+        "currency": "EUR",
+        "dial_code": "+43",
+        "mask": "(###)###-####"
+    },
+    {
+        "iso": "AZ",
+        "name": "Azerbaijan",
+        "currency": "AZN",
+        "dial_code": "+994",
+        "mask": "##-###-##-##"
+    },
+    {
+        "iso": "BS",
+        "name": "Bahamas",
+        "currency": "BSD",
+        "dial_code": "+1",
+        "mask": "(242)###-####"
+    },
+    {
+        "iso": "BH",
+        "name": "Bahrain",
+        "currency": "BHD",
+        "dial_code": "+973",
+        "mask": "####-####"
+    },
+    {
+        "iso": "BD",
+        "name": "Bangladesh",
+        "currency": "BDT",
+        "dial_code": "+880",
+        "mask": "1###-######"
+    },
+    {
+        "iso": "BB",
+        "name": "Barbados",
+        "currency": "BBD",
+        "dial_code": "+1",
+        "mask": "(246)###-####"
+    },
+    {
+        "iso": "BY",
+        "name": "Belarus",
+        "currency": "BYR",
+        "dial_code": "+375",
+        "mask": "(##)###-##-##"
+    },
+    {
+        "iso": "BE",
+        "name": "Belgium",
+        "currency": "EUR",
+        "dial_code": "+32",
+        "mask": "(###)###-###"
+    },
+    {
+        "iso": "BZ",
+        "name": "Belize",
+        "currency": "BZD",
+        "dial_code": "+501",
+        "mask": "###-####"
+    },
+    {
+        "iso": "BJ",
+        "name": "Benin",
+        "currency": "XOF",
+        "dial_code": "+229",
+        "mask": "##-##-####"
+    },
+    {
+        "iso": "BM",
+        "name": "Bermuda",
+        "currency": "BMD",
+        "dial_code": "+1",
+        "mask": "(441)###-####"
+    },
+    {
+        "iso": "BT",
+        "name": "Bhutan",
+        "currency": "BTN",
+        "dial_code": "+975",
+        "mask": [
+            "17-###-###",
+            "77-###-###",
+            "#-###-###"
+        ]
+    },
+    {
+        "iso": "BO",
+        "name": "Bolivia",
+        "currency": "BOB",
+        "dial_code": "+591",
+        "mask": "#-###-####"
+    },
+    {
+        "iso": "BA",
+        "name": "Bosnia and Herzegovina",
+        "currency": "BAM",
+        "dial_code": "+387",
+        "mask": [
+            "##-####",
+            "##-#####"
+        ]
+    },
+    {
+        "iso": "BW",
+        "name": "Botswana",
+        "currency": "BWP",
+        "dial_code": "+267",
+        "mask": "##-###-###"
+    },
+    {
+        "iso": "BR",
+        "name": "Brazil",
+        "currency": "BRL",
+        "dial_code": "+55",
+        "mask": [
+            "(##)####-####",
+            "(##)#####-####"
+        ]
+    },
+    {
+        "iso": "IO",
+        "name": "British Indian Ocean Territory",
+        "currency": "USD",
+        "dial_code": "+246",
+        "mask": "###-####"
+    },
+    {
+        "iso": "VG",
+        "name": "British Virgin Islands",
+        "currency": "USD",
+        "dial_code": "+1",
+        "mask": "(284)###-####"
+    },
+    {
+        "iso": "BN",
+        "name": "Brunei",
+        "currency": "BND",
+        "dial_code": "+673",
+        "mask": "###-####"
+    },
+    {
+        "iso": "BG",
+        "name": "Bulgaria",
+        "currency": "BGN",
+        "dial_code": "+359",
+        "mask": "(###)###-###"
+    },
+    {
+        "iso": "BF",
+        "name": "Burkina Faso",
+        "currency": "XOF",
+        "dial_code": "+226",
+        "mask": "##-##-####"
+    },
+    {
+        "iso": "BI",
+        "name": "Burundi",
+        "currency": "BIF",
+        "dial_code": "+257",
+        "mask": "##-##-####"
+    },
+    {
+        "iso": "KH",
+        "name": "Cambodia",
+        "currency": "KHR",
+        "dial_code": "+855",
+        "mask": "##-###-###"
+    },
+    {
+        "iso": "CM",
+        "name": "Cameroon",
+        "currency": "XAF",
+        "dial_code": "+237",
+        "mask": "####-####"
+    },
+    {
+        "iso": "CA",
+        "name": "Canada",
+        "currency": "CAD",
+        "dial_code": "+1",
+        "mask": "(###)###-####"
+    },
+    {
+        "iso": "CV",
+        "name": "Cape Verde",
+        "currency": "CVE",
+        "dial_code": "+238",
+        "mask": "(###)##-##"
+    },
+    {
+        "iso": "KY",
+        "name": "Cayman Islands",
+        "currency": "KYD",
+        "dial_code": "+1",
+        "mask": "(345)###-####"
+    },
+    {
+        "iso": "CF",
+        "name": "Central African Republic",
+        "currency": "XAF",
+        "dial_code": "+236",
+        "mask": "##-##-####"
+    },
+    {
+        "iso": "TD",
+        "name": "Chad",
+        "currency": "XAF",
+        "dial_code": "+235",
+        "mask": "##-##-##-##"
+    },
+    {
+        "iso": "CL",
+        "name": "Chile",
+        "currency": "CLF",
+        "dial_code": "+56",
+        "mask": "#-####-####"
+    },
+    {
+        "iso": "CN",
+        "name": "China",
+        "currency": "CNY",
+        "dial_code": "+86",
+        "mask": [
+            "(###)####-###",
+            "(###)####-####",
+            "##-#####-#####"
+        ]
+    },
+    {
+        "iso": "CX",
+        "name": "Christmas Island",
+        "currency": "AUD",
+        "dial_code": "+61",
+        "mask": "#-####-####"
+    },
+    {
+        "iso": "CC",
+        "name": "Cocos Islands",
+        "currency": "AUD",
+        "dial_code": "+61",
+        "mask": "#-####-####"
+    },
+    {
+        "iso": "CO",
+        "name": "Colombia",
+        "currency": "COP",
+        "dial_code": "+57",
+        "mask": "(###)###-####"
+    },
+    {
+        "iso": "KM",
+        "name": "Comoros",
+        "currency": "KMF",
+        "dial_code": "+269",
+        "mask": "##-#####"
+    },
+    {
+        "iso": "CK",
+        "name": "Cook Islands",
+        "currency": "NZD",
+        "dial_code": "+682",
+        "mask": "##-###"
+    },
+    {
+        "iso": "CR",
+        "name": "Costa Rica",
+        "currency": "CRC",
+        "dial_code": "+506",
+        "mask": "####-####"
+    },
+    {
+        "iso": "HR",
+        "name": "Croatia",
+        "currency": "HRK",
+        "dial_code": "+385",
+        "mask": "##-###-###"
+    },
+    {
+        "iso": "CU",
+        "name": "Cuba",
+        "currency": "CUC",
+        "dial_code": "+53",
+        "mask": "#-###-####"
+    },
+    {
+        "iso": "CY",
+        "name": "Cyprus",
+        "currency": "EUR",
+        "dial_code": "+357",
+        "mask": "##-###-###"
+    },
+    {
+        "iso": "CZ",
+        "name": "Czech Republic",
+        "currency": "CZK",
+        "dial_code": "+420",
+        "mask": "(###)###-###"
+    },
+    {
+        "iso": "CD",
+        "name": "Democratic Republic of the Congo",
+        "currency": "CDF",
+        "dial_code": "+243",
+        "mask": "(###)###-###"
+    },
+    {
+        "iso": "DK",
+        "name": "Denmark",
+        "currency": "DKK",
+        "dial_code": "+45",
+        "mask": "##-##-##-##"
+    },
+    {
+        "iso": "DJ",
+        "name": "Djibouti",
+        "currency": "DJF",
+        "dial_code": "+253",
+        "mask": "##-##-##-##"
+    },
+    {
+        "iso": "DM",
+        "name": "Dominica",
+        "currency": "XCD",
+        "dial_code": "+1",
+        "mask": "(767)###-####"
+    },
+    {
+        "iso": "DO",
+        "name": "Dominican Republic",
+        "currency": "DOP",
+        "dial_code": "+1",
+        "mask": [
+            "(809)###-####",
+            "(829)###-####",
+            "(849)###-####"
+        ]
+    },
+    {
+        "iso": "TL",
+        "name": "East Timor",
+        "currency": "USD",
+        "dial_code": "+670",
+        "mask": [
+            "###-####",
+            "77#-#####",
+            "78#-#####"
+        ]
+    },
+    {
+        "iso": "EC",
+        "name": "Ecuador",
+        "currency": "USD",
+        "dial_code": "+593",
+        "mask": [
+            "#-###-####",
+            "##-###-####"
+        ]
+    },
+    {
+        "iso": "EG",
+        "name": "Egypt",
+        "currency": "EGP",
+        "dial_code": "+20",
+        "mask": "(###)###-####"
+    },
+    {
+        "iso": "SV",
+        "name": "El Salvador",
+        "currency": "SVC",
+        "dial_code": "+503",
+        "mask": "##-##-####"
+    },
+    {
+        "iso": "GQ",
+        "name": "Equatorial Guinea",
+        "currency": "XAF",
+        "dial_code": "+240",
+        "mask": "##-###-####"
+    },
+    {
+        "iso": "ER",
+        "name": "Eritrea",
+        "currency": "ERN",
+        "dial_code": "+291",
+        "mask": "#-###-###"
+    },
+    {
+        "iso": "EE",
+        "name": "Estonia",
+        "currency": "EUR",
+        "dial_code": "+372",
+        "mask": [
+            "###-####",
+            "####-####"
+        ]
+    },
+    {
+        "iso": "ET",
+        "name": "Ethiopia",
+        "currency": "ETB",
+        "dial_code": "+251",
+        "mask": "##-###-####"
+    },
+    {
+        "iso": "FK",
+        "name": "Falkland Islands",
+        "currency": "FKP",
+        "dial_code": "+500",
+        "mask": "#####"
+    },
+    {
+        "iso": "FO",
+        "name": "Faroe Islands",
+        "currency": "DKK",
+        "dial_code": "+298",
+        "mask": "###-###"
+    },
+    {
+        "iso": "FJ",
+        "name": "Fiji",
+        "currency": "FJD",
+        "dial_code": "+679",
+        "mask": "##-#####"
+    },
+    {
+        "iso": "FI",
+        "name": "Finland",
+        "currency": "EUR",
+        "dial_code": "+358",
+        "mask": "(###)###-##-##"
+    },
+    {
+        "iso": "FR",
+        "name": "France",
+        "currency": "EUR",
+        "dial_code": "+33",
+        "mask": "(###)###-###"
+    },
+    {
+        "iso": "GF",
+        "name": "French Guiana",
+        "currency": "EUR",
+        "dial_code": "+594",
+        "mask": "#####-####"
+    },
+    {
+        "iso": "PF",
+        "name": "French Polynesia",
+        "currency": "XPF",
+        "dial_code": "+689",
+        "mask": "##-##-##"
+    },
+    {
+        "iso": "GA",
+        "name": "Gabon",
+        "currency": "XAF",
+        "dial_code": "+241",
+        "mask": "#-##-##-##"
+    },
+    {
+        "iso": "GM",
+        "name": "Gambia",
+        "currency": "GMD",
+        "dial_code": "+220",
+        "mask": "(###)##-##"
+    },
+    {
+        "iso": "GE",
+        "name": "Georgia",
+        "currency": "GEL",
+        "dial_code": "+995",
+        "mask": "(###)###-###"
+    },
+    {
+        "iso": "DE",
+        "name": "Germany",
+        "currency": "EUR",
+        "dial_code": "+49",
+        "mask": [
+            "###-###",
+            "(###)##-##",
+            "(###)##-###",
+            "(###)##-####",
+            "(###)###-####",
+            "(####)###-####"
+        ]
+    },
+    {
+        "iso": "GH",
+        "name": "Ghana",
+        "currency": "GHS",
+        "dial_code": "+233",
+        "mask": "(###)###-###"
+    },
+    {
+        "iso": "GI",
+        "name": "Gibraltar",
+        "currency": "GIP",
+        "dial_code": "+350",
+        "mask": "###-#####"
+    },
+    {
+        "iso": "GR",
+        "name": "Greece",
+        "currency": "EUR",
+        "dial_code": "+30",
+        "mask": "(###)###-####"
+    },
+    {
+        "iso": "GL",
+        "name": "Greenland",
+        "currency": "DKK",
+        "dial_code": "+299",
+        "mask": "##-##-##"
+    },
+    {
+        "iso": "GD",
+        "name": "Grenada",
+        "currency": "XCD",
+        "dial_code": "+1",
+        "mask": "(473)###-####"
+    },
+    {
+        "iso": "GP",
+        "name": "Guadeloupe",
+        "currency": "EUR",
+        "dial_code": "+590",
+        "mask": "(###)###-###"
+    },
+    {
+        "iso": "GU",
+        "name": "Guam",
+        "currency": "USD",
+        "dial_code": "+1",
+        "mask": "(671)###-####"
+    },
+    {
+        "iso": "GT",
+        "name": "Guatemala",
+        "currency": "GTQ",
+        "dial_code": "+502",
+        "mask": "#-###-####"
+    },
+    {
+        "iso": "GG",
+        "name": "Guernsey",
+        "currency": "GBP",
+        "dial_code": "+44",
+        "mask": "(####)######"
+    },
+    {
+        "iso": "GN",
+        "name": "Guinea",
+        "currency": "GNF",
+        "dial_code": "+224",
+        "mask": "##-###-###"
+    },
+    {
+        "iso": "GW",
+        "name": "Guinea-Bissau",
+        "currency": "XOF",
+        "dial_code": "+245",
+        "mask": "#-######"
+    },
+    {
+        "iso": "GY",
+        "name": "Guyana",
+        "currency": "GYD",
+        "dial_code": "+592",
+        "mask": "###-####"
+    },
+    {
+        "iso": "HT",
+        "name": "Haiti",
+        "currency": "HTG",
+        "dial_code": "+509",
+        "mask": "##-##-####"
+    },
+    {
+        "iso": "HN",
+        "name": "Honduras",
+        "currency": "HNL",
+        "dial_code": "+504",
+        "mask": "####-####"
+    },
+    {
+        "iso": "HK",
+        "name": "Hong Kong",
+        "currency": "HKD",
+        "dial_code": "+852",
+        "mask": "####-####"
+    },
+    {
+        "iso": "HU",
+        "name": "Hungary",
+        "currency": "HUF",
+        "dial_code": "+36",
+        "mask": "(###)###-###"
+    },
+    {
+        "iso": "IS",
+        "name": "Iceland",
+        "currency": "ISK",
+        "dial_code": "+354",
+        "mask": "###-####"
+    },
+    {
+        "iso": "IN",
+        "name": "India",
+        "currency": "INR",
+        "dial_code": "+91",
+        "mask": "(####)###-###"
+    },
+    {
+        "iso": "ID",
+        "name": "Indonesia",
+        "currency": "IDR",
+        "dial_code": "+62",
+        "mask": [
+            "##-###-##",
+            "##-###-###",
+            "##-###-####",
+            "(8##)###-###",
+            "(8##)###-##-###"
+        ]
+    },
+    {
+        "iso": "IR",
+        "name": "Iran",
+        "currency": "IRR",
+        "dial_code": "+98",
+        "mask": "(###)###-####"
+    },
+    {
+        "iso": "IQ",
+        "name": "Iraq",
+        "currency": "IQD",
+        "dial_code": "+924",
+        "mask": "(###)###-####"
+    },
+    {
+        "iso": "IE",
+        "name": "Ireland",
+        "currency": "EUR",
+        "dial_code": "+353",
+        "mask": "(###)###-###"
+    },
+    {
+        "iso": "IM",
+        "name": "Isle of Man",
+        "currency": "GBP",
+        "dial_code": "+44",
+        "mask": "(####)######"
+    },
+    {
+        "iso": "IL",
+        "name": "Israel",
+        "currency": "ILS",
+        "dial_code": "+972",
+        "mask": [
+            "#-###-####",
+            "5#-###-####"
+        ]
+    },
+    {
+        "iso": "IT",
+        "name": "Italy",
+        "currency": "EUR",
+        "dial_code": "+39",
+        "mask": "(###)####-###"
+    },
+    {
+        "iso": "CI",
+        "name": "Ivory Coast",
+        "currency": "XOF",
+        "dial_code": "+225",
+        "mask": "##-###-###"
+    },
+    {
+        "iso": "JM",
+        "name": "Jamaica",
+        "currency": "JMD",
+        "dial_code": "+1",
+        "mask": "(876)###-####"
+    },
+    {
+        "iso": "JP",
+        "name": "Japan",
+        "currency": "JPY",
+        "dial_code": "+81",
+        "mask": [
+            "(###)###-###",
+            "##-####-####"
+        ]
+    },
+    {
+        "iso": "JE",
+        "name": "Jersey",
+        "currency": "GBP",
+        "dial_code": "+44",
+        "mask": "(####)####-######"
+    },
+    {
+        "iso": "JO",
+        "name": "Jordan",
+        "currency": "JOD",
+        "dial_code": "+962",
+        "mask": "#-####-####"
+    },
+    {
+        "iso": "KZ",
+        "name": "Kazakhstan",
+        "currency": "KZT",
+        "dial_code": "+77",
+        "mask": [
+            "(6##)###-##-##",
+            "(7##)###-##-##"
+        ]
+    },
+    {
+        "iso": "KE",
+        "name": "Kenya",
+        "currency": "KES",
+        "dial_code": "+254",
+        "mask": "###-######"
+    },
+    {
+        "iso": "KI",
+        "name": "Kiribati",
+        "currency": "AUD",
+        "dial_code": "+686",
+        "mask": "##-###"
+    },
+    {
+        "iso": "XK",
+        "name": "Kosovo",
+        "currency": "EUR",
+        "dial_code": "+383",
+        "mask": [
+            "##-###-###",
+            "###-###-###"
+        ]
+    },
+    {
+        "iso": "KW",
+        "name": "Kuwait",
+        "currency": "KWD",
+        "dial_code": "+965",
+        "mask": "####-####"
+    },
+    {
+        "iso": "KG",
+        "name": "Kyrgyzstan",
+        "currency": "KGS",
+        "dial_code": "+996",
+        "mask": "(###)###-###"
+    },
+    {
+        "iso": "LA",
+        "name": "Laos",
+        "currency": "LAK",
+        "dial_code": "+856",
+        "mask": [
+            "##-###-###",
+            "(20##)###-###"
+        ]
+    },
+    {
+        "iso": "LV",
+        "name": "Latvia",
+        "currency": "EUR",
+        "dial_code": "+371",
+        "mask": "##-###-###"
+    },
+    {
+        "iso": "LB",
+        "name": "Lebanon",
+        "currency": "LBP",
+        "dial_code": "+961",
+        "mask": [
+            "#-###-###",
+            "##-###-###"
+        ]
+    },
+    {
+        "iso": "LS",
+        "name": "Lesotho",
+        "currency": "LSL",
+        "dial_code": "+266",
+        "mask": "#-###-####"
+    },
+    {
+        "iso": "LR",
+        "name": "Liberia",
+        "currency": "LRD",
+        "dial_code": "+231",
+        "mask": "##-###-###"
+    },
+    {
+        "iso": "LY",
+        "name": "Libya",
+        "currency": "LYD",
+        "dial_code": "+218",
+        "mask": [
+            "##-###-###",
+            "21-###-####"
+        ]
+    },
+    {
+        "iso": "LI",
+        "name": "Liechtenstein",
+        "currency": "CHF",
+        "dial_code": "+423",
+        "mask": "(###)###-####"
+    },
+    {
+        "iso": "LT",
+        "name": "Lithuania",
+        "currency": "EUR",
+        "dial_code": "+370",
+        "mask": "(###)##-###"
+    },
+    {
+        "iso": "LU",
+        "name": "Luxembourg",
+        "currency": "EUR",
+        "dial_code": "+352",
+        "mask": "(###)###-###"
+    },
+    {
+        "iso": "MO",
+        "name": "Macao",
+        "currency": "MOP",
+        "dial_code": "+853",
+        "mask": "####-####"
+    },
+    {
+        "iso": "MK",
+        "name": "Macedonia",
+        "currency": "MKD",
+        "dial_code": "+389",
+        "mask": "##-###-###"
+    },
+    {
+        "iso": "MG",
+        "name": "Madagascar",
+        "currency": "MGA",
+        "dial_code": "+261",
+        "mask": "##-##-#####"
+    },
+    {
+        "iso": "MW",
+        "name": "Malawi",
+        "currency": "MWK",
+        "dial_code": "+265",
+        "mask": [
+            "1-###-###",
+            "#-####-####"
+        ]
+    },
+    {
+        "iso": "MY",
+        "name": "Malaysia",
+        "currency": "MYR",
+        "dial_code": "+60",
+        "mask": [
+            "#-###-###",
+            "##-###-###",
+            "(###)###-###",
+            "##-###-####"
+        ]
+    },
+    {
+        "iso": "MV",
+        "name": "Maldives",
+        "currency": "MVR",
+        "dial_code": "+960",
+        "mask": "###-####"
+    },
+    {
+        "iso": "ML",
+        "name": "Mali",
+        "currency": "XOF",
+        "dial_code": "+223",
+        "mask": "##-##-####"
+    },
+    {
+        "iso": "MT",
+        "name": "Malta",
+        "currency": "EUR",
+        "dial_code": "+356",
+        "mask": "####-####"
+    },
+    {
+        "iso": "MH",
+        "name": "Marshall Islands",
+        "currency": "USD",
+        "dial_code": "+692",
+        "mask": "###-####"
+    },
+    {
+        "iso": "MQ",
+        "name": "Martinique",
+        "currency": "EUR",
+        "dial_code": "+596",
+        "mask": "(###)##-##-##"
+    },
+    {
+        "iso": "MR",
+        "name": "Mauritania",
+        "currency": "MRO",
+        "dial_code": "+222",
+        "mask": "##-##-####"
+    },
+    {
+        "iso": "MU",
+        "name": "Mauritius",
+        "currency": "MUR",
+        "dial_code": "+230",
+        "mask": "###-####"
+    },
+    {
+        "iso": "YT",
+        "name": "Mayotte",
+        "currency": "EUR",
+        "dial_code": "+262",
+        "mask": "#####-####"
+    },
+    {
+        "iso": "MX",
+        "name": "Mexico",
+        "currency": "MXN",
+        "dial_code": "+52",
+        "mask": [
+            "##-##-####",
+            "(###)###-####"
+        ]
+    },
+    {
+        "iso": "FM",
+        "name": "Micronesia",
+        "currency": "USD",
+        "dial_code": "+691",
+        "mask": "###-####"
+    },
+    {
+        "iso": "MD",
+        "name": "Moldova",
+        "currency": "MDL",
+        "dial_code": "+373",
+        "mask": "####-####"
+    },
+    {
+        "iso": "MC",
+        "name": "Monaco",
+        "currency": "EUR",
+        "dial_code": "+377",
+        "mask": [
+            "##-###-###",
+            "(###)###-###"
+        ]
+    },
+    {
+        "iso": "MN",
+        "name": "Mongolia",
+        "currency": "MNT",
+        "dial_code": "+976",
+        "mask": "##-##-####"
+    },
+    {
+        "iso": "ME",
+        "name": "Montenegro",
+        "currency": "EUR",
+        "dial_code": "+382",
+        "mask": "##-###-###"
+    },
+    {
+        "iso": "MS",
+        "name": "Montserrat",
+        "currency": "XCD",
+        "dial_code": "+1",
+        "mask": "(664)###-####"
+    },
+    {
+        "iso": "MA",
+        "name": "Morocco",
+        "currency": "MAD",
+        "dial_code": "+212",
+        "mask": "##-####-###"
+    },
+    {
+        "iso": "MZ",
+        "name": "Mozambique",
+        "currency": "MZN",
+        "dial_code": "+258",
+        "mask": "##-###-###"
+    },
+    {
+        "iso": "MM",
+        "name": "Myanmar",
+        "currency": "MMK",
+        "dial_code": "+95",
+        "mask": [
+            "###-###",
+            "#-###-###",
+            "##-###-###"
+        ]
+    },
+    {
+        "iso": "NA",
+        "name": "Namibia",
+        "currency": "NAD",
+        "dial_code": "+224",
+        "mask": "##-###-####"
+    },
+    {
+        "iso": "NR",
+        "name": "Nauru",
+        "currency": "AUD",
+        "dial_code": "+674",
+        "mask": "###-####"
+    },
+    {
+        "iso": "NP",
+        "name": "Nepal",
+        "currency": "NPR",
+        "dial_code": "+977",
+        "mask": "##-###-###"
+    },
+    {
+        "iso": "NL",
+        "name": "Netherlands",
+        "currency": "EUR",
+        "dial_code": "+31",
+        "mask": "##-###-####"
+    },
+    {
+        "iso": "NC",
+        "name": "New Caledonia",
+        "currency": "XPF",
+        "dial_code": "+687",
+        "mask": "##-####"
+    },
+    {
+        "iso": "NZ",
+        "name": "New Zealand",
+        "currency": "NZD",
+        "dial_code": "+24",
+        "mask": [
+            "#-###-###",
+            "(###)###-###",
+            "(###)###-####"
+        ]
+    },
+    {
+        "iso": "NI",
+        "name": "Nicaragua",
+        "currency": "NIO",
+        "dial_code": "+505",
+        "mask": "####-####"
+    },
+    {
+        "iso": "NE",
+        "name": "Niger",
+        "currency": "XOF",
+        "dial_code": "+227",
+        "mask": "##-##-####"
+    },
+    {
+        "iso": "NG",
+        "name": "Nigeria",
+        "currency": "NGN",
+        "dial_code": "+234",
+        "mask": [
+            "##-###-##",
+            "##-###-###",
+            "(###)###-####"
+        ]
+    },
+    {
+        "iso": "NU",
+        "name": "Niue",
+        "currency": "NZD",
+        "dial_code": "+683",
+        "mask": "####"
+    },
+    {
+        "iso": "NF",
+        "name": "Norfolk Island",
+        "currency": "AUD",
+        "dial_code": "+672",
+        "mask": "3##-###"
+    },
+    {
+        "iso": "KP",
+        "name": "North Korea",
+        "currency": "KPW",
+        "dial_code": "+850",
+        "mask": [
+            "###-###",
+            "####-####",
+            "##-###-###",
+            "###-####-###",
+            "191-###-####",
+            "####-#############"
+        ]
+    },
+    {
+        "iso": "MP",
+        "name": "Northern Mariana Islands",
+        "currency": "USD",
+        "dial_code": "+1",
+        "mask": "(670)###-####"
+    },
+    {
+        "iso": "NO",
+        "name": "Norway",
+        "currency": "NOK",
+        "dial_code": "+47",
+        "mask": "(###)##-###"
+    },
+    {
+        "iso": "OM",
+        "name": "Oman",
+        "currency": "OMR",
+        "dial_code": "+968",
+        "mask": "##-###-###"
+    },
+    {
+        "iso": "PK",
+        "name": "Pakistan",
+        "currency": "PKR",
+        "dial_code": "+92",
+        "mask": "(###)###-####"
+    },
+    {
+        "iso": "PW",
+        "name": "Palau",
+        "currency": "USD",
+        "dial_code": "+680",
+        "mask": "###-####"
+    },
+    {
+        "iso": "PS",
+        "name": "Palestinian Territory",
+        "currency": "ILS",
+        "dial_code": "+970",
+        "mask": "##-###-####"
+    },
+    {
+        "iso": "PA",
+        "name": "Panama",
+        "currency": "PAB",
+        "dial_code": "+507",
+        "mask": "###-####"
+    },
+    {
+        "iso": "PG",
+        "name": "Papua New Guinea",
+        "currency": "PGK",
+        "dial_code": "+675",
+        "mask": "(###)##-###"
+    },
+    {
+        "iso": "PY",
+        "name": "Paraguay",
+        "currency": "PYG",
+        "dial_code": "+595",
+        "mask": "(###)###-###"
+    },
+    {
+        "iso": "PE",
+        "name": "Peru",
+        "currency": "PEN",
+        "dial_code": "+51",
+        "mask": "(###)###-###"
+    },
+    {
+        "iso": "PH",
+        "name": "Philippines",
+        "currency": "PHP",
+        "dial_code": "+63",
+        "mask": "(###)###-####"
+    },
+    {
+        "iso": "PN",
+        "name": "Pitcairn",
+        "currency": "NZD",
+        "dial_code": "+870",
+        "mask": "###-###-###"
+    },
+    {
+        "iso": "PL",
+        "name": "Poland",
+        "currency": "PLN",
+        "dial_code": "+48",
+        "mask": "(###)###-###"
+    },
+    {
+        "iso": "PT",
+        "name": "Portugal",
+        "currency": "EUR",
+        "dial_code": "+351",
+        "mask": "##-###-####"
+    },
+    {
+        "iso": "PR",
+        "name": "Puerto Rico",
+        "currency": "USD",
+        "dial_code": "+1",
+        "mask": [
+            "(787) ### ####",
+            "(939) ### ####"
+        ]
+    },
+    {
+        "iso": "QA",
+        "name": "Qatar",
+        "currency": "QAR",
+        "dial_code": "+974",
+        "mask": "####-####"
+    },
+    {
+        "iso": "CG",
+        "name": "Republic of the Congo",
+        "currency": "XAF",
+        "dial_code": "+242",
+        "mask": "##-#####"
+    },
+    {
+        "iso": "RE",
+        "name": "Reunion",
+        "currency": "EUR",
+        "dial_code": "+262",
+        "mask": "#####-####"
+    },
+    {
+        "iso": "RO",
+        "name": "Romania",
+        "currency": "RON",
+        "dial_code": "+40",
+        "mask": "##-###-####"
+    },
+    {
+        "iso": "RU",
+        "name": "Russia",
+        "currency": "RUB",
+        "dial_code": "+7",
+        "mask": "(###)###-##-##"
+    },
+    {
+        "iso": "RW",
+        "name": "Rwanda",
+        "currency": "RWF",
+        "dial_code": "+250",
+        "mask": "(###)###-###"
+    },
+    {
+        "iso": "BL",
+        "name": "Saint Barth\u00e9lemy",
+        "currency": "EUR",
+        "dial_code": "+590",
+        "mask": "###-##-##-##"
+    },
+    {
+        "iso": "SH",
+        "name": "Saint Helena",
+        "currency": "SHP",
+        "dial_code": "+290",
+        "mask": "####"
+    },
+    {
+        "iso": "KN",
+        "name": "Saint Kitts and Nevis",
+        "currency": "XCD",
+        "dial_code": "+1",
+        "mask": "(869)###-####"
+    },
+    {
+        "iso": "LC",
+        "name": "Saint Lucia",
+        "currency": "XCD",
+        "dial_code": "+1",
+        "mask": "(758)###-####"
+    },
+    {
+        "iso": "MF",
+        "name": "Saint Martin",
+        "currency": "EUR",
+        "dial_code": "+590",
+        "mask": "(###)###-###"
+    },
+    {
+        "iso": "PM",
+        "name": "Saint Pierre and Miquelon",
+        "currency": "EUR",
+        "dial_code": "+508",
+        "mask": "##-####"
+    },
+    {
+        "iso": "VC",
+        "name": "Saint Vincent and the Grenadines",
+        "currency": "XCD",
+        "dial_code": "+1",
+        "mask": "(784)###-####"
+    },
+    {
+        "iso": "WS",
+        "name": "Samoa",
+        "currency": "WST",
+        "dial_code": "+685",
+        "mask": "##-####"
+    },
+    {
+        "iso": "SM",
+        "name": "San Marino",
+        "currency": "EUR",
+        "dial_code": "+378",
+        "mask": "####-######"
+    },
+    {
+        "iso": "ST",
+        "name": "Sao Tome and Principe",
+        "currency": "STD",
+        "dial_code": "+239",
+        "mask": "##-#####"
+    },
+    {
+        "iso": "SA",
+        "name": "Saudi Arabia",
+        "currency": "SAR",
+        "dial_code": "+966",
+        "mask": [
+            "#-###-####",
+            "5#-####-####"
+        ]
+    },
+    {
+        "iso": "SN",
+        "name": "Senegal",
+        "currency": "XOF",
+        "dial_code": "+221",
+        "mask": "##-###-####"
+    },
+    {
+        "iso": "RS",
+        "name": "Serbia",
+        "currency": "RSD",
+        "dial_code": "+381",
+        "mask": "##-###-####"
+    },
+    {
+        "iso": "SC",
+        "name": "Seychelles",
+        "currency": "SCR",
+        "dial_code": "+248",
+        "mask": "#-###-###"
+    },
+    {
+        "iso": "SL",
+        "name": "Sierra Leone",
+        "currency": "SLL",
+        "dial_code": "+232",
+        "mask": "##-######"
+    },
+    {
+        "iso": "SG",
+        "name": "Singapore",
+        "currency": "SGD",
+        "dial_code": "+65",
+        "mask": "####-####"
+    },
+    {
+        "iso": "SX",
+        "name": "Sint Maarten",
+        "currency": "ANG",
+        "dial_code": "+1",
+        "mask": "(721)###-####"
+    },
+    {
+        "iso": "SK",
+        "name": "Slovakia",
+        "currency": "EUR",
+        "dial_code": "+421",
+        "mask": "(###)###-###"
+    },
+    {
+        "iso": "SI",
+        "name": "Slovenia",
+        "currency": "EUR",
+        "dial_code": "+386",
+        "mask": "##-###-###"
+    },
+    {
+        "iso": "SB",
+        "name": "Solomon Islands",
+        "currency": "SDB",
+        "dial_code": "+677",
+        "mask": [
+            "#####",
+            "###-####"
+        ]
+    },
+    {
+        "iso": "SO",
+        "name": "Somalia",
+        "currency": "SOS",
+        "dial_code": "+252",
+        "mask": [
+            "#-###-###",
+            "##-###-###"
+        ]
+    },
+    {
+        "iso": "ZA",
+        "name": "South Africa",
+        "currency": "ZAR",
+        "dial_code": "+27",
+        "mask": "##-###-####"
+    },
+    {
+        "iso": "GS",
+        "name": "South Georgia and the South Sandwich Islands",
+        "currency": "GBP",
+        "dial_code": "+500",
+        "mask": "#####"
+    },
+    {
+        "iso": "KR",
+        "name": "South Korea",
+        "currency": "KRW",
+        "dial_code": "+82",
+        "mask": "##-###-####"
+    },
+    {
+        "iso": "SS",
+        "name": "South Sudan",
+        "currency": "SSP",
+        "dial_code": "+211",
+        "mask": "##-###-####"
+    },
+    {
+        "iso": "ES",
+        "name": "Spain",
+        "currency": "EUR",
+        "dial_code": "+34",
+        "mask": "(###)###-###"
+    },
+    {
+        "iso": "LK",
+        "name": "Sri Lanka",
+        "currency": "LKR",
+        "dial_code": "+94",
+        "mask": "##-###-####"
+    },
+    {
+        "iso": "SD",
+        "name": "Sudan",
+        "currency": "SDG",
+        "dial_code": "+249",
+        "mask": "##-###-####"
+    },
+    {
+        "iso": "SR",
+        "name": "Suriname",
+        "currency": "SRD",
+        "dial_code": "+597",
+        "mask": [
+            "###-###",
+            "###-####"
+        ]
+    },
+    {
+        "iso": "SJ",
+        "name": "Svalbard and Jan Mayen",
+        "currency": "NOK",
+        "dial_code": "+47",
+        "mask": "(###)##-###"
+    },
+    {
+        "iso": "SZ",
+        "name": "Swaziland",
+        "currency": "SZL",
+        "dial_code": "+268",
+        "mask": "##-##-####"
+    },
+    {
+        "iso": "SE",
+        "name": "Sweden",
+        "currency": "SEK",
+        "dial_code": "+46",
+        "mask": "##-###-####"
+    },
+    {
+        "iso": "CH",
+        "name": "Switzerland",
+        "currency": "CHF",
+        "dial_code": "+41",
+        "mask": "##-###-####"
+    },
+    {
+        "iso": "SY",
+        "name": "Syria",
+        "currency": "SYP",
+        "dial_code": "+963",
+        "mask": "##-####-###"
+    },
+    {
+        "iso": "TW",
+        "name": "Taiwan",
+        "currency": "TWD",
+        "dial_code": "+886",
+        "mask": [
+            "####-####",
+            "#-####-####"
+        ]
+    },
+    {
+        "iso": "TJ",
+        "name": "Tajikistan",
+        "currency": "TJS",
+        "dial_code": "+992",
+        "mask": "##-###-####"
+    },
+    {
+        "iso": "TZ",
+        "name": "Tanzania",
+        "currency": "TZS",
+        "dial_code": "+255",
+        "mask": "##-###-####"
+    },
+    {
+        "iso": "TH",
+        "name": "Thailand",
+        "currency": "THB",
+        "dial_code": "+66",
+        "mask": [
+            "##-###-###",
+            "##-###-####"
+        ]
+    },
+    {
+        "iso": "TG",
+        "name": "Togo",
+        "currency": "XOF",
+        "dial_code": "+228",
+        "mask": "##-###-###"
+    },
+    {
+        "iso": "TK",
+        "name": "Tokelau",
+        "currency": "NZD",
+        "dial_code": "+690",
+        "mask": "####"
+    },
+    {
+        "iso": "TO",
+        "name": "Tonga",
+        "currency": "TOP",
+        "dial_code": "+676",
+        "mask": "#####"
+    },
+    {
+        "iso": "TT",
+        "name": "Trinidad and Tobago",
+        "currency": "TTD",
+        "dial_code": "+1",
+        "mask": "(868)###-####"
+    },
+    {
+        "iso": "TN",
+        "name": "Tunisia",
+        "currency": "TND",
+        "dial_code": "+216",
+        "mask": "##-###-###"
+    },
+    {
+        "iso": "TR",
+        "name": "Turkey",
+        "currency": "TRY",
+        "dial_code": "+90",
+        "mask": "(###)###-####"
+    },
+    {
+        "iso": "TM",
+        "name": "Turkmenistan",
+        "currency": "TMT",
+        "dial_code": "+993",
+        "mask": "#-###-####"
+    },
+    {
+        "iso": "TC",
+        "name": "Turks and Caicos Islands",
+        "currency": "USD",
+        "dial_code": "+1",
+        "mask": "(249)###-###"
+    },
+    {
+        "iso": "TV",
+        "name": "Tuvalu",
+        "currency": "AUD",
+        "dial_code": "+688",
+        "mask": [
+            "2####",
+            "90####"
+        ]
+    },
+    {
+        "iso": "VI",
+        "name": "U.S. Virgin Islands",
+        "currency": "USD",
+        "dial_code": "+1",
+        "mask": "(340)###-####"
+    },
+    {
+        "iso": "UG",
+        "name": "Uganda",
+        "currency": "UGX",
+        "dial_code": "+256",
+        "mask": "(###)###-###"
+    },
+    {
+        "iso": "UA",
+        "name": "Ukraine",
+        "currency": "UAH",
+        "dial_code": "+380",
+        "mask": "(##)###-##-##"
+    },
+    {
+        "iso": "AE",
+        "name": "United Arab Emirates",
+        "currency": "AED",
+        "dial_code": "+971",
+        "mask": [
+            "#-###-####",
+            "5#-###-####"
+        ]
+    },
+    {
+        "iso": "GB",
+        "name": "United Kingdom",
+        "currency": "GBP",
+        "dial_code": "+44",
+        "mask": "##-####-####"
+    },
+    {
+        "iso": "US",
+        "name": "United States",
+        "currency": "USD",
+        "dial_code": "+1",
+        "mask": "(###)###-####"
+    },
+    {
+        "iso": "UY",
+        "name": "Uruguay",
+        "currency": "UYI",
+        "dial_code": "+598",
+        "mask": "#-###-##-##"
+    },
+    {
+        "iso": "UZ",
+        "name": "Uzbekistan",
+        "currency": "UZS",
+        "dial_code": "+998",
+        "mask": "##-###-####"
+    },
+    {
+        "iso": "VU",
+        "name": "Vanuatu",
+        "currency": "VUV",
+        "dial_code": "+678",
+        "mask": [
+            "#####",
+            "##-#####"
+        ]
+    },
+    {
+        "iso": "VA",
+        "name": "Vatican",
+        "currency": "EUR",
+        "dial_code": "+39",
+        "mask": "06 698#####"
+    },
+    {
+        "iso": "VE",
+        "name": "Venezuela",
+        "currency": "VEF",
+        "dial_code": "+58",
+        "mask": "(###)###-####"
+    },
+    {
+        "iso": "VN",
+        "name": "Vietnam",
+        "currency": "VND",
+        "dial_code": "+84",
+        "mask": [
+            "##-####-###",
+            "(###)####-###"
+        ]
+    },
+    {
+        "iso": "WF",
+        "name": "Wallis and Futuna",
+        "currency": "XPF",
+        "dial_code": "+681",
+        "mask": "##-####"
+    },
+    {
+        "iso": "EH",
+        "name": "Western Sahara",
+        "currency": "MAD",
+        "dial_code": "+212",
+        "mask": "####-#####"
+    },
+    {
+        "iso": "YE",
+        "name": "Yemen",
+        "currency": "YER",
+        "dial_code": "+967",
+        "mask": [
+            "#-###-###",
+            "##-###-###",
+            "###-###-###"
+        ]
+    },
+    {
+        "iso": "ZM",
+        "name": "Zambia",
+        "currency": "ZMK",
+        "dial_code": "+260",
+        "mask": "##-###-####"
+    },
+    {
+        "iso": "ZW",
+        "name": "Zimbabwe",
+        "currency": "USD",
+        "dial_code": "+263",
+        "mask": "#-######"
+    }
+]
