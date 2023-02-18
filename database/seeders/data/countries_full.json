@@ -88,14 +88,16 @@
         "name": "Australia",
         "currency": "AUD",
         "dial_code": "+61",
-        "mask": "#-####-####"
+        "mask": "#-####-####",
+        "status": true
     },
     {
         "iso": "AT",
         "name": "Austria",
         "currency": "EUR",
         "dial_code": "+43",
-        "mask": "(###)###-####"
+        "mask": "(###)###-####",
+        "status": true
     },
     {
         "iso": "AZ",
@@ -144,7 +146,8 @@
         "name": "Belgium",
         "currency": "EUR",
         "dial_code": "+32",
-        "mask": "(###)###-###"
+        "mask": "(###)###-###",
+        "status": true
     },
     {
         "iso": "BZ",
@@ -210,7 +213,8 @@
         "mask": [
             "(##)####-####",
             "(##)#####-####"
-        ]
+        ],
+        "status": true
     },
     {
         "iso": "IO",
@@ -238,7 +242,8 @@
         "name": "Bulgaria",
         "currency": "BGN",
         "dial_code": "+359",
-        "mask": "(###)###-###"
+        "mask": "(###)###-###",
+        "status": true
     },
     {
         "iso": "BF",
@@ -273,7 +278,8 @@
         "name": "Canada",
         "currency": "CAD",
         "dial_code": "+1",
-        "mask": "(###)###-####"
+        "mask": "(###)###-####",
+        "status": true
     },
     {
         "iso": "CV",
@@ -368,7 +374,8 @@
         "name": "Croatia",
         "currency": "HRK",
         "dial_code": "+385",
-        "mask": "##-###-###"
+        "mask": "##-###-###",
+        "status": true
     },
     {
         "iso": "CU",
@@ -382,14 +389,16 @@
         "name": "Cyprus",
         "currency": "EUR",
         "dial_code": "+357",
-        "mask": "##-###-###"
+        "mask": "##-###-###",
+        "status": true
     },
     {
         "iso": "CZ",
         "name": "Czech Republic",
         "currency": "CZK",
         "dial_code": "+420",
-        "mask": "(###)###-###"
+        "mask": "(###)###-###",
+        "status": true
     },
     {
         "iso": "CD",
@@ -403,7 +412,8 @@
         "name": "Denmark",
         "currency": "DKK",
         "dial_code": "+45",
-        "mask": "##-##-##-##"
+        "mask": "##-##-##-##",
+        "status": true
     },
     {
         "iso": "DJ",
@@ -487,7 +497,8 @@
         "mask": [
             "###-####",
             "####-####"
-        ]
+        ],
+        "status": true
     },
     {
         "iso": "ET",
@@ -522,14 +533,16 @@
         "name": "Finland",
         "currency": "EUR",
         "dial_code": "+358",
-        "mask": "(###)###-##-##"
+        "mask": "(###)###-##-##",
+        "status": true
     },
     {
         "iso": "FR",
         "name": "France",
         "currency": "EUR",
         "dial_code": "+33",
-        "mask": "(###)###-###"
+        "mask": "(###)###-###",
+        "status": true
     },
     {
         "iso": "GF",
@@ -578,7 +591,8 @@
             "(###)##-####",
             "(###)###-####",
             "(####)###-####"
-        ]
+        ],
+        "status": true
     },
     {
         "iso": "GH",
@@ -592,14 +606,16 @@
         "name": "Gibraltar",
         "currency": "GIP",
         "dial_code": "+350",
-        "mask": "###-#####"
+        "mask": "###-#####",
+        "status": true
     },
     {
         "iso": "GR",
         "name": "Greece",
         "currency": "EUR",
         "dial_code": "+30",
-        "mask": "(###)###-####"
+        "mask": "(###)###-####",
+        "status": true
     },
     {
         "iso": "GL",
@@ -683,14 +699,16 @@
         "name": "Hong Kong",
         "currency": "HKD",
         "dial_code": "+852",
-        "mask": "####-####"
+        "mask": "####-####",
+        "status": true
     },
     {
         "iso": "HU",
         "name": "Hungary",
         "currency": "HUF",
         "dial_code": "+36",
-        "mask": "(###)###-###"
+        "mask": "(###)###-###",
+        "status": true
     },
     {
         "iso": "IS",
@@ -738,7 +756,8 @@
         "name": "Ireland",
         "currency": "EUR",
         "dial_code": "+353",
-        "mask": "(###)###-###"
+        "mask": "(###)###-###",
+        "status": true
     },
     {
         "iso": "IM",
@@ -762,7 +781,8 @@
         "name": "Italy",
         "currency": "EUR",
         "dial_code": "+39",
-        "mask": "(###)####-###"
+        "mask": "(###)####-###",
+        "status": true
     },
     {
         "iso": "CI",
@@ -786,7 +806,8 @@
         "mask": [
             "(###)###-###",
             "##-####-####"
-        ]
+        ],
+        "status": true
     },
     {
         "iso": "JE",
@@ -865,7 +886,8 @@
         "name": "Latvia",
         "currency": "EUR",
         "dial_code": "+371",
-        "mask": "##-###-###"
+        "mask": "##-###-###",
+        "status": true
     },
     {
         "iso": "LB",
@@ -906,21 +928,24 @@
         "name": "Liechtenstein",
         "currency": "CHF",
         "dial_code": "+423",
-        "mask": "(###)###-####"
+        "mask": "(###)###-####",
+        "status": true
     },
     {
         "iso": "LT",
         "name": "Lithuania",
         "currency": "EUR",
         "dial_code": "+370",
-        "mask": "(###)##-###"
+        "mask": "(###)##-###",
+        "status": true
     },
     {
         "iso": "LU",
         "name": "Luxembourg",
         "currency": "EUR",
         "dial_code": "+352",
-        "mask": "(###)###-###"
+        "mask": "(###)###-###",
+        "status": true
     },
     {
         "iso": "MO",
@@ -963,7 +988,8 @@
             "##-###-###",
             "(###)###-###",
             "##-###-####"
-        ]
+        ],
+        "status": true
     },
     {
         "iso": "MV",
@@ -984,7 +1010,8 @@
         "name": "Malta",
         "currency": "EUR",
         "dial_code": "+356",
-        "mask": "####-####"
+        "mask": "####-####",
+        "status": true
     },
     {
         "iso": "MH",
@@ -1029,7 +1056,8 @@
         "mask": [
             "##-##-####",
             "(###)###-####"
-        ]
+        ],
+        "status": true
     },
     {
         "iso": "FM",
@@ -1127,7 +1155,8 @@
         "name": "Netherlands",
         "currency": "EUR",
         "dial_code": "+31",
-        "mask": "##-###-####"
+        "mask": "##-###-####",
+        "status": true
     },
     {
         "iso": "NC",
@@ -1145,7 +1174,8 @@
             "#-###-###",
             "(###)###-###",
             "(###)###-####"
-        ]
+        ],
+        "status": true
     },
     {
         "iso": "NI",
@@ -1212,7 +1242,8 @@
         "name": "Norway",
         "currency": "NOK",
         "dial_code": "+47",
-        "mask": "(###)##-###"
+        "mask": "(###)##-###",
+        "status": true
     },
     {
         "iso": "OM",
@@ -1289,14 +1320,16 @@
         "name": "Poland",
         "currency": "PLN",
         "dial_code": "+48",
-        "mask": "(###)###-###"
+        "mask": "(###)###-###",
+        "status": true
     },
     {
         "iso": "PT",
         "name": "Portugal",
         "currency": "EUR",
         "dial_code": "+351",
-        "mask": "##-###-####"
+        "mask": "##-###-####",
+        "status": true
     },
     {
         "iso": "PR",
@@ -1334,7 +1367,8 @@
         "name": "Romania",
         "currency": "RON",
         "dial_code": "+40",
-        "mask": "##-###-####"
+        "mask": "##-###-####",
+        "status": true
     },
     {
         "iso": "RU",
@@ -1463,7 +1497,8 @@
         "name": "Singapore",
         "currency": "SGD",
         "dial_code": "+65",
-        "mask": "####-####"
+        "mask": "####-####",
+        "status": true
     },
     {
         "iso": "SX",
@@ -1477,14 +1512,16 @@
         "name": "Slovakia",
         "currency": "EUR",
         "dial_code": "+421",
-        "mask": "(###)###-###"
+        "mask": "(###)###-###",
+        "status": true
     },
     {
         "iso": "SI",
         "name": "Slovenia",
         "currency": "EUR",
         "dial_code": "+386",
-        "mask": "##-###-###"
+        "mask": "##-###-###",
+        "status": true
     },
     {
         "iso": "SB",
@@ -1539,7 +1576,8 @@
         "name": "Spain",
         "currency": "EUR",
         "dial_code": "+34",
-        "mask": "(###)###-###"
+        "mask": "(###)###-###",
+        "status": true
     },
     {
         "iso": "LK",
@@ -1584,14 +1622,16 @@
         "name": "Sweden",
         "currency": "SEK",
         "dial_code": "+46",
-        "mask": "##-###-####"
+        "mask": "##-###-####",
+        "status": true
     },
     {
         "iso": "CH",
         "name": "Switzerland",
         "currency": "CHF",
         "dial_code": "+41",
-        "mask": "##-###-####"
+        "mask": "##-###-####",
+        "status": true
     },
     {
         "iso": "SY",
@@ -1632,7 +1672,8 @@
         "mask": [
             "##-###-###",
             "##-###-####"
-        ]
+        ],
+        "status": true
     },
     {
         "iso": "TG",
@@ -1729,21 +1770,24 @@
         "mask": [
             "#-###-####",
             "5#-###-####"
-        ]
+        ],
+        "status": true
     },
     {
         "iso": "GB",
         "name": "United Kingdom",
         "currency": "GBP",
         "dial_code": "+44",
-        "mask": "##-####-####"
+        "mask": "##-####-####",
+        "status": true
     },
     {
         "iso": "US",
         "name": "United States",
         "currency": "USD",
         "dial_code": "+1",
-        "mask": "(###)###-####"
+        "mask": "(###)###-####",
+        "status": true
     },
     {
         "iso": "UY",
