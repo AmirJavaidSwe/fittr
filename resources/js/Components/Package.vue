@@ -10,6 +10,7 @@ import Radio from '@/Components/Radio.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import InputError from '@/Components/InputError.vue';
 import DialogModal from '@/Components/DialogModal.vue';
+import { faPencil } from '@fortawesome/free-solid-svg-icons';
  
 dayjs.extend(relativeTime);
 const props = defineProps({
@@ -24,6 +25,8 @@ const route_name = usePage().props.value.route_name;
 const can_edit = computed(() => {
   return props.admin && route_name != 'admin.packages.edit';
 })
+const edit_link = route().has('admin.packages.edit') ? route('admin.packages.edit', {id: props.pack.id}) : '#';
+const show_link = route().has('admin.packages.show') ? route('admin.packages.show', {id: props.pack.id}) : '#';
 const confirmingSubscription = ref(false);
 const confirmSubscription = () => {
     confirmingSubscription.value = true;
@@ -54,15 +57,15 @@ const confirmSubscribe = () => {
 <div class="bg-gray-200 p-2 rounded-md shadow-sm w-72 space-y-2">
     <div>
         <div class="font-bold text-2xl flex justify-between items-start">
-            <Link :href="route('admin.packages.show', {id: pack.id})" v-if="route_name != 'admin.packages.show'" class="hover:text-blue-900 transition">
+            <Link :href="show_link" v-if="route_name != 'admin.packages.show' && can_edit" class="hover:text-blue-900 transition">
                 {{pack.title}}
             </Link>
             <span v-else>
                 {{pack.title}}
             </span>
-            <Link :href="route('admin.packages.edit', {id: pack.id})" v-if="can_edit" class="text-base text-gray-500 hover:text-gray-900 transition">
+            <Link :href="edit_link" v-if="can_edit" class="text-base text-gray-500 hover:text-gray-900 transition">
                 <span v-if="pack.is_private" class="font-normal p-2 text-xs">private</span>
-                <font-awesome-icon icon="fa-solid fa-pencil" />
+                <font-awesome-icon :icon="faPencil" />
             </Link>
             <span v-if="pack.subscribed" class="bg-green-300 text-xs font-medium px-2.5 py-0.5 rounded">Current plan</span>
         </div>

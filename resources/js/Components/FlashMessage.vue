@@ -11,15 +11,18 @@ const props = defineProps({
 const has_msg = computed(() => props.flash.timestamp);
 const msg_type = computed(() => props.flash.type);
 const show = ref(false);
+const title = ref(null);
 const timer = ref(null);
 const classes = ref('');
 watch(has_msg, (new_msg) => {
     switch (msg_type.value) {
         case 'success':
             classes.value = 'border-green-500';
+            title.value = 'Success';
             break;
         case 'warning':
             classes.value = 'border-yellow-500';
+            title.value = 'Warning';
             break;
     
         default:
@@ -44,8 +47,11 @@ watch(has_msg, (new_msg) => {
           leave-to-class="opacity-0 translate-x-full"
           >
         <div v-if="show" @click="show = false" class="cursor-pointer fixed right-8 top-24 transform transition-all">
-            <div class="bg-gray-900 border-l-4 overflow-hidden px-4 py-2 rounded-lg shadow-md text-white" :class="classes">
-                <div class="font-semibold text-sm">
+            <div class="bg-gray-900 border-l-4 overflow-hidden px-4 py-2 rounded-lg shadow-md text-white w-60" :class="classes">
+                <div v-if="title" class="font-bold">
+                    {{ title }}
+                </div>
+                <div class="text-sm">
                     {{ flash.message }}
                 </div>
             </div>

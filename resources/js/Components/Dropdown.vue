@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 
 const props = defineProps({
     align: {
@@ -17,6 +17,11 @@ const props = defineProps({
 });
 
 let open = ref(false);
+
+const emit = defineEmits(['toggled']);
+watch(open, (new_val) => {
+    emit('toggled', new_val);
+});
 
 const closeOnEscape = (e) => {
     if (open.value && e.key === 'Escape') {
@@ -65,7 +70,7 @@ const alignmentClasses = computed(() => {
         >
             <div
                 v-show="open"
-                class="absolute z-50 mt-2 rounded-md shadow-lg"
+                class="absolute z-50 mt-2 rounded-md shadow-lg overflow-hidden"
                 :class="[widthClass, alignmentClasses]"
                 style="display: none;"
                 @click="open = false"
