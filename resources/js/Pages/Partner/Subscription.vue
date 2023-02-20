@@ -10,19 +10,21 @@ const props = defineProps({
 </script>
 
 <template>
-    <Section>
+    <Section :bg="active_subscription ? '' : 'bg-red-100'">
         <div v-if="active_subscription">
             <div class="text-lg font-medium text-gray-900 mb-4">
-                Your current package
+                Subscription Information
             </div>
             <Subscription :subscription="active_subscription" />
         </div>
-
+        <div v-else class="text-lg font-medium text-red-900">
+            You have no active subscription.
+        </div>
     </Section>
     <Section>
         <div class="text-lg font-medium text-gray-900 my-4">Available packages</div>
         <div class="flex flex-wrap gap-8 my-4">
-            <Package v-for="pack in packages" :pack="pack" :has_subscription="active_subscription" :key="pack.id"/>
+            <Package v-for="pack in packages" :pack="pack" :has_subscription="has_subscription" :key="pack.id"/>
             <div v-if="!packages.length > 0">No packages found.</div>
         </div>
     </Section>

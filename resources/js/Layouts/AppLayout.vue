@@ -1,7 +1,7 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed, defineAsyncComponent } from 'vue';
 import { Inertia } from '@inertiajs/inertia';
-import { Link } from '@inertiajs/inertia-vue3';
+import { Link, usePage } from '@inertiajs/inertia-vue3';
 import AppHead from '@/Layouts/AppHead.vue';
 import LogoLetter from '@/Components/LogoLetter.vue';
 import Banner from '@/Components/Banner.vue';
@@ -10,7 +10,7 @@ import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import MainMenu from '@/Components/MainMenu.vue';
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
 
 const showingNavigationDropdown = ref(false);
 
@@ -25,6 +25,22 @@ const switchToTeam = (team) => {
 const logout = () => {
     Inertia.post(route('logout'));
 };
+
+const toggleMenu = (v) => {
+    showingNavigationDropdown.value = v;
+};
+
+const MainMenu = defineAsyncComponent(() => {
+    const is_partner = usePage().props.value.user.is_partner;
+    return is_partner ? import('./PartnerMenu.vue') : import('./AdminMenu.vue');
+});
+
+const header = computed(() => {
+  return usePage().props.value.header;
+})
+const headerIsArray = computed(() => {
+  return Array.isArray(header.value);
+})
 </script>
 
 <template>
@@ -49,9 +65,9 @@ const logout = () => {
                             <LogoLetter class="w-24 h-8" fill="#f00" />
                         </Link>
                         <!-- Mobile toggle, visible md and smaller -->
-                        <Dropdown align="right" width="48" :content-classes="['bg-gray-100', 'p-1']">
+                        <Dropdown align="right" width="48" :content-classes="['bg-gray-100', 'p-1']" @toggled="toggleMenu">
                             <template #trigger>
-                                <button class="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition" @click="showingNavigationDropdown = ! showingNavigationDropdown">
+                                <button class="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition">
                                     <svg
                                         class="h-6 w-6"
                                         stroke="currentColor"
@@ -76,24 +92,32 @@ const logout = () => {
                             </button>
                             </template>
                             <template #content>
-                                <main-menu />
+                                <MainMenu />
                             </template>
                         </Dropdown>
                     </div>
-                    <div class="bg-white flex items-center justify-between md:px-6 md:py-0 md:text-md p-4 shadow text-sm w-full z-0">
+                    <div class="bg-white flex items-center justify-between md:px-6 md:py-0 md:text-md p-4 shadow text-sm w-full z-0 gap-4">
                         <!-- Page Heading / Menu item name-->
                         <header class="bg-white ">
                             <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                                 <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                                    {{ $page.props.header }}
+                                    <div v-if="headerIsArray" class="flex flex-wrap gap-2">
+                                        <div v-for="item in header">
+                                            <Link v-if="item.link" :href="item.link" class="text-blue-600">{{item.title}}</Link>
+                                            <span v-else>
+                                                {{item.title}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <span v-else>{{header}}</span>
                                 </h2>
                             </div>
                         </header>
                         <!-- Settings Dropdown -->
-                        <div class="ml-3 relative">
-                            <Dropdown align="right" width="48">
+                        <div class="relative flex-shrink-0">
+                            <Dropdown align="right" width="48" :content-classes="['bg-white']">
                                 <template #trigger>
-                                    <button v-if="$page.props.jetstream.managesProfilePhotos" class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition">
+                                    <button v-if="$page.props.jetstream.managesProfilePhotos" class="flex text-sm border-2 border-gray-100 rounded-full focus:outline-none focus:border-gray-300 transition">
                                         <img class="h-8 w-8 rounded-full object-cover" :src="$page.props.user.profile_photo_url" :alt="$page.props.user.name">
                                     </button>
 
@@ -115,16 +139,25 @@ const logout = () => {
 
                                 <template #content>
                                     <!-- Account Management -->
-                                    <div class="block px-4 py-2 text-xs text-gray-400">
-                                        Manage Account
+                                    <div class="px-4 py-2 border-b bg-gray-50">
+                                        <div class="font-bold">{{$page.props.user.name}}</div>
+                                        <div class="text-gray-400">{{$page.props.user.email}}</div>
                                     </div>
 
                                     <DropdownLink :href="route('profile.show')">
                                         Profile
                                     </DropdownLink>
 
-                                    <DropdownLink v-if="$page.props.jetstream.hasApiFeatures" :href="route('api-tokens.index')">
+                                    <!-- <DropdownLink v-if="$page.props.jetstream.hasApiFeatures" :href="route('api-tokens.index')">
                                         API Tokens
+                                    </DropdownLink> -->
+
+                                    <DropdownLink v-if="$page.props.user.is_partner" :href="route('partner.subscriptions.index')">
+                                        Billing
+                                    </DropdownLink>
+
+                                    <DropdownLink v-if="$page.props.user.is_partner" :href="route('partner.contact.index')">
+                                        Contact support
                                     </DropdownLink>
 
                                     <div class="border-t border-gray-100" />
@@ -142,7 +175,7 @@ const logout = () => {
                 </div>
                 <div class="md:flex md:flex-grow md:overflow-hidden">
                     <!-- Menu -->
-                    <main-menu class="hidden flex-shrink-0 p-4 w-56 bg-gray-100 overflow-y-auto md:block space-y-4" />
+                    <MainMenu />
                     <!-- Page Content -->
                     <div class="md:flex-1 overflow-y-auto">
                         <main class="py-8 sm:px-6 lg:px-8 space-y-8">
@@ -151,7 +184,7 @@ const logout = () => {
                     </div>
                 </div>
                 <!-- footer -->
-                <footer class="bg-gray-100 p-2 text-center text-gray-400 text-xs">MADE WITH <svg class="mx-2 w-5 h-5 inline fill-current flex-shrink-0" viewBox="0 0 20 20"><path d="M10 3.22l-.61-.6a5.5 5.5 0 0 0-7.78 7.77L10 18.78l8.39-8.4a5.5 5.5 0 0 0-7.78-7.77l-.61.61z"></path></svg> IN LONDON</footer>
+                <footer class="bg-gray-100 p-2 text-center text-gray-400 text-xs">MADE WITH <font-awesome-icon :icon="faHeart" class="mx-2" /> IN LONDON</footer>
             </div>
         </div>
     </div>

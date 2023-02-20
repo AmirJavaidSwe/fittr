@@ -1,11 +1,12 @@
 <script setup>
 import { watch } from 'vue';
 import { Link, useForm } from '@inertiajs/inertia-vue3';
-import Section from '@/Components/Section.vue';
+// import Section from '@/Components/Section.vue';
 import SectionTitle from '@/Components/SectionTitle.vue';
 import SearchFilter from '@/Components/SearchFilter.vue';
 import Pagination from '@/Components/Pagination.vue';
 import ButtonLink from '@/Components/ButtonLink.vue';
+import { faPencil, faChevronRight} from '@fortawesome/free-solid-svg-icons';
 
 const props = defineProps({
     users: Object,
@@ -63,39 +64,37 @@ watch(() => form.search, runSearch);
       <ButtonLink :href="route('admin.partners.index')" type="primary">Add new</ButtonLink>
     </div>
 
-    <Section>
-        <div class="relative overflow-x-auto">
-            <table class="table-auto text-left border-collapse w-full">
-                <thead class="uppercase bg-gray-50 text-sm whitespace-nowrap">
-                    <tr>
-                        <th @click="setOrdering('id')" class="px-6 py-3 border-b cursor-pointer" :class="form.order_by == 'id' ? 'border-indigo-500' : ''">ID</th>
-                        <th @click="setOrdering('name')" class="px-6 py-3 border-b cursor-pointer" :class="form.order_by == 'name' ? 'border-indigo-500' : ''">Name</th>
-                        <th @click="setOrdering('email')" class="px-6 py-3 border-b cursor-pointer" :class="form.order_by == 'email' ? 'border-indigo-500' : ''">Email</th>
-                        <th @click="setOrdering('created_at')" class="px-6 py-3 border-b cursor-pointer" :class="form.order_by == 'created_at' ? 'border-indigo-500' : ''">Date created</th>
-                        <th class="border-b"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="user in props.users.data" :key="user.id" class="border-b whitespace-nowrap">
-                        <td class="px-6 py-4">{{user.id}}</td>
-                        <td class="px-6 py-4">{{user.name}}</td>
-                        <td class="px-6 py-4">{{user.email}}</td>
-                        <td class="px-6 py-4">{{user.created_at}}</td>
-                        <td class="px-6 py-4">
-                            <div class="flex gap-4 justify-end">
-                                <Link :href="user.url_edit">
-                                    <font-awesome-icon icon="fa-solid fa-pencil" />
-                                </Link>
-                                <Link :href="user.url_show">
-                                    <font-awesome-icon icon="fa-solid fa-chevron-right" />
-                                </Link>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </Section>
+    <div class="relative overflow-x-auto shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+        <table class="table-auto text-left border-collapse w-full">
+            <thead class="uppercase bg-gray-100 text-sm whitespace-nowrap">
+                <tr>
+                    <th @click="setOrdering('id')" class="px-6 py-3 border-b cursor-pointer" :class="form.order_by == 'id' ? 'border-indigo-500' : ''">ID</th>
+                    <th @click="setOrdering('name')" class="px-6 py-3 border-b cursor-pointer" :class="form.order_by == 'name' ? 'border-indigo-500' : ''">Name</th>
+                    <th @click="setOrdering('email')" class="px-6 py-3 border-b cursor-pointer" :class="form.order_by == 'email' ? 'border-indigo-500' : ''">Email</th>
+                    <th @click="setOrdering('created_at')" class="px-6 py-3 border-b cursor-pointer" :class="form.order_by == 'created_at' ? 'border-indigo-500' : ''">Date created</th>
+                    <th class="border-b"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="user in props.users.data" :key="user.id" class="border-b whitespace-nowrap bg-white hover:bg-gray-50">
+                    <td class="px-6 py-4">{{user.id}}</td>
+                    <td class="px-6 py-4">{{user.name}}</td>
+                    <td class="px-6 py-4">{{user.email}}</td>
+                    <td class="px-6 py-4">{{user.created_at}}</td>
+                    <td class="px-6 py-4">
+                        <div class="flex gap-4 justify-end">
+                            <Link :href="user.url_edit">
+                                <font-awesome-icon :icon="faPencil" />
+                            </Link>
+                            <Link :href="user.url_show">
+                                <font-awesome-icon :icon="faChevronRight" />
+                            </Link>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
     <p>Viewing {{users.from}} - {{users.to}} of {{users.total}} results</p>
     <pagination class="mt-6" :links="users.links" />

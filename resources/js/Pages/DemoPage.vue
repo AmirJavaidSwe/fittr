@@ -10,7 +10,7 @@ import SectionBorder from '@/Components/SectionBorder.vue';
 import SectionTitle from '@/Components/SectionTitle.vue';
 import ActionMessage from '@/Components/ActionMessage.vue';
 import ActionSection from '@/Components/ActionSection.vue';
-
+import { faCoffee, faHeart} from '@fortawesome/free-solid-svg-icons';
 
 const showModal = ref(false);
 const showActionMessage = ref(false);
@@ -81,26 +81,26 @@ const closeModal = () => {
         </SectionTitle>
 
         <div class="flex gap-4 items-center">
-            <font-awesome-icon icon="fa-solid fa-coffee" />
-            <font-awesome-icon icon="fa-solid fa-coffee" style="color: #7e4141" />
-            <font-awesome-icon icon="fa-solid fa-coffee" size="xs" />
-            <font-awesome-icon icon="fa-solid fa-coffee" size="sm" />
-            <font-awesome-icon icon="fa-solid fa-coffee" size="lg" />
-            <font-awesome-icon icon="fa-solid fa-coffee" size="xl" />
-            <font-awesome-icon icon="fa-solid fa-coffee" size="2xl" />
+            <font-awesome-icon :icon="faCoffee" />
+            <font-awesome-icon :icon="faCoffee" style="color: #7e4141" />
+            <font-awesome-icon :icon="faCoffee" size="xs" />
+            <font-awesome-icon :icon="faCoffee" size="sm" />
+            <font-awesome-icon :icon="faCoffee" size="lg" />
+            <font-awesome-icon :icon="faCoffee" size="xl" />
+            <font-awesome-icon :icon="faCoffee" size="2xl" />
 
-            <font-awesome-icon icon="fa-solid fa-coffee" size="1x" />
-            <font-awesome-icon icon="fa-solid fa-coffee" size="2x" />
-            <font-awesome-icon icon="fa-solid fa-coffee" size="3x" />
-            <font-awesome-icon icon="fa-solid fa-coffee" size="4x" />
-            <font-awesome-icon icon="fa-solid fa-coffee" size="5x" />
-            <font-awesome-icon icon="fa-solid fa-coffee" size="6x" />
+            <font-awesome-icon :icon="faCoffee" size="1x" />
+            <font-awesome-icon :icon="faCoffee" size="2x" />
+            <font-awesome-icon :icon="faCoffee" size="3x" />
+            <font-awesome-icon :icon="faCoffee" size="4x" />
+            <font-awesome-icon :icon="faCoffee" size="5x" />
+            <font-awesome-icon :icon="faCoffee" size="6x" />
 
-            <font-awesome-icon icon="fa-solid fa-coffee" rotation="90" />
-            <font-awesome-icon icon="fa-solid fa-coffee" rotation="270" />
-            <font-awesome-icon icon="fa-solid fa-coffee" flip="horizontal" border />
+            <font-awesome-icon :icon="faCoffee" rotation="90" />
+            <font-awesome-icon :icon="faCoffee" rotation="270" />
+            <font-awesome-icon :icon="faCoffee" flip="horizontal" border />
 
-            <font-awesome-icon icon="fa-solid fa-heart" beat border />
+            <font-awesome-icon :icon="faHeart" beat border />
         </div>
     </Section>
 
