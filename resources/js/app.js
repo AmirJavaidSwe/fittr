@@ -8,37 +8,8 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 import AppLayout from './Layouts/AppLayout.vue'; 
 
-/* import the fontawesome core */
-import { library } from '@fortawesome/fontawesome-svg-core';
-
 /* import font awesome icon component */
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-
-/* import specific icons */
-import { 
-    faUserSecret,
-    faHome,
-    faGaugeHigh,
-    faUserTie,
-    faGears,
-    faCoffee,
-    faHeart,
-    faPencil,
-    faChevronRight,
-} from '@fortawesome/free-solid-svg-icons';
-
-/* add icons to the library */
-library.add(
-    faUserSecret,
-    faHome,
-    faGaugeHigh,
-    faUserTie,
-    faGears,
-    faCoffee,
-    faHeart,
-    faPencil,
-    faChevronRight,
-);
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 
