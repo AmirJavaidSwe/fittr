@@ -29,6 +29,7 @@ class SettingsGeneralDetailsRequest extends FormRequest
             'business_name' => SettingKey::business_name->rules(),
             'business_email' => SettingKey::business_email->rules(),
             'country_id' => SettingKey::country_id->rules(),
+            'business_phone' => SettingKey::business_phone->rules(),
         ];
 
         return $rules;

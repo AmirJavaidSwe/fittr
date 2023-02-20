@@ -10,6 +10,7 @@ enum SettingKey: string
     case business_name = 'business_name';
     case business_email = 'business_email';
     case country_id = 'country_id';
+    case business_phone = 'business_phone';
 
     public const GROUP_GENERAL_DETAILS = SettingGroup::general_details->name;
     public const GROUP_GENERAL_ADDRESS = SettingGroup::general_address->name;
@@ -26,6 +27,7 @@ enum SettingKey: string
             static::business_name => ['required','string'],
             static::business_email => ['required','email'],
             static::country_id => ['required','exists:countries,id'],
+            static::business_phone => ['required','min:4', 'max:12', 'regex:"^[0-9]+$"'],
             default => [],
         };
     }
@@ -35,7 +37,8 @@ enum SettingKey: string
         return match($this) {
             static::business_name,
             static::business_email,
-            static::country_id => self::GROUP_GENERAL_DETAILS,
+            static::country_id,
+            static::business_phone => self::GROUP_GENERAL_DETAILS,
         };
     }
 
@@ -44,7 +47,8 @@ enum SettingKey: string
         return match($this) {
             static::business_name,
             static::business_email => CastType::string->name,
-            static::country_id => CastType::integer->name,
+            static::country_id,
+            static::business_phone => CastType::integer->name,
         };
     }
 }

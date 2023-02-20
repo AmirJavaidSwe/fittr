@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted  } from 'vue';
+import { computed, ref, onMounted  } from 'vue';
 import { useForm, usePage } from '@inertiajs/inertia-vue3';
 import GeneralSettingsMenu from '@/Pages/Partner/Settings/GeneralSettingsMenu.vue';
 
@@ -16,24 +16,36 @@ const props = defineProps({
     form_data: Object,
 });
 
+const business_phone = ref(props.form_data.business_phone);
+const testPhone = (e) => {
+    setTimeout(() => {
+        business_phone.value = e.target.value.replace(/\D+/, '');
+    }, 1);
+};
+
 const form = useForm({
     business_name: props.form_data.business_name,
     business_email: props.form_data.business_email,
     country_id: props.form_data.country_id,
+    business_phone: business_phone,
 });
 
 const currency = ref('');
 const flag = ref('');
 const flag_img = ref('');
+const mask = ref('');
+const dial_code = ref('');
 const countryChanged = () => {
     let country = props.countries.find(({ id }) => id == form.country_id);
     currency.value = country?.currency;
     flag.value = country?.iso;
     flag_img.value = '/images/flags/' + flag.value + '.svg';
+    mask.value = country?.mask;
+    dial_code.value = country?.dial_code;
 };
 onMounted(() => {
     countryChanged();
-})
+});
 
 const submitForm = () => {
     form.put(route('partner.settings.general-details.update'), {
@@ -43,7 +55,6 @@ const submitForm = () => {
 </script>
 
 <template>
-
     <FormSection @submitted="submitForm">
         <template #description>
             <GeneralSettingsMenu />
@@ -92,12 +103,30 @@ const submitForm = () => {
             <div class="col-span-6 sm:col-span-4">
                 <div class="bg-gray-100 flex font-medium gap-4 items-center mt-1 text-gray-700 text-sm">
                     <div class="w-20 h-10">
-                        <img :src="flag_img" :alt="flag" class="border h-full">
+                        <img v-if="flag" :src="flag_img" :alt="flag" class="border h-full">
                     </div>
                     <div>
                         Default currency: <b v-text="currency"></b>
                     </div>
                 </div>
+            </div>
+
+            <!-- Phone Number -->
+            <div class="col-span-6 sm:col-span-4">
+                <InputLabel for="business_phone" value="Phone Number" />
+                <div class="flex gap-2 items-center">
+                    <div v-text="dial_code"></div>
+                    <TextInput
+                        id="business_phone"
+                        v-model="business_phone"
+                        type="text"
+                        class="mt-1 block w-full"
+                        @input="testPhone"
+                        maxlength="12"
+                        :placeholder="mask"
+                    />
+                </div>
+                <InputError :message="form.errors.business_phone" class="mt-2" />
             </div>
         </template>
 
