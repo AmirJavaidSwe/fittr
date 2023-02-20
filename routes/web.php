@@ -12,9 +12,11 @@ use App\Http\Controllers\Admin\PartnerController;
 use App\Http\Controllers\Admin\SettingsController;
 
 use App\Http\Controllers\Shared\UserProfileController;
+
 use App\Http\Controllers\Partner\DashboardController as PartnerDashboardController;
 use App\Http\Controllers\Partner\PricingController as PartnerPricingController;
 use App\Http\Controllers\Partner\SubscriptionController as PartnerSubscriptionController;
+use App\Http\Controllers\Partner\PartnerSettingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -80,6 +82,14 @@ Route::middleware([
         Route::get('/subscriptions', [PartnerSubscriptionController::class, 'index'])->name('subscriptions.index');
         Route::put('/subscriptions/{subscription}/cancel', [PartnerSubscriptionController::class, 'cancel'])->name('subscriptions.cancel');
         Route::post('/subscriptions/{package}/store', [PartnerSubscriptionController::class, 'store'])->name('subscriptions.store');
+
+        Route::get('/contact-us', [PartnerDashboardController::class, 'index'])->name('contact.index');
+
+        Route::get('/settings', [PartnerSettingController::class, 'index'])->name('settings.index');
+        Route::get('/settings/general-details', [PartnerSettingController::class, 'generalDetails'])->name('settings.general-details.show');
+        Route::put('/settings/general-details', [PartnerSettingController::class, 'generalDetailsUpdate'])->name('settings.general-details.update');
+        Route::get('/settings/general-address', [PartnerSettingController::class, 'generalAddress'])->name('settings.general-address.show');
+        Route::get('/settings/general-formats', [PartnerSettingController::class, 'generalFormats'])->name('settings.general-formats.show');
     });
 
 });
