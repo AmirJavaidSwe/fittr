@@ -2,17 +2,25 @@
 import { computed, ref, onMounted  } from 'vue';
 import { useForm, usePage } from '@inertiajs/inertia-vue3';
 import GeneralSettingsMenu from '@/Pages/Partner/Settings/GeneralSettingsMenu.vue';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 
 import FormSection from '@/Components/FormSection.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
 import SelectInput from "@/Components/SelectInput.vue";
+import Checkbox from '@/Components/Checkbox.vue';
 import InputError from '@/Components/InputError.vue';
 import ActionMessage from '@/Components/ActionMessage.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 
+dayjs.extend(utc)
+dayjs.extend(timezone);
+
 const props = defineProps({
     countries: Array,
+    timezones: Array,
     form_data: Object,
 });
 
@@ -28,6 +36,8 @@ const form = useForm({
     business_email: props.form_data.business_email,
     country_id: props.form_data.country_id,
     business_phone: business_phone,
+    timezone: props.form_data.timezone,
+    show_timezone: props.form_data.show_timezone,
 });
 
 const currency = ref('');
@@ -46,6 +56,11 @@ const countryChanged = () => {
 onMounted(() => {
     countryChanged();
 });
+
+const localtime = ref(null);
+const timezoneChanged = () => {
+    localtime.value = dayjs().utc().tz(form.timezone).format('dddd, MMM D, YYYY h:mmA UTC Z');
+};
 
 const submitForm = () => {
     form.put(route('partner.settings.general-details.update'), {
@@ -98,8 +113,8 @@ const submitForm = () => {
                 >
                 </SelectInput>
                 <InputError :message="form.errors.country_id" class="mt-2" />
-
             </div>
+
             <div class="col-span-6 sm:col-span-4">
                 <div class="bg-gray-100 flex font-medium gap-4 items-center mt-1 text-gray-700 text-sm">
                     <div class="w-20 h-10">
@@ -127,6 +142,34 @@ const submitForm = () => {
                     />
                 </div>
                 <InputError :message="form.errors.business_phone" class="mt-2" />
+            </div>
+
+            <!-- Timezone -->
+            <div class="col-span-6 sm:col-span-4">
+                <InputLabel for="timezone" value="Timezone" />
+                <div class="mt-1">Note: Change of timezone will affect your store schedules and all resources using dates.</div>
+                <SelectInput
+                    id="timezone"
+                    v-model="form.timezone"
+                    :options="props.timezones"
+                    option_value="title"
+                    option_text="title"
+                    class="mt-1 block w-full"
+                    @change="timezoneChanged"
+                >
+                </SelectInput>
+                <InputError :message="form.errors.country_id" class="mt-2" />
+                <div v-if="localtime" class="mt-1">Local time: {{ localtime }}</div>
+            </div>
+
+            <!-- Show timezone in store -->
+            <div class="col-span-6 sm:col-span-4">
+                <label class="flex items-center">
+                    <span class="mr-4 text-sm text-gray-700">Show Timezone in Service Store</span>
+                    <Checkbox v-model:checked="form.show_timezone" :value="form.show_timezone ? '1' : '0'" />
+                    <span class="ml-4 text-sm text-gray-700" v-text="form.show_timezone ? 'On' : 'Off'"></span>
+                </label>
+                <InputError :message="form.errors.status" class="mt-2" />
             </div>
         </template>
 

@@ -30,6 +30,8 @@ class SettingsGeneralDetailsRequest extends FormRequest
             'business_email' => SettingKey::business_email->rules(),
             'country_id' => SettingKey::country_id->rules(),
             'business_phone' => SettingKey::business_phone->rules(),
+            'timezone' => SettingKey::timezone->rules(),
+            'show_timezone' => SettingKey::show_timezone->rules(),
         ];
 
         return $rules;
