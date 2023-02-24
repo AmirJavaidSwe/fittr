@@ -27,7 +27,8 @@ class CountrySeeder extends Seeder
                 'dial_code' => $country->dial_code ?? null,
                 'currency' => $country->currency,
                 'mask' => (is_array($country->mask) ? $country->mask[0] : $country->mask),
-                'status' => $country->status ?? false,
+                'status' => $country->status ?? false, //stripe supported
+                'has_states' => $country->has_states ?? false,
                 'created_at' => now(),
                 'updated_at' => now()
             ]);

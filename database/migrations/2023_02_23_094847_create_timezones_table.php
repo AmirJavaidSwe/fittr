@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('iso', 2);
             $table->string('title', 40);
-            $table->boolean('status')->dafault(false)->comment('stripe supported');
+            $table->boolean('status')->default(false)->comment('stripe supported');
             $table->timestamps();
             $table->softDeletes();
         });

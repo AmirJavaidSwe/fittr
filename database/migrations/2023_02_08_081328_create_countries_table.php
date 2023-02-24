@@ -20,7 +20,8 @@ return new class extends Migration
             $table->string('dial_code', 5);
             $table->string('currency', 3)->nullable();
             $table->string('mask', 20)->nullable();
-            $table->boolean('status')->dafault(false)->comment('stripe supported');
+            $table->boolean('status')->default(false)->comment('stripe supported');
+            $table->boolean('has_states')->default(false)->comment('e.g. US');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -1787,7 +1787,8 @@
         "currency": "USD",
         "dial_code": "+1",
         "mask": "(###)###-####",
-        "status": true
+        "status": true,
+        "has_states": true
     },
     {
         "iso": "UY",
