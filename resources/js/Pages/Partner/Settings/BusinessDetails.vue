@@ -37,7 +37,7 @@ const form = useForm({
     country_id: props.form_data.country_id,
     business_phone: business_phone,
     timezone: props.form_data.timezone,
-    show_timezone: props.form_data.show_timezone,
+    show_timezone: props.form_data.show_timezone ? true : false,
 });
 
 const currency = ref('');
@@ -158,7 +158,7 @@ const submitForm = () => {
                     @change="timezoneChanged"
                 >
                 </SelectInput>
-                <InputError :message="form.errors.country_id" class="mt-2" />
+                <InputError :message="form.errors.timezone" class="mt-2" />
                 <div v-if="localtime" class="mt-1">Local time: {{ localtime }}</div>
             </div>
 
@@ -169,7 +169,7 @@ const submitForm = () => {
                     <Checkbox v-model:checked="form.show_timezone" :value="form.show_timezone ? '1' : '0'" />
                     <span class="ml-4 text-sm text-gray-700" v-text="form.show_timezone ? 'On' : 'Off'"></span>
                 </label>
-                <InputError :message="form.errors.status" class="mt-2" />
+                <InputError :message="form.errors.show_timezone" class="mt-2" />
             </div>
         </template>
 

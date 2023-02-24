@@ -19,7 +19,7 @@ return new class extends Migration
         Schema::create('partner_settings', function (Blueprint $table) {
             $table->id();
             $table->integer('partner_id');
-            $table->enum('key', SettingKey::all());
+            $table->string('key', 100);
             $table->enum('group_name', SettingGroup::all());
             $table->enum('cast_to', CastType::all())->default(CastType::string->name);
             $table->text('val')->nullable();
