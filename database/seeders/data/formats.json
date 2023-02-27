@@ -1,0 +1,58 @@
+[
+    {
+        "type": "date",
+        "format_string": "m-d-Y",
+        "format_js": "MM-DD-YYYY",
+        "example": "03-25-2024",
+        "notes": "MONTH-DAY-YEAR with leading zeros"
+    },
+    {
+        "type": "date",
+        "format_string": "m/d/Y",
+        "format_js": "MM/DD/YYYY",
+        "example": "03/25/2024",
+        "notes": "MONTH/DAY/YEAR with leading zeros"
+    },
+    {
+        "type": "date",
+        "format_string": "d-m-Y",
+        "format_js": "DD-MM-YYYY",
+        "example": "25-03-2024",
+        "notes": "DAY-MONTH-YEAR with leading zeros"
+    },
+    {
+        "type": "date",
+        "format_string": "d/m/Y",
+        "format_js": "DD/MM/YYYY",
+        "example": "25/03/2024",
+        "notes": "DAY/MONTH/YEAR with leading zeros"
+    },
+    {
+        "type": "date",
+        "format_string": "M jS, Y",
+        "format_js": "MMM Do, YYYY",
+        "example": "March 25th, 2024",
+        "notes": "Month (three letters) day of the month without leading zeros"
+    },
+    {
+        "type": "time",
+        "format_string": "g:i A",
+        "format_js": "hh:mm A",
+        "example": "2:15 PM",
+        "notes": "12-hour format without leading zeros"
+    },
+    {
+        "type": "time",
+        "format_string": "h:i A",
+        "format_js": "hh:mm A",
+        "example": "08:15 AM",
+        "notes": "12-hour format with leading zeros"
+    },
+    {
+        "type": "time",
+        "format_string": "H:i",
+        "format_js": "HH:mm",
+        "example": "09:15",
+        "notes": "24-hour format with leading zeros"
+    }
+]
