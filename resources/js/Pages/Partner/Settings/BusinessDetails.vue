@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, onMounted  } from 'vue';
-import { useForm, usePage } from '@inertiajs/inertia-vue3';
+import { useForm } from '@inertiajs/inertia-vue3';
 import GeneralSettingsMenu from '@/Pages/Partner/Settings/GeneralSettingsMenu.vue';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -100,6 +100,7 @@ const submitForm = () => {
                 <InputError :message="form.errors.business_email" class="mt-2" />
             </div>
 
+            <!-- Country -->
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="country" value="Country" />
                 <SelectInput

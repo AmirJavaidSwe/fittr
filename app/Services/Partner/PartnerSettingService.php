@@ -22,6 +22,13 @@ class PartnerSettingService
         })->pluck('val', 'key')->toArray();
     }
 
+    public function getByKeys($keys = []): array
+    {
+        return $this->model->loggedIn()->whereIn('key', $keys)->get()->each(function($item) {
+            $item->val = $this->getCastValue($item);
+        })->pluck('val', 'key')->toArray();
+    }
+
     public function getCastValue(PartnerSetting $item)
     {
         return match ($item->cast_to) {

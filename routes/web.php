@@ -89,7 +89,9 @@ Route::middleware([
         Route::get('/settings/general-details', [PartnerSettingController::class, 'generalDetails'])->name('settings.general-details.show');
         Route::put('/settings/general-details', [PartnerSettingController::class, 'generalDetailsUpdate'])->name('settings.general-details.update');
         Route::get('/settings/general-address', [PartnerSettingController::class, 'generalAddress'])->name('settings.general-address.show');
+        Route::put('/settings/general-address', [PartnerSettingController::class, 'generalAddressUpdate'])->name('settings.general-address.update');
         Route::get('/settings/general-formats', [PartnerSettingController::class, 'generalFormats'])->name('settings.general-formats.show');
+        Route::put('/settings/general-formats', [PartnerSettingController::class, 'generalFormatsUpdate'])->name('settings.general-formats.update');
     });
 
 });

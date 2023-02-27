@@ -1,65 +1,87 @@
 <script setup>
-import { useForm, usePage } from '@inertiajs/inertia-vue3';
+import { ref, onMounted } from 'vue';
+import { useForm } from '@inertiajs/inertia-vue3';
 import GeneralSettingsMenu from '@/Pages/Partner/Settings/GeneralSettingsMenu.vue';
 
 import FormSection from '@/Components/FormSection.vue';
 import InputLabel from '@/Components/InputLabel.vue';
-import TextInput from '@/Components/TextInput.vue';
+import SelectInput from "@/Components/SelectInput.vue";
 import InputError from '@/Components/InputError.vue';
 import ActionMessage from '@/Components/ActionMessage.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 
-// const props = defineProps({
-//     partner: Object,
-// });
-
-const partner = usePage().props.value.user;
-
-const form = useForm({
-    id: partner.id,
-    name: partner.name,
-    email: partner.email,
+const props = defineProps({
+    formats_date: Array,
+    formats_time: Array,
+    form_data: Object,
 });
 
-const updateProfileInformation = () => {
-    form.put(route('admin.partners.update', {id: form.id}), {
-        errorBag: 'updateProfileInformation',
+const date_notes = ref(null);
+const dateChanged = () => {
+    let d = props.formats_date.find(({ id }) => id == form.date_format);
+    date_notes.value = d?.notes ?? null;
+};
+const time_notes = ref(null);
+const timeChanged = () => {
+    let t = props.formats_time.find(({ id }) => id == form.time_format);
+    time_notes.value = t?.notes ?? null;
+};
+onMounted(() => {
+    dateChanged();
+    timeChanged();
+});
+
+const form = useForm({
+    date_format: props.form_data.date_format,
+    time_format: props.form_data.time_format,
+});
+
+const submitForm = () => {
+    form.put(route('partner.settings.general-formats.update'), {
         preserveScroll: true
     });
 };
 </script>
 
 <template>
-    <FormSection @submitted="updateProfileInformation">
+    <FormSection @submitted="submitForm">
         <template #description>
             <GeneralSettingsMenu />
         </template>
 
-
         <template #form>
-             <!-- Name -->
+            <!-- Date Format -->
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="name" value="Name" />
-                <TextInput
-                    id="name"
-                    v-model="form.name"
-                    type="text"
+                <InputLabel for="date_format" value="Date Format" />
+                <SelectInput
+                    id="date_format"
+                    v-model="form.date_format"
+                    :options="props.formats_date"
+                    option_value="id"
+                    option_text="example"
                     class="mt-1 block w-full"
-                    autocomplete="name"
-                />
-                <InputError :message="form.errors.name" class="mt-2" />
+                    @change="dateChanged"
+                >
+                </SelectInput>
+                <InputError :message="form.errors.date_format" class="mt-2" />
+                <div v-if="date_notes" v-text="date_notes" class="mt-2"></div>
             </div>
 
-            <!-- Email -->
+            <!-- Time Format -->
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="email" value="Email" />
-                <TextInput
-                    id="email"
-                    v-model="form.email"
-                    type="email"
+                <InputLabel for="time_format" value="Time Format" />
+                <SelectInput
+                    id="time_format"
+                    v-model="form.time_format"
+                    :options="props.formats_time"
+                    option_value="id"
+                    option_text="example"
                     class="mt-1 block w-full"
-                />
-                <InputError :message="form.errors.email" class="mt-2" />
+                    @change="timeChanged"
+                >
+                </SelectInput>
+                <InputError :message="form.errors.time_format" class="mt-2" />
+                <div v-if="time_notes" v-text="time_notes" class="mt-2"></div>
             </div>
         </template>
 
