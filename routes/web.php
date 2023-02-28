@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\PackageController;
 use App\Http\Controllers\Admin\PartnerController;
 use App\Http\Controllers\Admin\SettingsController;
 
+use App\Http\Controllers\Shared\StripeWebhookController;
 use App\Http\Controllers\Shared\UserProfileController;
 
 use App\Http\Controllers\Partner\DashboardController as PartnerDashboardController;
@@ -33,6 +34,7 @@ Route::get('/auth/google', function () {
     return Socialite::driver('google')->redirect();
 })->name('auth.google');
 Route::get('/auth/google-callback', [UserProfileController::class, 'googleAuth']);
+Route::post('/stripe/webhook', [StripeWebhookController::class, 'webhook']);
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
