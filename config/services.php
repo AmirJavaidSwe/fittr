@@ -40,5 +40,10 @@ return [
         'client_id' => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'redirect' => '/auth/google-callback',
-    ]
+    ],
+    'stripe' => [
+        'publishable_key' => env('STRIPE_PUBLISHABLE_KEY'),
+        'secret_key' => env('STRIPE_SECRET_KEY'),
+        'endpoint_secret' => env('STRIPE_WEBHOOK_ENDPOINT_SECRET')
+    ],
 ];
