@@ -23,7 +23,7 @@ class StripeWebhookController extends Controller
     public function webhook(Request $request)
     {
         $payload = @file_get_contents('php://input');
-        $sig_header = $_SERVER['HTTP_STRIPE_SIGNATURE'];
+        $sig_header = $_SERVER['HTTP_STRIPE_SIGNATURE'] ?? null;
         $event = null;
 
         try {
