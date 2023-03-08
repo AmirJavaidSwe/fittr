@@ -88,12 +88,19 @@ Route::middleware([
         Route::get('/contact-us', [PartnerDashboardController::class, 'index'])->name('contact.index');
 
         Route::get('/settings', [PartnerSettingController::class, 'index'])->name('settings.index');
-        Route::get('/settings/general-details', [PartnerSettingController::class, 'generalDetails'])->name('settings.general-details.show');
-        Route::put('/settings/general-details', [PartnerSettingController::class, 'generalDetailsUpdate'])->name('settings.general-details.update');
-        Route::get('/settings/general-address', [PartnerSettingController::class, 'generalAddress'])->name('settings.general-address.show');
-        Route::put('/settings/general-address', [PartnerSettingController::class, 'generalAddressUpdate'])->name('settings.general-address.update');
-        Route::get('/settings/general-formats', [PartnerSettingController::class, 'generalFormats'])->name('settings.general-formats.show');
-        Route::put('/settings/general-formats', [PartnerSettingController::class, 'generalFormatsUpdate'])->name('settings.general-formats.update');
+        Route::get('/settings/general-details', [PartnerSettingController::class, 'generalDetails'])->name('settings.general-details');
+        Route::put('/settings/general-details', [PartnerSettingController::class, 'generalDetailsUpdate']);
+        Route::get('/settings/general-address', [PartnerSettingController::class, 'generalAddress'])->name('settings.general-address');
+        Route::put('/settings/general-address', [PartnerSettingController::class, 'generalAddressUpdate']);
+        Route::get('/settings/general-formats', [PartnerSettingController::class, 'generalFormats'])->name('settings.general-formats');
+        Route::put('/settings/general-formats', [PartnerSettingController::class, 'generalFormatsUpdate']);
+
+        Route::get('/settings/service-store-general', [PartnerSettingController::class, 'serviceStoreGeneral'])->name('settings.service-store-general');
+        Route::put('/settings/service-store-general', [PartnerSettingController::class, 'serviceStoreGeneralUpdate']);
+        Route::get('/settings/service-store-header', [PartnerSettingController::class, 'serviceStoreHeader'])->name('settings.service-store-header');
+        Route::put('/settings/service-store-header', [PartnerSettingController::class, 'serviceStoreHeaderUpdate']);
+        Route::get('/settings/service-store-seo', [PartnerSettingController::class, 'serviceStoreSeo'])->name('settings.service-store-seo');
+        Route::put('/settings/service-store-seo', [PartnerSettingController::class, 'serviceStoreSeoUpdate']);
     });
 
 });

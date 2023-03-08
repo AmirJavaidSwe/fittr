@@ -2,11 +2,13 @@
 
 namespace App\Services\Partner;
 
+use Storage;
 use App\Enums\CastType;
 use App\Enums\SettingKey;
 use App\Enums\SettingGroup;
 use App\Events\PartnerSettingUpdated;
 use App\Models\PartnerSetting;
+use Illuminate\Http\UploadedFile;
 
 class PartnerSettingService
 {
@@ -24,9 +26,17 @@ class PartnerSettingService
 
     public function getByKeys($keys = []): array
     {
-        return $this->model->loggedIn()->whereIn('key', $keys)->get()->each(function($item) {
+        $existing = $this->model->loggedIn()->whereIn('key', $keys)->get()->each(function($item) {
             $item->val = $this->getCastValue($item);
         })->pluck('val', 'key')->toArray();
+
+        //inject original keys to resulted array
+        $results = array();
+        foreach ($keys as $key) {
+            $results[$key] = $existing[$key] ?? null;
+        }
+
+        return $results;
     }
 
     public function getCastValue(PartnerSetting $item)
@@ -45,14 +55,25 @@ class PartnerSettingService
     {
         $partner_id = $request->user()->id;
         collect($request->validated())->each(function ($value, $key) use ($partner_id) {
-            PartnerSetting::updateOrCreate(
-                ['partner_id' => $partner_id, 'key' => $key],
-                [
-                    'group_name' => SettingKey::from($key)->group(),
-                    'cast_to' => SettingKey::from($key)->cast(),
-                    'val' => $value
-                ]
-            );
+            $is_file = false;
+            if($value instanceof UploadedFile){
+                $value = $value->storePublicly($key, ['disk' => 'public']);
+                $is_file = true;
+            }
+            $identifier = ['partner_id' => $partner_id, 'key' => $key];
+            $values = [
+                'group_name' => SettingKey::from($key)->group(),
+                'cast_to' => SettingKey::from($key)->cast(),
+                'val' => $value
+            ];
+            $partner_setting = PartnerSetting::where($identifier)->first();
+            $previous_value = $partner_setting->val ?? null;
+            $partner_setting ? $partner_setting->update($values) : PartnerSetting::create($identifier + $values);
+
+            //TODO: add is_file to Enums, remove $is_file
+            if(($is_file || in_array($key, ['logo', 'favicon'])) && $previous_value){
+                Storage::disk('public')->delete($previous_value);
+            }
         });
         PartnerSettingUpdated::dispatch($partner_id);
     }

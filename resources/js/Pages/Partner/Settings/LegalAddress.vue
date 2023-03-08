@@ -35,7 +35,7 @@ onMounted(() => {
 });
 
 const submitForm = () => {
-    form.put(route('partner.settings.general-address.update'), {
+    form.put(route('partner.settings.general-address'), {
         preserveScroll: true
     });
 };

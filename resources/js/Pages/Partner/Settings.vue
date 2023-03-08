@@ -13,7 +13,7 @@ import CardIcon from '@/Components/CardIcon.vue';
                     Business Settings
                 </div>
 
-                <CardIcon :card-link="route('partner.settings.general-details.show')">
+                <CardIcon :card-link="route('partner.settings.general-details')">
                     <template #icon>
                         <font-awesome-icon :icon="faGears" />
                     </template>
@@ -46,7 +46,7 @@ import CardIcon from '@/Components/CardIcon.vue';
                     Online Store
                 </div>
 
-                <CardIcon card-link="#">
+                <CardIcon :card-link="route('partner.settings.service-store-general')">
                     <template #icon>
                         <font-awesome-icon :icon="faStore" />
                     </template>

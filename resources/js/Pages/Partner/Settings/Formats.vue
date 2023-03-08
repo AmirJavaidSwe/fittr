@@ -37,7 +37,7 @@ const form = useForm({
 });
 
 const submitForm = () => {
-    form.put(route('partner.settings.general-formats.update'), {
+    form.put(route('partner.settings.general-formats'), {
         preserveScroll: true
     });
 };

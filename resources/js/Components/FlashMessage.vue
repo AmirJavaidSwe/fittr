@@ -7,14 +7,20 @@ const props = defineProps({
             return { type: 'info', message: 'OK', timestamp: null }
         }
     },
+    errors: {
+        type: Object,
+    },
 });
 const has_msg = computed(() => props.flash.timestamp);
 const msg_type = computed(() => props.flash.type);
+const errors = computed(() => props.errors);
 const show = ref(false);
+const show_errors = ref(false);
 const title = ref(null);
 const timer = ref(null);
 const classes = ref('');
-watch(has_msg, (new_msg) => {
+watch(has_msg, () => {
+    if(!has_msg.value) return;
     switch (msg_type.value) {
         case 'success':
             classes.value = 'border-green-500';
@@ -34,6 +40,17 @@ watch(has_msg, (new_msg) => {
         show.value = false;
     }, 3000);
 });
+watch(errors, (newValue, oldValue) => {
+    if(Object.keys(errors.value).length == 0) return;
+    classes.value = 'border-red-500';
+    show.value = true;
+    title.value = 'Error';
+    show_errors.value = true;
+    clearTimeout(timer.value);
+    timer.value = setTimeout(() => {
+        show.value = false;
+    }, 10000);
+});
 </script>
 <template>
 <teleport to="body">
@@ -47,13 +64,19 @@ watch(has_msg, (new_msg) => {
           leave-to-class="opacity-0 translate-x-full"
           >
         <div v-if="show" @click="show = false" class="cursor-pointer fixed right-8 top-24 transform transition-all">
-            <div class="bg-gray-900 border-l-4 overflow-hidden px-4 py-2 rounded-lg shadow-md text-white w-60" :class="classes">
+            <div class="bg-gray-900 border-l-4 overflow-hidden px-4 py-2 rounded-lg shadow-md text-white w-80" :class="classes">
                 <div v-if="title" class="font-bold">
                     {{ title }}
                 </div>
-                <div class="text-sm">
+                <div v-if="has_msg" class="text-sm">
                     {{ flash.message }}
                 </div>
+
+                <ul v-if="show_errors" class="text-sm text-red-100">
+                    <li v-for="error in errors">
+                        {{ error }}
+                    </li>
+                </ul>
             </div>
         </div>
     </transition>

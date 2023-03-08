@@ -63,7 +63,7 @@ const timezoneChanged = () => {
 };
 
 const submitForm = () => {
-    form.put(route('partner.settings.general-details.update'), {
+    form.put(route('partner.settings.general-details'), {
         preserveScroll: true
     });
 };

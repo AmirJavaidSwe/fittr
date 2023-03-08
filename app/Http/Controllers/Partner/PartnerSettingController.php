@@ -4,17 +4,21 @@ namespace App\Http\Controllers\Partner;
 
 use App\Services\Partner\PartnerSettingService;
 use App\Enums\FormatType;
-// use App\Enums\SettingKey;
+use App\Enums\SettingKey;
 use App\Enums\SettingGroup;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Partner\SettingsGeneralDetailsRequest;
 use App\Http\Requests\Partner\SettingsGeneralAddressRequest;
 use App\Http\Requests\Partner\SettingsGeneralFormatsRequest;
+use App\Http\Requests\Partner\SettingsServiceStoreGeneralRequest;
+use App\Http\Requests\Partner\SettingsServiceStoreHeaderRequest;
+use App\Http\Requests\Partner\SettingsServiceStoreSeoRequest;
 use App\Models\Country;
 use App\Models\Timezone;
 use App\Models\Format;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Storage;
 
 class PartnerSettingController extends Controller
 {
@@ -30,6 +34,9 @@ class PartnerSettingController extends Controller
             'header' => __('Settings'),
         ]);
     }
+
+    /* General */
+    /* Business and operations settings */
 
     // Business Settings column / General Settings / Business Details
     public function generalDetails(Request $request)
@@ -130,6 +137,106 @@ class PartnerSettingController extends Controller
     }
 
     public function generalFormatsUpdate(SettingsGeneralFormatsRequest $request)
+    {
+        $this->service->update($request);
+
+        return redirect()->back()->with('flash_type', 'success')->with('flash_message', __('Settings saved'))->with('flash_timestamp', time());
+    }
+
+    /* Service store */
+    /* Customise web store looks and features */
+
+    // Online Store column / Service store / General
+    public function serviceStoreGeneral(Request $request)
+    {
+        return Inertia::render('Partner/Settings/ServiceStoreGeneral', [
+            'page_title' => __('Settings - Service store - General'),
+            'header' => array(
+                [
+                    'title' => __('Settings'),
+                    'link' => route('partner.settings.index'),
+                ],
+                [
+                    'title' => '/',
+                    'link' => null,
+                ],
+                [
+                    'title' => __('Service store'),
+                    'link' => null,
+                ],
+            ),
+            'form_data' => $this->service->getByGroup(SettingGroup::service_store_general),
+        ]);
+    }
+
+    public function serviceStoreGeneralUpdate(SettingsServiceStoreGeneralRequest $request)
+    {
+        $this->service->update($request);
+
+        return redirect()->back()->with('flash_type', 'success')->with('flash_message', __('Settings saved'))->with('flash_timestamp', time());
+    }
+
+    // Online Store column / Service store / General
+    public function serviceStoreHeader(Request $request)
+    {
+        
+        $props = $this->service->getByKeys([SettingKey::logo->name, SettingKey::favicon->name]);
+        $logo = !empty($props[SettingKey::logo->name]) ? Storage::disk('public')->url($props[SettingKey::logo->name]) : null;
+        $favicon = !empty($props[SettingKey::favicon->name]) ? Storage::disk('public')->url($props[SettingKey::favicon->name]) : null;
+
+        return Inertia::render('Partner/Settings/ServiceStoreHeader', [
+            'page_title' => __('Settings - Service store - Header & Footer'),
+            'header' => array(
+                [
+                    'title' => __('Settings'),
+                    'link' => route('partner.settings.index'),
+                ],
+                [
+                    'title' => '/',
+                    'link' => null,
+                ],
+                [
+                    'title' => __('Service store'),
+                    'link' => null,
+                ],
+            ),
+            'logo' => $logo,
+            'favicon' => $favicon,
+            'form_data' => $this->service->getByGroup(SettingGroup::service_store_header),
+        ]);
+    }
+
+    public function serviceStoreHeaderUpdate(SettingsServiceStoreHeaderRequest $request)
+    {
+        $this->service->update($request);
+
+        return redirect()->back()->with('flash_type', 'success')->with('flash_message', __('Settings saved'))->with('flash_timestamp', time());
+    }
+
+    // Online Store column / Service store / Seo
+    public function serviceStoreSeo(Request $request)
+    {
+        return Inertia::render('Partner/Settings/ServiceStoreSeo', [
+            'page_title' => __('Settings - Service store - SEO'),
+            'header' => array(
+                [
+                    'title' => __('Settings'),
+                    'link' => route('partner.settings.index'),
+                ],
+                [
+                    'title' => '/',
+                    'link' => null,
+                ],
+                [
+                    'title' => __('Service store'),
+                    'link' => null,
+                ],
+            ),
+            'form_data' => $this->service->getByGroup(SettingGroup::service_store_seo),
+        ]);
+    }
+
+    public function serviceStoreSeoUpdate(SettingsServiceStoreSeoRequest $request)
     {
         $this->service->update($request);
 

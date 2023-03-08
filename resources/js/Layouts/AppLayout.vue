@@ -53,7 +53,7 @@ const headerIsArray = computed(() => {
         </AppHead>
 
         <Banner />
-        <FlashMessage :flash="$page.props.flash" />
+        <FlashMessage :flash="$page.props.flash" :errors="$page.props.errors" />
 
         <div class="min-h-screen bg-gray-50">
             <!-- Desktop, flex -->
