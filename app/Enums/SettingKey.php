@@ -52,6 +52,14 @@ enum SettingKey: string
         return array_column(self::cases(), 'name');
     }
 
+    public static function files(): array
+    {
+        return array_column([
+            static::logo,
+            static::favicon,
+        ], 'name');
+    }
+
     public function rules(): array
     {
         return match($this) {

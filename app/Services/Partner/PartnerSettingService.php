@@ -55,10 +55,8 @@ class PartnerSettingService
     {
         $partner_id = $request->user()->id;
         collect($request->validated())->each(function ($value, $key) use ($partner_id) {
-            $is_file = false;
             if($value instanceof UploadedFile){
                 $value = $value->storePublicly($key, ['disk' => 'public']);
-                $is_file = true;
             }
             $identifier = ['partner_id' => $partner_id, 'key' => $key];
             $values = [
@@ -70,8 +68,7 @@ class PartnerSettingService
             $previous_value = $partner_setting->val ?? null;
             $partner_setting ? $partner_setting->update($values) : PartnerSetting::create($identifier + $values);
 
-            //TODO: add is_file to Enums, remove $is_file
-            if(($is_file || in_array($key, ['logo', 'favicon'])) && $previous_value){
+            if(in_array($key, SettingKey::files()) && $previous_value){
                 Storage::disk('public')->delete($previous_value);
             }
         });

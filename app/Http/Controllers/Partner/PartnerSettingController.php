@@ -179,7 +179,6 @@ class PartnerSettingController extends Controller
     // Online Store column / Service store / General
     public function serviceStoreHeader(Request $request)
     {
-        
         $props = $this->service->getByKeys([SettingKey::logo->name, SettingKey::favicon->name]);
         $logo = !empty($props[SettingKey::logo->name]) ? Storage::disk('public')->url($props[SettingKey::logo->name]) : null;
         $favicon = !empty($props[SettingKey::favicon->name]) ? Storage::disk('public')->url($props[SettingKey::favicon->name]) : null;
