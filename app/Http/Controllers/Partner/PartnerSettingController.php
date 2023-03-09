@@ -13,6 +13,7 @@ use App\Http\Requests\Partner\SettingsGeneralFormatsRequest;
 use App\Http\Requests\Partner\SettingsServiceStoreGeneralRequest;
 use App\Http\Requests\Partner\SettingsServiceStoreHeaderRequest;
 use App\Http\Requests\Partner\SettingsServiceStoreSeoRequest;
+use App\Http\Requests\Partner\SettingsServiceStoreWaiversRequest;
 use App\Models\Country;
 use App\Models\Timezone;
 use App\Models\Format;
@@ -236,6 +237,37 @@ class PartnerSettingController extends Controller
     }
 
     public function serviceStoreSeoUpdate(SettingsServiceStoreSeoRequest $request)
+    {
+        $this->service->update($request);
+
+        return redirect()->back()->with('flash_type', 'success')->with('flash_message', __('Settings saved'))->with('flash_timestamp', time());
+    }
+
+    // Online Store column / Waivers
+    public function serviceStoreWaivers(Request $request)
+    {
+        return Inertia::render('Partner/Settings/ServiceStoreWaivers', [
+            'page_title' => __('Settings - Service store - Waivers'),
+            'header' => array(
+                [
+                    'title' => __('Settings'),
+                    'link' => route('partner.settings.index'),
+                ],
+                [
+                    'title' => '/',
+                    'link' => null,
+                ],
+                [
+                    'title' => __('Waivers'),
+                    'link' => null,
+                ],
+            ),
+            'default_waiver' => $this->service->getDefaultData('default_waiver'),
+            'form_data' => $this->service->getByGroup(SettingGroup::service_store_waivers),
+        ]);
+    }
+
+    public function serviceStoreWaiversUpdate(SettingsServiceStoreWaiversRequest $request)
     {
         $this->service->update($request);
 

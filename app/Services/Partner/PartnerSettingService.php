@@ -74,4 +74,11 @@ class PartnerSettingService
         });
         PartnerSettingUpdated::dispatch($partner_id);
     }
+
+    public function getDefaultData($key): ?string
+    {
+        $defaults = json_decode(Storage::disk('seeders')->get('/defaults/settings_keys.json'));
+
+        return $defaults->{$key} ?? null;
+    }
 }

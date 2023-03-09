@@ -101,6 +101,10 @@ Route::middleware([
         Route::put('/settings/service-store-header', [PartnerSettingController::class, 'serviceStoreHeaderUpdate']);
         Route::get('/settings/service-store-seo', [PartnerSettingController::class, 'serviceStoreSeo'])->name('settings.service-store-seo');
         Route::put('/settings/service-store-seo', [PartnerSettingController::class, 'serviceStoreSeoUpdate']);
+        // Route::get('/settings/service-store-widgets', [PartnerSettingController::class, 'serviceStoreWidgets'])->name('settings.service-store-widgets');
+        // Route::put('/settings/service-store-widgets', [PartnerSettingController::class, 'serviceStoreWidgetsUpdate']);
+        Route::get('/settings/service-store-waivers', [PartnerSettingController::class, 'serviceStoreWaivers'])->name('settings.service-store-waivers');
+        Route::put('/settings/service-store-waivers', [PartnerSettingController::class, 'serviceStoreWaiversUpdate']);
     });
 
 });

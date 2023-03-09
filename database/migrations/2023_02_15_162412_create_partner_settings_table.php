@@ -19,8 +19,8 @@ return new class extends Migration
         Schema::create('partner_settings', function (Blueprint $table) {
             $table->id();
             $table->integer('partner_id');
-            $table->string('key', 100);
-            $table->enum('group_name', SettingGroup::all());
+            $table->string('key', 100);// App\Enums\SettingKey
+            $table->string('group_name', 100); // App\Enums\SettingGroup
             $table->enum('cast_to', CastType::all())->default(CastType::string->name);
             $table->text('val')->nullable();
             $table->timestamps();

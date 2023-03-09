@@ -73,7 +73,7 @@ import CardIcon from '@/Components/CardIcon.vue';
                         Manage service store widgets for your websites
                     </template>
                 </CardIcon>
-                <CardIcon card-link="#">
+                <CardIcon :card-link="route('partner.settings.service-store-waivers')">
                     <template #icon>
                         <font-awesome-icon :icon="faFileContract" />
                     </template>

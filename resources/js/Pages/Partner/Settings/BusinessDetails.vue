@@ -37,7 +37,7 @@ const form = useForm({
     country_id: props.form_data.country_id,
     business_phone: business_phone,
     timezone: props.form_data.timezone,
-    show_timezone: props.form_data.show_timezone ? true : false,
+    show_timezone: props.form_data.show_timezone,
 });
 
 const currency = ref('');

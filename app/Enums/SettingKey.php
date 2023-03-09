@@ -38,6 +38,10 @@ enum SettingKey: string
     case link_youtube = 'link_youtube';
     case meta_title = 'meta_title';
     case meta_description = 'meta_description';
+    
+    //Waivers
+    case waiver_text = 'waiver_text';
+    case enforce_waiver = 'enforce_waiver';
 
     public const GROUP_GENERAL_DETAILS = SettingGroup::general_details->name;
     public const GROUP_GENERAL_ADDRESS = SettingGroup::general_address->name;
@@ -46,6 +50,7 @@ enum SettingKey: string
     public const GROUP_SERVICE_STORE_GENERAL = SettingGroup::service_store_general->name;
     public const GROUP_SERVICE_STORE_HEADER = SettingGroup::service_store_header->name;
     public const GROUP_SERVICE_STORE_SEO = SettingGroup::service_store_seo->name;
+    public const GROUP_SERVICE_STORE_WAIVERS = SettingGroup::service_store_waivers->name;
 
     public static function all(): array
     {
@@ -68,7 +73,7 @@ enum SettingKey: string
             static::country_id => ['required','exists:countries,id'],
             static::business_phone => ['required','min:4', 'max:12', 'regex:"^[0-9]+$"'],
             static::timezone => ['required','exists:timezones,title'],
-            static::show_timezone => ['required','boolean'],
+            static::show_timezone => ['boolean'],
             static::address_line1 => ['required', 'string', 'max:256'],
             static::address_line2 => ['nullable', 'string', 'max:256'],
             static::city => ['required', 'string', 'max:256'],
@@ -82,11 +87,11 @@ enum SettingKey: string
             static::custom_domain => ['max:255'],
 
             static::logo => ['nullable', 'mimes:jpg,jpeg,png,svg', 'max:2048'], //2MB
-            static::logo_url => ['required', 'max:5'],
+            static::logo_url => ['nullable', 'max:255', 'regex:"^(http:\/\/|https:\/\/)"'],
             static::favicon => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'], //1MB
-            static::show_address => ['required'],
-            static::show_phone => ['required'],
-            static::show_email => ['required'],
+            static::show_address => ['boolean'],
+            static::show_phone => ['boolean'],
+            static::show_email => ['boolean'],
             static::link_facebook => ['nullable', 'string', 'max:255', 'regex:"^https:\/\/www.facebook.com\/"'],
             static::link_instagram => ['nullable', 'string', 'max:255', 'regex:"^https:\/\/www.instagram.com\/"'],
             static::link_twitter => ['nullable', 'string', 'max:255', 'regex:"^https:\/\/twitter.com\/"'],
@@ -94,6 +99,9 @@ enum SettingKey: string
 
             static::meta_title => ['nullable', 'string', 'max:255'],
             static::meta_description => ['nullable', 'string', 'max:255'],
+
+            static::waiver_text => ['nullable', 'string', 'max:65535'],
+            static::enforce_waiver => ['boolean'],
 
             default => [],
         };
@@ -136,6 +144,9 @@ enum SettingKey: string
             static::meta_title,
             static::meta_description => self::GROUP_SERVICE_STORE_SEO,
 
+            static::waiver_text,
+            static::enforce_waiver => self::GROUP_SERVICE_STORE_WAIVERS,
+
         };
     }
 
@@ -160,7 +171,8 @@ enum SettingKey: string
             static::link_twitter,
             static::link_youtube,
             static::meta_title,
-            static::meta_description => CastType::string->name,
+            static::meta_description,
+            static::waiver_text => CastType::string->name,
 
             static::country_id,
             static::legal_country_id,
@@ -171,7 +183,8 @@ enum SettingKey: string
             static::show_timezone,
             static::show_address,
             static::show_phone,
-            static::show_email => CastType::boolean->name,
+            static::show_email,
+            static::enforce_waiver => CastType::boolean->name,
         };
     }
 }
