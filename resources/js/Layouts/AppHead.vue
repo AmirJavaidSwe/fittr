@@ -1,11 +1,5 @@
-<template>
-  <Head :title="title ? `${title}` : ''">
-    <slot />
-  </Head>
-</template>
-
 <script>
-import { Head } from '@inertiajs/inertia-vue3'
+import { Head } from '@inertiajs/vue3';
 
 export default {
   components: {
@@ -16,3 +10,9 @@ export default {
   },
 }
 </script>
+
+<template>
+  <Head :title="title ? `${title}` : ''">
+    <slot />
+  </Head>
+</template>

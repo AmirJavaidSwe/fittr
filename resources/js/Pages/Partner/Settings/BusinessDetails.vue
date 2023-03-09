@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, onMounted  } from 'vue';
-import { useForm } from '@inertiajs/inertia-vue3';
+import { useForm } from '@inertiajs/vue3';
 import GeneralSettingsMenu from '@/Pages/Partner/Settings/GeneralSettingsMenu.vue';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';

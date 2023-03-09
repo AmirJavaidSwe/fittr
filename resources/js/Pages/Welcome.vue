@@ -1,5 +1,5 @@
 <script setup>
-import { Head, Link } from '@inertiajs/inertia-vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import LogoLetter from '@/Components/LogoLetter.vue';
 import GoogleIcon from '@/Icons/Google.vue';
 import Banner from '@/Components/Banner.vue';

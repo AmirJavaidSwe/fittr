@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useForm } from '@inertiajs/inertia-vue3';
+import { useForm } from '@inertiajs/vue3';
 import GeneralSettingsMenu from '@/Pages/Partner/Settings/GeneralSettingsMenu.vue';
 
 import FormSection from '@/Components/FormSection.vue';

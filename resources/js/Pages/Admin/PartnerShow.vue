@@ -1,5 +1,5 @@
 <script setup>
-import { Link } from '@inertiajs/inertia-vue3';
+import { Link } from '@inertiajs/vue3';
 import Section from '@/Components/Section.vue';
 import SectionTitle from '@/Components/SectionTitle.vue';
 import SectionBorder from '@/Components/SectionBorder.vue';

@@ -1,6 +1,6 @@
 <script setup>
 import { reactive } from 'vue';
-import { Inertia } from '@inertiajs/inertia';
+import { router } from '@inertiajs/vue3'
 import NavLink from '@/Components/NavLink.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faHome, faGaugeHigh, faGears } from '@fortawesome/free-solid-svg-icons';
@@ -9,7 +9,7 @@ const active_route = reactive({
     name: route().current(),
 });
 
-Inertia.on('navigate', (event) => {
+router.on('navigate', (event) => {
   active_route.name = event.detail.page.props.route_name;
 });
 </script>

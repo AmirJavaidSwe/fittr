@@ -1,6 +1,6 @@
 <script setup>
 import { watch } from 'vue';
-import { Link, useForm } from '@inertiajs/inertia-vue3';
+import { Link, useForm } from '@inertiajs/vue3';
 // import Section from '@/Components/Section.vue';
 import SectionTitle from '@/Components/SectionTitle.vue';
 import SearchFilter from '@/Components/SearchFilter.vue';

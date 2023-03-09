@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref } from 'vue';
-import { Link, useForm, usePage } from '@inertiajs/inertia-vue3';
+import { Link, useForm, usePage } from '@inertiajs/vue3';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import ButtonLink from '@/Components/ButtonLink.vue';
@@ -21,7 +21,7 @@ const props = defineProps({
         default: false
     }
 });
-const route_name = usePage().props.value.route_name;
+const route_name = usePage().props.route_name;
 const can_edit = computed(() => {
   return props.admin && route_name != 'admin.packages.edit';
 })

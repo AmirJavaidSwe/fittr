@@ -1,7 +1,6 @@
 <script setup>
 import { computed, ref, onMounted  } from 'vue';
-import { useForm } from '@inertiajs/inertia-vue3';
-import { Inertia } from '@inertiajs/inertia';
+import { router, useForm } from '@inertiajs/vue3';
 import ServiceStoreMenu from '@/Pages/Partner/Settings/ServiceStoreMenu.vue';
 
 import SectionTitle from '@/Components/SectionTitle.vue';

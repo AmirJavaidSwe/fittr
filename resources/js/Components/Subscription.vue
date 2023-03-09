@@ -1,6 +1,6 @@
 <script setup>
-import { ref } from 'vue'
-import { useForm } from '@inertiajs/inertia-vue3';
+import { ref } from 'vue';
+import { useForm } from '@inertiajs/vue3';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import DialogModal from '@/Components/DialogModal.vue';

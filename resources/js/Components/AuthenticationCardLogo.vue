@@ -1,5 +1,5 @@
 <script setup>
-import { Link } from '@inertiajs/inertia-vue3';
+import { Link } from '@inertiajs/vue3';
 import LogoLetter from '@/Components/LogoLetter.vue';
 // import LogoSign from '@/Components/LogoSign.vue';
 </script>

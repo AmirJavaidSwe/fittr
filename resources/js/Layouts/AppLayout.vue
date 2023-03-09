@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, defineAsyncComponent } from 'vue';
-import { Inertia } from '@inertiajs/inertia';
-import { Link, usePage } from '@inertiajs/inertia-vue3';
+import { router } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 import AppHead from '@/Layouts/AppHead.vue';
 import LogoLetter from '@/Components/LogoLetter.vue';
 import Banner from '@/Components/Banner.vue';
@@ -15,7 +15,7 @@ import { faHeart } from '@fortawesome/free-solid-svg-icons';
 const showingNavigationDropdown = ref(false);
 
 const switchToTeam = (team) => {
-    Inertia.put(route('current-team.update'), {
+    router.put(route('current-team.update'), {
         team_id: team.id,
     }, {
         preserveState: false,
@@ -23,7 +23,7 @@ const switchToTeam = (team) => {
 };
 
 const logout = () => {
-    Inertia.post(route('logout'));
+    router.post(route('logout'));
 };
 
 const toggleMenu = (v) => {
@@ -31,12 +31,12 @@ const toggleMenu = (v) => {
 };
 
 const MainMenu = defineAsyncComponent(() => {
-    const is_partner = usePage().props.value.user.is_partner;
+    const is_partner = usePage().props.user.is_partner;
     return is_partner ? import('./PartnerMenu.vue') : import('./AdminMenu.vue');
 });
 
 const header = computed(() => {
-  return usePage().props.value.header;
+  return usePage().props.header;
 })
 const headerIsArray = computed(() => {
   return Array.isArray(header.value);

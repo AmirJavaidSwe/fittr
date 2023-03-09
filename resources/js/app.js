@@ -2,8 +2,7 @@ import './bootstrap';
 import '../css/app.css';
 
 import { createApp, h } from 'vue';
-import { createInertiaApp } from '@inertiajs/inertia-vue3';
-import { InertiaProgress } from '@inertiajs/progress';
+import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 import AppLayout from './Layouts/AppLayout.vue'; 
@@ -24,27 +23,26 @@ createInertiaApp({
             }
           });
         return page;
-      },
-    setup({ el, app, props, plugin }) {
-        return createApp({ render: () => h(app, props) })
+    },
+    progress: { 
+        // The delay after which the progress bar will
+        // appear during navigation, in milliseconds.
+        delay: 500,
+    
+        // The color of the progress bar.
+        color: '#4B5563',
+    
+        // Whether to include the default NProgress styles.
+        includeCSS: true,
+    
+        // Whether the NProgress spinner will be shown.
+        showSpinner: false,
+    },
+    setup({ el, App, props, plugin }) {
+        return createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(ZiggyVue, Ziggy)
             .component('font-awesome-icon', FontAwesomeIcon)
             .mount(el);
     },
-});
-
-InertiaProgress.init({ 
-    // The delay after which the progress bar will
-    // appear during navigation, in milliseconds.
-    delay: 500,
-
-    // The color of the progress bar.
-    color: '#4B5563',
-
-    // Whether to include the default NProgress styles.
-    includeCSS: true,
-
-    // Whether the NProgress spinner will be shown.
-    showSpinner: false,
 });
