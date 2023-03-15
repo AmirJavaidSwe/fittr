@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Partner;
 
 use App\Services\Partner\PartnerSettingService;
+use App\Services\Shared\StripeConnectService;
 use App\Enums\FormatType;
 use App\Enums\SettingKey;
 use App\Enums\SettingGroup;
@@ -18,14 +19,18 @@ use App\Models\Country;
 use App\Models\Timezone;
 use App\Models\Format;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Storage;
 
+
 class PartnerSettingController extends Controller
 {
-    public function __construct(PartnerSettingService $service)
+    public function __construct(PartnerSettingService $service, StripeConnectService $stripe_connect_service)
     {
         $this->service = $service;
+        $this->stripe_connect_service = $stripe_connect_service;
     }
 
     public function index(Request $request)
@@ -68,7 +73,7 @@ class PartnerSettingController extends Controller
     {
         $this->service->update($request);
 
-        return redirect()->back()->with('flash_type', 'success')->with('flash_message', __('Settings saved'))->with('flash_timestamp', time());
+        return $this->redirectBackSuccess(__('Settings saved'));
     }
 
     // Business Settings column / General Settings / Legal Address
@@ -108,7 +113,7 @@ class PartnerSettingController extends Controller
     {
         $this->service->update($request);
 
-        return redirect()->back()->with('flash_type', 'success')->with('flash_message', __('Settings saved'))->with('flash_timestamp', time());
+        return $this->redirectBackSuccess(__('Settings saved'));
     }
 
     // Business Settings column / General Settings / Date time formats
@@ -141,7 +146,7 @@ class PartnerSettingController extends Controller
     {
         $this->service->update($request);
 
-        return redirect()->back()->with('flash_type', 'success')->with('flash_message', __('Settings saved'))->with('flash_timestamp', time());
+        return $this->redirectBackSuccess(__('Settings saved'));
     }
 
     /* Service store */
@@ -174,10 +179,10 @@ class PartnerSettingController extends Controller
     {
         $this->service->update($request);
 
-        return redirect()->back()->with('flash_type', 'success')->with('flash_message', __('Settings saved'))->with('flash_timestamp', time());
+        return $this->redirectBackSuccess(__('Settings saved'));
     }
 
-    // Online Store column / Service store / General
+    // Online Store column / Service store / Header & Footer
     public function serviceStoreHeader(Request $request)
     {
         $props = $this->service->getByKeys([SettingKey::logo->name, SettingKey::favicon->name]);
@@ -210,7 +215,7 @@ class PartnerSettingController extends Controller
     {
         $this->service->update($request);
 
-        return redirect()->back()->with('flash_type', 'success')->with('flash_message', __('Settings saved'))->with('flash_timestamp', time());
+        return $this->redirectBackSuccess(__('Settings saved'));
     }
 
     // Online Store column / Service store / Seo
@@ -240,7 +245,7 @@ class PartnerSettingController extends Controller
     {
         $this->service->update($request);
 
-        return redirect()->back()->with('flash_type', 'success')->with('flash_message', __('Settings saved'))->with('flash_timestamp', time());
+        return $this->redirectBackSuccess(__('Settings saved'));
     }
 
     // Online Store column / Waivers
@@ -271,6 +276,92 @@ class PartnerSettingController extends Controller
     {
         $this->service->update($request);
 
-        return redirect()->back()->with('flash_type', 'success')->with('flash_message', __('Settings saved'))->with('flash_timestamp', time());
+        return $this->redirectBackSuccess(__('Settings saved'));
+    }
+
+    /* Bookings & Payments */
+    // Bookings & Payments column / Payments => List of available payment gateways
+    public function payments(Request $request)
+    {
+        return Inertia::render('Partner/Settings/Payments', [
+            'page_title' => __('Settings - Bookings & Payments - Payments'),
+            'header' => array(
+                [
+                    'title' => __('Settings'),
+                    'link' => route('partner.settings.index'),
+                ],
+                [
+                    'title' => '/',
+                    'link' => null,
+                ],
+                [
+                    'title' => __('Payments'),
+                    'link' => null,
+                ],
+            ),
+        ]);
+    }
+
+    // Bookings & Payments column / Payments / Stripe
+    public function paymentsStripe(Request $request)
+    {
+        //see: $this->stripe_connect_service->generateLink($stripe_account_id)
+        if($request->has('reauth')){
+            return $this->connectStripe($request);
+        }
+
+        $partner = $request->user();
+
+        return Inertia::render('Partner/Settings/PaymentsStripe', [
+            'page_title' => __('Settings - Bookings & Payments - Stripe Payments'),
+            'header' => array(
+                [
+                    'title' => __('Settings'),
+                    'link' => route('partner.settings.index'),
+                ],
+                [
+                    'title' => '/',
+                    'link' => null,
+                ],
+                [
+                    'title' => __('Payments'),
+                    'link' => route('partner.settings.payments'),
+                ],
+                [
+                    'title' => '/',
+                    'link' => null,
+                ],
+                [
+                    'title' => 'Stripe',
+                    'link' => null,
+                ],
+            ),
+            'has_account' => $partner->has_stripe_account,
+            'stripe_account' => $this->stripe_connect_service->retrieveAccount($partner->stripe_account_id)->data,
+        ]);
+    }
+
+    //POST
+    public function connectStripe(Request $request): Response|RedirectResponse
+    {
+        // $gate = Gate::allowIf(fn (User $user) => $user->is_partner && ! ALREADY CONNECTED);  charges_enabled
+
+        $partner = $request->user();
+        //User has connected account but onboarding not complete
+        if($partner->has_stripe_account){
+            return $this->stripe_connect_service->generateAndShowLink($partner->stripe_account_id);
+        }
+
+        //creates new account and updates $partner->stripe_account_id on success; Returns service object
+        $general_details = $this->service->getByGroup(SettingGroup::general_details);
+        $general_address = $this->service->getByGroup(SettingGroup::general_address);
+        $prefilled = $general_address + $general_details;
+        $result = $this->stripe_connect_service->createStandardConnectedAccount($partner, $prefilled);
+        //redirect back if any errors
+        if($result->error || empty($result->data->id)){
+            return $this->redirectBackError($result->error_message);
+        }
+
+        return $this->stripe_connect_service->generateAndShowLink($result->data->id);
     }
 }

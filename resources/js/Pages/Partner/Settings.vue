@@ -104,9 +104,9 @@ import CardIcon from '@/Components/CardIcon.vue';
                     <template #default>
                         Manage Preferences
                     </template>
-                </CardIcon>     
+                </CardIcon>
 
-                <CardIcon card-link="#">
+                <CardIcon :card-link="route('partner.settings.payments')">
                     <template #icon>
                         <font-awesome-icon :icon="faCreditCard" />
                     </template>

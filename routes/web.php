@@ -35,6 +35,7 @@ Route::get('/auth/google', function () {
 })->name('auth.google');
 Route::get('/auth/google-callback', [UserProfileController::class, 'googleAuth']);
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'webhook']);
+// https://app.fittr.tech/stripe/connect-redirect
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -105,6 +106,9 @@ Route::middleware([
         // Route::put('/settings/service-store-widgets', [PartnerSettingController::class, 'serviceStoreWidgetsUpdate']);
         Route::get('/settings/service-store-waivers', [PartnerSettingController::class, 'serviceStoreWaivers'])->name('settings.service-store-waivers');
         Route::put('/settings/service-store-waivers', [PartnerSettingController::class, 'serviceStoreWaiversUpdate']);
+        Route::get('/settings/payments', [PartnerSettingController::class, 'payments'])->name('settings.payments');
+        Route::get('/settings/payments/stripe', [PartnerSettingController::class, 'paymentsStripe'])->name('settings.payments.stripe');
+        Route::post('/settings/payments/stripe', [PartnerSettingController::class, 'connectStripe']);
     });
 
 });

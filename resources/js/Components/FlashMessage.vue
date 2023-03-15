@@ -30,6 +30,10 @@ watch(has_msg, () => {
             classes.value = 'border-yellow-500';
             title.value = 'Warning';
             break;
+        case 'error':
+            classes.value = 'border-red-500';
+            title.value = 'Error';
+            break;
     
         default:
             classes.value = 'border-blue-500';
@@ -38,7 +42,7 @@ watch(has_msg, () => {
     clearTimeout(timer.value);
     timer.value = setTimeout(() => {
         show.value = false;
-    }, 3000);
+    }, 5000);
 });
 watch(errors, (newValue, oldValue) => {
     if(Object.keys(errors.value).length == 0) return;

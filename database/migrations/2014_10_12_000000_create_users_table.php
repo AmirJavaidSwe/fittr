@@ -19,6 +19,8 @@ return new class extends Migration
             $table->enum('role', User::roles());
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('stripe_customer_id', 255)->nullable(); //customer id (partner is client => service subscriptions)
+            $table->string('stripe_account_id', 255)->nullable(); //connected account of partner
             $table->string('password');
             $table->rememberToken();
             $table->foreignId('current_team_id')->nullable();

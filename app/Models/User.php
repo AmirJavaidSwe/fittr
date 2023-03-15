@@ -41,6 +41,8 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $hidden = [
+        'stripe_customer_id',
+        'stripe_account_id',
         'password',
         'remember_token',
         'two_factor_recovery_codes',
@@ -99,6 +101,16 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getActiveSubscriptionAttribute()
     {
         return $this->subscriptions()->where('status', 1)->whereNull('cancelled_at')->first();
+    }
+
+    public function getHasStripeCustomerAttribute()
+    {
+        return !empty($this->stripe_customer_id);
+    }
+
+    public function getHasStripeAccountAttribute()
+    {
+        return !empty($this->stripe_account_id);
     }
 
     //Local scopes
