@@ -23,5 +23,11 @@ import { Link } from '@inertiajs/vue3';
                 :href="route('partner.settings.service-store-seo')" 
                 :class="$page.component.endsWith('ServiceStoreSeo')  ? 'font-bold bg-gray-200' : ''">SEO</Link>
         </li>
+        <li>
+            <Link 
+                class="p-2 block hover:underline transition"
+                :href="route('partner.settings.service-store-code')" 
+                :class="$page.component.endsWith('ServiceStoreCode')  ? 'font-bold bg-gray-200' : ''">Custom code</Link>
+        </li>
     </ul>
 </template>

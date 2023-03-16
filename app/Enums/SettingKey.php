@@ -38,6 +38,10 @@ enum SettingKey: string
     case link_youtube = 'link_youtube';
     case meta_title = 'meta_title';
     case meta_description = 'meta_description';
+    case google_analytics = 'google_analytics';
+    case google_gtag = 'google_gtag';
+    case google_adsense = 'google_adsense';
+    case fb_pixel = 'fb_pixel';
     
     //Waivers
     case waiver_text = 'waiver_text';
@@ -50,6 +54,7 @@ enum SettingKey: string
     public const GROUP_SERVICE_STORE_GENERAL = SettingGroup::service_store_general->name;
     public const GROUP_SERVICE_STORE_HEADER = SettingGroup::service_store_header->name;
     public const GROUP_SERVICE_STORE_SEO = SettingGroup::service_store_seo->name;
+    public const GROUP_SERVICE_STORE_CODE = SettingGroup::service_store_code->name;
     public const GROUP_SERVICE_STORE_WAIVERS = SettingGroup::service_store_waivers->name;
 
     public static function all(): array
@@ -68,24 +73,33 @@ enum SettingKey: string
     public function rules(): array
     {
         return match($this) {
+            //Business Settings
+            // Business Details
             static::business_name => ['required','string'],
             static::business_email => ['required','email'],
             static::country_id => ['required','exists:countries,id'],
             static::business_phone => ['required','min:4', 'max:12', 'regex:"^[0-9]+$"'],
             static::timezone => ['required','exists:timezones,title'],
             static::show_timezone => ['boolean'],
+
+            // Legal Address
             static::address_line1 => ['required', 'string', 'max:256'],
             static::address_line2 => ['nullable', 'string', 'max:256'],
             static::city => ['required', 'string', 'max:256'],
             static::state => ['max:256'],
             static::zip_code => ['required', 'string', 'max:256'],
             static::legal_country_id => ['required','exists:countries,id'],
+
+            // Formats
             static::date_format => ['required', 'exists:formats,id'],
             static::time_format => ['required', 'exists:formats,id'],
 
+            //Online Store
+            // General
             static::subdomain => ['required', 'string', 'max:255'],
             static::custom_domain => ['max:255'],
 
+            // Header & Footer
             static::logo => ['nullable', 'mimes:jpg,jpeg,png,svg', 'max:2048'], //2MB
             static::logo_url => ['nullable', 'max:255', 'regex:"^(http:\/\/|https:\/\/)"'],
             static::favicon => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'], //1MB
@@ -97,9 +111,17 @@ enum SettingKey: string
             static::link_twitter => ['nullable', 'string', 'max:255', 'regex:"^https:\/\/twitter.com\/"'],
             static::link_youtube => ['nullable', 'string', 'max:255', 'regex:"^https:\/\/www.youtube.com\/"'],
 
+            // SEO
             static::meta_title => ['nullable', 'string', 'max:255'],
             static::meta_description => ['nullable', 'string', 'max:255'],
 
+            // Custom code
+            static::google_analytics => ['nullable', 'string', 'max:255', 'regex:"^UA-"'],
+            static::google_gtag => ['nullable', 'string', 'max:255', 'regex:"^GTM-"'],
+            static::google_adsense => ['nullable', 'string', 'max:255', 'regex:"^ca-pub-"'],
+            static::fb_pixel => ['nullable', 'digits:15'],
+
+            // Waivers
             static::waiver_text => ['nullable', 'string', 'max:65535'],
             static::enforce_waiver => ['boolean'],
 
@@ -144,6 +166,11 @@ enum SettingKey: string
             static::meta_title,
             static::meta_description => self::GROUP_SERVICE_STORE_SEO,
 
+            static::google_analytics,
+            static::google_gtag,
+            static::google_adsense,
+            static::fb_pixel => self::GROUP_SERVICE_STORE_CODE,
+
             static::waiver_text,
             static::enforce_waiver => self::GROUP_SERVICE_STORE_WAIVERS,
 
@@ -172,6 +199,10 @@ enum SettingKey: string
             static::link_youtube,
             static::meta_title,
             static::meta_description,
+            static::google_analytics,
+            static::google_gtag,
+            static::google_adsense,
+            static::fb_pixel,
             static::waiver_text => CastType::string->name,
 
             static::country_id,

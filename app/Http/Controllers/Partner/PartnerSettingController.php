@@ -14,6 +14,7 @@ use App\Http\Requests\Partner\SettingsGeneralFormatsRequest;
 use App\Http\Requests\Partner\SettingsServiceStoreGeneralRequest;
 use App\Http\Requests\Partner\SettingsServiceStoreHeaderRequest;
 use App\Http\Requests\Partner\SettingsServiceStoreSeoRequest;
+use App\Http\Requests\Partner\SettingsServiceStoreCodeRequest;
 use App\Http\Requests\Partner\SettingsServiceStoreWaiversRequest;
 use App\Models\Country;
 use App\Models\Timezone;
@@ -242,6 +243,36 @@ class PartnerSettingController extends Controller
     }
 
     public function serviceStoreSeoUpdate(SettingsServiceStoreSeoRequest $request)
+    {
+        $this->service->update($request);
+
+        return $this->redirectBackSuccess(__('Settings saved'));
+    }
+
+    // Online Store column / Service store / Custom Code
+    public function serviceStoreCode(Request $request)
+    {
+        return Inertia::render('Partner/Settings/ServiceStoreCode', [
+            'page_title' => __('Settings - Service store - Custom Code'),
+            'header' => array(
+                [
+                    'title' => __('Settings'),
+                    'link' => route('partner.settings.index'),
+                ],
+                [
+                    'title' => '/',
+                    'link' => null,
+                ],
+                [
+                    'title' => __('Service store'),
+                    'link' => null,
+                ],
+            ),
+            'form_data' => $this->service->getByGroup(SettingGroup::service_store_code),
+        ]);
+    }
+
+    public function serviceStoreCodeUpdate(SettingsServiceStoreCodeRequest $request)
     {
         $this->service->update($request);
 

@@ -100,7 +100,7 @@ const submitForm = () => {
         </div>
 
         <div v-if="has_account" class="font-bold">Your stripe account created</div>
-        <div v-if="stripe_account.charges_enabled" class="text-green-600 p-4 bg-green-100">Account is ready to accept payments</div>
+        <div v-if="stripe_account?.charges_enabled" class="text-green-600 p-4 bg-green-100">Account is ready to accept payments</div>
 
         <form @submit.prevent="submitForm">
             <PrimaryButton v-if="!has_account" :class="{ 'opacity-25': form.processing }" :disabled="form.processing" type="submit">
