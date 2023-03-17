@@ -10,6 +10,9 @@ class PartnerSetting extends Model
     protected $guarded = [
         'id',
     ];
+    protected $casts = [
+        'is_encrypted' => 'boolean',
+    ];
 
     //Relationships
     public function partner()
