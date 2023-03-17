@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Partner\SettingsGeneralDetailsRequest;
 use App\Http\Requests\Partner\SettingsGeneralAddressRequest;
 use App\Http\Requests\Partner\SettingsGeneralFormatsRequest;
+use App\Http\Requests\Partner\SettingsIntegrationsRequest;
 use App\Http\Requests\Partner\SettingsServiceStoreGeneralRequest;
 use App\Http\Requests\Partner\SettingsServiceStoreHeaderRequest;
 use App\Http\Requests\Partner\SettingsServiceStoreSeoRequest;
@@ -144,6 +145,36 @@ class PartnerSettingController extends Controller
     }
 
     public function generalFormatsUpdate(SettingsGeneralFormatsRequest $request)
+    {
+        $this->service->update($request);
+
+        return $this->redirectBackSuccess(__('Settings saved'));
+    }
+
+    // Business Settings column / Integrations
+    public function integrations(Request $request)
+    {
+        return Inertia::render('Partner/Settings/Integrations', [
+            'page_title' => __('Business Settings - Integrations'),
+            'header' => array(
+                [
+                    'title' => __('Settings'),
+                    'link' => route('partner.settings.index'),
+                ],
+                [
+                    'title' => '/',
+                    'link' => null,
+                ],
+                [
+                    'title' => __('Integrations'),
+                    'link' => null,
+                ],
+            ),
+            'form_data' => $this->service->getByGroup(SettingGroup::integrations),
+        ]);
+    }
+
+    public function integrationsUpdate(SettingsIntegrationsRequest $request)
     {
         $this->service->update($request);
 

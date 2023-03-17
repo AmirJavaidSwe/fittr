@@ -22,6 +22,15 @@ enum SettingKey: string
     case zip_code = 'zip_code';
     case date_format = 'date_format';
     case time_format = 'time_format';
+    case integration_mailchimp_status = 'integration_mailchimp_status';
+    case integration_mailchimp_api_key = 'integration_mailchimp_api_key';
+    case integration_mailchimp_list_id = 'integration_mailchimp_list_id';
+    case integration_sendgrid_status = 'integration_sendgrid_status';
+    case integration_sendgrid_api_key = 'integration_sendgrid_api_key';
+    case integration_sendgrid_list_id = 'integration_sendgrid_list_id';
+    case integration_sendinblue_status = 'integration_sendinblue_status';
+    case integration_sendinblue_api_key = 'integration_sendinblue_api_key';
+    case integration_sendinblue_list_id = 'integration_sendinblue_list_id';
     
     //Online Store
     case subdomain = 'subdomain';
@@ -50,6 +59,8 @@ enum SettingKey: string
     public const GROUP_GENERAL_DETAILS = SettingGroup::general_details->name;
     public const GROUP_GENERAL_ADDRESS = SettingGroup::general_address->name;
     public const GROUP_GENERAL_FORMATS = SettingGroup::general_formats->name;
+
+    public const GROUP_INTEGRATIONS = SettingGroup::integrations->name;
 
     public const GROUP_SERVICE_STORE_GENERAL = SettingGroup::service_store_general->name;
     public const GROUP_SERVICE_STORE_HEADER = SettingGroup::service_store_header->name;
@@ -93,6 +104,17 @@ enum SettingKey: string
             // Formats
             static::date_format => ['required', 'exists:formats,id'],
             static::time_format => ['required', 'exists:formats,id'],
+
+            // Integrations
+            static::integration_mailchimp_status => ['boolean'],
+            static::integration_mailchimp_api_key => ['nullable', 'string', 'max:255'],
+            static::integration_mailchimp_list_id => ['nullable', 'string', 'max:255'],
+            static::integration_sendgrid_status => ['boolean'],
+            static::integration_sendgrid_api_key => ['nullable', 'string', 'max:255'],
+            static::integration_sendgrid_list_id => ['nullable', 'string', 'max:255'],
+            static::integration_sendinblue_status => ['boolean'],
+            static::integration_sendinblue_api_key => ['nullable', 'string', 'max:255'],
+            static::integration_sendinblue_list_id => ['nullable', 'string', 'max:255'],
 
             //Online Store
             // General
@@ -149,6 +171,16 @@ enum SettingKey: string
             static::date_format,
             static::time_format => self::GROUP_GENERAL_FORMATS,
 
+            static::integration_mailchimp_status,
+            static::integration_mailchimp_api_key,
+            static::integration_mailchimp_list_id,
+            static::integration_sendgrid_status,
+            static::integration_sendgrid_api_key,
+            static::integration_sendgrid_list_id,
+            static::integration_sendinblue_status,
+            static::integration_sendinblue_api_key,
+            static::integration_sendinblue_list_id => self::GROUP_INTEGRATIONS,
+
             static::subdomain,
             static::custom_domain => self::GROUP_SERVICE_STORE_GENERAL,
 
@@ -188,6 +220,12 @@ enum SettingKey: string
             static::city,
             static::state,
             static::zip_code,
+            static::integration_mailchimp_api_key,
+            static::integration_mailchimp_list_id,
+            static::integration_sendgrid_api_key,
+            static::integration_sendgrid_list_id,
+            static::integration_sendinblue_api_key,
+            static::integration_sendinblue_list_id,
             static::subdomain,
             static::custom_domain,
             static::logo,
@@ -215,7 +253,22 @@ enum SettingKey: string
             static::show_address,
             static::show_phone,
             static::show_email,
+            static::integration_mailchimp_status,
+            static::integration_sendgrid_status,
+            static::integration_sendinblue_status,
             static::enforce_waiver => CastType::boolean->name,
+        };
+    }
+
+    //keys that shoud be encrypted on save and decrypted on read
+    public function encryption(): bool
+    {
+        return match($this) {
+            static::integration_mailchimp_api_key,
+            static::integration_sendgrid_api_key,
+            static::integration_sendinblue_api_key  => true,
+
+            default => false,
         };
     }
 }

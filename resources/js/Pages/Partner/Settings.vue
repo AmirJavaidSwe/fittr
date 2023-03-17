@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue';
-import { faMoneyBill1, faGears, faStore, faCode, faFileContract, faTicket, faCreditCard, faFileInvoice, faPeopleGroup, faEnvelopesBulk } from '@fortawesome/free-solid-svg-icons';
+import { faMoneyBill1, faGears, faCodeCompare, faStore, faCode, faFileContract, faTicket, faCreditCard, faFileInvoice, faPeopleGroup, faEnvelopesBulk } from '@fortawesome/free-solid-svg-icons';
 import Section from '@/Components/Section.vue';
 import CardIcon from '@/Components/CardIcon.vue';
 </script>
@@ -38,6 +38,20 @@ import CardIcon from '@/Components/CardIcon.vue';
 
                     <template #default>
                         Add taxes for your services
+                    </template>
+                </CardIcon>
+
+                <CardIcon :card-link="route('partner.settings.integrations')">
+                    <template #icon>
+                        <font-awesome-icon :icon="faCodeCompare" />
+                    </template>
+
+                    <template #title>
+                        Integrations
+                    </template>
+
+                    <template #default>
+                        Connect external apps to your business
                     </template>
                 </CardIcon>
             </div>

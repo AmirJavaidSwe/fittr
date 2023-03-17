@@ -9,6 +9,7 @@ use App\Enums\SettingGroup;
 use App\Events\PartnerSettingUpdated;
 use App\Models\PartnerSetting;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Crypt;
 
 class PartnerSettingService
 {
@@ -41,13 +42,14 @@ class PartnerSettingService
 
     public function getCastValue(PartnerSetting $item)
     {
+        $value = $item->is_encrypted ? Crypt::decryptString($item->val) : $item->val;
         return match ($item->cast_to) {
-                CastType::string->name => $item->val,
-                CastType::integer->name => intval($item->val),
-                CastType::float->name => floatval($item->val),
-                CastType::boolean->name => boolval($item->val),
-                CastType::array->name => json_decode($item->val),
-                CastType::json->name => json_decode($item->val),
+                CastType::string->name => $value,
+                CastType::integer->name => intval($value),
+                CastType::float->name => floatval($value),
+                CastType::boolean->name => boolval($value),
+                CastType::array->name => json_decode($value),
+                CastType::json->name => json_decode($value),
             };
     }
 
@@ -59,10 +61,12 @@ class PartnerSettingService
                 $value = $value->storePublicly($key, ['disk' => 'public']);
             }
             $identifier = ['partner_id' => $partner_id, 'key' => $key];
+            $is_encrypted = SettingKey::from($key)->encryption();
             $values = [
                 'group_name' => SettingKey::from($key)->group(),
                 'cast_to' => SettingKey::from($key)->cast(),
-                'val' => $value
+                'is_encrypted' => $is_encrypted,
+                'val' => ($is_encrypted ? Crypt::encryptString($value) : $value),
             ];
             $partner_setting = PartnerSetting::where($identifier)->first();
             $previous_value = $partner_setting->val ?? null;

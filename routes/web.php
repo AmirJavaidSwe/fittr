@@ -95,6 +95,8 @@ Route::middleware([
         Route::put('/settings/general-address', [PartnerSettingController::class, 'generalAddressUpdate']);
         Route::get('/settings/general-formats', [PartnerSettingController::class, 'generalFormats'])->name('settings.general-formats');
         Route::put('/settings/general-formats', [PartnerSettingController::class, 'generalFormatsUpdate']);
+        Route::get('/settings/integrations', [PartnerSettingController::class, 'integrations'])->name('settings.integrations');
+        Route::put('/settings/integrations', [PartnerSettingController::class, 'integrationsUpdate']);
 
         Route::get('/settings/service-store-general', [PartnerSettingController::class, 'serviceStoreGeneral'])->name('settings.service-store-general');
         Route::put('/settings/service-store-general', [PartnerSettingController::class, 'serviceStoreGeneralUpdate']);
