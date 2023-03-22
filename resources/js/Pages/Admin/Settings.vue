@@ -23,7 +23,7 @@ const switchTab = (val) => {
             <Packages :packages="$page.props.packages" />
         </Tab>
         <Tab :on="active_tab_index" :index="1">
-            <Admins />
+            <Admins :admins="$page.props.admins" />
         </Tab>
         <Tab :on="active_tab_index" :index="2">
             <div>Other Tab1 content</div>
