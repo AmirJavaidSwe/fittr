@@ -28,6 +28,7 @@ class UserSeeder extends Seeder
                 'role' => $user->role,
                 'name' => $user->name, 
                 'email' => $user->email,
+                'stripe_account_id' => $user->stripe_account_id ?? null,
                 'password' => Hash::make($user->password), 
                 'remember_token' => Str::random(10),
                 'email_verified_at' => now(),

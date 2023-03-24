@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\DemoController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PackageController;
 use App\Http\Controllers\Admin\PartnerController;
+use App\Http\Controllers\Admin\InstanceController;
 use App\Http\Controllers\Admin\SettingsController;
 
 use App\Http\Controllers\Shared\StripeWebhookController;
@@ -61,6 +62,11 @@ Route::middleware([
             Route::put('/partners/{id}', 'update')->name('update');
             Route::delete('/partners/{id}', 'destroy')->name('destroy');
             Route::post('/partners', 'store')->name('store');
+        });
+        Route::controller(InstanceController::class)->name('instances.')->group(function () {
+            Route::get('/instances', 'index')->name('index');
+            Route::get('/instances/{name}', 'show')->name('show');
+            Route::get('/instances/{name}/{metric}', 'showMetric')->name('show_metric');
         });
         Route::get('/partners-performance', [PartnerController::class, 'performanceIndex'])->name('partners.performance.index');
         Route::get('/settings', [SettingsController::class, 'index'])->name('settings');

@@ -38,7 +38,7 @@ import ButtonLink from '@/Components/ButtonLink.vue';
                     <div class="text-3xl">1</div>
                 </template>
                 <template #footer>
-                    <ButtonLink href="#" type="primary">Manage</ButtonLink>
+                    <ButtonLink :href="route('admin.instances.index')" type="primary">Manage</ButtonLink>
                 </template>
             </CardBasic>
         </div>

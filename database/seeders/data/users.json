@@ -33,12 +33,14 @@
         "role": "partner",
         "name": "Demo Partner1",
         "email": "dummy1@fittr.tech",
-        "password": "dummy1"
+        "password": "dummy1",
+        "stripe_account_id": "acct_1MlaLVFZgNT1PRCW"
     },
     {
         "role": "partner",
         "name": "Demo Partner2",
         "email": "dummy2@fittr.tech",
-        "password": "dummy2"
+        "password": "dummy2",
+        "stripe_account_id": "acct_1MlpPN2ZUYnPPk7a"
     }
 ]

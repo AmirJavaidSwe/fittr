@@ -2,7 +2,7 @@
 import { reactive } from 'vue';
 import { router } from '@inertiajs/vue3';
 import NavLink from '@/Components/NavLink.vue';
-import { faHome, faGaugeHigh, faUserTie, faGears, faCoffee} from '@fortawesome/free-solid-svg-icons';
+import { faHome, faGaugeHigh, faUserTie, faServer, faGears, faCoffee} from '@fortawesome/free-solid-svg-icons';
 
 const active_route = reactive({
     name: route().current(),
@@ -26,6 +26,10 @@ router.on('navigate', (event) => {
     <NavLink :href="route('admin.partners.index')" :active="active_route.name == 'admin.partners.index'">
       <font-awesome-icon :icon="faUserTie" />
       <div>Partner management</div>
+    </NavLink>
+    <NavLink :href="route('admin.instances.index')" :active="active_route.name == 'admin.instances.index'">
+      <font-awesome-icon :icon="faServer" />
+      <div>AWS Instances</div>
     </NavLink>
     <NavLink :href="route('admin.settings')" :active="active_route.name == 'admin.settings'">
       <font-awesome-icon :icon="faGears" />

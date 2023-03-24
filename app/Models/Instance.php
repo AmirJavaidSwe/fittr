@@ -13,4 +13,10 @@ class Instance extends Model
     protected $guarded = [
         'id',
     ];
+
+    //Relationships
+    public function partner()
+    {
+        return $this->belongsTo(User::class, 'partner_id');
+    }
 }

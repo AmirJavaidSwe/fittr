@@ -17,6 +17,7 @@ return new class extends Migration
         Schema::create('instances', function (Blueprint $table) {
             $table->id();
             $table->integer('partner_id');
+            $table->string('name', 255); //aws instance name, string, case-sensitive
             $table->enum('status', Instance::statuses())->default(Instance::INACTIVE->value);
             $table->ipAddress('public_ip')->nullable();
             $table->ipAddress('private_ip')->nullable();

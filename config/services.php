@@ -36,6 +36,14 @@ return [
         //     ],
         // ],
     ],
+    'lightsail' => [
+        'version' => 'latest',
+        'region' => env('AWS_DEFAULT_REGION'),
+        'credentials' => [
+            'key'      => env('AWS_LIGHTSAIL_KEY'),
+            'secret'   => env('AWS_LIGHTSAIL_SECRET'),
+        ],
+    ],
     'google' => [
         'client_id' => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
