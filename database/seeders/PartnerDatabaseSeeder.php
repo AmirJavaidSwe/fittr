@@ -32,7 +32,7 @@ class PartnerDatabaseSeeder extends Seeder
             $db_host = config('database.connections.mysql.host');
             $db_port = config('database.connections.mysql.port');
             $db_user = 'p_'.$partner->id;
-            $db_password = Str::random(8);
+            $db_password = Str::random(8).'Aa7!';
 
             //drop database user
             DB::statement("DROP USER IF EXISTS '$db_user'@'$db_host'");
@@ -95,13 +95,14 @@ class PartnerDatabaseSeeder extends Seeder
             DB::setDefaultConnection('mysql_partner');
 
             //run migrations on currently connected partner database:
-            Artisan::call('migrate', ['--path' => 'database/migrations/partner']);
+            Artisan::call('migrate', ['--path' => 'database/migrations/partner', '--force' => true]);
             // Artisan::call('db:seed Partner\DatabaseSeeder --database=mysql_partner --class=UserSeeder');
 
             //run seeds for the first partner only
             if($partner->id == $first_partner_id){
                 dump('seeding '.$first_partner_id);
-                Artisan::call('db:seed Database\\\Seeders\\\Partner\\\DatabaseSeeder');
+                // Artisan::call('db:seed --force Database\\\Seeders\\\Partner\\\DatabaseSeeder');
+                Artisan::call('db:seed', ['--class' => 'Database\Seeders\Partner\DatabaseSeeder', '--force' => true]);
             }
         }
 
