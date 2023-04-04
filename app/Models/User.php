@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\User as Enum;
+use App\Enums\AppUserRole;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -85,12 +85,12 @@ class User extends Authenticatable implements MustVerifyEmail
     // Accessors
     public function getIsPartnerAttribute()
     {
-        return $this->role == Enum::PARTNER->value;
+        return $this->role == AppUserRole::PARTNER->value;
     }
 
     public function getIsAdminAttribute()
     {
-        return $this->role == Enum::ADMIN->value;
+        return $this->role == AppUserRole::ADMIN->value;
     }
 
     public function getDashboardRouteAttribute()
@@ -116,12 +116,17 @@ class User extends Authenticatable implements MustVerifyEmail
     //Local scopes
     public function scopeAdmin($query)
     {
-        $query->where('role', Enum::ADMIN->value);
+        $query->where('role', AppUserRole::ADMIN->value);
     }
 
     public function scopePartner($query)
     {
-        $query->where('role', Enum::PARTNER->value);
+        $query->where('role', AppUserRole::PARTNER->value);
+    }
+
+    public function scopeDatabaseless($query)
+    {
+        $query->whereNull('db_name');
     }
 
     //Relationships

@@ -51,6 +51,8 @@ return [
             'database' => env('DB_DATABASE', 'forge'),
             'username' => env('DB_USERNAME', 'forge'),
             'password' => env('DB_PASSWORD', ''),
+            'master_partner_username' => env('DB_MASTER_PARTNER_USERNAME', 'forge'), //backup, disaster access to partner db
+            'master_partner_password' => env('DB_MASTER_PARTNER_PASSWORD', ''), //backup, disaster access to partner db
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',

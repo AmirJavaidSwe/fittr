@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use DB;
 use Storage;
 use App\Models\Country;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class TimezoneSeeder extends Seeder

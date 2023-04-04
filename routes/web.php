@@ -20,17 +20,6 @@ use App\Http\Controllers\Partner\PricingController as PartnerPricingController;
 use App\Http\Controllers\Partner\SubscriptionController as PartnerSubscriptionController;
 use App\Http\Controllers\Partner\PartnerSettingController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
 Route::get('/auth/google', function () {
     return Socialite::driver('google')->redirect();
 })->name('auth.google');
@@ -38,88 +27,120 @@ Route::get('/auth/google-callback', [UserProfileController::class, 'googleAuth']
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'webhook']);
 // https://app.fittr.tech/stripe/connect-redirect
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-    ]);
-})->name('root');
+// this is for fittr admin users and partner users
+Route::domain('app.'.config('app.domain'))->group(function () {
+    Route::get('/', function () {
+        return Inertia::render('Welcome', [
+            'canLogin' => Route::has('login'),
+            'canRegister' => Route::has('register'),
+        ]);
+    })->name('root');
 
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
+    Route::middleware([
+        'auth:sanctum',
+        config('jetstream.auth_session'),
+        'verified',
+    ])->group(function () {
+        
+        //ADMIN
+        Route::middleware(['auth.role:admin'])->prefix('admin')->name('admin.')->group(function () {
+            Route::get('/demo', [DemoController::class, 'index'])->name('demo');
+            Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+            Route::controller(PartnerController::class)->name('partners.')->group(function () {
+                Route::get('/partners', 'index')->name('index');
+                Route::get('/partners/{id}', 'show')->name('show');
+                Route::get('/partners/{id}/edit', 'edit')->name('edit');
+                Route::put('/partners/{id}', 'update')->name('update');
+                Route::delete('/partners/{id}', 'destroy')->name('destroy');
+                Route::post('/partners', 'store')->name('store');
+            });
+            Route::controller(InstanceController::class)->name('instances.')->group(function () {
+                Route::get('/instances', 'index')->name('index');
+                Route::get('/instances/{name}', 'show')->name('show');
+                Route::get('/instances/{name}/{metric}', 'showMetric')->name('show_metric');
+            });
+            Route::get('/partners-performance', [PartnerController::class, 'performanceIndex'])->name('partners.performance.index');
+            Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
+            //this can be resource controller, listing methods for clarity
+            //implicit binding
+            Route::controller(PackageController::class)->name('packages.')->group(function () {
+                Route::get('/packages', 'index')->name('index');
+                Route::get('/packages/create', 'create')->name('create');
+                Route::post('/packages', 'store')->name('store');
+                Route::get('/packages/{package}', 'show')->name('show');
+                Route::get('/packages/{package}/edit', 'edit')->name('edit');
+                Route::put('/packages/{package}', 'update')->name('update');
+                Route::delete('/packages/{package}', 'destroy')->name('destroy');
+            });
+        });
     
-    //ADMIN
-    Route::middleware(['auth.role:admin'])->prefix('admin')->name('admin.')->group(function () {
-        Route::get('/demo', [DemoController::class, 'index'])->name('demo');
-        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-        Route::controller(PartnerController::class)->name('partners.')->group(function () {
-            Route::get('/partners', 'index')->name('index');
-            Route::get('/partners/{id}', 'show')->name('show');
-            Route::get('/partners/{id}/edit', 'edit')->name('edit');
-            Route::put('/partners/{id}', 'update')->name('update');
-            Route::delete('/partners/{id}', 'destroy')->name('destroy');
-            Route::post('/partners', 'store')->name('store');
+        //PARTNER
+        Route::middleware(['auth.role:partner'])->name('partner.')->group(function () {
+            Route::get('/dashboard', [PartnerDashboardController::class, 'index'])->name('dashboard');
+            Route::get('/pricing', [PartnerPricingController::class, 'index'])->name('pricing.index');
+    
+            Route::get('/subscriptions', [PartnerSubscriptionController::class, 'index'])->name('subscriptions.index');
+            Route::put('/subscriptions/{subscription}/cancel', [PartnerSubscriptionController::class, 'cancel'])->name('subscriptions.cancel');
+            Route::post('/subscriptions/{package}/store', [PartnerSubscriptionController::class, 'store'])->name('subscriptions.store');
+    
+            Route::get('/contact-us', [PartnerDashboardController::class, 'index'])->name('contact.index');
+    
+            Route::get('/settings', [PartnerSettingController::class, 'index'])->name('settings.index');
+            Route::get('/settings/general-details', [PartnerSettingController::class, 'generalDetails'])->name('settings.general-details');
+            Route::put('/settings/general-details', [PartnerSettingController::class, 'generalDetailsUpdate']);
+            Route::get('/settings/general-address', [PartnerSettingController::class, 'generalAddress'])->name('settings.general-address');
+            Route::put('/settings/general-address', [PartnerSettingController::class, 'generalAddressUpdate']);
+            Route::get('/settings/general-formats', [PartnerSettingController::class, 'generalFormats'])->name('settings.general-formats');
+            Route::put('/settings/general-formats', [PartnerSettingController::class, 'generalFormatsUpdate']);
+            Route::get('/settings/integrations', [PartnerSettingController::class, 'integrations'])->name('settings.integrations');
+            Route::put('/settings/integrations', [PartnerSettingController::class, 'integrationsUpdate']);
+    
+            Route::get('/settings/service-store-general', [PartnerSettingController::class, 'serviceStoreGeneral'])->name('settings.service-store-general');
+            Route::put('/settings/service-store-general', [PartnerSettingController::class, 'serviceStoreGeneralUpdate']);
+            Route::get('/settings/service-store-header', [PartnerSettingController::class, 'serviceStoreHeader'])->name('settings.service-store-header');
+            Route::put('/settings/service-store-header', [PartnerSettingController::class, 'serviceStoreHeaderUpdate']);
+            Route::get('/settings/service-store-seo', [PartnerSettingController::class, 'serviceStoreSeo'])->name('settings.service-store-seo');
+            Route::put('/settings/service-store-seo', [PartnerSettingController::class, 'serviceStoreSeoUpdate']);
+            Route::get('/settings/service-store-code', [PartnerSettingController::class, 'serviceStoreCode'])->name('settings.service-store-code');
+            Route::put('/settings/service-store-code', [PartnerSettingController::class, 'serviceStoreCodeUpdate']);
+    
+            // Route::get('/settings/service-store-widgets', [PartnerSettingController::class, 'serviceStoreWidgets'])->name('settings.service-store-widgets');
+            // Route::put('/settings/service-store-widgets', [PartnerSettingController::class, 'serviceStoreWidgetsUpdate']);
+            Route::get('/settings/service-store-waivers', [PartnerSettingController::class, 'serviceStoreWaivers'])->name('settings.service-store-waivers');
+            Route::put('/settings/service-store-waivers', [PartnerSettingController::class, 'serviceStoreWaiversUpdate']);
+            Route::get('/settings/payments', [PartnerSettingController::class, 'payments'])->name('settings.payments');
+            Route::get('/settings/payments/stripe', [PartnerSettingController::class, 'paymentsStripe'])->name('settings.payments.stripe');
+            Route::post('/settings/payments/stripe', [PartnerSettingController::class, 'connectStripe']);
         });
-        Route::controller(InstanceController::class)->name('instances.')->group(function () {
-            Route::get('/instances', 'index')->name('index');
-            Route::get('/instances/{name}', 'show')->name('show');
-            Route::get('/instances/{name}/{metric}', 'showMetric')->name('show_metric');
-        });
-        Route::get('/partners-performance', [PartnerController::class, 'performanceIndex'])->name('partners.performance.index');
-        Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
-        //this can be resource controller, listing methods for clarity
-        //implicit binding
-        Route::controller(PackageController::class)->name('packages.')->group(function () {
-            Route::get('/packages', 'index')->name('index');
-            Route::get('/packages/create', 'create')->name('create');
-            Route::post('/packages', 'store')->name('store');
-            Route::get('/packages/{package}', 'show')->name('show');
-            Route::get('/packages/{package}/edit', 'edit')->name('edit');
-            Route::put('/packages/{package}', 'update')->name('update');
-            Route::delete('/packages/{package}', 'destroy')->name('destroy');
-        });
+    
+    });
+});
+
+// this is for partner members and instructors, public service store or logged in area
+// add middleware that should check if such subdomain exist to prevent random access
+Route::domain('{subdomain}.'.config('app.domain'))->group(function () {
+
+    Route::get('/', function ($subdomain) {
+        return "THIS IS CLIENT PARTNER PUBLIC FACING SERVICE STORE PAGE. Subdomain name is $subdomain";
     });
 
-    //PARTNER
-    Route::middleware(['auth.role:partner'])->name('partner.')->group(function () {
-        Route::get('/dashboard', [PartnerDashboardController::class, 'index'])->name('dashboard');
-        Route::get('/pricing', [PartnerPricingController::class, 'index'])->name('pricing.index');
+    Route::middleware([
+        'auth:sanctum',
+        config('jetstream.auth_session'),
+        'verified',
+    ])->group(function () {
 
-        Route::get('/subscriptions', [PartnerSubscriptionController::class, 'index'])->name('subscriptions.index');
-        Route::put('/subscriptions/{subscription}/cancel', [PartnerSubscriptionController::class, 'cancel'])->name('subscriptions.cancel');
-        Route::post('/subscriptions/{package}/store', [PartnerSubscriptionController::class, 'store'])->name('subscriptions.store');
+        //MEMBER
+        Route::middleware(['auth.role:member'])->name('member.')->group(function () {
+            Route::get('/dashboard', [MemberDashboardController::class, 'index'])->name('dashboard');
+            // Route::get('/memberships', [MembershipController::class, 'index'])->name('memberships');
+        });
 
-        Route::get('/contact-us', [PartnerDashboardController::class, 'index'])->name('contact.index');
-
-        Route::get('/settings', [PartnerSettingController::class, 'index'])->name('settings.index');
-        Route::get('/settings/general-details', [PartnerSettingController::class, 'generalDetails'])->name('settings.general-details');
-        Route::put('/settings/general-details', [PartnerSettingController::class, 'generalDetailsUpdate']);
-        Route::get('/settings/general-address', [PartnerSettingController::class, 'generalAddress'])->name('settings.general-address');
-        Route::put('/settings/general-address', [PartnerSettingController::class, 'generalAddressUpdate']);
-        Route::get('/settings/general-formats', [PartnerSettingController::class, 'generalFormats'])->name('settings.general-formats');
-        Route::put('/settings/general-formats', [PartnerSettingController::class, 'generalFormatsUpdate']);
-        Route::get('/settings/integrations', [PartnerSettingController::class, 'integrations'])->name('settings.integrations');
-        Route::put('/settings/integrations', [PartnerSettingController::class, 'integrationsUpdate']);
-
-        Route::get('/settings/service-store-general', [PartnerSettingController::class, 'serviceStoreGeneral'])->name('settings.service-store-general');
-        Route::put('/settings/service-store-general', [PartnerSettingController::class, 'serviceStoreGeneralUpdate']);
-        Route::get('/settings/service-store-header', [PartnerSettingController::class, 'serviceStoreHeader'])->name('settings.service-store-header');
-        Route::put('/settings/service-store-header', [PartnerSettingController::class, 'serviceStoreHeaderUpdate']);
-        Route::get('/settings/service-store-seo', [PartnerSettingController::class, 'serviceStoreSeo'])->name('settings.service-store-seo');
-        Route::put('/settings/service-store-seo', [PartnerSettingController::class, 'serviceStoreSeoUpdate']);
-        Route::get('/settings/service-store-code', [PartnerSettingController::class, 'serviceStoreCode'])->name('settings.service-store-code');
-        Route::put('/settings/service-store-code', [PartnerSettingController::class, 'serviceStoreCodeUpdate']);
-
-        // Route::get('/settings/service-store-widgets', [PartnerSettingController::class, 'serviceStoreWidgets'])->name('settings.service-store-widgets');
-        // Route::put('/settings/service-store-widgets', [PartnerSettingController::class, 'serviceStoreWidgetsUpdate']);
-        Route::get('/settings/service-store-waivers', [PartnerSettingController::class, 'serviceStoreWaivers'])->name('settings.service-store-waivers');
-        Route::put('/settings/service-store-waivers', [PartnerSettingController::class, 'serviceStoreWaiversUpdate']);
-        Route::get('/settings/payments', [PartnerSettingController::class, 'payments'])->name('settings.payments');
-        Route::get('/settings/payments/stripe', [PartnerSettingController::class, 'paymentsStripe'])->name('settings.payments.stripe');
-        Route::post('/settings/payments/stripe', [PartnerSettingController::class, 'connectStripe']);
+        //INSTRUCTOR
+        Route::middleware(['auth.role:instructor'])->prefix('instructor')->name('instructor.')->group(function () {
+            Route::get('/dashboard', function () {
+                return 'Hello World';
+            })->name('dashboard');
+        });
     });
-
 });

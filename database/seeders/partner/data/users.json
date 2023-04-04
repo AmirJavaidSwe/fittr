@@ -1,0 +1,32 @@
+[
+    {
+        "role": "admin",
+        "name": "Demo Partner1",
+        "email": "dummy1@fittr.tech",
+        "password": "dummy1"
+    },
+    {
+        "role": "member",
+        "name": "Geoff Bamber",
+        "email": "geoff@fittr.tech",
+        "password": "geoff"
+    },
+    {
+        "role": "member",
+        "name": "Phil Parker",
+        "email": "phil@fittr.tech",
+        "password": "phil"
+    },
+    {
+        "role": "member",
+        "name": "Leo Studenikin",
+        "email": "leo@fittr.tech",
+        "password": "leo"
+    },
+    {
+        "role": "member",
+        "name": "Mishuk Adhikari",
+        "email": "mishuk.ad.bd@gmail.com",
+        "password": "mishuksecret"
+    }
+]

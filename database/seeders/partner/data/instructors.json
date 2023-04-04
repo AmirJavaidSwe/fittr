@@ -1,0 +1,32 @@
+[
+    {
+        "role": "instructor",
+        "name": "Demo Instructor 1",
+        "email": "instructor1@fittr.tech",
+        "password": "instructor1"
+    },
+    {
+        "role": "instructor",
+        "name": "Demo Instructor 2",
+        "email": "instructor2@fittr.tech",
+        "password": "instructor2"
+    },
+    {
+        "role": "instructor",
+        "name": "Demo Instructor 3",
+        "email": "instructor3@fittr.tech",
+        "password": "instructor3"
+    },
+    {
+        "role": "instructor",
+        "name": "Demo Instructor 4",
+        "email": "instructor4@fittr.tech",
+        "password": "instructor4"
+    },
+    {
+        "role": "instructor",
+        "name": "Demo Instructor 5",
+        "email": "instructor5@fittr.tech",
+        "password": "instructor5"
+    }
+]

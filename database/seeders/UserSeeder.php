@@ -6,7 +6,6 @@ use DB;
 use Hash;
 use Str;
 use Storage;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
