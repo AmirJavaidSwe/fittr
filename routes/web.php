@@ -132,7 +132,7 @@ Route::domain('{subdomain}.'.config('app.domain'))->middleware(['auth.subdomain'
         //temp demo
         // dump(Config::get('database.connections.mysql_partner'));
         dump('Partner classes dump:');
-        $partner_classes = \App\Models\ClassLesson::all();
+        $partner_classes = \App\Models\Partner\ClassLesson::all();
         dump($partner_classes);
         return "THIS IS CLIENT PARTNER PUBLIC FACING SERVICE STORE PAGE. Subdomain name is $subdomain";
     });
