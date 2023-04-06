@@ -15,10 +15,11 @@ use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Shared\StripeWebhookController;
 use App\Http\Controllers\Shared\UserProfileController;
 
-use App\Http\Controllers\Partner\DashboardController as PartnerDashboardController;
-use App\Http\Controllers\Partner\PricingController as PartnerPricingController;
-use App\Http\Controllers\Partner\SubscriptionController as PartnerSubscriptionController;
+use App\Http\Controllers\Partner\PartnerDashboardController;
+use App\Http\Controllers\Partner\PartnerPricingController;
+use App\Http\Controllers\Partner\PartnerSubscriptionController;
 use App\Http\Controllers\Partner\PartnerSettingController;
+use App\Http\Controllers\Partner\PartnerMemberController;
 
 Route::get('/auth/google', function () {
     return Socialite::driver('google')->redirect();
@@ -74,7 +75,10 @@ Route::domain('app.'.config('app.domain'))->group(function () {
             });
         });
     
-        //PARTNER
+        //PARTNER 
+        // \App\Http\Middleware\ConnectPartnerDatabase::class runs on every request, see App\Http\Kernel $middlewareGroups
+        // ConnectPartnerDatabase must run before SubstituteBindings in order for implicit model bindings to work
+    
         Route::middleware(['auth.role:partner'])->name('partner.')->group(function () {
             Route::get('/dashboard', [PartnerDashboardController::class, 'index'])->name('dashboard');
             Route::get('/pricing', [PartnerPricingController::class, 'index'])->name('pricing.index');
@@ -111,16 +115,25 @@ Route::domain('app.'.config('app.domain'))->group(function () {
             Route::get('/settings/payments', [PartnerSettingController::class, 'payments'])->name('settings.payments');
             Route::get('/settings/payments/stripe', [PartnerSettingController::class, 'paymentsStripe'])->name('settings.payments.stripe');
             Route::post('/settings/payments/stripe', [PartnerSettingController::class, 'connectStripe']);
+
+            //partner.members.index
+            //partner.members.destroy /members/{member}
+            Route::resource('members', PartnerMemberController::class);
         });
     
     });
 });
 
 // this is for partner members and instructors, public service store or logged in area
-// add middleware that should check if such subdomain exist to prevent random access
-Route::domain('{subdomain}.'.config('app.domain'))->group(function () {
+// AuthenticateSubdomain middleware will check if such subdomain exist to prevent random access and will set proper db connection (in addition to) 'database.connections.mysql_partner'
+Route::domain('{subdomain}.'.config('app.domain'))->middleware(['auth.subdomain'])->group(function () {
 
     Route::get('/', function ($subdomain) {
+        //temp demo
+        // dump(Config::get('database.connections.mysql_partner'));
+        dump('Partner classes dump:');
+        $partner_classes = \App\Models\ClassLesson::all();
+        dump($partner_classes);
         return "THIS IS CLIENT PARTNER PUBLIC FACING SERVICE STORE PAGE. Subdomain name is $subdomain";
     });
 

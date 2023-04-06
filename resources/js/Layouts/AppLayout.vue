@@ -1,7 +1,6 @@
 <script setup>
 import { ref, computed, defineAsyncComponent } from 'vue';
-import { router } from '@inertiajs/vue3';
-import { Link, usePage } from '@inertiajs/vue3';
+import { router, Link, usePage } from '@inertiajs/vue3';
 import AppHead from '@/Layouts/AppHead.vue';
 import LogoLetter from '@/Components/LogoLetter.vue';
 import Banner from '@/Components/Banner.vue';
@@ -96,7 +95,7 @@ const headerIsArray = computed(() => {
                             </template>
                         </Dropdown>
                     </div>
-                    <div class="bg-white flex items-center justify-between md:px-6 md:py-0 md:text-md p-4 shadow text-sm w-full z-0 gap-4">
+                    <div class="bg-white flex items-center justify-between md:px-6 md:py-0 md:text-md p-4 shadow text-sm w-full gap-4">
                         <!-- Page Heading / Menu item name-->
                         <header class="bg-white ">
                             <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">

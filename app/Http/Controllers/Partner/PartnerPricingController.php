@@ -7,7 +7,7 @@ use App\Models\Package;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class PricingController extends Controller
+class PartnerPricingController extends Controller
 {
     public function index(Request $request)
     {

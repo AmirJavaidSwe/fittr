@@ -13,7 +13,7 @@ use App\Events\SubscriptionStarted;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class SubscriptionController extends Controller
+class PartnerSubscriptionController extends Controller
 {
     public function index(Request $request)
     {

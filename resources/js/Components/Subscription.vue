@@ -17,7 +17,7 @@ const confirmCancellation = () => {
 const closeModal = () => {
     confirmingCancellation.value = false;
 };
-const form = useForm();
+const form = useForm({});
 const cancelSubscription = () => {
     form.put(route('partner.subscriptions.cancel', {id: props.subscription.id}), {
         preserveScroll: true,

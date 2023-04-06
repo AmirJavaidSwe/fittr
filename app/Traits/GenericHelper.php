@@ -14,8 +14,10 @@ trait GenericHelper
         return redirect()->back()->with('flash_type', 'warning')->with('flash_message', __($msg ?? 'Warning'))->with('flash_timestamp', time());
     }
 
-    public function redirectBackSuccess($msg = null)
+    public function redirectBackSuccess($msg = null, $route = null)
     {
-        return redirect()->back()->with('flash_type', 'success')->with('flash_message', __($msg ?? 'Success'))->with('flash_timestamp', time());
+        return empty($route) ? 
+            redirect()->back()->with('flash_type', 'success')->with('flash_message', __($msg ?? 'Success'))->with('flash_timestamp', time()) :
+            redirect()->route($route)->with('flash_type', 'success')->with('flash_message', __($msg ?? 'Success'))->with('flash_timestamp', time());
     }
 }
