@@ -81,7 +81,7 @@ class PartnerDatabaseSeeder extends Seeder
             Config::set('database.connections.mysql_partner', [
                 'driver' => 'mysql',
                 'host' => $db_host,
-                'port' => '3306',
+                'port' => $db_port,
                 'database' => $db_name,
                 'username' => $db_user,
                 'password' => $db_password,

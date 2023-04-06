@@ -1,8 +1,8 @@
 <?php
 
-namespace Database\Factories;
+namespace Database\Factories\Partner;
 
-use App\Models\ClassLesson;
+use App\Models\Partner\ClassLesson;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

@@ -2,7 +2,7 @@
 
 namespace Database\Seeders\Partner;
 
-use App\Models\ClassLesson;
+use App\Models\Partner\ClassLesson;
 use Illuminate\Database\Seeder;
 
 class ClassesSeeder extends Seeder

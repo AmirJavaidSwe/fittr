@@ -2,7 +2,7 @@
 
 namespace Database\Seeders\Partner;
 
-use App\Models\Amenity;
+use App\Models\Partner\Amenity;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Storage;
 

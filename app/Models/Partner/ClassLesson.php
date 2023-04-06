@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Partner;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -19,9 +19,9 @@ class ClassLesson extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $guarded = ['id'];
-
     protected $table = 'classes';
+    protected $connection = 'mysql_partner';
+    protected $guarded = ['id'];
 
     protected $casts = [
         'week_days' => 'array',

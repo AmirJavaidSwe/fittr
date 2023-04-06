@@ -2,7 +2,7 @@
 
 namespace Database\Seeders\Partner;
 
-use Database\Factories\InstructorFactory;
+use Database\Factories\Partner\InstructorFactory;
 use Illuminate\Database\Seeder;
 
 class InstructorSeeder extends Seeder

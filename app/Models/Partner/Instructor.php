@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Partner;
 
-use App\Enums\UserRole;
+use App\Enums\PartnerUserRole;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -18,13 +18,13 @@ class Instructor extends Model
     use SoftDeletes;
 
     protected $table = 'users';
-
+    protected $connection = 'mysql_partner';
     protected $guarded = ['id'];
 
     protected static function booted()
     {
         static::saving(function ($instructor) {
-            $instructor->role = UserRole::INSTRUCTOR->value;
+            $instructor->role = PartnerUserRole::INSTRUCTOR->value;
         });
     }
 
@@ -36,6 +36,6 @@ class Instructor extends Model
 
     protected function newBaseQueryBuilder(): Builder
     {
-        return parent::newBaseQueryBuilder()->where('role', UserRole::INSTRUCTOR->value);
+        return parent::newBaseQueryBuilder()->where('role', PartnerUserRole::INSTRUCTOR->value);
     }
 }

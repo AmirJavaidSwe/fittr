@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Factories;
+namespace Database\Factories\Partner;
 
 use App\Enums\PartnerUserRole;
 use Illuminate\Database\Eloquent\Factories\Factory;

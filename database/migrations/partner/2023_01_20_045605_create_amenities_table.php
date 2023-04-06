@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('amenities', function (Blueprint $table) {
             $table->id();
+            $table->integer('studio_id')->unsigned();
             $table->string('title');
             $table->string('icon');
             $table->text('contents');

@@ -2,7 +2,7 @@
 
 namespace Database\Seeders\Partner;
 
-use App\Models\Creditpack;
+use App\Models\Partner\Creditpack;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
 

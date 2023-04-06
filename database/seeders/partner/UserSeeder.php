@@ -2,7 +2,7 @@
 
 namespace Database\Seeders\Partner;
 
-use App\Models\User;
+use App\Models\Partner\User;
 use DB;
 use Hash;
 use Str;
