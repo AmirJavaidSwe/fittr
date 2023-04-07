@@ -9,11 +9,12 @@ class AuthServiceProvider extends ServiceProvider
 {
     /**
      * The model to policy mappings for the application.
+     * Any policies that are explicitly mapped will take precedence over any potentially auto-discovered policies.
      *
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        // 'App\Models\Model' => 'App\Policies\ModelPolicy',
+        'App\Models\Partner\Amenity' => 'App\Policies\Partner\AmenityPolicy',
     ];
 
     /**
@@ -27,5 +28,10 @@ class AuthServiceProvider extends ServiceProvider
         // $this->registerPolicies();
 
         //
+
+        // Gate::guessPolicyNamesUsing(function (string $modelClass) {
+            // Return the name of the policy class for the given model...
+        // });
     }
+
 }
