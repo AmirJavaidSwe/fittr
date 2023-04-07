@@ -96,7 +96,7 @@ const deleteItem = () => {
             <tr v-for="amenity in amenities.data">
                 <table-data :title="amenity.id"/>
                 <table-data>
-                    <img src="https://fakeimg.pl/50x50/" alt="">
+                    <img v-if="amenity.image_url" :src="amenity.image_url" alt="icon" class="w-10 h-10">
                 </table-data>
                 <table-data>
                     <Link class="font-medium text-indigo-600 hover:text-indigo-500"

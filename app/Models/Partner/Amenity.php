@@ -27,7 +27,7 @@ class Amenity extends Model
         'image_url',
     ];
 
-    public function getImageUrlAttribute(): string
+    public function getImageUrlAttribute(): ?string
     {
         if(empty($this->icon)){
             return null;

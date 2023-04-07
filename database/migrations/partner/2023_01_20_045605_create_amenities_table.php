@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->integer('studio_id')->unsigned();
             $table->string('title');
-            $table->string('icon');
+            $table->string('icon')->nullable();
             $table->text('contents');
             $table->integer('ordering')->default(0)->unsigned();
             $table->tinyInteger('status')->default(1)->unsigned();

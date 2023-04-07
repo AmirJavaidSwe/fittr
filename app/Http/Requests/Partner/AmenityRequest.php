@@ -25,7 +25,7 @@ class AmenityRequest extends FormRequest
     {
         return [
             'title' => 'required|string|max:255',
-            'icon' => 'required|string|max:255',
+            'icon' => 'nullable|string|max:255',
             'contents' => 'required|string',
             'ordering' => 'required|integer',
             'studio_id' => 'required|integer',
