@@ -80,11 +80,6 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     // Accessors
-    public function getIsAdminAttribute(): bool
-    {
-        return $this->role == PartnerUserRole::ADMIN->value;
-    }
-
     public function getIsMemberAttribute(): bool
     {
         return $this->role == PartnerUserRole::MEMBER->value;
@@ -104,11 +99,6 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     //Local scopes
-    public function scopeAdmin($query)
-    {
-        $query->where('role', PartnerUserRole::ADMIN->value);
-    }
-
     public function scopeMember($query)
     {
         $query->where('role', PartnerUserRole::MEMBER->value);

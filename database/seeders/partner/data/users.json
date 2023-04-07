@@ -1,11 +1,5 @@
 [
     {
-        "role": "admin",
-        "name": "Demo Partner1",
-        "email": "dummy1@fittr.tech",
-        "password": "dummy1"
-    },
-    {
         "role": "member",
         "name": "Geoff Bamber",
         "email": "geoff@fittr.tech",
@@ -28,5 +22,17 @@
         "name": "Mishuk Adhikari",
         "email": "mishuk.ad.bd@gmail.com",
         "password": "mishuksecret"
+    },
+    {
+        "role": "member",
+        "name": "Amir",
+        "email": "softwareengr.1@gmail.com",
+        "password": "amir"
+    },
+    {
+        "role": "member",
+        "name": "Tung",
+        "email": "gslip228@gmail.com",
+        "password": "tung"
     }
 ]

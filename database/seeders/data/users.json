@@ -30,6 +30,18 @@
         "password": "mishuksecret"
     },
     {
+        "role": "admin",
+        "name": "Amir",
+        "email": "softwareengr.1@gmail.com",
+        "password": "amir"
+    },
+    {
+        "role": "admin",
+        "name": "Tung",
+        "email": "gslip228@gmail.com",
+        "password": "tung"
+    },
+    {
         "role": "partner",
         "name": "Demo Partner1",
         "email": "dummy1@fittr.tech",
