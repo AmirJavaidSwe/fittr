@@ -37,8 +37,7 @@ router.on('navigate', (event) => {
       <font-awesome-icon :icon="faUsers" />
       <div>Members</div>
     </NavLink>
-    <!-- <NavLink :href="route('admin.instructors.index')" :active="active_route.name == 'admin.instructors.index'"> -->
-    <NavLink href="#">
+    <NavLink :href="route('partner.instructors.index')" :active="active_route.name == 'partner.instructors.index'">
       <font-awesome-icon :icon="faUserTie" />
       <div>Instructors</div>
     </NavLink>

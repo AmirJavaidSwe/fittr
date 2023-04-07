@@ -4,7 +4,7 @@ namespace App\Http\Requests\Partner;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class MemberFormRequest extends FormRequest
+class InstructorFormRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,7 +25,7 @@ class MemberFormRequest extends FormRequest
     {
         $rules =  [
             'name' => 'required',
-            'email' => 'required|email|unique:mysql_partner.users,email,'.$this->member?->id,
+            'email' => 'required|email|unique:mysql_partner.users,email,'.$this->instructor?->id,
         ];
 
         return $rules;

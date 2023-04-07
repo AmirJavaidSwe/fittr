@@ -18,7 +18,7 @@ const props = defineProps({
         type: Boolean,
         default: false
     },
-    members: Object,
+    instructors: Object,
     search: String,
     per_page: Number,
     order_by: String,
@@ -33,7 +33,7 @@ const form = useForm({
 });
 
 const runSearch = () => {
-    form.get(route('partner.members.index'), {
+    form.get(route('partner.instructors.index'), {
         preserveScroll: true,
         preserveState: true,
         replace: true,
@@ -56,7 +56,7 @@ const confirmDeletion = (id) => {
     itemDeleting.value = true;
 };
 const deleteItem = () => {
-    form.delete(route('partner.members.destroy', { id: itemIdDeleting.value }), {
+    form.delete(route('partner.instructors.destroy', { id: itemIdDeleting.value }), {
         preserveScroll: true,
         preserveState: true,
         onSuccess: () => {
@@ -69,8 +69,8 @@ const deleteItem = () => {
 </script>
 <template>
     <data-table-layout
-        button-title="Create a new member"
-        :button-link="route('partner.members.create')"
+        button-title="Create a new instructor"
+        :button-link="route('partner.instructors.create')"
         :disable-search="disableSearch">
 
         <template #search>
@@ -92,22 +92,22 @@ const deleteItem = () => {
         </template>
 
         <template #tableData>
-            <tr v-for="member in members.data" >
-                <table-data :title="member.id"/>
+            <tr v-for="instructor in instructors.data" >
+                <table-data :title="instructor.id"/>
                 <table-data>
                     <Link class="font-medium text-indigo-600 hover:text-indigo-500"
-                          :href="route('partner.members.show', member)"> {{ member.name }} </Link>
+                          :href="route('partner.instructors.show', instructor)"> {{ instructor.name }} </Link>
                 </table-data>
-                <table-data :title="member.email"/>
-                <table-data :title="dayjs(member.created_at).fromNow()"/>
-                <table-data :title="dayjs(member.updated_at).fromNow()"/>
+                <table-data :title="instructor.email"/>
+                <table-data :title="dayjs(instructor.created_at).fromNow()"/>
+                <table-data :title="dayjs(instructor.updated_at).fromNow()"/>
                 <table-data>
                     <Link class="font-medium text-indigo-600 hover:text-indigo-500"
-                          :href="route('partner.members.edit', member)">
+                          :href="route('partner.instructors.edit', instructor)">
                         Edit
                     </Link>
                     <br>
-                    <button class="block text-red-500" @click="confirmDeletion(member.id)">
+                    <button class="block text-red-500" @click="confirmDeletion(instructor.id)">
                         Delete
                     </button>
                 </table-data>
@@ -116,9 +116,9 @@ const deleteItem = () => {
 
         <template #pagination>
             <pagination
-                :links="members.links"/>
+                :links="instructors.links"/>
 
-            <p class="p-2 text-xs">Viewing {{members.from}} - {{members.to}} of {{members.total}} results</p>
+            <p class="p-2 text-xs">Viewing {{instructors.from}} - {{instructors.to}} of {{instructors.total}} results</p>
         </template>    
     </data-table-layout>
     <!-- Delete Confirmation Modal -->

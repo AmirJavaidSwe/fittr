@@ -20,6 +20,7 @@ use App\Http\Controllers\Partner\PartnerPricingController;
 use App\Http\Controllers\Partner\PartnerSubscriptionController;
 use App\Http\Controllers\Partner\PartnerSettingController;
 use App\Http\Controllers\Partner\PartnerMemberController;
+use App\Http\Controllers\Partner\PartnerInstructorController;
 use App\Http\Controllers\Partner\PartnerAmenityController;
 
 Route::get('/auth/google', function () {
@@ -120,6 +121,7 @@ Route::domain('app.'.config('app.domain'))->group(function () {
             //partner.members.index
             //partner.members.destroy /members/{member}
             Route::resource('members', PartnerMemberController::class);
+            Route::resource('instructors', PartnerInstructorController::class);
             Route::resource('amenity', PartnerAmenityController::class);
         });
     
