@@ -1,0 +1,45 @@
+<script setup>
+import SingleView from "@/Components/DataTable/SingleView.vue";
+import SingleViewRow from "@/Components/DataTable/SingleViewRow.vue";
+import dayjs from 'dayjs';
+import {Link} from "@inertiajs/vue3";
+
+defineProps({
+    class_lesson: {
+        type: Object,
+        required: true,
+    },
+});
+</script>
+<template>
+    <single-view title="Class Details" description="Here is the full details of the class">
+        <template #head>
+            <div class="flex flex-row items-center mr-10">
+                <Link
+                    class="cursor-pointer h-10 inline-flex items-center justify-center rounded-md border border-transparent
+                            bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none
+                            focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+                    :href="route('partner.classes.edit', class_lesson)">
+                    Edit
+                </Link>
+            </div>
+        </template>
+        <template #item>
+            <single-view-row label="ID" :even="false" :value="class_lesson.id"/>
+
+            <single-view-row label="Name" :even="true" :value="class_lesson.name"/>
+
+            <single-view-row label="Studio" :even="false" :value="class_lesson.studio?.title"/>
+
+            <single-view-row label="Instructor" :even="true" :value="class_lesson.instructor?.name"/>
+
+            <single-view-row label="Start At" :even="false" :value="dayjs(class_lesson.start_at).format('dddd, MMMM D, YYYY h:mm A')"/>
+
+            <single-view-row label="End At" :even="true" :value="dayjs(class_lesson.end_at).format('dddd, MMMM D, YYYY h:mm A')"/>
+
+            <single-view-row label="Created At" :even="false" :value="dayjs(class_lesson.created_at)"/>
+
+            <single-view-row label="Updated At" :even="true" :value="dayjs(class_lesson.updated_at)"/>
+        </template>
+    </single-view>
+</template>
