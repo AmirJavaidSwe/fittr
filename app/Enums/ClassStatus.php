@@ -2,7 +2,9 @@
 
 namespace App\Enums;
 
-enum ClassStatuses: string
+use Illuminate\Support\Str;
+
+enum ClassStatus: string
 {
     case ACTIVE = 'active';
     case INACTIVE = 'inactive';
@@ -26,21 +28,6 @@ enum ClassStatuses: string
         self::CANCELLED->value
     ];
 
-    const GET_VALUES_WITH_LABELS = [
-        [
-            'label' => self::ACTIVE->value,
-            'value' => self::ACTIVE->value,
-        ],
-        [
-            'label' => self::INACTIVE->value,
-            'value' => self::INACTIVE->value,
-        ],
-        [
-            'label' => self::CANCELLED->value,
-            'value' => self::CANCELLED->value,
-        ]
-    ];
-
     public function is($status): bool
     {
         return $this === $status;
@@ -54,5 +41,23 @@ enum ClassStatuses: string
     public static function get(): array
     {
         return self::GET;
+    }
+
+    public static function labels(): array
+    {
+        return array(
+            [
+                'label' => Str::ucfirst(__(self::ACTIVE->value)),
+                'value' => self::ACTIVE->value,
+            ],
+            [
+                'label' => Str::ucfirst(__(self::INACTIVE->value)),
+                'value' => self::INACTIVE->value,
+            ],
+            [
+                'label' => Str::ucfirst(__(self::CANCELLED->value)),
+                'value' => self::CANCELLED->value,
+            ]
+        );
     }
 }

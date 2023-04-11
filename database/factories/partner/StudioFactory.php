@@ -17,17 +17,17 @@ class StudioFactory extends Factory
     public function definition()
     {
         return [
-            'title' => $this->faker->sentence(3),
+            'title' => 'Studio '.$this->faker->randomLetter(),
             'page_title' => $this->faker->sentence(3),
             'brief' => $this->faker->sentence(3),
-            'address_line_1' => $this->faker->sentence(3),
-            'address_line_2' => $this->faker->sentence(3),
-            'city' => $this->faker->sentence(3),
+            'address_line_1' => $this->faker->streetAddress(),
+            'address_line_2' => $this->faker->cityPrefix(),
+            'city' => $this->faker->city(),
             'county' => $this->faker->sentence(3),
-            'postcode' => $this->faker->sentence(3),
-            'tel' => $this->faker->sentence(3),
-            'map_latitude' => $this->faker->sentence(3),
-            'map_longitude' => $this->faker->sentence(3),
+            'postcode' => $this->faker->postcode(),
+            'tel' => $this->faker->phoneNumber(),
+            'map_latitude' => $this->faker->latitude(),
+            'map_longitude' => $this->faker->longitude(),
             'ordering' => rand(1, 100),
             'status' => rand(0, 1)
         ];

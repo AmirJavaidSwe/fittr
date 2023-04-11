@@ -17,15 +17,16 @@ class ClassLessonFactory extends Factory
      */
     public function definition(): array
     {
+        $dt = today()->addDays(rand(1, 10))->addHour(rand(6, 10));
+
         return [
             'name' => $this->faker->sentence,
             'status' => $this->faker->randomElement(['active', 'inactive']),
-            'start_date' => $this->faker->dateTime,
-            'end_date' => $this->faker->dateTime,
-            'instructor_id' => $this->faker->numberBetween(1, 10),
-            'studio_id' => $this->faker->numberBetween(1, 10),
-            'does_repeat' => $this->faker->boolean,
-            'week_days' => $this->faker->randomElements(ClassLesson::WEEK_DAYS, $this->faker->numberBetween(1, 7)),
+            'is_offpeak' => $this->faker->boolean,
+            'start_date' => $dt,
+            'end_date' => $dt->copy()->addMinutes(45),
+            'instructor_id' => $this->faker->numberBetween(1, 5),
+            'studio_id' => $this->faker->numberBetween(1, 5),
         ];
     }
 }
