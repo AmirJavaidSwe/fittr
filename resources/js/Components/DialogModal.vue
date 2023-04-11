@@ -1,7 +1,9 @@
 <script setup>
+import { computed, useSlots } from 'vue';
 import Modal from './Modal.vue';
 
 const emit = defineEmits(['close']);
+const hasFooter = computed(() => !! useSlots().footer);
 
 defineProps({
     show: {
@@ -40,7 +42,7 @@ const close = () => {
                 <slot name="content" />
             </div>
         </div>
-        <div class="flex flex-row justify-end px-6 py-4 bg-gray-100 text-right">
+        <div v-if="hasFooter" class="flex flex-row justify-end px-6 py-4 bg-gray-100 text-right">
             <slot name="footer" />
         </div>
     </Modal>

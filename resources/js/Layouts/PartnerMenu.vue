@@ -28,8 +28,7 @@ router.on('navigate', (event) => {
       <font-awesome-icon :icon="faHome" />
       <div>Dashboard</div>
     </NavLink>
-    <!-- <NavLink :href="route('admin.class-lesson.index')" :active="active_route.name == 'admin.class-lesson.index'"> -->
-    <NavLink href="#">
+    <NavLink :href="route('partner.classes.index')" :active="active_route.name == 'partner.class-lesson.index'">
       <font-awesome-icon :icon="faBookOpen" />
       <div>Classes</div>
     </NavLink>

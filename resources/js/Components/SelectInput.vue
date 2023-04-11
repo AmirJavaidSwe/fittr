@@ -15,7 +15,7 @@
         @change="$emit('update:modelValue', $event.target.value)"
         >
         <option v-for="option in options"
-                :key="option.id"
+                :key="option[option_value]"
                 :value="option[option_value]">
             {{ option[option_text] }}
         </option>

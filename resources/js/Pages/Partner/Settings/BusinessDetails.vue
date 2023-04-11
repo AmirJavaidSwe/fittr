@@ -15,7 +15,7 @@ import InputError from '@/Components/InputError.vue';
 import ActionMessage from '@/Components/ActionMessage.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 
-dayjs.extend(utc)
+dayjs.extend(utc);
 dayjs.extend(timezone);
 
 const props = defineProps({
