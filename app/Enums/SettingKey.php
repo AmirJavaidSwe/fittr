@@ -125,9 +125,9 @@ enum SettingKey: string
             static::logo => ['nullable', 'mimes:jpg,jpeg,png,svg', 'max:2048'], //2MB
             static::logo_url => ['nullable', 'max:255', 'regex:"^(http:\/\/|https:\/\/)"'],
             static::favicon => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'], //1MB
-            static::show_address => ['boolean'],
-            static::show_phone => ['boolean'],
-            static::show_email => ['boolean'],
+            static::show_address => ['nullable', 'boolean'],
+            static::show_phone => ['nullable', 'boolean'],
+            static::show_email => ['nullable', 'boolean'],
             static::link_facebook => ['nullable', 'string', 'max:255', 'regex:"^https:\/\/www.facebook.com\/"'],
             static::link_instagram => ['nullable', 'string', 'max:255', 'regex:"^https:\/\/www.instagram.com\/"'],
             static::link_twitter => ['nullable', 'string', 'max:255', 'regex:"^https:\/\/twitter.com\/"'],

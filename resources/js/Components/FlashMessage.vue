@@ -15,12 +15,16 @@ const has_msg = computed(() => props.flash.timestamp);
 const msg_type = computed(() => props.flash.type);
 const errors = computed(() => props.errors);
 const show = ref(false);
+const shown = ref([]);
 const show_errors = ref(false);
 const title = ref(null);
 const timer = ref(null);
 const classes = ref('');
 watch(has_msg, () => {
     if(!has_msg.value) return;
+    if (shown.value.includes(has_msg.value))  return;    
+    shown.value.push(has_msg.value);
+
     switch (msg_type.value) {
         case 'success':
             classes.value = 'border-green-500';
