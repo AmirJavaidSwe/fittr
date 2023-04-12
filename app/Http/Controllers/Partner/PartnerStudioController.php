@@ -36,8 +36,21 @@ class PartnerStudioController extends Controller
             'per_page' => intval($this->per_page),
             'order_by' => $this->order_by,
             'order_dir' => $this->order_dir,
-            'page_title' => __('Studios'),
-            'header' => __('Studios'),
+            'page_title' => __('Settings - Studios'),
+            'header' => array(
+                [
+                    'title' => __('Settings'),
+                    'link' => route('partner.settings.index'),
+                ],
+                [
+                    'title' => '/',
+                    'link' => null,
+                ],
+                [
+                    'title' => __('Studios'),
+                    'link' => null,
+                ],
+            ),
         ]);
     }
 
@@ -51,6 +64,14 @@ class PartnerStudioController extends Controller
         return Inertia::render('Partner/Studio/Create', [
             'page_title' => __('Create Studio'),
             'header' => array(
+                [
+                    'title' => __('Settings'),
+                    'link' => route('partner.settings.index'),
+                ],
+                [
+                    'title' => '/',
+                    'link' => null,
+                ],
                 [
                     'title' => __('Studios'),
                     'link' => route('partner.studios.index'),
@@ -92,6 +113,14 @@ class PartnerStudioController extends Controller
             'page_title' => __('Studio details'),
             'header' => array(
                 [
+                    'title' => __('Settings'),
+                    'link' => route('partner.settings.index'),
+                ],
+                [
+                    'title' => '/',
+                    'link' => null,
+                ],
+                [
                     'title' => __('Studios'),
                     'link' => route('partner.studios.index'),
                 ],
@@ -119,6 +148,14 @@ class PartnerStudioController extends Controller
         return Inertia::render('Partner/Studio/Edit', [
             'page_title' => __('Edit Studio'),
             'header' => array(
+                [
+                    'title' => __('Settings'),
+                    'link' => route('partner.settings.index'),
+                ],
+                [
+                    'title' => '/',
+                    'link' => null,
+                ],
                 [
                     'title' => __('Studios'),
                     'link' => route('partner.studios.index'),

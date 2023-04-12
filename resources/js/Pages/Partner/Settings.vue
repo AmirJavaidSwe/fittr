@@ -1,6 +1,19 @@
 <script setup>
 import { computed } from 'vue';
-import { faMoneyBill1, faGears, faCodeCompare, faStore, faCode, faFileContract, faTicket, faCreditCard, faFileInvoice, faPeopleGroup, faEnvelopesBulk } from '@fortawesome/free-solid-svg-icons';
+import { 
+    faMoneyBill1,
+    faGears,
+    faCodeCompare,
+    faStore,
+    faCode,
+    faFileContract,
+    faTicket,
+    faCreditCard,
+    faFileInvoice,
+    faPeopleGroup,
+    faEnvelopesBulk,
+    faDoorOpen,
+} from '@fortawesome/free-solid-svg-icons';
 import Section from '@/Components/Section.vue';
 import CardIcon from '@/Components/CardIcon.vue';
 </script>
@@ -54,6 +67,26 @@ import CardIcon from '@/Components/CardIcon.vue';
                         Connect external apps to your business
                     </template>
                 </CardIcon>
+            </div>
+            <div class="space-y-4">
+                <div class="text-xl font-bold tracking-tight text-gray-900">
+                    Studios
+                </div>
+
+                <CardIcon :card-link="route('partner.studios.index')">
+                    <template #icon>
+                        <font-awesome-icon :icon="faDoorOpen" />
+                    </template>
+
+                    <template #title>
+                        Studios
+                    </template>
+
+                    <template #default>
+                        Manage studios
+                    </template>
+                </CardIcon>
+
             </div>
             <div class="space-y-4">
                 <div class="text-xl font-bold tracking-tight text-gray-900">
