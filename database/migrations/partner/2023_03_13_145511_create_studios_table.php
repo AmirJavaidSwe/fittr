@@ -15,21 +15,21 @@ return new class extends Migration
     {
         Schema::create('studios', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('title', 250);
-            $table->string('page_title', 250);
-            $table->string('brief', 500);
-            $table->string('address_line_1');
-            $table->string('address_line_2');
-            $table->string('city');
-            $table->string('county');
-            $table->string('postcode');
-            $table->string('tel', 50);
-            $table->string('map_latitude', 50);
-            $table->string('map_longitude', 50);
-            $table->integer('ordering');
+            $table->boolean('status')->default(0);
+            $table->string('title', 255);
+            $table->string('page_title', 255)->nullable();
+            $table->string('brief', 500)->nullable();
+            $table->string('address_line_1', 255)->nullable();
+            $table->string('address_line_2', 255)->nullable();
+            $table->string('city', 255)->nullable();
+            $table->string('county', 255)->nullable();
+            $table->string('postcode', 255)->nullable();
+            $table->string('tel', 50)->nullable();
+            $table->string('map_latitude', 50)->nullable();
+            $table->string('map_longitude', 50)->nullable();
+            $table->integer('ordering')->default(0);
             $table->timestamps();
             $table->softDeletes();
-            $table->tinyInteger('status')->index();
         });
     }
 

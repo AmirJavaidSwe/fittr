@@ -23,6 +23,7 @@ use App\Http\Controllers\Partner\PartnerMemberController;
 use App\Http\Controllers\Partner\PartnerInstructorController;
 use App\Http\Controllers\Partner\PartnerAmenityController;
 use App\Http\Controllers\Partner\PartnerClassLessonController;
+use App\Http\Controllers\Partner\PartnerStudioController;
 
 Route::get('/auth/google', function () {
     return Socialite::driver('google')->redirect();
@@ -125,6 +126,7 @@ Route::domain('app.'.config('app.domain'))->group(function () {
             Route::resource('instructors', PartnerInstructorController::class);
             Route::resource('amenity', PartnerAmenityController::class);
             Route::resource('classes', PartnerClassLessonController::class);
+            Route::resource('studios', PartnerStudioController::class);
         });
     
     });
