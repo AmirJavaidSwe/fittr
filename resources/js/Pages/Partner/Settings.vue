@@ -13,6 +13,7 @@ import {
     faPeopleGroup,
     faEnvelopesBulk,
     faDoorOpen,
+    faGamepad,
 } from '@fortawesome/free-solid-svg-icons';
 import Section from '@/Components/Section.vue';
 import CardIcon from '@/Components/CardIcon.vue';
@@ -84,6 +85,20 @@ import CardIcon from '@/Components/CardIcon.vue';
 
                     <template #default>
                         Manage studios
+                    </template>
+                </CardIcon>
+
+                <CardIcon :card-link="route('partner.classtypes.index')">
+                    <template #icon>
+                        <font-awesome-icon :icon="faGamepad" />
+                    </template>
+
+                    <template #title>
+                        Class Types
+                    </template>
+
+                    <template #default>
+                        Manage studio class types
                     </template>
                 </CardIcon>
 
