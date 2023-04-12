@@ -40,8 +40,21 @@ class PartnerAmenityController extends Controller
             'per_page' => intval($this->per_page),
             'order_by' => $this->order_by,
             'order_dir' => $this->order_dir,
-            'page_title' => __('Amenities'),
-            'header' => __('Amenities'),
+            'page_title' => __('Settings - Studio amenities'),
+            'header' => array(
+                [
+                    'title' => __('Settings'),
+                    'link' => route('partner.settings.index'),
+                ],
+                [
+                    'title' => '/',
+                    'link' => null,
+                ],
+                [
+                    'title' => __('Studio amenities'),
+                    'link' => null,
+                ],
+            ),
         ]);
     }
 
@@ -55,6 +68,14 @@ class PartnerAmenityController extends Controller
         return Inertia::render('Partner/Amenity/Create', [
             'page_title' => __('Create Amenity'),
             'header' => array(
+                [
+                    'title' => __('Settings'),
+                    'link' => route('partner.settings.index'),
+                ],
+                [
+                    'title' => '/',
+                    'link' => null,
+                ],
                 [
                     'title' => __('Amenities'),
                     'link' => route('partner.amenity.index'),
@@ -94,8 +115,16 @@ class PartnerAmenityController extends Controller
     {
         // image path provided by model accessor
         return Inertia::render('Partner/Amenity/Show', [
-            'page_title' => __('Show Amenity'),
+            'page_title' => __('Amenity details'),
             'header' => array(
+                [
+                    'title' => __('Settings'),
+                    'link' => route('partner.settings.index'),
+                ],
+                [
+                    'title' => '/',
+                    'link' => null,
+                ],
                 [
                     'title' => __('Amenities'),
                     'link' => route('partner.amenity.index'),
@@ -124,6 +153,14 @@ class PartnerAmenityController extends Controller
         return Inertia::render('Partner/Amenity/Edit', [
             'page_title' => __('Edit Amenity'),
             'header' => array(
+                [
+                    'title' => __('Settings'),
+                    'link' => route('partner.settings.index'),
+                ],
+                [
+                    'title' => '/',
+                    'link' => null,
+                ],
                 [
                     'title' => __('Amenities'),
                     'link' => route('partner.amenity.index'),

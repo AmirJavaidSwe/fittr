@@ -48,9 +48,5 @@ router.on('navigate', (event) => {
       <font-awesome-icon :icon="faGears" />
       <div>Settings</div>
     </NavLink>
-    <NavLink :href="route('partner.amenity.index')" :active="active_route.name == 'partner.amenity.index'">
-      <font-awesome-icon :icon="faWandMagicSparkles" />
-      <div>Amenity</div>
-    </NavLink>
   </div>
 </template>

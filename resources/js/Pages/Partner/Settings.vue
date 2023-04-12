@@ -14,6 +14,7 @@ import {
     faEnvelopesBulk,
     faDoorOpen,
     faGamepad,
+    faWandMagicSparkles,
 } from '@fortawesome/free-solid-svg-icons';
 import Section from '@/Components/Section.vue';
 import CardIcon from '@/Components/CardIcon.vue';
@@ -99,6 +100,20 @@ import CardIcon from '@/Components/CardIcon.vue';
 
                     <template #default>
                         Manage studio class types
+                    </template>
+                </CardIcon>
+
+                <CardIcon :card-link="route('partner.amenity.index')">
+                    <template #icon>
+                        <font-awesome-icon :icon="faWandMagicSparkles" />
+                    </template>
+
+                    <template #title>
+                        Amenities
+                    </template>
+
+                    <template #default>
+                        Manage studio amenities
                     </template>
                 </CardIcon>
 

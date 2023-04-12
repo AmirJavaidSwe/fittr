@@ -69,7 +69,7 @@ const deleteItem = () => {
 </script>
 <template>
     <data-table-layout
-        button-title="Create a new amenity"
+        button-title="Create new"
         :button-link="route('partner.amenity.create')">
 
         <template #search>
