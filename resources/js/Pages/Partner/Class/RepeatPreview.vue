@@ -9,6 +9,7 @@ import {
     faBookOpen,
     faUserTie,
     faLocationDot,
+    faGamepad,
     faTornado,
     faRetweet
 } from '@fortawesome/free-solid-svg-icons';
@@ -24,6 +25,7 @@ const props = defineProps({
     form_data: Object,
     class_duration: Number,
     instructor: Object,
+    classtype: Object,
     repeats: Array,
     repeats_count: Number,
     studio: Object,
@@ -100,6 +102,19 @@ const form = useForm(props.form_data);
 
                     <template #default>
                         Studio
+                    </template>
+                </CardIcon>
+                <CardIcon class="w-full sm:w-auto">
+                    <template #icon>
+                        <font-awesome-icon :icon="faGamepad" />
+                    </template>
+
+                    <template #title>
+                        {{props.classtype.title}}
+                    </template>
+
+                    <template #default>
+                        Class Type
                     </template>
                 </CardIcon>
                 <CardIcon class="w-full sm:w-auto">

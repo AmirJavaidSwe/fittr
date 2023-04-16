@@ -26,8 +26,9 @@ class ClassFormRequest extends FormRequest
     public function rules()
     {
         $rules =  [
-            'name' => 'required|string|max:191',
+            'title' => 'required|string|max:255',
             'instructor_id' => 'required|integer|exists:mysql_partner.users,id',
+            'classtype_id' => 'required|integer|exists:mysql_partner.classtypes,id',
             'studio_id' => 'required|integer|exists:mysql_partner.studios,id',
             'start_date' => 'required|date',
             'end_date' => 'required|date',

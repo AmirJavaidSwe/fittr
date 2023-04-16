@@ -17,6 +17,7 @@ import Switcher from "@/Components/Switcher.vue";
 const props = defineProps({
     statuses: Object,
     instructors: Object,
+    classtypes: Object,
     studios: Object,
     form: {
         type: Object,
@@ -48,14 +49,14 @@ const updateWeekDays = (index) => {
     <FormSection @submitted="submitted">
         <template #form>
             <div class="">
-                <InputLabel for="name" value="Class Name"/>
+                <InputLabel for="title" value="Class Title"/>
                 <TextInput
-                    id="name"
-                    v-model="form.name"
+                    id="title"
+                    v-model="form.title"
                     type="text"
                     class="mt-1 block w-full"
                     />
-                <InputError :message="form.errors.name" class="mt-2"/>
+                <InputError :message="form.errors.title" class="mt-2"/>
             </div>
 
             <div class="">
@@ -130,6 +131,21 @@ const updateWeekDays = (index) => {
                     >
                 </Multiselect>
                 <InputError :message="form.errors.instructor_id" class="mt-2"/>
+            </div>
+
+            <!-- Class Type -->
+            <div class="">
+                <InputLabel for="classtype" value="Class Type"/>
+                <Multiselect
+                    v-model="form.classtype_id"
+                    :options="classtypes"
+                    :searchable="true"
+                    :close-on-select="true"
+                    :show-labels="true"
+                    placeholder="Select Class Type"
+                    >
+                </Multiselect>
+                <InputError :message="form.errors.classtype_id" class="mt-2"/>
             </div>
 
             <!-- Studios -->

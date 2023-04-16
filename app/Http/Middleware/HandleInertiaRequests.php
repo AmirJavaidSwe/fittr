@@ -46,6 +46,7 @@ class HandleInertiaRequests extends Middleware
                 'message' => $request->session()->get('flash_message', __('OK')),
                 'timestamp' => $request->session()->get('flash_timestamp'),
             ],
+            'extra' => $request->session()->get('extra'),
             // 'ziggy' => (new Ziggy(['common', 'partner', 'admin']))->toArray(),
         ]);
     }

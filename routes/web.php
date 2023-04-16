@@ -25,6 +25,7 @@ use App\Http\Controllers\Partner\PartnerAmenityController;
 use App\Http\Controllers\Partner\PartnerClassLessonController;
 use App\Http\Controllers\Partner\PartnerStudioController;
 use App\Http\Controllers\Partner\PartnerClassTypeController;
+use App\Http\Controllers\Partner\PartnerExportController;
 
 Route::get('/auth/google', function () {
     return Socialite::driver('google')->redirect();
@@ -129,6 +130,11 @@ Route::domain('app.'.config('app.domain'))->group(function () {
             Route::resource('classes', PartnerClassLessonController::class);
             Route::resource('studios', PartnerStudioController::class);
             Route::resource('classtypes', PartnerClassTypeController::class);
+
+            Route::get('/exports', [PartnerExportController::class, 'index'])->name('exports.index');
+            Route::get('/exports/{export}', [PartnerExportController::class, 'show'])->name('exports.show');
+            Route::delete('/exports/{export}', [PartnerExportController::class, 'destroy'])->name('exports.destroy');
+            Route::post('/exports', [PartnerExportController::class, 'store']);
         });
     
     });

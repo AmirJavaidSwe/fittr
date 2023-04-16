@@ -10,37 +10,9 @@ enum ClassStatus: string
     case INACTIVE = 'inactive';
     case CANCELLED = 'cancelled';
 
-    const GET = [
-        self::ACTIVE,
-        self::INACTIVE,
-        self::CANCELLED
-    ];
-
-    const CLASSES = [
-        self::ACTIVE->value => 'Active',
-        self::INACTIVE->value => 'Inactive',
-        self::CANCELLED->value => 'Cancelled'
-    ];
-
-    const GET_VALUES = [
-        self::ACTIVE->value,
-        self::INACTIVE->value,
-        self::CANCELLED->value
-    ];
-
-    public function is($status): bool
+    public static function all(): array
     {
-        return $this === $status;
-    }
-
-    public function isNot($status): bool
-    {
-        return !$this->is($status);
-    }
-
-    public static function get(): array
-    {
-        return self::GET;
+        return array_column(self::cases(), 'value', 'name');
     }
 
     public static function labels(): array

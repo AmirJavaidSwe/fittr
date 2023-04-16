@@ -17,14 +17,16 @@ let props = defineProps({
     statuses: Object,
     studios: Object,
     instructors: Object,
+    classtypes: Object,
 });
 
 let form = useForm({
-    name: props.class_lesson.name,
+    title: props.class_lesson.title,
     status: props.class_lesson.status,
     start_date: props.class_lesson.start_date,
     end_date: props.class_lesson.end_date,
     instructor_id: props.class_lesson.instructor_id,
+    classtype_id: props.class_lesson.classtype_id,
     studio_id: props.class_lesson.studio_id,
     is_offpeak: props.class_lesson.is_offpeak,
 });
@@ -36,6 +38,7 @@ let form = useForm({
         :statuses="statuses"
         :studios="studios"
         :instructors="instructors"
+        :classtypes="classtypes"
         :submitted="storeClass"
         />
 </template>

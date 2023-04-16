@@ -27,11 +27,13 @@ defineProps({
         <template #item>
             <single-view-row label="ID" :even="false" :value="class_lesson.id"/>
 
-            <single-view-row label="Name" :even="true" :value="class_lesson.name"/>
+            <single-view-row label="Name" :even="true" :value="class_lesson.title"/>
 
             <single-view-row label="Studio" :even="false" :value="class_lesson.studio?.title"/>
 
             <single-view-row label="Instructor" :even="true" :value="class_lesson.instructor?.name"/>
+
+            <single-view-row label="Class Type" :even="true" :value="class_lesson.classtype?.title"/>
 
             <single-view-row label="Start At" :even="false" :value="dayjs(class_lesson.start_at).format('dddd, MMMM D, YYYY h:mm A')"/>
 

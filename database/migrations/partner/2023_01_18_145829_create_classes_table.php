@@ -17,13 +17,14 @@ return new class extends Migration
     {
         Schema::create('classes', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->enum('status', ClassStatus::GET_VALUES)->default(ClassStatus::INACTIVE->value);
+            $table->string('title', 255);
+            $table->enum('status', ClassStatus::all())->default(ClassStatus::INACTIVE->value);
             $table->boolean('is_offpeak')->default(false);
             $table->timestamp('start_date')->nullable();
             $table->timestamp('end_date')->nullable();
             $table->integer('instructor_id')->unsigned();
-            $table->integer('studio_id')->nullable()->unsigned();
+            $table->integer('classtype_id')->unsigned();
+            $table->integer('studio_id')->unsigned();
             $table->timestamps();
             $table->softDeletes();
         });

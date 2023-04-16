@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 // use App\Http\Requests\ImportFile;
 use App\Http\Requests\Partner\ClassFormRequest;
 use App\Models\Partner\ClassLesson;
+use App\Models\Partner\Classtype;
 use App\Models\Partner\Instructor;
 use App\Models\Partner\Studio;
 use Illuminate\Http\Request;
@@ -47,6 +48,7 @@ class PartnerClassLessonController extends Controller
                 ->withQueryString(),
             'statuses' => ClassStatus::labels(),
             'instructors' => Instructor::orderBy('id', 'desc')->pluck('name', 'id'),
+            'classtypes' => Classtype::orderBy('id', 'desc')->pluck('title', 'id'),
             'studios' => Studio::orderBy('id', 'desc')->pluck('title', 'id'),
         ]);
     }
@@ -76,6 +78,7 @@ class PartnerClassLessonController extends Controller
             ),
             'statuses' => ClassStatus::labels(),
             'instructors' => Instructor::orderBy('id', 'desc')->pluck('name', 'id'),
+            'classtypes' => Classtype::orderBy('id', 'desc')->pluck('title', 'id'),
             'studios' => Studio::orderBy('id', 'desc')->pluck('title', 'id'),
         ]);
     }
@@ -146,6 +149,7 @@ class PartnerClassLessonController extends Controller
                 ),
                 'form_data' => array_merge($validated, ['preview_confirmed' => true]),
                 'instructor' => Instructor::find($request->instructor_id),
+                'classtype' => Classtype::find($request->classtype_id),
                 'studio' => Studio::find($request->studio_id),
                 'class_duration' => $class_duration,
                 'repeats' => $repeats,
@@ -182,7 +186,7 @@ class PartnerClassLessonController extends Controller
                     'link' => null,
                 ],
             ),
-            'class_lesson' => $class->load(['studio', 'instructor']),
+            'class_lesson' => $class->load(['studio', 'instructor', 'classtype']),
         ]);
     }
 
@@ -213,6 +217,7 @@ class PartnerClassLessonController extends Controller
             'class_lesson' => $class,
             'statuses' => ClassStatus::labels(),
             'instructors' => Instructor::orderBy('id', 'desc')->pluck('name', 'id'),
+            'classtypes' => Classtype::orderBy('id', 'desc')->pluck('title', 'id'),
             'studios' => Studio::orderBy('id', 'desc')->pluck('title', 'id'),
         ]);
     }

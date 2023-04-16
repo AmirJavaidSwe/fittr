@@ -9,13 +9,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
-/**
- * @method static create(array $array)
- * @method static orderBy(string $string, string $string1)
- * @method static select(string[] $array)
- * @method static count()
- * @method static distinct(string $string)
- */
 class ClassLesson extends Model
 {
     use HasFactory;
@@ -40,16 +33,6 @@ class ClassLesson extends Model
         'status_label',
     ];
 
-    const WEEK_DAYS = [
-        'monday' => 'Monday',
-        'tuesday' => 'Tuesday',
-        'wednesday' => 'Wednesday',
-        'thursday' => 'Thursday',
-        'friday' => 'Friday',
-        'saturday' => 'Saturday',
-        'sunday' => 'Sunday',
-    ];
-
     public function studio(): BelongsTo
     {
         return $this->belongsTo(Studio::class);
@@ -58,6 +41,11 @@ class ClassLesson extends Model
     public function instructor(): BelongsTo
     {
         return $this->belongsTo(Instructor::class);
+    }
+
+    public function classtype(): BelongsTo
+    {
+        return $this->belongsTo(Classtype::class);
     }
 
     // Accessors
