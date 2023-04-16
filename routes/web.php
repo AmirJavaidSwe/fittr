@@ -48,7 +48,7 @@ Route::domain('app.'.config('app.domain'))->group(function () {
         config('jetstream.auth_session'),
         'verified',
     ])->group(function () {
-        
+
         //ADMIN
         Route::middleware(['auth.role:admin'])->prefix('admin')->name('admin.')->group(function () {
             Route::get('/demo', [DemoController::class, 'index'])->name('demo');
@@ -57,6 +57,7 @@ Route::domain('app.'.config('app.domain'))->group(function () {
                 Route::get('/partners', 'index')->name('index');
                 Route::get('/partners/{id}', 'show')->name('show');
                 Route::get('/partners/{id}/edit', 'edit')->name('edit');
+                Route::get('/partners/{id}/login_as', 'loginAs')->name('login-as');
                 Route::put('/partners/{id}', 'update')->name('update');
                 Route::delete('/partners/{id}', 'destroy')->name('destroy');
                 Route::post('/partners', 'store')->name('store');
@@ -80,21 +81,21 @@ Route::domain('app.'.config('app.domain'))->group(function () {
                 Route::delete('/packages/{package}', 'destroy')->name('destroy');
             });
         });
-    
-        //PARTNER 
+
+        //PARTNER
         // \App\Http\Middleware\ConnectPartnerDatabase::class runs on every request, see App\Http\Kernel $middlewareGroups
         // ConnectPartnerDatabase must run before SubstituteBindings in order for implicit model bindings to work
-    
+
         Route::middleware(['auth.role:partner'])->name('partner.')->group(function () {
             Route::get('/dashboard', [PartnerDashboardController::class, 'index'])->name('dashboard');
             Route::get('/pricing', [PartnerPricingController::class, 'index'])->name('pricing.index');
-    
+
             Route::get('/subscriptions', [PartnerSubscriptionController::class, 'index'])->name('subscriptions.index');
             Route::put('/subscriptions/{subscription}/cancel', [PartnerSubscriptionController::class, 'cancel'])->name('subscriptions.cancel');
             Route::post('/subscriptions/{package}/store', [PartnerSubscriptionController::class, 'store'])->name('subscriptions.store');
-    
+
             Route::get('/contact-us', [PartnerDashboardController::class, 'index'])->name('contact.index');
-    
+
             Route::get('/settings', [PartnerSettingController::class, 'index'])->name('settings.index');
             Route::get('/settings/general-details', [PartnerSettingController::class, 'generalDetails'])->name('settings.general-details');
             Route::put('/settings/general-details', [PartnerSettingController::class, 'generalDetailsUpdate']);
@@ -104,7 +105,7 @@ Route::domain('app.'.config('app.domain'))->group(function () {
             Route::put('/settings/general-formats', [PartnerSettingController::class, 'generalFormatsUpdate']);
             Route::get('/settings/integrations', [PartnerSettingController::class, 'integrations'])->name('settings.integrations');
             Route::put('/settings/integrations', [PartnerSettingController::class, 'integrationsUpdate']);
-    
+
             Route::get('/settings/service-store-general', [PartnerSettingController::class, 'serviceStoreGeneral'])->name('settings.service-store-general');
             Route::put('/settings/service-store-general', [PartnerSettingController::class, 'serviceStoreGeneralUpdate']);
             Route::get('/settings/service-store-header', [PartnerSettingController::class, 'serviceStoreHeader'])->name('settings.service-store-header');
@@ -113,7 +114,7 @@ Route::domain('app.'.config('app.domain'))->group(function () {
             Route::put('/settings/service-store-seo', [PartnerSettingController::class, 'serviceStoreSeoUpdate']);
             Route::get('/settings/service-store-code', [PartnerSettingController::class, 'serviceStoreCode'])->name('settings.service-store-code');
             Route::put('/settings/service-store-code', [PartnerSettingController::class, 'serviceStoreCodeUpdate']);
-    
+
             // Route::get('/settings/service-store-widgets', [PartnerSettingController::class, 'serviceStoreWidgets'])->name('settings.service-store-widgets');
             // Route::put('/settings/service-store-widgets', [PartnerSettingController::class, 'serviceStoreWidgetsUpdate']);
             Route::get('/settings/service-store-waivers', [PartnerSettingController::class, 'serviceStoreWaivers'])->name('settings.service-store-waivers');
@@ -136,7 +137,7 @@ Route::domain('app.'.config('app.domain'))->group(function () {
             Route::delete('/exports/{export}', [PartnerExportController::class, 'destroy'])->name('exports.destroy');
             Route::post('/exports', [PartnerExportController::class, 'store']);
         });
-    
+
     });
 });
 
