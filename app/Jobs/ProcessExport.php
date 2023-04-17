@@ -28,7 +28,6 @@ class ProcessExport implements ShouldQueue, ShouldBeUnique
      */
     public function __construct(Export $export)
     {
-        // dd($export);
         $this->export = $export;
     }
 
@@ -37,7 +36,6 @@ class ProcessExport implements ShouldQueue, ShouldBeUnique
      */
     public function uniqueId(): int
     {
-        // dd($this->export->id);
         return $this->export->id;
     }
 
@@ -58,10 +56,10 @@ class ProcessExport implements ShouldQueue, ShouldBeUnique
     {
         $enum = ExportType::from($this->export->export_type);
         $filters = $this->export->filters;
-        $model = $enum->model();
-        // $fields = $enum->fields();
+//        $model = $enum->model();
+        $export = $enum->get($filters);
 
-        //this is just a demo of export job
+        // this is just a demo of export job
         // $model is ok for basic exports, however most exports will require extra processing for columns
         // We need to add abstraction and make this job a proxy calling new App/Exports/{$enum->ExportClass}
 
@@ -107,17 +105,14 @@ class ProcessExport implements ShouldQueue, ShouldBeUnique
                     }
                     $query->{$method}($key, $operator, $value);
                 }
-            })
-            ->get();
+            })->get();
 
         //CREATE AND STORE FILE
-
         $this->export->update([
-            // 'csv_file_name' => 'string 1024',
+            'csv_file_name' => 'string 1024',
             'file_rows' => rand(10, 100),
             'file_size' => rand(100, 10000),
             'completed_at' => now(),
-
         ]);
     }
 }

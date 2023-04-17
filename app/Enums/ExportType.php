@@ -3,14 +3,16 @@
 namespace App\Enums;
 
 use App\Models\Partner\ClassLesson;
+use App\Models\Partner\Instructor;
+use App\Models\Partner\Studio;
 
 enum ExportType
 {
     case classes;
-    // case members;
-    // case instructors;
-    // case studios;
-    // case orders;
+    case instructors;
+    case studios;
+//    case members;
+//    case orders;
 
     public static function all(): array
     {
@@ -37,6 +39,15 @@ enum ExportType
     {
         return match($this) {
             static::classes => new ClassLesson,
+            static::instructors => new Instructor,
+            static::studios => new Studio
+        };
+    }
+
+    public function get(array $filters)
+    {
+        return match($this) {
+            static::classes => app( \App\Exports\ClassLesson::class, $filters),
         };
     }
 
