@@ -62,7 +62,16 @@ class PartnerExportController extends Controller
     public function store(ExportFormRequest $request)
     {
         $filters = array_filter($request->filters);
+
+        // Filter the dates to carbon format to filter easily
+        if (isset($filters['start_date']))
+            $filters['start_date'] = Carbon::parse($filters['start_date'])->format('Y-m-d');
+
+        if (isset($filters['end_date']))
+            $filters['end_date'] = Carbon::parse($filters['end_date'])->format('Y-m-d');
+
         $enum = ExportType::from($request->export_type);
+
         $export = Export::create([
             'export_type' => $enum->name,
             'filters' => $filters,
@@ -80,7 +89,7 @@ class PartnerExportController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\Partner\Export  $export
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(Export $export)
     {

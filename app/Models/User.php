@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\AppUserRole;
+use App\Models\Partner\Export;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -143,5 +144,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function instance()
     {
         return $this->hasOne(Instance::class, 'partner_id');
+    }
+
+    public function exports()
+    {
+        return $this->hasMany(Export::class, 'created_by');
     }
 }
