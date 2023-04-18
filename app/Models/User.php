@@ -6,6 +6,8 @@ use App\Enums\AppUserRole;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -135,13 +137,18 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     //Relationships
-    public function subscriptions()
+    public function subscriptions(): HasMany
     {
         return $this->hasMany(Subscription::class, 'partner_id');
     }
 
-    public function instance()
+    // public function instance()
+    // {
+    //     return $this->hasOne(Instance::class, 'partner_id');
+    // }
+
+    public function business(): BelongsTo
     {
-        return $this->hasOne(Instance::class, 'partner_id');
+        return $this->belongsTo(Business::class, 'business_id');
     }
 }
