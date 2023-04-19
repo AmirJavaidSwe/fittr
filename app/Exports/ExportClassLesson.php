@@ -9,30 +9,25 @@ use Carbon\Carbon;
 
 class ExportClassLesson extends Export
 {
-    private ClassLesson $classLesson;
-
     public function __construct(array $filters)
     {
-        parent::__construct($filters);
+        parent::__construct($filters, new ClassLesson());
     }
 
     public function __invoke(): array
     {
         $this->modifyFilters();
-        $this->query();
+
+        return $this->query();
     }
 
     public function fields(): array
     {
         return [
             'id',
-            'name',
-            'description',
             'start_date',
+            'status',
             'end_date',
-            'start_time',
-            'end_time',
-            'duration',
             'studio_id',
             'instructor_id',
             'created_at',
@@ -53,16 +48,11 @@ class ExportClassLesson extends Export
 
     protected function query(): array
     {
-        $this->classLesson = new ClassLesson;
-
         foreach ($this->filters as $key => $value) {
             $operator = ExportType::operator($key);
-            dump($key, $operator, $value);
-//            $this->classLesson = $this->classLesson->{$operator[0]}($key, $operator[1], $value);
+            $this->query->{$operator[0]}($key, $operator[1], $value);
         }
 
-        dd($this->filters);
-
-        return $this->classLesson->get($this->fields())->toArray();
+        return $this->query->select($this->fields())->get()->toArray();
     }
 }

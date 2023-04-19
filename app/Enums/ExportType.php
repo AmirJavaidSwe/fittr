@@ -51,13 +51,4 @@ enum ExportType
             static::classes => (new ExportClassLesson($filters))(),
         };
     }
-
-    // public function fields()
-    // {
-    //     return match($this) {
-    //         static::classes => array(
-
-    //         ),
-    //     };
-    // }
 }

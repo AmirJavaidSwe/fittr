@@ -20,6 +20,8 @@ return new class extends Migration
             $table->integer('file_rows')->unsigned()->nullable();
             $table->integer('file_size')->unsigned()->nullable(); //bytes (4,294,967,295 max)
             $table->timestamp('completed_at')->nullable();
+            $table->string('status', 100)->default('pending'); //pending, processing, completed, failed
+            $table->string('messages', 100)->default('pending'); //pending, processing, completed, failed
             $table->timestamps();
             $table->softDeletes();
         });
