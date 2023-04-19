@@ -67,6 +67,10 @@ const deleteItem = () => {
     });
 };
 
+const bytesToKibibytes = (bytes) => {
+    return Math.floor(bytes / 1024)+' KB';
+}
+
 </script>
 
 <template>
@@ -99,10 +103,11 @@ const deleteItem = () => {
         <template #tableData>
             <tr v-for="exporting in exportings.data" >
                 <table-data :title="exporting.id"/>
-                <table-data :title="exporting.id"/>
+                <table-data :title="exporting.status"/>
                 <table-data :title="exporting.export_type"/>
-                <table-data :title="exporting.file_size"/>
+                <table-data :title="bytesToKibibytes(exporting.file_size)"/>
                 <table-data :title="dayjs(exporting.created_at).fromNow()"/>
+
                 <table-data :title="exporting.created_by"/>
 
                 <table-data>
@@ -123,7 +128,7 @@ const deleteItem = () => {
                 :links="exportings.links"/>
 
             <p class="p-2 text-xs">Viewing {{exportings.from}} - {{exportings.to}} of {{exportings.total}} results</p>
-        </template>    
+        </template>
     </data-table-layout>
     <!-- Delete Confirmation Modal -->
     <ConfirmationModal :show="itemDeleting" @close="itemDeleting = false">
