@@ -34,10 +34,7 @@
             "Database\\Factories\\Partner\\": "database/factories/partner/",
             "Database\\Seeders\\": "database/seeders/",
             "Database\\Seeders\\Partner\\": "database/seeders/partner/"
-        },
-        "files": [
-            "bootstrap/helpers.php"
-        ]
+        }
     },
     "autoload-dev": {
         "psr-4": {
