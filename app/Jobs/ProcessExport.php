@@ -92,8 +92,9 @@ class ProcessExport implements ShouldQueue, ShouldBeUnique
         fclose($file);
 
         // Save the CSV content to a file
-        $filename = $partner->name.'_'.$partner->role.'_'.date('d/m/y H:i').'_export.csv';
-        Storage::put($filename, $csv);
+        $filename = reverse_title(date('d-m-y H:i').'_'.$partner->name.'_'.$this->export->export_type.'_'.$partner->role.'_'.'export.csv');
+
+        Storage::put($this->export->export_type.'/'.$partner->role.'/'.$filename, $csv);
 
         if (!isset($statusMessage)) {
             $statusMessage = "CSV file has been stored as " . $filename;
