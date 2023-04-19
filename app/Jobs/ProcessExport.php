@@ -54,10 +54,9 @@ class ProcessExport implements ShouldQueue, ShouldBeUnique
      */
     public function handle(): void
     {
-        $enum = ExportType::from($this->export->export_type);
-        $filters = $this->export->filters;
-//        $model = $enum->model();
-        $export = $enum->get($filters);
+        $export = ExportType::from($this->export->export_type)->get($this->export->filters);
+
+        dd($export);
 
         // this is just a demo of export job
         // $model is ok for basic exports, however most exports will require extra processing for columns
@@ -66,7 +65,6 @@ class ProcessExport implements ShouldQueue, ShouldBeUnique
         // Idea is: create a class for each of the supported exports under App/Exports namespace
         // Make this job colling new export class, passing in it's constructor filter_params, produce data and store in the file, return results object back to the job (filename, size, ect)
 
-        $created_by = $this->export->created_by; //creator may be a staff user of partner admin, need to add business_id
         $partner = User::partner()
             ->select(
                 'db_host',
@@ -75,7 +73,7 @@ class ProcessExport implements ShouldQueue, ShouldBeUnique
                 'db_user',
                 'db_password',
             )
-            ->where('id', $created_by)
+            ->where('id', $this->export->created_by)
             ->first();
 
         //Set connection to database: (run time)
@@ -92,8 +90,7 @@ class ProcessExport implements ShouldQueue, ShouldBeUnique
             'strict'    => true,
         ]);
 
-        $results = $model
-            ->when($filters, function (Builder $query, array $filters) {
+        $results = $export->when($filters, function (Builder $query, array $filters) {
                 foreach ($filters as $key => $value) {
                     $type = ExportType::operator($key);
                     $method = $type[0];

@@ -61,13 +61,9 @@ class PartnerExportController extends Controller
      */
     public function store(ExportFormRequest $request)
     {
-        $filters = array_filter($request->filters);
-
-        $enum = ExportType::from($request->export_type);
-
         $export = Export::create([
-            'export_type' => $enum->name,
-            'filters' => $filters,
+            'export_type' => $request->export_type,
+            'filters' => array_filter($request->filters),
             'created_by' => $request->user()->id,
         ]);
 

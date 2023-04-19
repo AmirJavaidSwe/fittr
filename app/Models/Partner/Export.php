@@ -5,6 +5,10 @@ namespace App\Models\Partner;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @property mixed $export_type
+ * @property mixed $filters
+ */
 class Export extends Model
 {
     use SoftDeletes;

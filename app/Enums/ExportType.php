@@ -2,6 +2,7 @@
 
 namespace App\Enums;
 
+use App\Exports\ExportClassLesson;
 use App\Models\Partner\ClassLesson;
 use App\Models\Partner\Instructor;
 use App\Models\Partner\Studio;
@@ -31,7 +32,7 @@ enum ExportType
         return match($param) {
             'start_date' => ['whereDate', '>=', 'datetime'],
             'end_date' => ['whereDate', '<=', 'datetime'],
-            default => ['where', '=', null],
+            default => ['where', '=', $param],
         };
     }
 
@@ -47,7 +48,7 @@ enum ExportType
     public function get(array $filters)
     {
         return match($this) {
-            static::classes => app( \App\Exports\ClassLesson::class, $filters),
+            static::classes => (new ExportClassLesson($filters))(),
         };
     }
 
