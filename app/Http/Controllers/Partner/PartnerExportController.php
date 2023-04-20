@@ -67,6 +67,8 @@ class PartnerExportController extends Controller
             'created_by' => $request->user()->id,
         ]);
 
+        $export->setStatusPending();
+
         ProcessExport::dispatch($export);
 
         $extra = array('export_id' => $export->id);
@@ -77,7 +79,7 @@ class PartnerExportController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Partner\Export  $export
+     * @param Export $export
      * @return Response
      */
     public function show(Export $export)
@@ -102,11 +104,11 @@ class PartnerExportController extends Controller
         ]);
     }
 
-        /**
+    /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Partner\Export  $studio
-     * @return \Illuminate\Http\Response
+     * @param Export $export
+     * @return RedirectResponse
      */
     public function destroy(Export $export)
     {

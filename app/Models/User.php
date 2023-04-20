@@ -14,6 +14,9 @@ use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 // use DateTimeInterface;
 
+/**
+ * @method static partner()
+ */
 class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens;
