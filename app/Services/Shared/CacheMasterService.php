@@ -20,18 +20,19 @@ class CacheMasterService
         });
     }
 
-    public function partner_db_connections()
+    public function businesses()
     {
-        return Cache::remember('cache_partner_partner_db_connections', config('cache.ttl.default'), function () {
-            return DB::table('users')->select(
+        return Cache::remember('cache_businesses', config('cache.ttl.default'), function () {
+            return DB::table('businesses')->select(
                 'id',
+                'stripe_customer_id',
+                'stripe_account_id',
                 'db_host',
                 'db_port',
                 'db_name',
                 'db_user',
                 'db_password',
             )
-            ->where('role', AppUserRole::PARTNER->value)
             ->whereNull('deleted_at')
             ->get();
         });

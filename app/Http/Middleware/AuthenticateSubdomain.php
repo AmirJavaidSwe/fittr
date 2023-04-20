@@ -30,9 +30,11 @@ class AuthenticateSubdomain
         //we don't need to let non-existing subdomains to enter the app. We can just abort the request or redirect them to custom page or somewhere else.
         abort_unless($subdomains->contains('val', $subdomain), 403, __('This service store does not exist.'));
 
+        // Same middleware is used to setup proper database connection to be used on service store:
         if(!Config::has('database.connections.mysql_partner')){
+            //get correct partner for service store subdomain
             $partner_settings = $this->cache->partner_settings()->where('key', 'subdomain')->firstWhere('val', $subdomain);
-            $partner_db_connection = $this->cache->partner_db_connections()->firstWhere('id', $partner_settings->partner_id);
+            $partner_db_connection = $this->cache->businesses()->firstWhere('db_name', 'fittr_p'.$partner_settings->partner_id);
 
             //abort if connection to partner database does not exist, otherwise set new connection
             if(empty($partner_db_connection)){

@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Models\Business;
 use App\Models\User;
 use DB;
 use Illuminate\Support\Facades\Artisan;
@@ -34,6 +35,23 @@ class PartnerDatabaseSeeder extends Seeder
             $db_user = 'p_'.$partner->id;
             $db_password = Str::random(8).'Aa7!';
 
+            // Create new Business (wrapper entity of partner and other staff users partner may create in future) and store connection to partner db
+            $business = Business::updateOrCreate(
+                [
+                    'db_name' => $db_name,
+                ],
+                [
+                    'db_host' => $db_host,
+                    'db_port' => $db_port,
+                    'db_user' => $db_user,
+                    'db_password' => Crypt::encryptString($db_password),
+                ]
+            );
+
+            // set business_id on partner
+            $partner->business()->associate($business);
+            $partner->save();
+
             //drop database user
             DB::statement("DROP USER IF EXISTS '$db_user'@'$db_host'");
 
@@ -52,14 +70,6 @@ class PartnerDatabaseSeeder extends Seeder
             DB::statement("GRANT ALL PRIVILEGES ON $db_name.* TO '$db_user'@'$db_host'");
             DB::statement("GRANT ALL PRIVILEGES ON $db_name.* TO '$db_master_partner_username'@'%'");
 
-            //Store connection to partner db on user
-            $partner->db_name = $db_name;
-            $partner->db_host = $db_host;
-            $partner->db_port = $db_port;
-            $partner->db_user = $db_user;
-            $partner->db_password = Crypt::encryptString($db_password);
-            $partner->save();
-
             // 'php artisan key:generate' may be ran only after all encrypted values were retrived.
             // 'The MAC is invalid' will be thrown on attempt to decrypt values with new key.
             // $db_master_partner_username added to each db for recovery only, should not be used for regular queries
@@ -71,11 +81,12 @@ class PartnerDatabaseSeeder extends Seeder
         // first partner only:
         $first_partner_id = $partners->first()->id;
         foreach ($partners as $partner) {
-            $db_name = $partner->db_name;
-            $db_host = $partner->db_host;
-            $db_port = $partner->db_port;
-            $db_user = $partner->db_user;
-            $db_password = Crypt::decryptString($partner->db_password);
+            $business = $partner->business;
+            $db_name = $business->db_name;
+            $db_host = $business->db_host;
+            $db_port = $business->db_port;
+            $db_user = $business->db_user;
+            $db_password = Crypt::decryptString($business->db_password);
 
             //create runtime config (mysql_partner - does not exist in the file)
             Config::set('database.connections.mysql_partner', [

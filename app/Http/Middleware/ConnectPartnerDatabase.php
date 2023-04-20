@@ -28,16 +28,17 @@ class ConnectPartnerDatabase
             return $next($request);
         }
 
+        $business = $partner->business;
         // abort_if(empty($partner) || !$partner->is_partner, 403, __('Unable to connect to database.'));
 
         //Set connection to database: (run time)
         Config::set('database.connections.mysql_partner', [
             'driver' => 'mysql',
-            'host' => $partner->db_host,
-            'port' => $partner->db_port,
-            'database' => $partner->db_name,
-            'username' => $partner->db_user,
-            'password' => Crypt::decryptString($partner->db_password),
+            'host' => $business->db_host,
+            'port' => $business->db_port,
+            'database' => $business->db_name,
+            'username' => $business->db_user,
+            'password' => Crypt::decryptString($business->db_password),
             'charset'   => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
             'prefix'    => '',

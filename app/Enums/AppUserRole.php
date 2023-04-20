@@ -4,6 +4,7 @@ namespace App\Enums;
 
 enum AppUserRole: string
 {
+    //TODO: add staff role - to be assigned to staff users, created by partner. Permissions to be added by partner
     case PARTNER = 'partner';
     case ADMIN = 'admin';
 
