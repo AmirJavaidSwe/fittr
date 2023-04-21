@@ -11,4 +11,10 @@ use Illuminate\Routing\Controller as BaseController;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests, GenericHelper;
+
+    public function business()
+    {
+        return session('business');
+    }
+
 }

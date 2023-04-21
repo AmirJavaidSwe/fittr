@@ -20,14 +20,17 @@ class BusinessSettingService
 
     public function getByGroup(SettingGroup $group): array
     {
-        return $this->model->ofGroup($group)->get()->each(function($item) {
+        $business = session('business');
+
+        return $this->model->ofBusiness($business->id)->ofGroup($group)->get()->each(function($item) {
             $item->val = $this->getCastValue($item);
         })->pluck('val', 'key')->toArray();
     }
 
     public function getByKeys($keys = []): array
     {
-        $existing = $this->model->whereIn('key', $keys)->get()->each(function($item) {
+        $business = session('business');
+        $existing = $this->model->ofBusiness($business->id)->whereIn('key', $keys)->get()->each(function($item) {
             $item->val = $this->getCastValue($item);
         })->pluck('val', 'key')->toArray();
 
@@ -55,8 +58,7 @@ class BusinessSettingService
 
     public function update($request): void
     {
-        $partner = $request->user();
-        $business = $partner->business;
+        $business = session('business');
         $business_id = $business->id;
 
         collect($request->validated())->each(function ($value, $key) use ($business_id) {
@@ -92,6 +94,8 @@ class BusinessSettingService
     // Method to check uniqueness of value inside business_settings table
     public function uniqueSettingValue($key, $val): bool
     {
-        return BusinessSetting::where('business_id', '!=', auth()->user()->business_id)->where('key', $key)->where('val', $val)->doesntExist();
+        $business = session('business');
+
+        return BusinessSetting::where('business_id', '!=', $business->id)->where('key', $key)->where('val', $val)->doesntExist();
     }
 }

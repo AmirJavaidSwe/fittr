@@ -27,8 +27,14 @@ class ConnectPartnerDatabase
             return $next($request);
         }
 
-        $business = $partner->business;
-        // abort_if(empty($partner) || !$partner->is_partner, 403, __('Unable to connect to database.'));
+        //grab business from session, save DB call
+        $business = session('business', $partner->business);
+
+        abort_if(empty($business), 403, __('Unable to connect.'));
+
+        if ($request->session()->missing('business')) {
+            $request->session()->put('business', $business);
+        }
 
         //Set connection to database: (run time)
         Config::set('database.connections.mysql_partner', [

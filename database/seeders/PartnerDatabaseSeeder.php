@@ -113,7 +113,10 @@ class PartnerDatabaseSeeder extends Seeder
 
             //run seeds for the first partner only
             if($partner->id == $first_partner_id){
-                dump('seeding '.$first_partner_id);
+                dump('seeding partner id '.$first_partner_id);
+                dump($partner->email.' set stripe connected account for business '.$business->id);
+
+                $business->update(['stripe_account_id' => 'acct_1MlaLVFZgNT1PRCW']);
                 // Artisan::call('db:seed --force Database\\\Seeders\\\Partner\\\DatabaseSeeder');
                 Artisan::call('db:seed', ['--class' => 'Database\Seeders\Partner\DatabaseSeeder', '--force' => true]);
             }

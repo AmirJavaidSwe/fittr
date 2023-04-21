@@ -21,10 +21,10 @@ class BusinessSetting extends Model
     }
 
     //Local scopes
-    // public function scopeLoggedIn($query)
-    // {
-    //     $query->where('partner_id', auth()->user()->id);
-    // }
+    public function scopeOfBusiness($query, $business_id)
+    {
+        $query->where('business_id', $business_id);
+    }
 
     public function scopeOfGroup($query, $group)
     {
