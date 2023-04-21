@@ -2,14 +2,14 @@
 
 namespace App\Providers;
 
+use App\Events\BusinessSettingUpdated;
 use App\Events\SubscriptionCancelled;
 use App\Events\SubscriptionChanged;
 use App\Events\SubscriptionStarted;
-use App\Events\PartnerSettingUpdated;
+use App\Listeners\BusinessSettingUpdatedListener;
 use App\Listeners\SubscriptionCancelledListener;
 use App\Listeners\SubscriptionChangedListener;
 use App\Listeners\SubscriptionStartedListener;
-use App\Listeners\PartnerSettingUpdatedListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -35,8 +35,8 @@ class EventServiceProvider extends ServiceProvider
         SubscriptionStarted::class => [
             SubscriptionStartedListener::class,
         ],
-        PartnerSettingUpdated::class => [
-            PartnerSettingUpdatedListener::class,
+        BusinessSettingUpdated::class => [
+            BusinessSettingUpdatedListener::class,
         ],
     ];
 
