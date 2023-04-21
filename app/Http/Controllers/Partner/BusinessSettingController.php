@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Partner;
 
-use App\Services\Partner\PartnerSettingService;
+use App\Services\Partner\BusinessSettingService;
 use App\Services\Shared\StripeConnectService;
 use App\Enums\FormatType;
 use App\Enums\SettingKey;
@@ -28,9 +28,9 @@ use Inertia\Inertia;
 use Storage;
 
 
-class PartnerSettingController extends Controller
+class BusinessSettingController extends Controller
 {
-    public function __construct(PartnerSettingService $service, StripeConnectService $stripe_connect_service)
+    public function __construct(BusinessSettingService $service, StripeConnectService $stripe_connect_service)
     {
         $this->service = $service;
         $this->stripe_connect_service = $stripe_connect_service;

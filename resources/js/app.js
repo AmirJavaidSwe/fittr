@@ -5,7 +5,8 @@ import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
-import AppLayout from './Layouts/AppLayout.vue'; 
+import AppLayout from './Layouts/AppLayout.vue';
+import StoreLayout from './Layouts/StoreLayout.vue';
 
 /* import font awesome icon component */
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -18,8 +19,21 @@ createInertiaApp({
         const page = resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue'));
         // set persistent default page layout, except for home and auth pages (AppLayout depends on logged in user)
         page.then((module) => {
-            if ( name != 'Welcome' && !name.startsWith('Auth/') ) {
-                module.default.layout = module.default.layout || AppLayout;
+            switch (true) {
+                // service store layout
+                case name.startsWith('Store/'):
+                    module.default.layout = StoreLayout;
+                    break;
+
+                // admin and partners
+                case name != 'Welcome' && !name.startsWith('Auth/'):
+                    module.default.layout = AppLayout;
+                    break;
+                
+                //below pages doesn't use layout
+                default:
+                    console.log('default');
+                    break;
             }
           });
         return page;

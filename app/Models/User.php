@@ -131,10 +131,10 @@ class User extends Authenticatable implements MustVerifyEmail
         $query->where('role', AppUserRole::PARTNER->value);
     }
 
-    public function scopeDatabaseless($query)
-    {
-        $query->whereNull('db_name');
-    }
+    // public function scopeDatabaseless($query)
+    // {
+    //     $query->whereNull('db_name');
+    // }
 
     //Relationships
     public function subscriptions(): HasMany

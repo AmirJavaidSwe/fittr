@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use App\Enums\StateType;
 use App\Services\Shared\CacheMasterService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
@@ -33,25 +34,27 @@ class AuthenticateSubdomain
         // Same middleware is used to setup proper database connection to be used on service store:
         if(!Config::has('database.connections.mysql_partner')){
             //get correct partner for service store subdomain
-            $partner_settings = $this->cache->partner_settings()->where('key', 'subdomain')->firstWhere('val', $subdomain);
-            $partner_db_connection = $this->cache->businesses()->firstWhere('db_name', 'fittr_p'.$partner_settings->partner_id);
+            $business_subdomain = $this->cache->business_settings()->where('key', 'subdomain')->firstWhere('val', $subdomain);
+            $business_db_connection = $this->cache->businesses()->where('status', StateType::ACTIVE->value)->firstWhere('id', $business_subdomain->business_id);
 
             //abort if connection to partner database does not exist, otherwise set new connection
-            if(empty($partner_db_connection)){
-                abort(403, __('The service store connection is lost.'));
+            if(empty($business_db_connection)){
+                abort(403, __('The service store is not available.'));
             }
             Config::set('database.connections.mysql_partner', [
                 'driver' => 'mysql',
-                'host' => $partner_db_connection->db_host,
-                'port' => $partner_db_connection->db_port,
-                'database' => $partner_db_connection->db_name,
-                'username' => $partner_db_connection->db_user,
-                'password' => Crypt::decryptString($partner_db_connection->db_password),
+                'host' => $business_db_connection->db_host,
+                'port' => $business_db_connection->db_port,
+                'database' => $business_db_connection->db_name,
+                'username' => $business_db_connection->db_user,
+                'password' => Crypt::decryptString($business_db_connection->db_password),
                 'charset'   => 'utf8mb4',
                 'collation' => 'utf8mb4_unicode_ci',
                 'prefix'    => '',
                 'strict'    => true,
             ]);
+
+            Config::set('business_subdomain', $business_subdomain);
         }
 
         return $next($request);
