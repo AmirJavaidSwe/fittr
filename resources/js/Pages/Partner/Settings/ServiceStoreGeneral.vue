@@ -43,6 +43,8 @@ const submitForm = () => {
                     class="mt-1 block w-full"
                 />
                 <InputError :message="form.errors.subdomain" class="mt-2" />
+                <InputError :message="form.errors.unique" class="mt-2" />
+                <p v-if="form.subdomain">Your service store URL will be: <b>https://{{form.subdomain}}.{{$page.props.app_domain}}</b></p>
             </div>
             <!-- Custom Domain -->
             <div class="col-span-6 sm:col-span-4">

@@ -85,4 +85,10 @@ class PartnerSettingService
 
         return $defaults->{$key} ?? null;
     }
+
+    // Method to check uniqueness of value inside partner_settings table (this will be updated to businesses later)
+    public function uniqueSettingValue($key, $val): bool
+    {
+        return PartnerSetting::where('partner_id', '!=', auth()->user()->id)->where('key', $key)->where('val', $val)->doesntExist();
+    }
 }

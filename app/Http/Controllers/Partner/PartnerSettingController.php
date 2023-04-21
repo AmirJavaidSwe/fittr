@@ -23,6 +23,7 @@ use App\Models\Format;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use Storage;
 
@@ -209,6 +210,15 @@ class PartnerSettingController extends Controller
 
     public function serviceStoreGeneralUpdate(SettingsServiceStoreGeneralRequest $request)
     {
+        //subdomain extra uniqueness check
+        $is_unique = $this->service->uniqueSettingValue('subdomain', $request->subdomain);
+        $input = ['unique' => $is_unique];
+        Validator::make($input, [
+            'unique' => 'accepted',
+        ],
+        [
+            'unique.accepted' => __('The subdomain has already been taken.'),
+        ])->validate();
         $this->service->update($request);
 
         return $this->redirectBackSuccess(__('Settings saved'));

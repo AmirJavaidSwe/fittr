@@ -40,6 +40,7 @@ class HandleInertiaRequests extends Middleware
     {
         return array_merge(parent::share($request), [
             'app_name' => config('app.name'),
+            'app_domain' => config('app.domain'),
             'route_name' => Route::currentRouteName(),
             'flash' => [
                 'type' => $request->session()->get('flash_type'),

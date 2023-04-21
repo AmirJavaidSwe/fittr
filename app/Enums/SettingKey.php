@@ -118,8 +118,8 @@ enum SettingKey: string
 
             //Online Store
             // General
-            static::subdomain => ['required', 'string', 'max:255'],
-            static::custom_domain => ['max:255'],
+            static::subdomain => ['required', 'max:255', 'regex:"^[a-z0-9-]+$"'],
+            static::custom_domain => ['nullable', 'max:255', 'regex:"^[a-z0-9-.]+$"'],
 
             // Header & Footer
             static::logo => ['nullable', 'mimes:jpg,jpeg,png,svg', 'max:2048'], //2MB

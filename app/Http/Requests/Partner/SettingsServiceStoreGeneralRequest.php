@@ -32,4 +32,16 @@ class SettingsServiceStoreGeneralRequest extends FormRequest
 
         return $rules;
     }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'subdomain.regex' => __('Subdomain name should have lowercase letters, numbers and hyphens only.'),
+        ];
+    }
 }
