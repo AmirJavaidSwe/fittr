@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Enums\ExportStatus;
 use App\Enums\ExportType;
+use App\Models\Business;
 use App\Models\Partner\Export;
 use App\Models\User;
 use Carbon\Carbon;
@@ -67,17 +68,19 @@ class ProcessExport implements ShouldQueue, ShouldBeUnique
 
     public function setPartnerConnection(): void
     {
-        $this->partner = User::partner()->select(
-            'name', 'role', 'db_host', 'db_port', 'db_name', 'db_user', 'db_password'
-        )->where('id', $this->export->created_by)->first();
+        $this->partner = User::partner()
+                                ->select('name','business_id')
+                                ->where('id', $this->export->created_by)->first();
+
+        $business = $this->partner->business;
 
         Config::set('database.connections.mysql_partner', [
             'driver' => 'mysql',
-            'host' => $this->partner->db_host,
-            'port' => $this->partner->db_port,
-            'database' => $this->partner->db_name,
-            'username' => $this->partner->db_user,
-            'password' => Crypt::decryptString($this->partner->db_password),
+            'host' => $business->db_host,
+            'port' => $business->db_port,
+            'database' => $business->db_name,
+            'username' => $business->db_user,
+            'password' => Crypt::decryptString($business->db_password),
             'charset'   => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
             'prefix'    => '',
