@@ -40,6 +40,7 @@ class StripeConnectService extends StripeService
 
     public function createStandardConnectedAccount($partner, $prefilled = []) : object
     {
+        $business = session('business');
         $data = array(
             'type' => $this->account_standard_type, //May be one of custom, express or standard. Standard type is used at all times.
             'email' => $partner->email, //The email address of the account holder. This is only to make the account easier to identify to you.
@@ -48,6 +49,7 @@ class StripeConnectService extends StripeService
             // ],
             'business_type' => 'company',
             'metadata' => [
+                'business_id' => $business->id,
                 'partner_id' => $partner->id,
             ],
         );
@@ -89,8 +91,11 @@ class StripeConnectService extends StripeService
         $this->call($endpoint, $action, [$data]);
 
         if($this->response->error === false){
-            $partner->stripe_account_id = $this->response?->data->id;
-            $partner->save();
+            $business->stripe_account_id = $this->response?->data->id;
+            $business->save();
+
+            //update session business
+            session(['business' => $business]);
         }
 
         return $this->response;

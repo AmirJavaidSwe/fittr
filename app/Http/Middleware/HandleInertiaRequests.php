@@ -31,6 +31,7 @@ class HandleInertiaRequests extends Middleware
 
     /**
      * Defines the props that are shared by default.
+     * NOTE, Jetstream also shares props (jetstream, user, errorBags) \vendor\laravel\jetstream\src\Http\Middleware\ShareInertiaData.php
      *
      * @see https://inertiajs.com/shared-data
      * @param  \Illuminate\Http\Request  $request

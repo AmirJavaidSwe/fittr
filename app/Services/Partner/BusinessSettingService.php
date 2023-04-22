@@ -6,28 +6,31 @@ use Storage;
 use App\Enums\CastType;
 use App\Enums\SettingKey;
 use App\Enums\SettingGroup;
-use App\Events\PartnerSettingUpdated;
-use App\Models\PartnerSetting;
+use App\Events\BusinessSettingUpdated;
+use App\Models\BusinessSetting;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Crypt;
 
-class PartnerSettingService
+class BusinessSettingService
 {
-    public function __construct(PartnerSetting $model)
+    public function __construct(BusinessSetting $model)
     {
         $this->model = $model;
     }
 
     public function getByGroup(SettingGroup $group): array
     {
-        return $this->model->loggedIn()->ofGroup($group)->get()->each(function($item) {
+        $business = session('business');
+
+        return $this->model->ofBusiness($business->id)->ofGroup($group)->get()->each(function($item) {
             $item->val = $this->getCastValue($item);
         })->pluck('val', 'key')->toArray();
     }
 
     public function getByKeys($keys = []): array
     {
-        $existing = $this->model->loggedIn()->whereIn('key', $keys)->get()->each(function($item) {
+        $business = session('business');
+        $existing = $this->model->ofBusiness($business->id)->whereIn('key', $keys)->get()->each(function($item) {
             $item->val = $this->getCastValue($item);
         })->pluck('val', 'key')->toArray();
 
@@ -40,7 +43,7 @@ class PartnerSettingService
         return $results;
     }
 
-    public function getCastValue(PartnerSetting $item)
+    public function getCastValue(BusinessSetting $item)
     {
         $value = $item->is_encrypted ? Crypt::decryptString($item->val) : $item->val;
         return match ($item->cast_to) {
@@ -55,12 +58,14 @@ class PartnerSettingService
 
     public function update($request): void
     {
-        $partner_id = $request->user()->id;
-        collect($request->validated())->each(function ($value, $key) use ($partner_id) {
+        $business = session('business');
+        $business_id = $business->id;
+
+        collect($request->validated())->each(function ($value, $key) use ($business_id) {
             if($value instanceof UploadedFile){
                 $value = $value->storePublicly($key, ['disk' => 'public']);
             }
-            $identifier = ['partner_id' => $partner_id, 'key' => $key];
+            $identifier = ['business_id' => $business_id, 'key' => $key];
             $is_encrypted = SettingKey::from($key)->encryption();
             $values = [
                 'group_name' => SettingKey::from($key)->group(),
@@ -68,15 +73,15 @@ class PartnerSettingService
                 'is_encrypted' => $is_encrypted,
                 'val' => ($is_encrypted ? Crypt::encryptString($value) : $value),
             ];
-            $partner_setting = PartnerSetting::where($identifier)->first();
-            $previous_value = $partner_setting->val ?? null;
-            $partner_setting ? $partner_setting->update($values) : PartnerSetting::create($identifier + $values);
+            $business_setting = BusinessSetting::where($identifier)->first();
+            $previous_value = $business_setting->val ?? null;
+            $business_setting ? $business_setting->update($values) : BusinessSetting::create($identifier + $values);
 
             if(in_array($key, SettingKey::files()) && $previous_value){
                 Storage::disk('public')->delete($previous_value);
             }
         });
-        PartnerSettingUpdated::dispatch($partner_id);
+        BusinessSettingUpdated::dispatch($business_id);
     }
 
     public function getDefaultData($key): ?string
@@ -86,9 +91,11 @@ class PartnerSettingService
         return $defaults->{$key} ?? null;
     }
 
-    // Method to check uniqueness of value inside partner_settings table (this will be updated to businesses later)
+    // Method to check uniqueness of value inside business_settings table
     public function uniqueSettingValue($key, $val): bool
     {
-        return PartnerSetting::where('partner_id', '!=', auth()->user()->id)->where('key', $key)->where('val', $val)->doesntExist();
+        $business = session('business');
+
+        return BusinessSetting::where('business_id', '!=', $business->id)->where('key', $key)->where('val', $val)->doesntExist();
     }
 }

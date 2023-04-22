@@ -2,10 +2,11 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
+use App\Enums\StateType;
 use App\Models\Business;
 use App\Models\User;
 use DB;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Crypt;
@@ -41,6 +42,7 @@ class PartnerDatabaseSeeder extends Seeder
                     'db_name' => $db_name,
                 ],
                 [
+                    'status' => StateType::ACTIVE->value,
                     'db_host' => $db_host,
                     'db_port' => $db_port,
                     'db_user' => $db_user,
@@ -111,7 +113,10 @@ class PartnerDatabaseSeeder extends Seeder
 
             //run seeds for the first partner only
             if($partner->id == $first_partner_id){
-                dump('seeding '.$first_partner_id);
+                dump('seeding partner id '.$first_partner_id);
+                dump($partner->email.' set stripe connected account for business '.$business->id);
+
+                $business->update(['stripe_account_id' => 'acct_1MlaLVFZgNT1PRCW']);
                 // Artisan::call('db:seed --force Database\\\Seeders\\\Partner\\\DatabaseSeeder');
                 Artisan::call('db:seed', ['--class' => 'Database\Seeders\Partner\DatabaseSeeder', '--force' => true]);
             }

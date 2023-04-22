@@ -16,9 +16,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('partner_settings', function (Blueprint $table) {
+        Schema::create('business_settings', function (Blueprint $table) {
             $table->id();
-            $table->integer('partner_id');
+            $table->integer('business_id');
             $table->string('key', 100);// App\Enums\SettingKey
             $table->string('group_name', 100); // App\Enums\SettingGroup
             $table->enum('cast_to', CastType::all())->default(CastType::string->name);

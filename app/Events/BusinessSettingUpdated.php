@@ -10,25 +10,25 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class PartnerSettingUpdated
+class BusinessSettingUpdated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
-     * Partner user id.
+     * Business id.
      *
      * @var 
      */
-    public $partner_id;
+    public $business_id;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($partner_id)
+    public function __construct($business_id)
     {
-        $this->partner_id = $partner_id;
+        $this->business_id = $business_id;
     }
 
     /**

@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\StateType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,6 +14,7 @@ return new class extends Migration
     {
         Schema::create('businesses', function (Blueprint $table) {
             $table->id();
+            $table->enum('status', StateType::all())->default(StateType::INACTIVE->value);
             $table->string('stripe_customer_id', 255)->nullable(); //customer id (partner is client => service subscriptions)
             $table->string('stripe_account_id', 255)->nullable(); //connected account of partner
             $table->string('db_host', 512)->nullable(); //Same server or someother managed db

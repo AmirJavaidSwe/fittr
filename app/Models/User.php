@@ -47,17 +47,10 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $hidden = [
-        'stripe_customer_id',
-        'stripe_account_id',
         'password',
         'remember_token',
         'two_factor_recovery_codes',
         'two_factor_secret',
-        'db_host',
-        'db_port',
-        'db_name',
-        'db_user',
-        'db_password',
     ];
 
     /**
@@ -114,16 +107,6 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->subscriptions()->where('status', 1)->whereNull('cancelled_at')->first();
     }
 
-    public function getHasStripeCustomerAttribute()
-    {
-        return !empty($this->stripe_customer_id);
-    }
-
-    public function getHasStripeAccountAttribute()
-    {
-        return !empty($this->stripe_account_id);
-    }
-
     //Local scopes
     public function scopeAdmin($query)
     {
@@ -135,10 +118,10 @@ class User extends Authenticatable implements MustVerifyEmail
         $query->where('role', AppUserRole::PARTNER->value);
     }
 
-    public function scopeDatabaseless($query)
-    {
-        $query->whereNull('db_name');
-    }
+    // public function scopeDatabaseless($query)
+    // {
+    //     $query->whereNull('db_name');
+    // }
 
     //Relationships
     public function subscriptions(): HasMany

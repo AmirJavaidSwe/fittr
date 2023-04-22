@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PartnerSetting extends Model
+class BusinessSetting extends Model
 {
-    protected $table = 'partner_settings';
+    protected $table = 'business_settings';
     protected $guarded = [
         'id',
     ];
@@ -15,15 +15,15 @@ class PartnerSetting extends Model
     ];
 
     //Relationships
-    public function partner()
+    public function business()
     {
-        return $this->belongsTo(User::class, 'partner_id');
+        return $this->belongsTo(Business::class, 'business_id');
     }
 
     //Local scopes
-    public function scopeLoggedIn($query)
+    public function scopeOfBusiness($query, $business_id)
     {
-        $query->where('partner_id', auth()->user()->id);
+        $query->where('business_id', $business_id);
     }
 
     public function scopeOfGroup($query, $group)

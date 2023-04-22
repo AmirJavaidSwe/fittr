@@ -2,11 +2,11 @@
 
 namespace App\Listeners;
 
-use App\Events\PartnerSettingUpdated;
+use App\Events\BusinessSettingUpdated;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-class PartnerSettingUpdatedListener implements ShouldQueue
+class BusinessSettingUpdatedListener implements ShouldQueue
 {
     /**
      * Create the event listener.
@@ -21,12 +21,12 @@ class PartnerSettingUpdatedListener implements ShouldQueue
     /**
      * Handle the event.
      *
-     * @param  \App\Events\PartnerSettingUpdated  $event
+     * @param  \App\Events\BusinessSettingUpdated  $event
      * @return void
      */
-    public function handle(PartnerSettingUpdated $event)
+    public function handle(BusinessSettingUpdated $event)
     {
-        $partner_id = $event->partner_id;
+        $business_id = $event->business_id;
         // do whatever
     }
 }

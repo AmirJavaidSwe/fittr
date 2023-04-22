@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Partner;
 
-use App\Services\Partner\PartnerSettingService;
+use App\Services\Partner\BusinessSettingService;
 use App\Services\Shared\StripeConnectService;
 use App\Enums\FormatType;
 use App\Enums\SettingKey;
@@ -28,9 +28,9 @@ use Inertia\Inertia;
 use Storage;
 
 
-class PartnerSettingController extends Controller
+class BusinessSettingController extends Controller
 {
-    public function __construct(PartnerSettingService $service, StripeConnectService $stripe_connect_service)
+    public function __construct(BusinessSettingService $service, StripeConnectService $stripe_connect_service)
     {
         $this->service = $service;
         $this->stripe_connect_service = $stripe_connect_service;
@@ -382,7 +382,7 @@ class PartnerSettingController extends Controller
             return $this->connectStripe($request);
         }
 
-        $partner = $request->user();
+        $business = $this->business();
 
         return Inertia::render('Partner/Settings/PaymentsStripe', [
             'page_title' => __('Settings - Bookings & Payments - Stripe Payments'),
@@ -408,8 +408,8 @@ class PartnerSettingController extends Controller
                     'link' => null,
                 ],
             ),
-            'has_account' => $partner->has_stripe_account,
-            'stripe_account' => $this->stripe_connect_service->retrieveAccount($partner->stripe_account_id)->data,
+            'has_account' => $business->has_stripe_account,
+            'stripe_account' => $this->stripe_connect_service->retrieveAccount($business->stripe_account_id)->data,
         ]);
     }
 
@@ -418,10 +418,11 @@ class PartnerSettingController extends Controller
     {
         // $gate = Gate::allowIf(fn (User $user) => $user->is_partner && ! ALREADY CONNECTED);  charges_enabled
 
+        $business = $this->business();
         $partner = $request->user();
         //User has connected account but onboarding not complete
-        if($partner->has_stripe_account){
-            return $this->stripe_connect_service->generateAndShowLink($partner->stripe_account_id);
+        if($business->has_stripe_account){
+            return $this->stripe_connect_service->generateAndShowLink($business->stripe_account_id);
         }
 
         //creates new account and updates $partner->stripe_account_id on success; Returns service object

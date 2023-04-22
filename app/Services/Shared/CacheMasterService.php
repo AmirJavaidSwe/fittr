@@ -4,7 +4,6 @@ namespace App\Services\Shared;
 
 use DB;
 use Cache;
-use App\Enums\AppUserRole;
 
 class CacheMasterService
 {
@@ -13,10 +12,10 @@ class CacheMasterService
 
     }
 
-    public function partner_settings()
+    public function business_settings()
     {
-        return Cache::remember('cache_partner_settings', config('cache.ttl.default'), function () {
-            return DB::table('partner_settings')->get();
+        return Cache::remember('cache_business_settings', config('cache.ttl.default'), function () {
+            return DB::table('business_settings')->get();
         });
     }
 
@@ -25,6 +24,7 @@ class CacheMasterService
         return Cache::remember('cache_businesses', config('cache.ttl.default'), function () {
             return DB::table('businesses')->select(
                 'id',
+                'status',
                 'stripe_customer_id',
                 'stripe_account_id',
                 'db_host',
@@ -41,7 +41,7 @@ class CacheMasterService
     public function subdomains()
     {
         return Cache::remember('cache_subdomains', config('cache.ttl.default'), function () {
-            return DB::table('partner_settings')->select('val')->where('key', 'subdomain')->get();
+            return DB::table('business_settings')->select('val')->where('key', 'subdomain')->get();
         });
     }
 
