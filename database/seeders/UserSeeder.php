@@ -2,11 +2,12 @@
 
 namespace Database\Seeders;
 
-use DB;
-use Hash;
-use Str;
-use Storage;
+use App\Models\Role;
+use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class UserSeeder extends Seeder
 {
@@ -23,15 +24,20 @@ class UserSeeder extends Seeder
         }
         $users = json_decode(Storage::disk('seeders')->get('/data/users.json'));
         foreach ($users as $user) {
-            DB::table('users')->insert([
-                'role' => $user->role,
+            $userId = DB::table('users')->insertGetId([
                 'name' => $user->name, 
+                'role' => $user->role,
                 'email' => $user->email,
                 'password' => Hash::make($user->password), 
                 'remember_token' => Str::random(10),
                 'email_verified_at' => now(),
                 'created_at' => now(),
                 'updated_at' => now()
+            ]);
+            $role = Role::whereSlug($user->role)->first();
+            DB::table('role_user')->insert([
+                'role_id' => $role->id,
+                'user_id' => $userId
             ]);
         }
     }

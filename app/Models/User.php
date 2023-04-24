@@ -88,6 +88,10 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->role == AppUserRole::PARTNER->value;
     }
 
+    public function roles(){
+        return $this->belongsToMany(Role::class);
+    }
+
     public function getIsAdminAttribute()
     {
         return $this->role == AppUserRole::ADMIN->value;
