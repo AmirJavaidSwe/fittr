@@ -9,9 +9,9 @@ use Carbon\Carbon;
 
 class ExportClassLesson extends Export
 {
-    public function __construct(array $filters)
+    public function __construct(array $filters, string $fileType = 'csv')
     {
-        parent::__construct($filters, new ClassLesson());
+        parent::__construct($filters, new ClassLesson(), $fileType);
     }
 
     public function __invoke(): array

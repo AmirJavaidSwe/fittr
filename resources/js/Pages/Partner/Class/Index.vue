@@ -126,7 +126,7 @@ const resetExportFilters = () => {
 const exportClasses = () => {
     form_class
     .transform((data) => ({
-        export_type: 'classes',
+        type: 'classes',
         filters : {
             status: data.status,
             start_date: data.start_date,
@@ -228,7 +228,7 @@ const showLink = (exporting) => {
                           class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ">
                         {{ classStatuses[class_lesson.status].label }}
                     </span> -->
-                    <span 
+                    <span
                           class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ">
                         {{ class_lesson.status_label }}
                     </span>
@@ -264,7 +264,7 @@ const showLink = (exporting) => {
         </template>
 
         <template #content>
-            <FormExport 
+            <FormExport
                 :form="form_class"
                 :initiated="exportInitiated"
                 :ready="completed_at"
@@ -284,7 +284,7 @@ const showLink = (exporting) => {
         </template>
 
         <template #content>
-            <Form 
+            <Form
                 :form="form_class"
                 :isNew="true"
                 :statuses="statuses"

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('exports', function (Blueprint $table) {
             $table->id();
-            $table->string('export_type', 100); // App\Enums\ExportType
+            $table->string('type', 100); // App\Enums\ExportType
             $table->text('filters')->nullable();
             $table->integer('created_by')->unsigned(); //creator ID
             $table->string('csv_file_name', 1024)->nullable();

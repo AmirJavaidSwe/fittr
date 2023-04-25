@@ -28,7 +28,7 @@ class ExportFormRequest extends FormRequest
     public function rules()
     {
         $rules =  [
-            'export_type' => ['required', Rule::in(ExportType::all())],
+            'type' => ['required', Rule::in(ExportType::all())],
             'filters' => 'nullable|array',
         ];
 
@@ -43,7 +43,7 @@ class ExportFormRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'export_type.in' => __('Unsupported export type'),
+            'type.in' => __('Unsupported export type'),
         ];
     }
 }

@@ -62,14 +62,14 @@ class PartnerExportController extends Controller
     public function store(ExportFormRequest $request)
     {
         $export = Export::create([
-            'export_type' => $request->export_type,
+            'type' => $request->type,
             'filters' => array_filter($request->filters),
             'created_by' => $request->user()->id,
         ]);
 
         $export->setStatusPending();
 
-        ProcessExport::dispatch($export);
+        ProcessExport::dispatchSync($export);
 
         $extra = array('export_id' => $export->id);
 

@@ -104,7 +104,7 @@ const bytesToKibibytes = (bytes) => {
             <tr v-for="exporting in exportings.data" >
                 <table-data :title="exporting.id"/>
                 <table-data :title="exporting.status"/>
-                <table-data :title="exporting.export_type"/>
+                <table-data :title="exporting.type"/>
                 <table-data :title="bytesToKibibytes(exporting.file_size)"/>
                 <table-data :title="dayjs(exporting.created_at).fromNow()"/>
 

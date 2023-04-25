@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * @property mixed $export_type
+ * @property mixed $type
  * @property mixed $filters
  * @property mixed $created_by
  * @property mixed $id

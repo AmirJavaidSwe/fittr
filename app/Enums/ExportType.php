@@ -15,6 +15,9 @@ enum ExportType
 //    case members;
 //    case orders;
 
+    case fileCsv;
+    case fileXlsx;
+
     public static function all(): array
     {
         return array_column(self::cases(), 'name');
@@ -45,10 +48,10 @@ enum ExportType
         };
     }
 
-    public function get(array $filters)
+    public function get(array $filters, $fileType = 'csv')
     {
         return match($this) {
-            static::classes => (new ExportClassLesson($filters))(),
+            static::classes => (new ExportClassLesson($filters, $fileType))(),
         };
     }
 }

@@ -28,7 +28,7 @@ class ProcessExport implements ShouldQueue, ShouldBeUnique
     private array $exportData;
     private bool $hasDataToExport = false;
     private string $statusMessage = '';
-    private string $exportPath = 'exports/{export_type}/{role}/{file_name}';
+    private string $exportPath = 'exports/{type}/{role}/{file_name}';
 
     public function __construct(Export $export)
     {
@@ -48,9 +48,10 @@ class ProcessExport implements ShouldQueue, ShouldBeUnique
     public function handle(): void
     {
         $this->export->setStatusProcessing();
+
         $this->setPartnerConnection();
 
-        $this->exportData = ExportType::from($this->export->export_type)->get($this->export->filters);
+        $this->exportData = ExportType::from($this->export->type)->get($this->export->filters);
 
         $this->hasDataToExport = count($this->exportData) > 0;
 
@@ -69,7 +70,7 @@ class ProcessExport implements ShouldQueue, ShouldBeUnique
     public function setPartnerConnection(): void
     {
         $this->partner = User::partner()
-                                ->select('name','business_id')
+                                ->select('name', 'business_id')
                                 ->where('id', $this->export->created_by)->first();
 
         $business = $this->partner->business;
@@ -107,14 +108,14 @@ class ProcessExport implements ShouldQueue, ShouldBeUnique
         fclose($file);
 
         // Create file name
-        $fileName = $this->partner->name.'_'.$this->export->export_type.'_'.date('d-m-y H:i').'_export.csv';
+        $fileName = $this->partner->name.'_'.$this->export->type.'_'.date('d-m-y H:i').'_export.csv';
 
         // Replace spaces with underscores
         $filename = str_replace(' ', '_', $fileName);
 
         // Replace special characters with underscores
-        $storagePath = str_replace(['{export_type}', '{role}', '{file_name}'], [
-            $this->export->export_type, $this->partner->role, $filename
+        $storagePath = str_replace(['{type}', '{role}', '{file_name}'], [
+            $this->export->type, $this->partner->role, $filename
         ], $this->exportPath);
 
         // Store CSV file
