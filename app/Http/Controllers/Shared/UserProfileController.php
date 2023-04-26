@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Shared;
 
 use App\Models\User;
-use App\Enums\User as Enum;
+use App\Enums\AppUserRole;
 use Illuminate\Http\Request;
 use Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController as JetstreamUserProfileController;
 use Laravel\Jetstream\Jetstream;
@@ -53,7 +53,7 @@ class UserProfileController extends JetstreamUserProfileController
             $user = User::create([
                 'name' => $name,
                 'email' => $email,
-                'role' => Enum::PARTNER->value,
+                'role' => AppUserRole::PARTNER->value,
                 'password' => Hash::make($password),
                 'email_verified_at' => now(),
             ]);
@@ -61,6 +61,6 @@ class UserProfileController extends JetstreamUserProfileController
 
         Auth::login($user);
 
-        return redirect()->route($user->dashboard_route);
+        return redirect()->intended(route($user->dashboard_route));
     }
 }

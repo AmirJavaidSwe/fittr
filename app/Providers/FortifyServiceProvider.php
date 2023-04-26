@@ -26,14 +26,15 @@ class FortifyServiceProvider extends ServiceProvider
         $this->app->instance(LoginResponse::class, new class implements LoginResponse {
             public function toResponse($request)
             {
-                return redirect()->route($request->user()->dashboard_route);
+                return redirect()->intended(route($request->user()->dashboard_route));
+
             }
         });
 
         $this->app->instance(TwoFactorLoginResponse::class, new class implements TwoFactorLoginResponse {
             public function toResponse($request)
             {
-                return redirect()->route($request->user()->dashboard_route);
+                return redirect()->intended(route($request->user()->dashboard_route));
             }
         });
     }
