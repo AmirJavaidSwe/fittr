@@ -36,6 +36,11 @@ class Business extends Model
         return $this->hasMany(User::class, 'business_id');
     }
 
+    public function settings(): HasMany
+    {
+        return $this->hasMany(BusinessSetting::class, 'business_id');
+    }
+
     // Accessors
     public function getHasStripeAccountAttribute()
     {

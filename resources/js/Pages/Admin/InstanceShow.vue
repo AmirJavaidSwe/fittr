@@ -1,13 +1,10 @@
 <script setup>
 import { ref } from 'vue';
 import { Link } from '@inertiajs/vue3';
+import { DateTime } from "luxon";
 import Section from '@/Components/Section.vue';
 import SectionTitle from '@/Components/SectionTitle.vue';
 import ButtonLink from '@/Components/ButtonLink.vue';
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
- 
-dayjs.extend(relativeTime);
 
 const props = defineProps({
     api_results: Object,
@@ -43,7 +40,7 @@ const instance = ref(props.api_results.data.instance);
             </div>
             <div class="flex flex-wrap gap-2">
                 <dt class="text-gray-500 w-full md:w-48">Date created</dt>
-                <dd class="text-lg font-semibold">{{ dayjs(instance.createdAt) }} ({{ dayjs(instance.createdAt).fromNow() }})</dd>
+                <dd class="text-lg font-semibold">{{ DateTime.fromISO(instance.createdAt) }} ({{ DateTime.fromISO(instance.createdAt).toRelative() }})</dd>
             </div>
             <div class="flex flex-wrap gap-2">
                 <dt class="text-blue-600 w-full md:w-48 mt-4"> Object data</dt>

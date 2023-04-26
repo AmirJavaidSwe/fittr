@@ -2,8 +2,12 @@
 
 namespace Database\Seeders;
 
+use App\Enums\CastType;
+use App\Enums\SettingKey;
+use App\Enums\SettingGroup;
 use App\Enums\StateType;
 use App\Models\Business;
+use App\Models\Format;
 use App\Models\User;
 use DB;
 use Illuminate\Database\Seeder;
@@ -47,6 +51,24 @@ class PartnerDatabaseSeeder extends Seeder
                     'db_port' => $db_port,
                     'db_user' => $db_user,
                     'db_password' => Crypt::encryptString($db_password),
+                ]
+            );
+
+            // default date and time settings for business
+            $business->settings()->updateOrCreate(
+                ['key' => SettingKey::date_format->name],
+                [
+                    'group_name' => SettingGroup::general_formats->name,
+                    'cast_to' => CastType::integer->name,
+                    'val' => Format::where('type', 'date')->where('format_string', 'Y-m-d')->first()->id,
+                ]
+            );
+            $business->settings()->updateOrCreate(
+                ['key' => SettingKey::time_format->name],
+                [
+                    'group_name' => SettingGroup::general_formats->name,
+                    'cast_to' => CastType::integer->name,
+                    'val' => Format::where('type', 'time')->where('format_string', 'H:i')->first()->id,
                 ]
             );
 

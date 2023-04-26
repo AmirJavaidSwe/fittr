@@ -2,8 +2,7 @@
 import { ref, watch } from 'vue';
 import { Link, useForm } from '@inertiajs/vue3';
 import TopMenu from './TopMenu.vue';
-import dayjs from 'dayjs';
-import relativeTime from "dayjs/plugin/relativeTime";
+import { DateTime } from "luxon";
 import Search from "@/Components/DataTable/Search.vue";
 import Pagination from "@/Components/Pagination.vue";
 import TableHead from "@/Components/DataTable/TableHead.vue";
@@ -12,7 +11,6 @@ import DataTableLayout from "@/Components/DataTable/Layout.vue";
 import ConfirmationModal from '@/Components/ConfirmationModal.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import DangerButton from '@/Components/DangerButton.vue';
-dayjs.extend(relativeTime);
 
 const props = defineProps({
     disableSearch: {
@@ -102,7 +100,7 @@ const deleteItem = () => {
                 <table-data :title="exporting.id"/>
                 <table-data :title="exporting.export_type"/>
                 <table-data :title="exporting.file_size"/>
-                <table-data :title="dayjs(exporting.created_at).fromNow()"/>
+                <table-data :title="DateTime.fromISO(exporting.created_at).toRelative()"/>
                 <table-data :title="exporting.created_by"/>
 
                 <table-data>

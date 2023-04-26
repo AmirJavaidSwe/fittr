@@ -1,6 +1,6 @@
 <script setup>
 import SectionTitle from '@/Components/SectionTitle.vue';
-import dayjs from 'dayjs';
+import { DateTime } from "luxon";
 const props = defineProps({
     admins: Array,
 });
@@ -31,7 +31,7 @@ const props = defineProps({
                     <td class="px-6 py-4">{{admin.name}}</td>
                     <td class="px-6 py-4">{{admin.email}}</td>
                     <td class="px-6 py-4"><img :src="admin.profile_photo_url" :alt="admin.name" class="rounded-full h-8 w-8 object-cover"></td>
-                    <td class="px-6 py-4">{{dayjs(admin.created_at)}}</td>
+                    <td class="px-6 py-4">{{DateTime.fromISO(admin.created_at)}}</td>
                     <td class="px-6 py-4"></td>
                 </tr>
             </tbody>

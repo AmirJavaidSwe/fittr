@@ -1,5 +1,6 @@
 <script setup>
-
+import { computed } from 'vue';
+import { DateTime } from "luxon";
 import Multiselect from '@vueform/multiselect';
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
@@ -19,6 +20,7 @@ const props = defineProps({
     instructors: Object,
     classtypes: Object,
     studios: Object,
+    business_seetings: Object,
     form: {
         type: Object,
         required: true
@@ -42,6 +44,10 @@ const updateWeekDays = (index) => {
         props.form.week_days.push(index);
     }
 }
+const formatDate = computed(() => {
+    return props.business_seetings.date_format.format_js + ' ' +
+           props.business_seetings.time_format.format_js;
+});
 
 </script>
 
@@ -66,18 +72,18 @@ const updateWeekDays = (index) => {
                         class="mt-1 block w-full bg-gray-100 border-transparent rounded-md shadow-sm focus:border-gray-300
                                focus:bg-white focus:ring-0"
                         v-model="form.start_date"
-
-                        position="left"
                         :enable-time-picker="true"
+                        :flow="['calendar', 'time']"
+                        :format="formatDate"
+                        :timezone="business_seetings.timezone"
+                        position="left"
                         placeholder="Start Date"
                         minutes-increment="1"
                         text-input
-                        timezone="UTC"
-                        hide-offset-dates
                         week-numbers
                         close-on-scroll
                         partial-flow
-                        :flow="['calendar', 'time']"
+                        hide-offset-dates
                         />
                     <InputError :message="form.errors.start_date" class="mt-2"/>
                 </div>
@@ -88,18 +94,18 @@ const updateWeekDays = (index) => {
                         class="mt-1 block w-full bg-gray-100 border-transparent rounded-md shadow-sm focus:border-gray-300
                                focus:bg-white focus:ring-0"
                         v-model="form.end_date"
-
-                        position="left"
                         :enable-time-picker="true"
+                        :flow="['calendar', 'time']"
+                        :format="formatDate"
+                        :timezone="business_seetings.timezone"
+                        position="left"
                         placeholder="End Date"
                         minutes-increment="1"
                         text-input
-                        timezone="UTC"
                         close-on-scroll
                         partial-flow
-                        :flow="['calendar', 'time']"
                         hide-offset-dates
-                        :min-date="form.start_date"/>
+                        />
                     <InputError :message="form.errors.end_date" class="mt-2"/>
                 </div>
             </div>
@@ -189,7 +195,6 @@ const updateWeekDays = (index) => {
                     placeholder="Repeat End Date"
                     text-input
                     auto-apply
-                    timezone="UTC"
                     :min-date="form.end_date"
                     />
                 <InputError :message="form.errors.repeat_end_date" class="mt-2"/>
@@ -225,7 +230,7 @@ const updateWeekDays = (index) => {
 
             <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                 <span v-if="isNew">Create</span>
-                <span v-else>Save changes</span>                
+                <span v-else>Save changes</span>
             </PrimaryButton>
         </template>
     </FormSection>
