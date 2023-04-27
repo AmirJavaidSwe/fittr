@@ -11,6 +11,13 @@ import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 
+const props = defineProps({
+    business_seetings: {
+        type: Object,
+        required: true,
+    },
+});
+
 const showingNavigationDropdown = ref(false);
 
 const logout = () => {
@@ -22,10 +29,15 @@ const toggleMenu = (v) => {
 };
 
 const MainMenu = defineAsyncComponent(() => {
-    const user = usePage().props.user;
-    if(!user) {
-        return import('./MemberMenu.vue');
-    }
+    // const user = usePage().props.user;
+    // if(!user) {
+    //     return import('./MemberMenu.vue');
+    // }
+
+    //TODO: return either member or instructor menu
+
+    // MemberMenu checks is user exist
+    return import('./MemberMenu.vue');
 });
 
 const header = computed(() => {
@@ -52,10 +64,15 @@ const headerIsArray = computed(() => {
             <!-- Desktop, flex -->
             <div class="md:flex md:flex-col md:h-screen">
                 <div class="md:flex md:flex-shrink-0">
-                    <div class="flex items-center justify-between px-6 py-4 md:flex-shrink-0 md:justify-center md:w-56 bg-gray-100">
+                    <div class="flex items-center justify-between md:flex-shrink-0 md:justify-center md:w-56 bg-white">
                         <!-- Logo -->
-                        <Link href="/" class="">
-                            LOGO
+                        <Link :href="business_seetings.logo_url ?? '/'" class="">
+                            <div v-if="business_seetings.logo" class="h-20 w-56">
+                                <img :src="business_seetings.asset_url + business_seetings.logo" :alt="business_seetings.business_name" class="h-full">
+                            </div>
+                            <div v-else class="px-6 py-4 font-bold">
+                                {{business_seetings.business_name ?? 'LOGO'}}
+                            </div>
                         </Link>
                         <!-- Mobile toggle, visible md and smaller -->
                         <Dropdown align="right" width="48" :content-classes="['bg-gray-100', 'p-1']" @toggled="toggleMenu">

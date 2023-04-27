@@ -101,12 +101,16 @@ class BusinessSettingService
             SettingGroup::general_details,
             SettingGroup::general_address,
             SettingGroup::general_formats,
+            SettingGroup::service_store_general,
             SettingGroup::service_store_header,
             SettingGroup::service_store_seo,
             SettingGroup::service_store_code,
         );
         $settings = $this->getByGroups(array_column($groups, 'name'));
         $request->session()->put('business_seetings', $settings);
+
+        //save to cache when settings were last updated timestamp (\App\Http\Middleware\AuthenticateSubdomain::class will update settings in session)
+        $this->cache->put('business_seetings_updated.'.$business_id, now()->timestamp);
 
         BusinessSettingUpdated::dispatch($business_id);
     }
