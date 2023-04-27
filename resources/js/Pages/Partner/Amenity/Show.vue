@@ -1,11 +1,8 @@
 <script setup>
 import {Link} from "@inertiajs/vue3";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
+import { DateTime } from "luxon";
 import SingleView from "@/Components/DataTable/SingleView.vue";
 import SingleViewRow from "@/Components/DataTable/SingleViewRow.vue";
-
-dayjs.extend(relativeTime);
 
 defineProps({
     amenity: {
@@ -44,7 +41,7 @@ defineProps({
 
             <single-view-row :even="true" label="Status" :value="amenity.status"/>
 
-            <single-view-row :even="false" label="Created At" :value="dayjs(amenity.created_at).fromNow()"/>
+            <single-view-row :even="false" label="Created At" :value="DateTime.fromISO(amenity.updated_at).toRelative()"/>
 
         </template>
     </single-view>

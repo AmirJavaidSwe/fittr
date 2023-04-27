@@ -1,8 +1,8 @@
 <script setup>
 import { Link } from '@inertiajs/vue3';
+import { DateTime } from "luxon";
 import SectionTitle from '@/Components/SectionTitle.vue';
 import ButtonLink from '@/Components/ButtonLink.vue';
-import dayjs from 'dayjs';
 const props = defineProps({
     api_results: Object,
 });
@@ -44,7 +44,7 @@ const props = defineProps({
                     <td class="px-6 py-4">Public: {{instance.publicIpAddress}}<br>Private: {{instance.privateIpAddress}}</td>
                     <td class="px-6 py-4">{{instance.sshKeyName}}</td>
                     <td class="px-6 py-4">{{instance.state?.name}}</td>
-                    <td class="px-6 py-4">{{dayjs(instance.createdAt)}}</td>
+                    <td class="px-6 py-4">{{DateTime.fromISO(instance.createdAt)}}</td>
                     <td class="px-6 py-4">
                         <ButtonLink :href="route('admin.instances.show', {name: instance.name})" type="primary">Show</ButtonLink>
                     </td>

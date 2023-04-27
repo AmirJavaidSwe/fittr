@@ -1,8 +1,8 @@
 <script setup>
 import SingleView from "@/Components/DataTable/SingleView.vue";
 import SingleViewRow from "@/Components/DataTable/SingleViewRow.vue";
-import dayjs from 'dayjs';
 import {Link} from "@inertiajs/vue3";
+import { DateTime } from "luxon";
 
 defineProps({
     class_lesson: {
@@ -35,13 +35,13 @@ defineProps({
 
             <single-view-row label="Class Type" :even="true" :value="class_lesson.classtype?.title"/>
 
-            <single-view-row label="Start At" :even="false" :value="dayjs(class_lesson.start_at).format('dddd, MMMM D, YYYY h:mm A')"/>
+            <single-view-row label="Start At" :even="false" :value="DateTime.fromISO(class_lesson.start_date)"/>
 
-            <single-view-row label="End At" :even="true" :value="dayjs(class_lesson.end_at).format('dddd, MMMM D, YYYY h:mm A')"/>
+            <single-view-row label="End At" :even="true" :value="DateTime.fromISO(class_lesson.end_date)"/>
 
-            <single-view-row label="Created At" :even="false" :value="dayjs(class_lesson.created_at)"/>
+            <single-view-row label="Created At" :even="false" :value="DateTime.fromISO(class_lesson.created_at)"/>
 
-            <single-view-row label="Updated At" :even="true" :value="dayjs(class_lesson.updated_at)"/>
+            <single-view-row label="Updated At" :even="true" :value="DateTime.fromISO(class_lesson.updated_at)"/>
         </template>
     </single-view>
 </template>

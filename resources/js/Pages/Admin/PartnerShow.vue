@@ -1,13 +1,10 @@
 <script setup>
 import { Link } from '@inertiajs/vue3';
+import { DateTime } from "luxon";
 import Section from '@/Components/Section.vue';
 import SectionTitle from '@/Components/SectionTitle.vue';
 import SectionBorder from '@/Components/SectionBorder.vue';
 import ButtonLink from '@/Components/ButtonLink.vue';
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
- 
-dayjs.extend(relativeTime);
 
 const props = defineProps({
     partner: Object,
@@ -42,13 +39,13 @@ const props = defineProps({
             <div class="flex flex-col pb-3">
                 <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Email verified</dt>
                 <dd class="text-lg font-semibold">
-                    <span v-if="partner.email_verified_at">YES, {{ dayjs(partner.email_verified_at).fromNow() }}</span>
+                    <span v-if="partner.email_verified_at">YES, {{ DateTime.fromISO(partner.email_verified_at).toRelative() }}</span>
                     <span v-else>NO</span>
                 </dd>
             </div>
             <div class="flex flex-col pb-3">
                 <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Date created</dt>
-                <dd class="text-lg font-semibold">{{ new Date(partner.created_at).toLocaleString() }} {{ dayjs(partner.created_at).fromNow() }}</dd>
+                <dd class="text-lg font-semibold">{{ DateTime.fromISO(partner.created_at) }} {{ DateTime.fromISO(partner.created_at).toRelative() }}</dd>
             </div>
         </dl>
     </Section>

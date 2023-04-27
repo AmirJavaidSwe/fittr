@@ -1,12 +1,9 @@
 <script setup>
 
 import {Link} from "@inertiajs/vue3";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
+import { DateTime } from "luxon";
 import SingleView from "@/Components/DataTable/SingleView.vue";
 import SingleViewRow from "@/Components/DataTable/SingleViewRow.vue";
-
-dayjs.extend(relativeTime);
 
 defineProps({
     member: {
@@ -37,9 +34,9 @@ defineProps({
 
             <single-view-row :even="true" label="Contents" :value="member.email"/>
 
-            <single-view-row :even="false" label="Created At" :value="dayjs(member.created_at).fromNow()"/>
+            <single-view-row :even="false" label="Created At" :value="DateTime.fromISO(member.created_at)"/>
 
-            <single-view-row :even="true" label="Updated At" :value="dayjs(member.updated_at).fromNow()"/>
+            <single-view-row :even="true" label="Updated At" :value="DateTime.fromISO(member.updated_at).toRelative()"/>
 
         </template>
     </single-view>

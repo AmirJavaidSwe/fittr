@@ -167,7 +167,7 @@ Route::domain('{subdomain}.'.config('app.domain'))->middleware(['auth.subdomain'
 
         //MEMBER
         Route::middleware(['auth.role:member'])->name('member.')->group(function () {
-            Route::get('/dashboard', [MemberDashboardController::class, 'index'])->name('dashboard');
+            // Route::get('/dashboard', [MemberDashboardController::class, 'index'])->name('dashboard');
             // Route::get('/memberships', [MembershipController::class, 'index'])->name('memberships');
         });
 

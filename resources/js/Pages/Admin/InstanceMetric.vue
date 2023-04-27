@@ -1,13 +1,10 @@
 <script setup>
 import { ref } from 'vue';
 import { Link } from '@inertiajs/vue3';
+import { DateTime } from "luxon";
 import Section from '@/Components/Section.vue';
 import SectionTitle from '@/Components/SectionTitle.vue';
 import ButtonLink from '@/Components/ButtonLink.vue';
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
- 
-dayjs.extend(relativeTime);
 
 const props = defineProps({
     api_results: Object,
@@ -44,7 +41,7 @@ const metric = ref(props.api_results.data.metricData[0]);
             </div>
             <div class="flex flex-wrap gap-2">
                 <dt class="text-gray-500 w-full md:w-48">Period</dt>
-                <dd class="text-lg font-semibold">{{ dayjs(metric.timestamp) }} - {{ dayjs() }}</dd>
+                <dd class="text-lg font-semibold">{{ DateTime.fromISO(metric.timestamp) }}</dd>
             </div>
         </dl>
         <div v-else>

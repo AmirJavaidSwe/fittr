@@ -30,4 +30,9 @@ class BusinessSetting extends Model
     {
         return $query->where('group_name', $group->name);
     }
+
+    public function scopeOfGroups($query, array $groups)
+    {
+        return $query->whereIn('group_name', $groups);
+    }
 }

@@ -8,20 +8,27 @@ use App\Enums\CastType;
 enum SettingKey: string
 {
     //Business Settings
+    // GROUP_GENERAL_DETAILS
     case business_name = 'business_name';
     case business_email = 'business_email';
     case country_id = 'country_id';
     case business_phone = 'business_phone';
     case timezone = 'timezone';
     case show_timezone = 'show_timezone';
+
+    // GROUP_GENERAL_ADDRESS
     case address_line1 = 'address_line1';
     case address_line2 = 'address_line2';
     case city = 'city';
     case state = 'state';
     case legal_country_id = 'legal_country_id';
     case zip_code = 'zip_code';
+
+    // GROUP_GENERAL_FORMATS
     case date_format = 'date_format';
     case time_format = 'time_format';
+
+    // GROUP_INTEGRATIONS
     case integration_mailchimp_status = 'integration_mailchimp_status';
     case integration_mailchimp_api_key = 'integration_mailchimp_api_key';
     case integration_mailchimp_list_id = 'integration_mailchimp_list_id';
@@ -33,8 +40,11 @@ enum SettingKey: string
     case integration_sendinblue_list_id = 'integration_sendinblue_list_id';
     
     //Online Store
+    // GROUP_SERVICE_STORE_GENERAL
     case subdomain = 'subdomain';
     case custom_domain = 'custom_domain';
+
+    // GROUP_SERVICE_STORE_HEADER
     case logo = 'logo';
     case logo_url = 'logo_url';
     case favicon = 'favicon';
@@ -45,14 +55,19 @@ enum SettingKey: string
     case link_instagram = 'link_instagram';
     case link_twitter = 'link_twitter';
     case link_youtube = 'link_youtube';
+
+    // GROUP_SERVICE_STORE_SEO
     case meta_title = 'meta_title';
     case meta_description = 'meta_description';
+
+    // GROUP_SERVICE_STORE_CODE
     case google_analytics = 'google_analytics';
     case google_gtag = 'google_gtag';
     case google_adsense = 'google_adsense';
     case fb_pixel = 'fb_pixel';
     
     //Waivers
+    // GROUP_SERVICE_STORE_WAIVERS
     case waiver_text = 'waiver_text';
     case enforce_waiver = 'enforce_waiver';
 

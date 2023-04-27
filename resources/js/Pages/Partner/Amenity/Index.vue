@@ -1,17 +1,15 @@
 <script setup>
 import { ref, watch } from 'vue';
 import { Link, useForm } from '@inertiajs/vue3';
+import { DateTime } from "luxon";
 import TableHead from "@/Components/DataTable/TableHead.vue";
 import TableData from "@/Components/DataTable/TableData.vue";
 import DataTableLayout from "@/Components/DataTable/Layout.vue";
-import relativeTime from "dayjs/plugin/relativeTime";
-import dayjs from "dayjs";
 import Search from "@/Components/DataTable/Search.vue";
 import Pagination from "@/Components/Pagination.vue";
 import ConfirmationModal from '@/Components/ConfirmationModal.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import DangerButton from '@/Components/DangerButton.vue';
-dayjs.extend(relativeTime);
 
 const props = defineProps({
     disableSearch: {
@@ -109,8 +107,8 @@ const deleteItem = () => {
                         {{ amenity.status ? 'Active' : 'Inactive' }}
                     </span>
                 </table-data>
-                <table-data :title="dayjs(amenity.created_at).fromNow()"/>
-                <table-data :title="dayjs(amenity.updated_at).fromNow()"/>
+                <table-data :title="DateTime.fromISO(amenity.created_at)"/>
+                <table-data :title="DateTime.fromISO(amenity.updated_at).toRelative()"/>
                 <table-data>
                     <Link class="font-medium text-indigo-600 hover:text-indigo-500"
                           :href="route('partner.amenity.edit', amenity)">

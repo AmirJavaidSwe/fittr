@@ -45,4 +45,11 @@ class CacheMasterService
         });
     }
 
+    public function formats()
+    {
+        return Cache::remember('cache_formats', config('cache.ttl.default'), function () {
+            return DB::table('formats')->select('id', 'type', 'format_string', 'format_js')->get();
+        });
+    }
+
 }

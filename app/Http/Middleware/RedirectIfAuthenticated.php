@@ -22,7 +22,7 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
-                return redirect()->route($request->user()->dashboard_route);
+                return redirect()->intended(route($request->user()->dashboard_route));
             }
         }
 

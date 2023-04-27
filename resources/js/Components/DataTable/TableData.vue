@@ -11,14 +11,5 @@
 </template>
 
 <script setup>
-defineProps({
-    title: {
-        type: [String, Number],
-        required: false
-    },
-    subtitle: {
-        type: String,
-        required: false
-    }
-})
+    defineProps(['title', 'subtitle']);
 </script>
