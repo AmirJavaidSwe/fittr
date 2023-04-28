@@ -2,6 +2,7 @@
 
 namespace App\Enums;
 
+use App\Models\Partner\Export;
 use App\Exports\ExportClassLesson;
 use App\Models\Partner\ClassLesson;
 use App\Models\Partner\Instructor;
@@ -39,7 +40,7 @@ enum ExportType
         };
     }
 
-    public function model()
+    public function model(): Studio|Instructor|ClassLesson
     {
         return match($this) {
             static::classes => new ClassLesson,
@@ -48,10 +49,10 @@ enum ExportType
         };
     }
 
-    public function get(array $filters, $fileType = 'csv')
+    public function get(Export $export, $fileType = 'csv')
     {
         return match($this) {
-            static::classes => (new ExportClassLesson($filters, $fileType))(),
+            static::classes => (new ExportClassLesson($export, $fileType))(),
         };
     }
 }

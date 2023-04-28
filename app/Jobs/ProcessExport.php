@@ -2,12 +2,9 @@
 
 namespace App\Jobs;
 
-use App\Enums\ExportStatus;
 use App\Enums\ExportType;
-use App\Models\Business;
 use App\Models\Partner\Export;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -17,18 +14,12 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\Middleware\WithoutOverlapping;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\Storage;
 
 class ProcessExport implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     private Export $export;
-    private User $partner;
-    private array $exportData;
-    private bool $hasDataToExport = false;
-    private string $statusMessage = '';
-    private string $exportPath = 'exports/{type}/{role}/{file_name}';
 
     public function __construct(Export $export)
     {
@@ -45,35 +36,12 @@ class ProcessExport implements ShouldQueue, ShouldBeUnique
         return [(new WithoutOverlapping($this->export->id))->expireAfter(300)];
     }
 
-    public function handle(): void
-    {
-        $this->export->setStatusProcessing();
-
-        $this->setPartnerConnection();
-
-        $this->exportData = ExportType::from($this->export->type)->get($this->export->filters);
-
-        $this->hasDataToExport = count($this->exportData) > 0;
-
-        if (!$this->hasDataToExport) {
-            $this->statusMessage = "No data to export";
-
-            $this->export->update([
-                'status' => ExportStatus::completed,
-                'message' => $this->statusMessage,
-            ]);
-        } else {
-            $this->exportToCSV();
-        }
-    }
-
     public function setPartnerConnection(): void
     {
-        $this->partner = User::partner()
-                                ->select('name', 'business_id')
-                                ->where('id', $this->export->created_by)->first();
-
-        $business = $this->partner->business;
+        $business = User::partner()
+                        ->select('name', 'business_id')
+                        ->where('id', $this->export->created_by)
+                        ->first()->business;
 
         Config::set('database.connections.mysql_partner', [
             'driver' => 'mysql',
@@ -89,50 +57,16 @@ class ProcessExport implements ShouldQueue, ShouldBeUnique
         ]);
     }
 
-    public function exportToCSV(): void
+    public function handle(): void
     {
-        $headers = $this->hasDataToExport ? array_keys($this->exportData[0]) : [];
+        $this->export->setStatusProcessing();
 
-        $file = fopen('php://temp', 'rw');
+        $this->setPartnerConnection();
 
-        // Insert headers
-        fputcsv($file, $headers);
+        $response = ExportType::from($this->export->type)->get($this->export);
 
-        // Insert data
-        foreach ($this->exportData as $record) {
-            fputcsv($file, $record);
-        }
+        $this->export->update($response);
 
-        rewind($file);
-        $csv = stream_get_contents($file);
-        fclose($file);
-
-        // Create file name
-        $fileName = $this->partner->name.'_'.$this->export->type.'_'.date('d-m-y H:i').'_export.csv';
-
-        // Replace spaces with underscores
-        $filename = str_replace(' ', '_', $fileName);
-
-        // Replace special characters with underscores
-        $storagePath = str_replace(['{type}', '{role}', '{file_name}'], [
-            $this->export->type, $this->partner->role, $filename
-        ], $this->exportPath);
-
-        // Store CSV file
-        Storage::put($storagePath, $csv);
-
-        if (!isset($this->statusMessage)) {
-            $this->statusMessage = "CSV file has been stored as " . $filename;
-        }
-
-        // Update Export model
-        $this->export->update([
-            'csv_file_name' => $filename,
-            'file_rows' => count($this->exportData),
-            'file_size' => strlen($csv),
-            'completed_at' => Carbon::now(),
-            'status' => ExportStatus::completed->name,
-            'message' => $this->statusMessage
-        ]);
+        $this->export->setStatusCompleted();
     }
 }
