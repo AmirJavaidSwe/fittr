@@ -17,7 +17,6 @@ use App\Http\Controllers\Shared\UserProfileController;
 
 use App\Http\Controllers\Partner\BusinessSettingController;
 use App\Http\Controllers\Partner\PartnerDashboardController;
-use App\Http\Controllers\Partner\PartnerPricingController;
 use App\Http\Controllers\Partner\PartnerSubscriptionController;
 use App\Http\Controllers\Partner\PartnerMemberController;
 use App\Http\Controllers\Partner\PartnerInstructorController;
@@ -90,7 +89,6 @@ Route::domain('app.'.config('app.domain'))->group(function () {
     
         Route::middleware(['auth.role:partner'])->name('partner.')->group(function () {
             Route::get('/dashboard', [PartnerDashboardController::class, 'index'])->name('dashboard');
-            Route::get('/pricing', [PartnerPricingController::class, 'index'])->name('pricing.index');
     
             Route::get('/subscriptions', [PartnerSubscriptionController::class, 'index'])->name('subscriptions.index');
             Route::put('/subscriptions/{subscription}/cancel', [PartnerSubscriptionController::class, 'cancel'])->name('subscriptions.cancel');
