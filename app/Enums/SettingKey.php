@@ -139,7 +139,7 @@ enum SettingKey: string
             // Header & Footer
             static::logo => ['nullable', 'mimes:jpg,jpeg,png,svg', 'max:2048'], //2MB
             static::logo_url => ['nullable', 'max:255', 'regex:"^(http:\/\/|https:\/\/)"'],
-            static::favicon => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'], //1MB
+            static::favicon => ['nullable', 'mimes:png,ico,svg', 'max:1024'], //1MB
             static::show_address => ['nullable', 'boolean'],
             static::show_phone => ['nullable', 'boolean'],
             static::show_email => ['nullable', 'boolean'],

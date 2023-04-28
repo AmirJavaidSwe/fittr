@@ -42,7 +42,28 @@ const MainMenu = defineAsyncComponent(() => {
 
 const header = computed(() => {
   return usePage().props.header;
-})
+});
+
+const logo_image_url = computed(() => {
+    return props.business_seetings.logo ? usePage().props.asset_url + props.business_seetings.logo : null;
+});
+
+const favicon_type = ref('image/x-icon');
+const favicon_image_url = computed(() => {
+    if(!props.business_seetings.favicon){
+        return null;
+    }
+    switch (true) {
+        case props.business_seetings.favicon.endsWith('.png'):
+            favicon_type.value="image/png";
+            break;
+        case props.business_seetings.favicon.endsWith('.svg'):
+            favicon_type.value="image/svg+xml";
+            break;
+    }
+    return usePage().props.asset_url + props.business_seetings.favicon;    
+});
+
 const headerIsArray = computed(() => {
   return Array.isArray(header.value);
 })
@@ -50,11 +71,10 @@ const headerIsArray = computed(() => {
 
 <template>
     <div>
-        <AppHead :title="$page.props.page_title">
-            <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-            <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-            <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-            <link rel="manifest" href="/site.webmanifest">
+        <AppHead 
+            :title="$page.props.page_title"
+            :favicon_type="favicon_type"
+            :favicon_image_url="favicon_image_url">
         </AppHead>
 
         <Banner />
@@ -68,7 +88,7 @@ const headerIsArray = computed(() => {
                         <!-- Logo -->
                         <Link :href="business_seetings.logo_url ?? '/'" class="">
                             <div v-if="business_seetings.logo" class="h-20 w-56">
-                                <img :src="business_seetings.asset_url + business_seetings.logo" :alt="business_seetings.business_name" class="h-full">
+                                <img :src="logo_image_url" :alt="business_seetings.business_name" class="h-full">
                             </div>
                             <div v-else class="px-6 py-4 font-bold">
                                 {{business_seetings.business_name ?? 'LOGO'}}

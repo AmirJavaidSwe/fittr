@@ -69,8 +69,6 @@ class AuthenticateSubdomain
                 SettingGroup::service_store_code,
             );
             $settings = $this->business_settings_service->getByGroups(array_column($groups, 'name'));
-
-            $settings['asset_url'] = Config::get('app.asset_url');
             $settings['settings_updated'] = now()->timestamp;
             $request->session()->put('business_seetings', $settings);
         }
@@ -86,6 +84,8 @@ class AuthenticateSubdomain
             'prefix'    => '',
             'strict'    => true,
         ]);
+
+        Config::set('app.name', session('business_seetings.business_name') ?? __('Service store'));
 
         return $next($request);
     }

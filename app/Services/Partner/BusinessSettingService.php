@@ -77,7 +77,7 @@ class BusinessSettingService
 
         collect($request->validated())->each(function ($value, $key) use ($business_id) {
             if($value instanceof UploadedFile){
-                $value = $value->storePublicly($key, ['disk' => 'public']);
+                $value = $value->storePublicly($key, ['disk' => config('filesystems.default')]);
             }
             $identifier = ['business_id' => $business_id, 'key' => $key];
             $is_encrypted = SettingKey::from($key)->encryption();
@@ -92,7 +92,7 @@ class BusinessSettingService
             $business_setting ? $business_setting->update($values) : BusinessSetting::create($identifier + $values);
 
             if(in_array($key, SettingKey::files()) && $previous_value){
-                Storage::disk('public')->delete($previous_value);
+                Storage::disk(config('filesystems.default'))->delete($previous_value);
             }
         });
 

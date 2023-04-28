@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, onMounted  } from 'vue';
-import { router, useForm } from '@inertiajs/vue3';
+import { router, useForm, usePage } from '@inertiajs/vue3';
 import ServiceStoreMenu from '@/Pages/Partner/Settings/ServiceStoreMenu.vue';
 
 import SectionTitle from '@/Components/SectionTitle.vue';
@@ -17,16 +17,15 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faArrowsDownToLine, faArrowsUpToLine } from '@fortawesome/free-solid-svg-icons';
 
 const props = defineProps({
-    logo: String,
-    favicon: String,
+    business_seetings: Object,
     form_data: Object,
 });
 
 const form = useForm({
     _method: 'PUT', //use spoofing for multipart/form-data support
-    logo: null, //file
+    logo: props.form_data.logo, //file
     logo_url: props.form_data.logo_url,
-    favicon: null, //file
+    favicon: props.form_data.favicon, //file
     show_address: props.form_data.show_address,
     show_phone: props.form_data.show_phone,
     show_email: props.form_data.show_email,
@@ -69,8 +68,12 @@ const deleteLogo = () => {
     logoDelete.value = true;
 };
 
+const logo_img_url = computed(() => {
+    return form.logo ? usePage().props.asset_url + form.logo : null;
+});
+
 const show_logo = computed(() => {
-    return (props.logo || logoPreview.value) && !logoDelete.value;
+    return (form.logo || logoPreview.value) && !logoDelete.value;
 });
 
 const updateFaviconPreview = () => {
@@ -90,8 +93,12 @@ const deleteFavicon = () => {
     faviconDelete.value = true;
 };
 
+const favicon_img_url = computed(() => {
+    return form.favicon ? usePage().props.asset_url + form.favicon : null;
+});
+
 const show_favicon = computed(() => {
-    return (props.favicon || faviconPreview.value) && !faviconDelete.value;
+    return (form.favicon || faviconPreview.value) && !faviconDelete.value;
 });
 
 const submitForm = () => {
@@ -150,10 +157,10 @@ const submitForm = () => {
                     <p>Upload a PNG, JPG or SVG logo image.</p>
                 </div>
 
-                <div v-if="show_logo">                
+                <div v-if="show_logo">
                     <!-- Current Logo -->
-                    <div v-show="!logoPreview && logo" class="mt-2">
-                        <img :src="logo" class="h-32">
+                    <div v-show="!logoPreview && form.logo" class="mt-2">
+                        <img :src="logo_img_url" class="h-32">
                     </div>
 
                     <!-- New Logo Preview -->
@@ -167,7 +174,7 @@ const submitForm = () => {
                 </SecondaryButton>
 
                 <SecondaryButton
-                    v-if="!logoDelete && logo"
+                    v-if="!logoDelete && form.logo"
                     type="button"
                     class="mt-2"
                     @click="deleteLogo"
@@ -206,13 +213,13 @@ const submitForm = () => {
 
                 <div v-if="show_favicon">
                     <!-- Current favicon -->
-                    <div v-show="!faviconPreview && favicon" class="mt-2">
-                        <img :src="favicon" class="h-12">
+                    <div v-show="!faviconPreview && form.favicon" class="mt-2">
+                        <img :src="favicon_img_url" class="bg-gray-900 h-12 p-2">
                     </div>
 
                     <!-- New favicon -->
                     <div v-show="faviconPreview" class="mt-2">
-                        <img :src="faviconPreview" class="h-12">
+                        <img :src="faviconPreview" class="bg-gray-900 h-12 p-2">
                     </div>
                 </div>
 
@@ -221,7 +228,7 @@ const submitForm = () => {
                 </SecondaryButton>
 
                 <SecondaryButton
-                    v-if="!faviconDelete && favicon"
+                    v-if="!faviconDelete && form.favicon"
                     type="button"
                     class="mt-2"
                     @click="deleteFavicon"
