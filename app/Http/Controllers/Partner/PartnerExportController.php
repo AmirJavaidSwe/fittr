@@ -114,4 +114,11 @@ class PartnerExportController extends Controller
         return $this->redirectBackSuccess(__('Export deleted successfully'), 'partner.exports.index');
     }
 
+    public function download(Export $export)
+    {
+
+
+        return response()->download(storage_path('app/public/exports/'.$export->csv_file_name));
+    }
+
 }

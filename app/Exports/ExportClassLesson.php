@@ -69,6 +69,7 @@ class ExportClassLesson extends Export
 
         // Insert data
         $exportData = $this->query()->get();
+
         foreach ($exportData as $record) {
             fputcsv($file, $record->toArray());
         }

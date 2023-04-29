@@ -51,4 +51,10 @@ class Export extends Model
         $this->completed_at = Carbon::now();
         $this->saveQuietly();
     }
+
+    public function generateToken(): void
+    {
+        $this->token = bin2hex(random_bytes(32));
+        $this->saveQuietly();
+    }
 }
