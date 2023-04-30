@@ -98,6 +98,7 @@ class ExportClassLesson extends Export
 
         // Update Export model
         return [
+            'file_path' => $storagePath,
             'csv_file_name' => $filename,
             'file_rows' => count($exportData),
             'file_size' => strlen($csv),

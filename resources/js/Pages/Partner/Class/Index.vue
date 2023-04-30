@@ -51,7 +51,7 @@ const form_class = useForm({
     start_date: null,
     end_date: null,
     instructor_id: null,
-    classtype_id: null,
+    class_type_id: null,
     studio_id: null,
     is_offpeak: false,
     does_repeat: false,
@@ -150,7 +150,8 @@ const exportClasses = () => {
 const completed_at = ref(null);
 const checkExportStatus = () => {
     setTimeout(() => {
-        // idea is to do quick query here to check for export status. The job may have been complete and we can show a download link inside modal, to avoid visit exports page
+        // idea is to do quick query here to check for export status. The job may have been complete and we can show a
+        // download link inside modal, to avoid visit exports page
 
         axios
         .get(route('partner.exports.show', {id: export_id.value}), {
@@ -222,18 +223,14 @@ const showLink = (exporting) => {
                 </table-data>
                 <table-data :title="class_lesson.studio_id"/>
                 <table-data :title="class_lesson.instructor_id"/>
-                <table-data :title="class_lesson.classtype_id"/>
+                <table-data :title="class_lesson.class_type_id"/>
                 <table-data>
-                    <!-- <span :class="classStatuses[class_lesson.status].color"
-                          class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ">
-                        {{ classStatuses[class_lesson.status].label }}
-                    </span> -->
-                    <span
-                          class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ">
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ">
                         {{ class_lesson.status_label }}
                     </span>
                 </table-data>
-                <table-data :title="dayjs(class_lesson.start_date).format('dddd, MMMM D, YYYY (h:mm A)')" :subtitle="dayjs(class_lesson.end_date).format('dddd, MMMM D, YYYY (h:mm A)')"/>
+                <table-data :title="dayjs(class_lesson.start_date).format('dddd, MMMM D, YYYY (h:mm A)')"
+                            :subtitle="dayjs(class_lesson.end_date).format('dddd, MMMM D, YYYY (h:mm A)')"/>
                 <table-data :title="dayjs(class_lesson.updated_at).fromNow()"/>
                 <table-data>
                     <Link class="font-medium text-indigo-600 hover:text-indigo-500"
@@ -315,8 +312,7 @@ const showLink = (exporting) => {
                 class="ml-3"
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
-                @click="deleteItem"
-            >
+                @click="deleteItem">
                 Delete
             </DangerButton>
         </template>

@@ -137,7 +137,7 @@ const updateWeekDays = (index) => {
             <div class="">
                 <InputLabel for="classtype" value="Class Type"/>
                 <Multiselect
-                    v-model="form.classtype_id"
+                    v-model="form.class_type_id"
                     :options="classtypes"
                     :searchable="true"
                     :close-on-select="true"
@@ -145,7 +145,7 @@ const updateWeekDays = (index) => {
                     placeholder="Select Class Type"
                     >
                 </Multiselect>
-                <InputError :message="form.errors.classtype_id" class="mt-2"/>
+                <InputError :message="form.errors.class_type_id" class="mt-2"/>
             </div>
 
             <!-- Studios -->
@@ -178,7 +178,7 @@ const updateWeekDays = (index) => {
                     description="Enable to create multiple classes."/>
             </div>
 
-            
+
             <div v-if="form.does_repeat">
                 <InputLabel for="repeat_end_date" value="Repeat until (cutout date)"/>
                 <Datepicker
@@ -200,7 +200,7 @@ const updateWeekDays = (index) => {
                             class="mb-2"/>
                 <div class="text-xs">Additional classes will be created with same settings but on the days you selected until cutout date inclusive</div>
                 <div class="items-center w-full text-sm font-medium text-gray-900 bg-white flex flex-wrap text-white gap-2 cursor-pointer">
-                    <label 
+                    <label
                         v-for="(weekDay, index) in weekDays"
                         :for="'weekday'+index" class="border border-gray-200 flex font-medium gap-4 items-center p-3 py-2 rounded-md text-gray-900 text-sm">
                         <input :id="'weekday'+index"
@@ -214,7 +214,7 @@ const updateWeekDays = (index) => {
                 </div>
                 <InputError :message="form.errors.week_days" class="mt-2" />
             </div>
-           
+
 
         </template>
 
@@ -225,7 +225,7 @@ const updateWeekDays = (index) => {
 
             <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                 <span v-if="isNew">Create</span>
-                <span v-else>Save changes</span>                
+                <span v-else>Save changes</span>
             </PrimaryButton>
         </template>
     </FormSection>

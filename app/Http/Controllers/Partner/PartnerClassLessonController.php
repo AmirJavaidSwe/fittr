@@ -149,7 +149,7 @@ class PartnerClassLessonController extends Controller
                 ),
                 'form_data' => array_merge($validated, ['preview_confirmed' => true]),
                 'instructor' => Instructor::find($request->instructor_id),
-                'classtype' => Classtype::find($request->classtype_id),
+                'classtype' => Classtype::find($request->class_type_id),
                 'studio' => Studio::find($request->studio_id),
                 'class_duration' => $class_duration,
                 'repeats' => $repeats,

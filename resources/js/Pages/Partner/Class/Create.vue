@@ -22,7 +22,7 @@ let form = useForm({
     start_date: null,
     end_date: null,
     instructor_id: null,
-    classtype_id: null,
+    class_type_id: null,
     studio_id: null,
     is_offpeak: false,
     does_repeat: false,
@@ -33,7 +33,7 @@ let form = useForm({
 </script>
 
 <template>
-    <Form 
+    <Form
         :form="form"
         :isNew="true"
         :statuses="statuses"

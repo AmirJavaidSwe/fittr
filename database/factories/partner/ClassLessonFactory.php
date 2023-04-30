@@ -26,7 +26,7 @@ class ClassLessonFactory extends Factory
             'start_date' => $dt,
             'end_date' => $dt->copy()->addMinutes(45),
             'instructor_id' => $this->faker->numberBetween(1, 5),
-            'classtype_id' => $this->faker->numberBetween(1, 5),
+            'class_type_id' => $this->faker->numberBetween(1, 5),
             'studio_id' => $this->faker->numberBetween(1, 5),
         ];
     }

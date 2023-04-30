@@ -23,8 +23,9 @@ return new class extends Migration
             $table->timestamp('start_date')->nullable();
             $table->timestamp('end_date')->nullable();
             $table->integer('instructor_id')->unsigned();
-            $table->integer('classtype_id')->unsigned();
+            $table->integer('class_type_id')->unsigned();
             $table->integer('studio_id')->unsigned();
+            $table->string('file_path')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
