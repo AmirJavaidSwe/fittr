@@ -36,7 +36,7 @@ class ClassFormRequest extends FormRequest
             'week_days' => 'required_if:does_repeat,true|nullable',
             'week_days.*' => 'in:0,1,2,3,4,5,6',
             'status' => ['required', new Enum(ClassStatus::class)],
-            'is_offpeak' => 'boolean',
+            'is_off_peak' => 'boolean',
             'does_repeat' => 'boolean',
         ];
 

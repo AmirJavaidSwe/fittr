@@ -28,7 +28,7 @@ let form = useForm({
     instructor_id: props.class_lesson.instructor_id,
     class_type_id: props.class_lesson.class_type_id,
     studio_id: props.class_lesson.studio_id,
-    is_offpeak: props.class_lesson.is_offpeak,
+    is_off_peak: props.class_lesson.is_off_peak,
 });
 
 </script>

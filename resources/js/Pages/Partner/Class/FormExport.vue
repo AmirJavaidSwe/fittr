@@ -35,7 +35,7 @@ const emit = defineEmits(['reset', 'submitted']);
 
         <p v-if="ready">Export is complete. Click here to download the file.</p>
         <div v-else>Checking the status...</div>
-        
+
         <ButtonLink
             :href="route('partner.exports.index')"
             type="primary"
@@ -126,7 +126,7 @@ const emit = defineEmits(['reset', 'submitted']);
             <!-- Off-peak -->
             <div class="">
                 <Switcher
-                    v-model="form.is_offpeak"
+                    v-model="form.is_off_peak"
                     title="Off Peak"
                     description="Would you like to tag the class as off peak?"/>
             </div>

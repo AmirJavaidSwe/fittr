@@ -8,6 +8,7 @@ use App\Enums\ExportType;
 use App\Models\Partner\ClassLesson;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 
 class ExportClassLesson extends Export
@@ -30,12 +31,12 @@ class ExportClassLesson extends Export
 
     public function __invoke(): array
     {
-        $this->map();
+        $this->applyFilters();
 
         return $this->exportToFile();
     }
 
-    protected function map(): array
+    protected function applyFilters(): array
     {
         if (in_array('start_date', array_keys($this->filters)))
             $this->filters['start_date'] = Carbon::parse($this->filters['start_date'])->format('Y-m-d');
@@ -44,6 +45,14 @@ class ExportClassLesson extends Export
             $this->filters['end_date'] = Carbon::parse($this->filters['end_date'])->format('Y-m-d');
 
         return $this->filters;
+    }
+
+    protected function relationShips() : array
+    {
+        return [
+            'studio:id,title',
+            'instructor:id,name,email,role'
+        ];
     }
 
     protected function query(): Builder
@@ -55,7 +64,24 @@ class ExportClassLesson extends Export
             $query->{$operator[0]}($key, $operator[1], $value);
         }
 
+        $query->with($this->relationShips());
+
         return $query->select($this->fields);
+    }
+
+    protected function getExportData() : Collection
+    {
+        return $this->query()->chunkMap(function ($query){
+
+            $query->start_date = $query->start_date->setTimeZone('Europe/London')->format('Y-m-d H:i:s A');
+            $query->end_date = $query->end_date->setTimeZone('Europe/London')->format('Y-m-d H:i:s A');
+
+            $query->studio = $query->id.':'.$query->studio->title;
+            $query->instructor = $query?->instructor?->email;
+
+            return $query;
+
+        }, 500);
     }
 
     protected function exportToFile(): array
@@ -68,10 +94,23 @@ class ExportClassLesson extends Export
         fputcsv($file, $headers);
 
         // Insert data
-        $exportData = $this->query()->get();
+        $exportData = $this->getExportData();
 
         foreach ($exportData as $record) {
-            fputcsv($file, $record->toArray());
+
+            $record = $record->toArray();
+
+            foreach ($record as $key => $value) {
+                if (str_contains($key, '_date') || str_contains($key, '_at')) {
+                    $record[$key] = Carbon::parse($value)->format('Y-m-d H:i:s A');
+                }
+
+                if ($key == 'studio') {
+                    $record['studio'] = $value['id'].':'.$value['title'];
+                }
+            }
+
+            fputcsv($file, $record);
         }
 
         rewind($file);

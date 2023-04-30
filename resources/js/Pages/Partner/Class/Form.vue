@@ -165,7 +165,7 @@ const updateWeekDays = (index) => {
             <!-- Off-peak -->
             <div class="">
                 <Switcher
-                    v-model="form.is_offpeak"
+                    v-model="form.is_off_peak"
                     title="Off Peak"
                     description="Would you like to tag the class as off peak?"/>
             </div>

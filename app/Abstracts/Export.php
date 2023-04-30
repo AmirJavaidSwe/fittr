@@ -3,6 +3,7 @@
 namespace App\Abstracts;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 
 abstract class Export
 {
@@ -20,7 +21,9 @@ abstract class Export
         $this->fileType = $fileType;
     }
     public abstract function __invoke() : array;
-    protected abstract function map() : array;
+    protected abstract function applyFilters() : array;
     protected abstract function query() : Builder;
+    protected abstract function getExportData() : Collection;
+    protected abstract function relationShips() : array;
     protected abstract function exportToFile() : array;
 }

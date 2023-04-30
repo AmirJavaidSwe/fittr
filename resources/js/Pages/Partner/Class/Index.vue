@@ -53,7 +53,7 @@ const form_class = useForm({
     instructor_id: null,
     class_type_id: null,
     studio_id: null,
-    is_offpeak: false,
+    is_off_peak: false,
     does_repeat: false,
     repeat_end_date: null,
     week_days: [],
@@ -133,7 +133,7 @@ const exportClasses = () => {
             end_date: data.end_date,
             instructor_id: data.instructor_id,
             studio_id: data.studio_id,
-            is_offpeak: data.is_offpeak
+            is_off_peak: data.is_off_peak
         },
     }))
     .post(route('partner.exports.index'), {
