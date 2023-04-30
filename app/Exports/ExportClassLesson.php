@@ -55,7 +55,7 @@ class ExportClassLesson extends Export
         ];
     }
 
-    protected function query(): Builder
+    public function query(): Builder
     {
         $query = $this->model->query();
 
@@ -145,5 +145,30 @@ class ExportClassLesson extends Export
             'status' => ExportStatus::completed->name,
             'message' => $this->statusMessage
         ];
+    }
+
+    public function columnFormats(): array
+    {
+        // TODO: Implement columnFormats() method.
+    }
+
+    public function registerEvents(): array
+    {
+        // TODO: Implement registerEvents() method.
+    }
+
+    public function headings(): array
+    {
+        // TODO: Implement headings() method.
+    }
+
+    public function map($row): array
+    {
+        // TODO: Implement map() method.
+    }
+
+    public function title(): string
+    {
+        // TODO: Implement title() method.
     }
 }

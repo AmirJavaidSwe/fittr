@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue';
-import { 
+import {
     faMoneyBill1,
     faGears,
     faCodeCompare,
@@ -135,7 +135,7 @@ import CardIcon from '@/Components/CardIcon.vue';
                     <template #default>
                         Customise web store looks and features
                     </template>
-                </CardIcon>     
+                </CardIcon>
 
                 <CardIcon card-link="#">
                     <template #icon>
@@ -227,7 +227,7 @@ import CardIcon from '@/Components/CardIcon.vue';
                     <template #default>
                         Manage your staff and permissions
                     </template>
-                </CardIcon>     
+                </CardIcon>
 
                 <CardIcon card-link="#">
                     <template #icon>

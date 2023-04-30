@@ -43,9 +43,9 @@ class ClassLesson extends Model
         return $this->belongsTo(Instructor::class);
     }
 
-    public function classtype(): BelongsTo
+    public function classType(): BelongsTo
     {
-        return $this->belongsTo(Classtype::class);
+        return $this->belongsTo(ClassType::class);
     }
 
     // Accessors

@@ -2,11 +2,22 @@
 
 namespace App\Abstracts;
 
+use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithColumnFormatting;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithTitle;
 
-abstract class Export
+abstract class Export implements FromQuery, WithTitle, WithHeadings, WithMapping, ShouldAutoSize, WithEvents, Responsable, WithColumnFormatting
 {
+    use Exportable;
+
     protected array $filters;
     protected array $fields;
     protected object $model;
@@ -21,8 +32,8 @@ abstract class Export
         $this->fileType = $fileType;
     }
     public abstract function __invoke() : array;
+    public abstract function query() : Builder;
     protected abstract function applyFilters() : array;
-    protected abstract function query() : Builder;
     protected abstract function getExportData() : Collection;
     protected abstract function relationShips() : array;
     protected abstract function exportToFile() : array;
