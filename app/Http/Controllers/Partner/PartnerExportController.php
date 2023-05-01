@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Partner;
 
+use App\Enums\ExportStatus;
 use App\Jobs\ProcessExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Partner\ExportFormRequest;
 use App\Models\Partner\Export;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -31,9 +33,10 @@ class PartnerExportController extends Controller
                 ->when($this->search, function ($query) {
                     $query->where(function($query) {
                         $query->orWhere('id', intval($this->search))
-                              ->orWhere('csv_file_name', 'LIKE', '%'.$this->search.'%');
+                              ->orWhere('file_name', 'LIKE', '%'.$this->search.'%');
                     });
                 })
+                ->with('user:id,name')
                 ->paginate($this->per_page)
                 ->withQueryString(),
             'search' => $this->search,
@@ -47,6 +50,22 @@ class PartnerExportController extends Controller
                     'link' => null,
                 ],
             ),
+        ]);
+    }
+
+    public function requestToDownload(Export $export)
+    {
+        if ($export->status != ExportStatus::completed->name) {
+            return response()->json([
+                'message' => __('Export is not completed yet'),
+            ], 400);
+        }
+
+        $token = $export->generateToken();
+
+        return response()->json([
+            'token' => $token,
+            'url' => route('partner.exports.download', $token),
         ]);
     }
 
@@ -114,11 +133,16 @@ class PartnerExportController extends Controller
         return $this->redirectBackSuccess(__('Export deleted successfully'), 'partner.exports.index');
     }
 
-    public function download(Export $export)
+    public function download()
     {
+        if(!cache()->has(request()->route('token'))) {
+            return $this->redirectBackError(__('Export is not ready yet'));
+        }
+
+        $export = Export::where('id', explode(':',base64_decode(request()->route('token')))[0])->first();
 
 
-        return response()->download(storage_path('app/public/exports/'.$export->csv_file_name));
+        return response()->download(storage_path('app/exports/classes/'.$export->created_by.'/'.$export->file_name));
     }
 
 }

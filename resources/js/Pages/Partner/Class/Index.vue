@@ -53,6 +53,7 @@ const form_class = useForm({
     instructor_id: null,
     class_type_id: null,
     studio_id: null,
+    file_type: 'csv',
     is_off_peak: false,
     does_repeat: false,
     repeat_end_date: null,

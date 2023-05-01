@@ -123,6 +123,25 @@ const emit = defineEmits(['reset', 'submitted']);
                 </Multiselect>
             </div>
 
+            <!-- Studios -->
+            <div class="w-full">
+                <InputLabel for="file_type" value="File Type"/>
+                <select-input
+                    class="w-full"
+                    v-model="form.file_type"
+                    option_value="id"
+                    option_text="name"
+                    :options="[
+                        {'id': 'csv', 'name': 'CSV'},
+                        {'id':'xlsx', 'name': 'Excel'}
+                    ]"
+                    :searchable="true"
+                    :close-on-select="true"
+                    :show-labels="true"
+                    placeholder="Select Studio">
+                </select-input>
+            </div>
+
             <!-- Off-peak -->
             <div class="">
                 <Switcher

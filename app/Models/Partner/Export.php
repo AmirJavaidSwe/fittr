@@ -7,12 +7,17 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Str;
 
 /**
  * @property mixed $type
  * @property mixed $filters
  * @property mixed $created_by
  * @property mixed $id
+ * @property string $status
+ * @property mixed $file_name
  */
 class Export extends Model
 {
@@ -27,6 +32,15 @@ class Export extends Model
         'completed_at' => 'datetime',
         'deleted_at' => 'datetime',
     ];
+
+    protected static function boot(): void
+    {
+        parent::boot();
+        static::deleted(function ($menu_model) {
+            // TODO: delete file
+        });
+    }
+
 
     public function user(): BelongsTo
     {
@@ -52,9 +66,12 @@ class Export extends Model
         $this->saveQuietly();
     }
 
-    public function generateToken(): void
+    public function generateToken(): string
     {
-        $this->token = bin2hex(random_bytes(32));
-        $this->saveQuietly();
+        $token = base64_encode($this->id.':'.Str::random(32).':'.$this->type);
+
+        return Cache::remember($token, 30, function () use ($token) {
+            return $token;
+        });
     }
 }

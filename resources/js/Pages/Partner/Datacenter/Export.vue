@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch } from 'vue';
-import { Link, useForm } from '@inertiajs/vue3';
+import { Link, useForm, router } from '@inertiajs/vue3';
 import TopMenu from './TopMenu.vue';
 import dayjs from 'dayjs';
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -71,6 +71,17 @@ const bytesToKibibytes = (bytes) => {
     return Math.floor(bytes / 1024)+' KB';
 }
 
+const requestExport = (exporting) => {
+    axios.get(route('partner.exports.request-to-download', { id: exporting }))
+        .then(response => {
+            window.location.replace(response.data.url);
+        })
+        .catch(error => {
+            console.log(error);
+        });
+};
+
+
 </script>
 
 <template>
@@ -86,12 +97,12 @@ const bytesToKibibytes = (bytes) => {
                 v-model="form.search"
                 :disable-search="disableSearch"
                 @reset="form.search = null"
-                @pp_changed="setPerPage"
-                />
+                @pp_changed="setPerPage"/>
         </template>
 
         <template #tableHead>
             <table-head title="Id"/>
+            <table-head title="Name"/>
             <table-head title="Status"/>
             <table-head title="Type"/>
             <table-head title="Size"/>
@@ -103,20 +114,32 @@ const bytesToKibibytes = (bytes) => {
         <template #tableData>
             <tr v-for="exporting in exportings.data" >
                 <table-data :title="exporting.id"/>
+                <table-data :title="exporting.file_name"/>
                 <table-data :title="exporting.status"/>
                 <table-data :title="exporting.type"/>
                 <table-data :title="bytesToKibibytes(exporting.file_size)"/>
                 <table-data :title="dayjs(exporting.created_at).fromNow()"/>
 
-                <table-data :title="exporting.created_by"/>
+                <table-data>
+                    <template v-if="exporting.created_by">
+                        <Link
+                            class="text-indigo-600 hover:text-indigo-500 via-indigo-950"
+                            :href="route('partner.members.show', exporting.created_by)">
+                            {{ 'ID#'+exporting.user.id+': ' +exporting.user.name }}
+                        </Link>
+                    </template>
+                </table-data>
 
                 <table-data>
-                    <Link class="font-medium text-indigo-600 hover:text-indigo-500"
+                    <button v-if="exporting.status === 'completed'" class="font-medium text-white hover:text-white bg-yellow-500 hover:bg-yellow-600 rounded py-2 px-4 inline-block mr-2"
+                            @click.prevent="requestExport(exporting.id)">
+                        Download
+                    </button>
+                    <Link class="font-medium text-white hover:text-white bg-indigo-600 hover:bg-indigo-700 rounded py-2 px-4 inline-block mr-2"
                           :href="route('partner.exports.show', exporting)">
                         View
                     </Link>
-                    <br>
-                    <button class="block text-red-500" @click="confirmDeletion(exporting.id)">
+                    <button class="text-white bg-red-500 hover:bg-red-600 rounded py-2 px-4 inline-block" @click="confirmDeletion(exporting.id)">
                         Delete
                     </button>
                 </table-data>
@@ -149,8 +172,7 @@ const bytesToKibibytes = (bytes) => {
                 class="ml-3"
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
-                @click="deleteItem"
-            >
+                @click="deleteItem">
                 Delete
             </DangerButton>
         </template>

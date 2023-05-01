@@ -137,6 +137,8 @@ Route::domain('app.'.config('app.domain'))->group(function () {
 
             Route::get('/exports', [PartnerExportController::class, 'index'])->name('exports.index');
             Route::get('/exports/{export}', [PartnerExportController::class, 'show'])->name('exports.show');
+            Route::get('exports/download/{token}', [PartnerExportController::class, 'download'])->name('exports.download');
+            Route::get('exports/download/request/{export}', [PartnerExportController::class, 'requestToDownload'])->name('exports.request-to-download');
             Route::delete('/exports/{export}', [PartnerExportController::class, 'destroy'])->name('exports.destroy');
             Route::post('/exports', [PartnerExportController::class, 'store']);
         });

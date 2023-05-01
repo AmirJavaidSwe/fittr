@@ -138,7 +138,7 @@ class ExportClassLesson extends Export
         // Update Export model
         return [
             'file_path' => $storagePath,
-            'csv_file_name' => $filename,
+            'file_name' => $filename,
             'file_rows' => count($exportData),
             'file_size' => strlen($csv),
             'completed_at' => Carbon::now(),
@@ -149,22 +149,40 @@ class ExportClassLesson extends Export
 
     public function columnFormats(): array
     {
-        // TODO: Implement columnFormats() method.
+
     }
 
     public function registerEvents(): array
     {
-        // TODO: Implement registerEvents() method.
+
     }
 
     public function headings(): array
     {
-        // TODO: Implement headings() method.
+        return [
+            'User ID',
+            'Start Date',
+            'Status',
+            'End Date',
+            'Studio',
+            'Instructor',
+            'Created At',
+            'Updated At'
+        ];
     }
 
     public function map($row): array
     {
-        // TODO: Implement map() method.
+        return [
+            $row->id,
+            $row->start_date,
+            $row->status,
+            $row->end_date,
+            $row->studio->title,
+            $row->instructor->email,
+            $row->created_at,
+            $row->updated_at
+        ];
     }
 
     public function title(): string

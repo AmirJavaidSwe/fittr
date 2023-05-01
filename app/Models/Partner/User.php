@@ -94,7 +94,8 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return match($this->role) {
             PartnerUserRole::MEMBER->value => 'member.dashboard',
-            PartnerUserRole::INSTRUCTOR->value => 'instructor.dashboard'
+            PartnerUserRole::INSTRUCTOR->value => 'instructor.dashboard',
+            default => 'dashboard',
         };
     }
 

@@ -24,6 +24,14 @@ enum ExportType
         return array_column(self::cases(), 'name');
     }
 
+    public static function fileType(string $fileType): ExportType
+    {
+        return match($fileType) {
+            'csv' => static::fileCsv,
+            'xlsx' => static::fileXlsx,
+        };
+    }
+
     public static function from(string $case)
     {
         return match(true) {
