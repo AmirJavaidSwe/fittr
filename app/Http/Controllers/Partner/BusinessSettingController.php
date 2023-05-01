@@ -227,10 +227,6 @@ class BusinessSettingController extends Controller
     // Online Store column / Service store / Header & Footer
     public function serviceStoreHeader(Request $request)
     {
-        $props = $this->service->getByKeys([SettingKey::logo->name, SettingKey::favicon->name]);
-        $logo = !empty($props[SettingKey::logo->name]) ? Storage::disk('public')->url($props[SettingKey::logo->name]) : null;
-        $favicon = !empty($props[SettingKey::favicon->name]) ? Storage::disk('public')->url($props[SettingKey::favicon->name]) : null;
-
         return Inertia::render('Partner/Settings/ServiceStoreHeader', [
             'page_title' => __('Settings - Service store - Header & Footer'),
             'header' => array(
@@ -247,8 +243,6 @@ class BusinessSettingController extends Controller
                     'link' => null,
                 ],
             ),
-            'logo' => $logo,
-            'favicon' => $favicon,
             'form_data' => $this->service->getByGroup(SettingGroup::service_store_header),
         ]);
     }

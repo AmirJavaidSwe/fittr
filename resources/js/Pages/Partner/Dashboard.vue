@@ -49,7 +49,7 @@ const props = defineProps({
             </template>
 
             <template #footer>
-                <ButtonLink :href="route('partner.pricing.index')" type="primary">Select package</ButtonLink>
+                <ButtonLink :href="route('partner.subscriptions.index')" type="primary">Select package</ButtonLink>
             </template>
         </CardBasic>
 

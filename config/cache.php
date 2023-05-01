@@ -112,10 +112,10 @@ return [
     | Cache used for web resources
     |--------------------------------------------------------------------------
     |
-    | All values are in minutes
+    | All values are in seconds
     */
     'ttl' => [
-        'default' => 30,
+        'default' => 1800,
     ],
 
 ];

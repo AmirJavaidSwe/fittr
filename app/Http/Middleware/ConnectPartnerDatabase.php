@@ -48,6 +48,7 @@ class ConnectPartnerDatabase
                 SettingGroup::general_details,
                 SettingGroup::general_address,
                 SettingGroup::general_formats,
+                SettingGroup::service_store_general,
                 SettingGroup::service_store_header,
                 SettingGroup::service_store_seo,
                 SettingGroup::service_store_code,

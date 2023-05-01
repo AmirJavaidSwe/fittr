@@ -9,7 +9,6 @@ import {
   faUsers,
   faUserTie,
   faWandMagicSparkles,
-  faGaugeHigh,
   faRepeat,
   faGears
 } from '@fortawesome/free-solid-svg-icons';
@@ -40,10 +39,6 @@ router.on('navigate', (event) => {
     <NavLink :href="route('partner.instructors.index')" :active="active_route.name == 'partner.instructors.index'">
       <font-awesome-icon :icon="faUserTie" />
       <div>Instructors</div>
-    </NavLink>
-    <NavLink :href="route('partner.pricing.index')" :active="active_route.name == 'partner.pricing.index'">
-      <font-awesome-icon :icon="faGaugeHigh" />
-      <div>Pricing</div>
     </NavLink>
     <NavLink :href="route('partner.exports.index')" :active="active_route.name == 'partner.exports.index'">
       <font-awesome-icon :icon="faRepeat" />

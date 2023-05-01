@@ -77,7 +77,7 @@ class BusinessSettingService
 
         collect($request->validated())->each(function ($value, $key) use ($business_id) {
             if($value instanceof UploadedFile){
-                $value = $value->storePublicly($key, ['disk' => 'public']);
+                $value = $value->storePublicly($key, ['disk' => config('filesystems.default')]);
             }
             $identifier = ['business_id' => $business_id, 'key' => $key];
             $is_encrypted = SettingKey::from($key)->encryption();
@@ -92,7 +92,7 @@ class BusinessSettingService
             $business_setting ? $business_setting->update($values) : BusinessSetting::create($identifier + $values);
 
             if(in_array($key, SettingKey::files()) && $previous_value){
-                Storage::disk('public')->delete($previous_value);
+                Storage::disk(config('filesystems.default'))->delete($previous_value);
             }
         });
 
@@ -101,12 +101,16 @@ class BusinessSettingService
             SettingGroup::general_details,
             SettingGroup::general_address,
             SettingGroup::general_formats,
+            SettingGroup::service_store_general,
             SettingGroup::service_store_header,
             SettingGroup::service_store_seo,
             SettingGroup::service_store_code,
         );
         $settings = $this->getByGroups(array_column($groups, 'name'));
         $request->session()->put('business_seetings', $settings);
+
+        //save to cache when settings were last updated timestamp (\App\Http\Middleware\AuthenticateSubdomain::class will update settings in session)
+        $this->cache->put('business_seetings_updated.'.$business_id, now()->timestamp);
 
         BusinessSettingUpdated::dispatch($business_id);
     }
