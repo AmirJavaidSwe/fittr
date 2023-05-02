@@ -14,7 +14,7 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithTitle;
 
-abstract class Export implements FromQuery, WithTitle, WithHeadings, WithMapping, ShouldAutoSize, WithEvents, Responsable, WithColumnFormatting
+abstract class Exporter implements FromQuery, WithTitle, WithHeadings, WithMapping, ShouldAutoSize, WithEvents, Responsable, WithColumnFormatting
 {
     use Exportable;
 

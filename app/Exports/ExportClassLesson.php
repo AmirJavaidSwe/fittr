@@ -2,7 +2,7 @@
 
 namespace App\Exports;
 
-use App\Abstracts\Export;
+use App\Abstracts\Exporter;
 use App\Enums\ExportStatus;
 use App\Enums\ExportType;
 use App\Models\Partner\ClassLesson;
@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 
-class ExportClassLesson extends Export
+class ExportClassLesson extends Exporter
 {
     protected array $fields = [
         'id',

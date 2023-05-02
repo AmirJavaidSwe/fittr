@@ -153,6 +153,7 @@ const requestExport = (exporting) => {
             <p class="p-2 text-xs">Viewing {{exportings.from}} - {{exportings.to}} of {{exportings.total}} results</p>
         </template>
     </data-table-layout>
+
     <!-- Delete Confirmation Modal -->
     <ConfirmationModal :show="itemDeleting" @close="itemDeleting = false">
         <template #title>
