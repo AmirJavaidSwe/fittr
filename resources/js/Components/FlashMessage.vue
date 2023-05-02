@@ -8,7 +8,7 @@ const props = defineProps({
         }
     },
     errors: {
-        type: Object,
+        type: [Array, Object],
     },
 });
 const has_msg = computed(() => props.flash.timestamp);

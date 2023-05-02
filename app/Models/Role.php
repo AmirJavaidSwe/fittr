@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 class Role extends Model
@@ -10,9 +11,14 @@ class Role extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name','slug',
+        'name', 'slug', 'created_by'
     ];
+
     public function permissions(){
         return $this->belongsToMany(Permission::class);
+    }
+    
+    public function user(){
+        return $this->belongsTo(User::class, 'created_by');
     }
 }

@@ -18,13 +18,13 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             RoleSeeder::class,
-            PermissionSeeder::class,
-            PermissionRoleSeeder::class,
             CountrySeeder::class,
             TimezoneSeeder::class,
             FormatSeeder::class,
             UserSeeder::class,
             PackageSeeder::class,
+            PermissionSeeder::class,
+            PermissionRoleSeeder::class,
             // InstanceSeeder::class,
 
             // ! This seeder runs a chain 1-4 and should remain commented out. Run 'php artisan db:seed --class=PartnerDatabaseSeeder' from console when needed

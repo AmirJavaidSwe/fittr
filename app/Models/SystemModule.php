@@ -5,11 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Permission extends Model
+class SystemModule extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'name', 'slug', 'system_module_id'
+        'name', 'slug', 'is_for'
     ];
+
+    public function permissions() {
+        return $this->hasMany(Permission::class, 'system_module_id');
+    }
 }

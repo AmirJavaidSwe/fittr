@@ -25,6 +25,7 @@ use App\Http\Controllers\Partner\PartnerClassLessonController;
 use App\Http\Controllers\Partner\PartnerStudioController;
 use App\Http\Controllers\Partner\PartnerClassTypeController;
 use App\Http\Controllers\Partner\PartnerExportController;
+use App\Http\Controllers\Admin\RoleController;
 
 // Service store area, partner subdomains:
 use App\Http\Controllers\Store\StorePublicController;
@@ -70,6 +71,8 @@ Route::domain('app.'.config('app.domain'))->group(function () {
             });
             Route::get('/partners-performance', [PartnerController::class, 'performanceIndex'])->name('partners.performance.index');
             Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
+            Route::get('/settings/edit-admin/{id}', [SettingsController::class, 'editAdmins'])->name('settings.edit.admins');
+            Route::put('/settings/edit-admin/{id}', [SettingsController::class, 'updateAdmins'])->name('settings.update.admins');
             //this can be resource controller, listing methods for clarity
             //implicit binding
             Route::controller(PackageController::class)->name('packages.')->group(function () {
@@ -81,6 +84,7 @@ Route::domain('app.'.config('app.domain'))->group(function () {
                 Route::put('/packages/{package}', 'update')->name('update');
                 Route::delete('/packages/{package}', 'destroy')->name('destroy');
             });
+            Route::resource('roles', RoleController::class);
         });
     
         //PARTNER 

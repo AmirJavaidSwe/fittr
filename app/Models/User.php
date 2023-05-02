@@ -13,6 +13,8 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+
 // use DateTimeInterface;
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -36,6 +38,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'email_verified_at',
     ];
+
 
     /**
      * The attributes that should be hidden for serialization.
@@ -69,6 +72,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'dashboard_route',
         'active_subscription',
         'is_partner',
+        'user_roles'
     ];
 
     /**
@@ -137,5 +141,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function business(): BelongsTo
     {
         return $this->belongsTo(Business::class, 'business_id');
+    }
+
+    protected function getUserRolesAttribute()
+    {
+        return $this->roles()->pluck('name')->toArray();
     }
 }

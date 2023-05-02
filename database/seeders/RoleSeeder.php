@@ -29,6 +29,7 @@ class RoleSeeder extends Seeder
                 Role::create([
                     'name' => $role,
                     'slug' => Str::slug($role),
+                    'created_by' => null,
                 ]);
             }
         }
