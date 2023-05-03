@@ -2,18 +2,11 @@
 import {onMounted, ref} from 'vue'
 import { Switch, SwitchDescription, SwitchGroup, SwitchLabel } from '@headlessui/vue';
 
-const enabled = ref(false);
-
-onMounted(() => {
-    enabled.value = props.modelValue
-});
-
-defineEmits(['update:modelValue'])
-
+defineEmits(['update:modelValue']);
 const props = defineProps({
     modelValue: {
         type: Boolean,
-        default: '',
+        default: false,
     },
     title: {
         type: String,
@@ -23,7 +16,10 @@ const props = defineProps({
         type: String,
         default: null,
     },
-})
+});
+
+const enabled = ref(props.modelValue);
+
 </script>
 <template>
     <SwitchGroup as="div" class="flex items-center justify-between">
@@ -35,13 +31,13 @@ const props = defineProps({
                 {{ description }}
             </SwitchDescription>
         </span>
-        <Switch v-model="enabled" @update:modelValue="$emit('update:modelValue', $event)"
-                :class="[enabled ? 'bg-indigo-600' :
+        <Switch v-slot="enabled" @update:modelValue="$emit('update:modelValue', $event)"
+                :class="[modelValue ? 'bg-indigo-600' :
                     'bg-gray-200', 'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 ' +
                      'border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 ' +
                       'focus:ring-indigo-600 focus:ring-offset-2']">
       <span aria-hidden="true"
-            :class="[enabled ? 'translate-x-5' : 'translate-x-0', 'pointer-events-none inline-block h-5 w-5 transform ' +
+            :class="[modelValue ? 'translate-x-5' : 'translate-x-0', 'pointer-events-none inline-block h-5 w-5 transform ' +
              'rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out']" />
         </Switch>
     </SwitchGroup>

@@ -2,11 +2,11 @@
 
 namespace Database\Seeders\Partner;
 
-use App\Models\Partner\Creditpack;
+use App\Models\Partner\Classpack;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
 
-class CreditpackSeeder extends Seeder
+class ClasspackSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,12 +15,12 @@ class CreditpackSeeder extends Seeder
      */
     public function run()
     {
-        return Creditpack::factory()
+        return Classpack::factory()
             ->count(3)
             ->state(
                 new Sequence(
-                    ['status' => true],
-                    ['status' => false],
+                    ['is_active' => true],
+                    ['is_active' => false],
                 )
             )
             ->sequence(fn (Sequence $sequence) => ['title' => 'Demo pack '.$sequence->index+1])
