@@ -1,9 +1,7 @@
 <script setup>
 import { ref, watch, computed } from 'vue';
 import { Link, useForm, usePage } from '@inertiajs/vue3';
-import dayjs from 'dayjs';
-import relativeTime from "dayjs/plugin/relativeTime";
-
+import { DateTime } from "luxon";
 import Form from "./Form.vue";
 import FormExport from "./FormExport.vue";
 import Search from "@/Components/DataTable/Search.vue";
@@ -11,7 +9,6 @@ import Pagination from "@/Components/Pagination.vue";
 import TableHead from "@/Components/DataTable/TableHead.vue";
 import TableData from "@/Components/DataTable/TableData.vue";
 import DataTableLayout from "@/Components/DataTable/Layout.vue";
-
 import DialogModal from '@/Components/DialogModal.vue';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue';
 
@@ -19,7 +16,6 @@ import ConfirmationModal from '@/Components/ConfirmationModal.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import DangerButton from '@/Components/DangerButton.vue';
 import ButtonLink from '@/Components/ButtonLink.vue';
-dayjs.extend(relativeTime);
 
 const props = defineProps({
     disableSearch: {
@@ -31,6 +27,8 @@ const props = defineProps({
     per_page: Number,
     order_by: String,
     order_dir: String,
+
+    business_seetings: Object,
 
     statuses: Object,
     studios: Object,
@@ -162,7 +160,7 @@ const checkExportStatus = () => {
             }
         })
         .then((response) => {
-            completed_at.value = null;
+            // completed_at.value = null;
             showLink(response.data.props.exporting);
         });
     }, 5000);
@@ -210,7 +208,8 @@ const showLink = (exporting) => {
             <table-head title="Instructor ID"/>
             <table-head title="Class Type ID"/>
             <table-head title="Status"/>
-            <table-head title="Start/End Date"/>
+            <table-head title="Start"/>
+            <table-head title="Duration"/>
             <table-head title="Updated At"/>
             <table-head title="Action"/>
         </template>
@@ -230,9 +229,13 @@ const showLink = (exporting) => {
                         {{ class_lesson.status_label }}
                     </span>
                 </table-data>
-                <table-data :title="dayjs(class_lesson.start_date).format('dddd, MMMM D, YYYY (h:mm A)')"
-                            :subtitle="dayjs(class_lesson.end_date).format('dddd, MMMM D, YYYY (h:mm A)')"/>
-                <table-data :title="dayjs(class_lesson.updated_at).fromNow()"/>
+                <table-data
+                    :title="DateTime.fromISO(class_lesson.start_date).setZone(business_seetings.timezone).toFormat(business_seetings.date_format.format_js)"
+                            :subtitle="DateTime.fromISO(class_lesson.start_date).setZone(business_seetings.timezone).toFormat(business_seetings.time_format.format_js)">
+                </table-data>
+
+                <table-data :title="class_lesson.duration"/>
+                <table-data :title="DateTime.fromISO(class_lesson.updated_at).toRelative()"/>
                 <table-data>
                     <Link class="font-medium text-indigo-600 hover:text-indigo-500"
                           :href="route('partner.classes.edit', class_lesson)">
@@ -289,6 +292,7 @@ const showLink = (exporting) => {
                 :studios="studios"
                 :instructors="instructors"
                 :classtypes="classtypes"
+                :business_seetings="business_seetings"
                 :submitted="storeClass"
                 />
         </template>

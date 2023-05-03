@@ -1,12 +1,11 @@
 <script setup>
 import { ref } from 'vue';
 import { useForm } from '@inertiajs/vue3';
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
+import { DateTime } from "luxon";
 import DialogModal from '@/Components/DialogModal.vue';
 import DangerButton from '@/Components/DangerButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue'; 
-dayjs.extend(relativeTime);
+
 const props = defineProps({
     subscription: Object,
 });
@@ -30,7 +29,7 @@ const cancelSubscription = () => {
 <div class="shadow-sm">
     <div class="p-4 text-sm bg-gray-200">
         <b>{{subscription.package_title}}</b><br>
-        Subscribed on: {{new Date(subscription.updated_at).toLocaleString() }} ({{ dayjs(subscription.updated_at).fromNow()}})
+        Subscribed on: {{ DateTime.fromISO(subscription.updated_at) }} ({{ DateTime.fromISO(subscription.updated_at).toRelative() }})
     </div>
     <div class="p-4 bg-white space-y-2">
         <div class="border-b border-gray-100 flex justify-between">

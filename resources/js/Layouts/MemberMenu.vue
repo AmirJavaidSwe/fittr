@@ -1,9 +1,11 @@
 <script setup>
 import { reactive } from 'vue';
-import { router } from '@inertiajs/vue3'
+import { router, usePage } from '@inertiajs/vue3';
 import NavLink from '@/Components/NavLink.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faHome, faFileInvoiceDollar, faGaugeHigh, faGears, faReceipt } from '@fortawesome/free-solid-svg-icons';
+
+const user = usePage().props.user;
 
 const active_route = reactive({
     name: route().current(),
@@ -15,7 +17,7 @@ router.on('navigate', (event) => {
 </script>
 
 <template>
-  <div class="hidden flex-shrink-0 p-4 w-56 bg-gray-100 overflow-y-auto md:block space-y-4">
+  <div v-if="user" class="hidden flex-shrink-0 p-4 w-56 bg-gray-100 overflow-y-auto md:block space-y-4">
     <!-- <NavLink :href="route('member.dashboard')" :active="active_route.name == 'member.dashboard'"> -->
     <NavLink href="#" :active="active_route.name == 'member.dashboard'">
       <font-awesome-icon :icon="faHome" class="w-4" />

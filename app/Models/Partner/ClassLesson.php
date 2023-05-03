@@ -19,6 +19,7 @@ class ClassLesson extends Model
     protected $guarded = ['id'];
 
     protected $casts = [
+        'is_offpeak' => 'boolean',
         'start_date' => 'datetime',
         'end_date' => 'datetime',
         'deleted_at' => 'datetime',
@@ -31,6 +32,7 @@ class ClassLesson extends Model
      */
     protected $appends = [
         'status_label',
+        'duration',
     ];
 
     public function studio(): BelongsTo
@@ -58,5 +60,11 @@ class ClassLesson extends Model
         };
 
         return Str::ucfirst($value);
+    }
+
+    public function getDurationAttribute(): ?int
+    {
+        // 2nd param false, returns negative value when end_date on is greater than the compared start_date
+        return $this->start_date->diffInMinutes($this->end_date, false);
     }
 }

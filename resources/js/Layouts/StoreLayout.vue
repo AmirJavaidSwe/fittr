@@ -11,6 +11,13 @@ import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 
+const props = defineProps({
+    business_seetings: {
+        type: Object,
+        required: true,
+    },
+});
+
 const showingNavigationDropdown = ref(false);
 
 const logout = () => {
@@ -22,15 +29,41 @@ const toggleMenu = (v) => {
 };
 
 const MainMenu = defineAsyncComponent(() => {
-    const user = usePage().props.user;
-    if(!user) {
-        return import('./MemberMenu.vue');
-    }
+    // const user = usePage().props.user;
+    // if(!user) {
+    //     return import('./MemberMenu.vue');
+    // }
+
+    //TODO: return either member or instructor menu
+
+    // MemberMenu checks is user exist
+    return import('./MemberMenu.vue');
 });
 
 const header = computed(() => {
   return usePage().props.header;
-})
+});
+
+const logo_image_url = computed(() => {
+    return props.business_seetings.logo ? usePage().props.asset_url + props.business_seetings.logo : null;
+});
+
+const favicon_type = ref('image/x-icon');
+const favicon_image_url = computed(() => {
+    if(!props.business_seetings.favicon){
+        return null;
+    }
+    switch (true) {
+        case props.business_seetings.favicon.endsWith('.png'):
+            favicon_type.value="image/png";
+            break;
+        case props.business_seetings.favicon.endsWith('.svg'):
+            favicon_type.value="image/svg+xml";
+            break;
+    }
+    return usePage().props.asset_url + props.business_seetings.favicon;    
+});
+
 const headerIsArray = computed(() => {
   return Array.isArray(header.value);
 })
@@ -38,11 +71,10 @@ const headerIsArray = computed(() => {
 
 <template>
     <div>
-        <AppHead :title="$page.props.page_title">
-            <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-            <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-            <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-            <link rel="manifest" href="/site.webmanifest">
+        <AppHead 
+            :title="$page.props.page_title"
+            :favicon_type="favicon_type"
+            :favicon_image_url="favicon_image_url">
         </AppHead>
 
         <Banner />
@@ -52,10 +84,15 @@ const headerIsArray = computed(() => {
             <!-- Desktop, flex -->
             <div class="md:flex md:flex-col md:h-screen">
                 <div class="md:flex md:flex-shrink-0">
-                    <div class="flex items-center justify-between px-6 py-4 md:flex-shrink-0 md:justify-center md:w-56 bg-gray-100">
+                    <div class="flex items-center justify-between md:flex-shrink-0 md:justify-center md:w-56 bg-white">
                         <!-- Logo -->
-                        <Link href="/" class="">
-                            LOGO
+                        <Link :href="business_seetings.logo_url ?? '/'" class="">
+                            <div v-if="business_seetings.logo" class="h-20 w-56">
+                                <img :src="logo_image_url" :alt="business_seetings.business_name" class="h-full">
+                            </div>
+                            <div v-else class="px-6 py-4 font-bold">
+                                {{business_seetings.business_name ?? 'LOGO'}}
+                            </div>
                         </Link>
                         <!-- Mobile toggle, visible md and smaller -->
                         <Dropdown align="right" width="48" :content-classes="['bg-gray-100', 'p-1']" @toggled="toggleMenu">

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { computed } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 import GeneralSettingsMenu from '@/Pages/Partner/Settings/GeneralSettingsMenu.vue';
 
@@ -16,24 +16,18 @@ const props = defineProps({
     form_data: Object,
 });
 
-const date_notes = ref(null);
-const dateChanged = () => {
+const date_notes = computed(() => {
     let d = props.formats_date.find(({ id }) => id == form.date_format);
-    date_notes.value = d?.notes ?? null;
-};
-const time_notes = ref(null);
-const timeChanged = () => {
+    return d?.notes ?? null;
+})
+const time_notes = computed(() => {
     let t = props.formats_time.find(({ id }) => id == form.time_format);
-    time_notes.value = t?.notes ?? null;
-};
-onMounted(() => {
-    dateChanged();
-    timeChanged();
-});
+    return t?.notes ?? null;
+})
 
 const form = useForm({
-    date_format: props.form_data.date_format,
-    time_format: props.form_data.time_format,
+    date_format: props.form_data.date_format.id,
+    time_format: props.form_data.time_format.id,
 });
 
 const submitForm = () => {
@@ -60,7 +54,6 @@ const submitForm = () => {
                     option_value="id"
                     option_text="example"
                     class="mt-1 block w-full"
-                    @change="dateChanged"
                 >
                 </SelectInput>
                 <InputError :message="form.errors.date_format" class="mt-2" />
@@ -77,7 +70,6 @@ const submitForm = () => {
                     option_value="id"
                     option_text="example"
                     class="mt-1 block w-full"
-                    @change="timeChanged"
                 >
                 </SelectInput>
                 <InputError :message="form.errors.time_format" class="mt-2" />

@@ -17,4 +17,9 @@ class Controller extends BaseController
         return session('business');
     }
 
+    public function business_seetings()
+    {
+        return session('business_seetings');
+    }
+
 }

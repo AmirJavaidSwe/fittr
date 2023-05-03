@@ -3,6 +3,8 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use App\Enums\SettingGroup;
+use App\Services\Partner\BusinessSettingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
@@ -11,6 +13,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ConnectPartnerDatabase
 {
+    public function __construct(BusinessSettingService $business_settings_service)
+    {
+        $this->business_settings_service = $business_settings_service;
+    }
+
     /**
      * Handle an incoming request.
      *
@@ -28,13 +35,27 @@ class ConnectPartnerDatabase
             return $next($request);
         }
 
-        //grab business from session, save DB call
+        //grab business from session. Session may not have $business, use $partner->business as default
         $business = session('business', $partner->business);
 
         abort_if(empty($business), 403, __('Unable to connect.'));
 
+        //This condition will happen after login
         if ($request->session()->missing('business')) {
             $request->session()->put('business', $business);
+        }
+        if ($request->session()->missing('business_seetings')) {
+            $groups = array(
+                SettingGroup::general_details,
+                SettingGroup::general_address,
+                SettingGroup::general_formats,
+                SettingGroup::service_store_general,
+                SettingGroup::service_store_header,
+                SettingGroup::service_store_seo,
+                SettingGroup::service_store_code,
+            );
+            $settings = $this->business_settings_service->getByGroups(array_column($groups, 'name'));
+            $request->session()->put('business_seetings', $settings);
         }
 
         //Set connection to database: (run time)

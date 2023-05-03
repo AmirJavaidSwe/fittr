@@ -1,6 +1,6 @@
 <script setup>
-
 import {useForm} from "@inertiajs/vue3";
+import { DateTime } from "luxon";
 import FormSection from "@/Components/FormSection.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import CardIcon from '@/Components/CardIcon.vue';
@@ -13,9 +13,6 @@ import {
     faTornado,
     faRetweet
 } from '@fortawesome/free-solid-svg-icons';
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-dayjs.extend(utc);
 
 const confirm = () => {
     form.post(route('partner.classes.store'));
@@ -135,8 +132,8 @@ const form = useForm(props.form_data);
             <p>Starts on:</p>
             <dl class="max-w-md text-gray-900 divide-y divide-gray-200">
                 <div v-for="repeat in props.repeats" class="flex flex-col py-3">
-                    <dt class="mb-1 text-gray-500">{{dayjs(repeat).format('dddd')}}</dt>
-                    <dd class="text-lg font-semibold">{{dayjs(repeat).utc().format('MMMM D, YYYY h:mm A UTC Z')}}</dd>
+                    <dt class="mb-1 text-gray-500">{{DateTime.fromISO(repeat).toFormat('cccc')}}</dt>
+                    <dd class="text-lg font-semibold">{{DateTime.fromISO(repeat)}}</dd>
                 </div>
             </dl>
         </template>

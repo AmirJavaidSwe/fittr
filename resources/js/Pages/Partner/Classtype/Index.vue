@@ -1,8 +1,7 @@
 <script setup>
 import { ref, watch } from 'vue';
 import { Link, useForm } from '@inertiajs/vue3';
-import dayjs from 'dayjs';
-import relativeTime from "dayjs/plugin/relativeTime";
+import { DateTime } from "luxon";
 import Search from "@/Components/DataTable/Search.vue";
 import Pagination from "@/Components/Pagination.vue";
 import TableHead from "@/Components/DataTable/TableHead.vue";
@@ -11,7 +10,6 @@ import DataTableLayout from "@/Components/DataTable/Layout.vue";
 import ConfirmationModal from '@/Components/ConfirmationModal.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import DangerButton from '@/Components/DangerButton.vue';
-dayjs.extend(relativeTime);
 
 const props = defineProps({
     disableSearch: {
@@ -99,8 +97,8 @@ const deleteItem = () => {
                           :href="route('partner.classtypes.show', classtype)"> {{ classtype.title }} </Link>
                 </table-data>
                 <table-data :title="classtype.description"/>
-                <table-data :title="dayjs(classtype.created_at).fromNow()"/>
-                <table-data :title="dayjs(classtype.updated_at).fromNow()"/>
+                <table-data :title="DateTime.fromISO(classtype.created_at)"/>
+                <table-data :title="DateTime.fromISO(classtype.updated_at).toRelative()"/>
                 <table-data>
                     <Link class="font-medium text-indigo-600 hover:text-indigo-500"
                           :href="route('partner.classtypes.edit', classtype)">

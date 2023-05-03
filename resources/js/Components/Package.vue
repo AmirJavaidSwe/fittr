@@ -1,8 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue';
 import { Link, useForm, usePage } from '@inertiajs/vue3';
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
+import { DateTime } from "luxon";
 import ButtonLink from '@/Components/ButtonLink.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
@@ -12,7 +11,6 @@ import InputError from '@/Components/InputError.vue';
 import DialogModal from '@/Components/DialogModal.vue';
 import { faPencil } from '@fortawesome/free-solid-svg-icons';
  
-dayjs.extend(relativeTime);
 const props = defineProps({
     pack: Object,
     has_subscription: Boolean,
@@ -107,7 +105,8 @@ const confirmSubscribe = () => {
     <div class="mt-8 text-sm">
         <div v-if="admin">
                 Updated:<br>
-                {{new Date(pack.updated_at).toLocaleString() }} ({{ dayjs(pack.updated_at).fromNow()}})
+                {{ DateTime.fromISO(pack.updated_at) }}<br>
+                ({{ DateTime.fromISO(pack.updated_at).toRelative() }})
                 <div v-if="!pack.is_free">
                     Yearly cost on monthly cycle: <span class="font-bold">{{ pack.monthly_price_year}}</span><br>
                     Yearly cost on annual cycle: <span class="font-bold">{{ pack.annual_price_year}}</span><br>

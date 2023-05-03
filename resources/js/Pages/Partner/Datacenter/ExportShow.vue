@@ -1,11 +1,8 @@
 <script setup>
 
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
+import { DateTime } from "luxon";
 import SingleView from "@/Components/DataTable/SingleView.vue";
 import SingleViewRow from "@/Components/DataTable/SingleViewRow.vue";
-
-dayjs.extend(relativeTime);
 
 defineProps({
     exporting: {
@@ -52,8 +49,9 @@ defineProps({
                              :isEven="true"
                              :value="dayjs(exporting.created_at).fromNow()"/>
 
-            <single-view-row label="Updated At"
-                             :value="dayjs(exporting.completed_at).fromNow()"/>
+            <single-view-row label="Created At" :value="DateTime.fromISO(exporting.created_at)"/>
+
+            <single-view-row label="Completed" :value="DateTime.fromISO(exporting.completed_at).toRelative()"/>
 
         </template>
     </single-view>

@@ -8,14 +8,16 @@ use App\Enums\SettingKey;
 use App\Enums\SettingGroup;
 use App\Events\BusinessSettingUpdated;
 use App\Models\BusinessSetting;
+use App\Services\Shared\CacheMasterService;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Crypt;
 
 class BusinessSettingService
 {
-    public function __construct(BusinessSetting $model)
+    public function __construct(BusinessSetting $model, CacheMasterService $cache)
     {
         $this->model = $model;
+        $this->cache = $cache;
     }
 
     public function getByGroup(SettingGroup $group): array
@@ -23,6 +25,15 @@ class BusinessSettingService
         $business = session('business');
 
         return $this->model->ofBusiness($business->id)->ofGroup($group)->get()->each(function($item) {
+            $item->val = $this->getCastValue($item);
+        })->pluck('val', 'key')->toArray();
+    }
+
+    public function getByGroups($groups): array
+    {
+        $business = session('business');
+
+        return $this->model->ofBusiness($business->id)->ofGroups($groups)->get()->each(function($item) {
             $item->val = $this->getCastValue($item);
         })->pluck('val', 'key')->toArray();
     }
@@ -46,6 +57,9 @@ class BusinessSettingService
     public function getCastValue(BusinessSetting $item)
     {
         $value = $item->is_encrypted ? Crypt::decryptString($item->val) : $item->val;
+        if(in_array($item->key, [SettingKey::time_format->value, SettingKey::date_format->value])){
+            return $this->cache->formats()->firstWhere('id', $item->val);
+        }
         return match ($item->cast_to) {
                 CastType::string->name => $value,
                 CastType::integer->name => intval($value),
@@ -63,7 +77,7 @@ class BusinessSettingService
 
         collect($request->validated())->each(function ($value, $key) use ($business_id) {
             if($value instanceof UploadedFile){
-                $value = $value->storePublicly($key, ['disk' => 'public']);
+                $value = $value->storePublicly($key, ['disk' => config('filesystems.default')]);
             }
             $identifier = ['business_id' => $business_id, 'key' => $key];
             $is_encrypted = SettingKey::from($key)->encryption();
@@ -78,9 +92,26 @@ class BusinessSettingService
             $business_setting ? $business_setting->update($values) : BusinessSetting::create($identifier + $values);
 
             if(in_array($key, SettingKey::files()) && $previous_value){
-                Storage::disk('public')->delete($previous_value);
+                Storage::disk(config('filesystems.default'))->delete($previous_value);
             }
         });
+
+        //update session:
+        $groups = array(
+            SettingGroup::general_details,
+            SettingGroup::general_address,
+            SettingGroup::general_formats,
+            SettingGroup::service_store_general,
+            SettingGroup::service_store_header,
+            SettingGroup::service_store_seo,
+            SettingGroup::service_store_code,
+        );
+        $settings = $this->getByGroups(array_column($groups, 'name'));
+        $request->session()->put('business_seetings', $settings);
+
+        //save to cache when settings were last updated timestamp (\App\Http\Middleware\AuthenticateSubdomain::class will update settings in session)
+        $this->cache->put('business_seetings_updated.'.$business_id, now()->timestamp);
+
         BusinessSettingUpdated::dispatch($business_id);
     }
 
