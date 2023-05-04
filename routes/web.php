@@ -24,6 +24,8 @@ use App\Http\Controllers\Partner\PartnerAmenityController;
 use App\Http\Controllers\Partner\PartnerClassLessonController;
 use App\Http\Controllers\Partner\PartnerStudioController;
 use App\Http\Controllers\Partner\PartnerClassTypeController;
+use App\Http\Controllers\Partner\PartnerMembershipPlanController;
+use App\Http\Controllers\Partner\PartnerClassPackController;
 use App\Http\Controllers\Partner\PartnerExportController;
 
 // Service store area, partner subdomains:
@@ -132,6 +134,8 @@ Route::domain('app.'.config('app.domain'))->group(function () {
             Route::resource('classes', PartnerClassLessonController::class);
             Route::resource('studios', PartnerStudioController::class);
             Route::resource('classtypes', PartnerClassTypeController::class);
+            Route::resource('plans', PartnerMembershipPlanController::class);
+            Route::resource('classpacks', PartnerClassPackController::class);
 
             Route::get('/exports', [PartnerExportController::class, 'index'])->name('exports.index');
             Route::get('/exports/{export}', [PartnerExportController::class, 'show'])->name('exports.show');
