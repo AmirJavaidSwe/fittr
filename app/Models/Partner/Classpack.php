@@ -5,11 +5,11 @@ namespace App\Models\Partner;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Classpack extends Model
+class ClassPack extends Model
 {
     use HasFactory;
 
-    protected $table = 'classpacks';
+    protected $table = 'class_packs';
     protected $connection = 'mysql_partner';
     protected $guarded = ['id'];
 

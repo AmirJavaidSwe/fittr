@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('classpacks', function (Blueprint $table) {
+        Schema::create('class_packs', function (Blueprint $table) {
             $table->id();
             $table->boolean('is_active')->default(false)->comment('bool'); //global state
             $table->string('title', 255);

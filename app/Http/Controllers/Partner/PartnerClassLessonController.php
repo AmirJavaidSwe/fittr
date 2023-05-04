@@ -174,7 +174,7 @@ class PartnerClassLessonController extends Controller
             'page_title' => __('Class details'),
             'header' => array(
                 [
-                    'title' => __('Class details'),
+                    'title' => __('Classes'),
                     'link' => route('partner.classes.index'),
                 ],
                 [

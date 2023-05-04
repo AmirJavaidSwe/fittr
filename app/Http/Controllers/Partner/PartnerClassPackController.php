@@ -6,8 +6,8 @@ use App\Enums\ClasspackType;
 use App\Enums\ClasspackExpirationPeriod;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Partner\ClasspackFormRequest;
-use App\Models\Partner\Classpack;
-use App\Models\Partner\Classtype;
+use App\Models\Partner\ClassPack;
+use App\Models\Partner\ClassType;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -31,7 +31,7 @@ class PartnerClassPackController extends Controller
         $this->order_dir = $request->query('order_dir', 'desc');
 
         return Inertia::render('Partner/Classpack/Index', [
-            'classpacks' => Classpack::orderBy($this->order_by, $this->order_dir)
+            'classpacks' => ClassPack::orderBy($this->order_by, $this->order_dir)
                 ->when($this->search, function ($query) {
                     $query->where(function($query) {
                         $query->orWhere('id', intval($this->search))
@@ -61,7 +61,7 @@ class PartnerClassPackController extends Controller
             ),
             'options_types' => ClasspackType::labels(),
             'options_periods' => ClasspackExpirationPeriod::labels(),
-            'classtypes' => Classtype::orderBy('id', 'desc')->pluck('title', 'id'),
+            'classtypes' => ClassType::orderBy('id', 'desc')->pluck('title', 'id'),
         ]);
     }
 
@@ -98,7 +98,7 @@ class PartnerClassPackController extends Controller
             ),
             'options_types' => ClasspackType::labels(),
             'options_periods' => ClasspackExpirationPeriod::labels(),
-            'classtypes' => Classtype::orderBy('id', 'desc')->pluck('title', 'id'),
+            'classtypes' => ClassType::orderBy('id', 'desc')->pluck('title', 'id'),
         ]);
     }
 
@@ -110,7 +110,7 @@ class PartnerClassPackController extends Controller
      */
     public function store(ClasspackFormRequest $request)
     {
-        Classpack::create($request->validated());
+        ClassPack::create($request->validated());
 
         return $this->redirectBackSuccess(__('Class Pack created successfully'), 'partner.classpacks.index');
     }
@@ -118,10 +118,10 @@ class PartnerClassPackController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Partner\Classpack  $classpack
+     * @param  \App\Models\Partner\ClassPack  $classpack
      * @return \Illuminate\Http\Response
      */
-    public function show(Classpack $classpack)
+    public function show(ClassPack $classpack)
     {
         return Inertia::render('Partner/Classpack/Show', [
             'page_title' => __('Class Pack details'),
@@ -154,10 +154,10 @@ class PartnerClassPackController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Partner\Classpack  $classtype
+     * @param  \App\Models\Partner\ClassPack  $classtype
      * @return \Illuminate\Http\Response
      */
-    public function edit(Classpack $classpack)
+    public function edit(ClassPack $classpack)
     {
         return Inertia::render('Partner/Classpack/Edit', [
             'page_title' => __('Edit Class Pack'),
@@ -186,7 +186,7 @@ class PartnerClassPackController extends Controller
             'classpack' => $classpack,
             'options_types' => ClasspackType::labels(),
             'options_periods' => ClasspackExpirationPeriod::labels(),
-            'classtypes' => Classtype::orderBy('id', 'desc')->pluck('title', 'id'),
+            'classtypes' => ClassType::orderBy('id', 'desc')->pluck('title', 'id'),
         ]);
     }
 
@@ -194,10 +194,10 @@ class PartnerClassPackController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\Partner\ClasspackFormRequest  $request
-     * @param  \App\Models\Partner\Classpack  $classpack
+     * @param  \App\Models\Partner\ClassPack  $classpack
      * @return \Illuminate\Http\Response
      */
-    public function update(ClasspackFormRequest $request, Classpack $classpack)
+    public function update(ClasspackFormRequest $request, ClassPack $classpack)
     {
         $classpack->update($request->validated());
 
@@ -207,10 +207,10 @@ class PartnerClassPackController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Partner\Classpack  $classpack
+     * @param  \App\Models\Partner\ClassPack  $classpack
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Classpack $classpack)
+    public function destroy(ClassPack $classpack)
     {
         $classpack->delete();
 
