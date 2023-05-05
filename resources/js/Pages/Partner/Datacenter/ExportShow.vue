@@ -19,16 +19,17 @@ defineProps({
 
         <template #item>
             <single-view-row label="ID"
-                             :isEven="true"
                              :value="exporting.id"/>
 
             <single-view-row label="File Name"
+                             :even="false"
                              :value="exporting.file_name"/>
 
             <single-view-row label="Type"
                              :value="exporting.file_type"/>
 
             <single-view-row label="Filters"
+                             :even="false"
                              :value="exporting.filters"/>
 
 
@@ -46,12 +47,15 @@ defineProps({
             </single-view-row>
 
             <single-view-row label="Created At"
-                             :isEven="true"
+                             :even="false"
                              :value="DateTime.fromISO(exporting.created_at).toRelative()"/>
 
-            <single-view-row label="Created At" :value="DateTime.fromISO(exporting.created_at).toRelative()"/>
+            <single-view-row label="Created At"
+                             :value="DateTime.fromISO(exporting.created_at).toRelative()"/>
 
-            <single-view-row label="Completed" :value="DateTime.fromISO(exporting.completed_at)"/>
+            <single-view-row label="Completed"
+                             :even="false"
+                             :value="DateTime.fromISO(exporting.completed_at).toRelative()"/>
 
         </template>
     </single-view>
