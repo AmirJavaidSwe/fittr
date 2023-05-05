@@ -35,7 +35,7 @@ class ExportClassLesson extends Exporter
     {
         $this->applyFilters();
 
-        return $this->exportTo();
+        return $this->export();
     }
 
     protected function applyFilters(): array
@@ -118,7 +118,7 @@ class ExportClassLesson extends Exporter
         return 'Fittr Class Lesson Export';
     }
 
-    private function exportTo(): array
+    protected function export(): array
     {
         $fileName = $this->export->type.'_'.date('y_m_d').'_'.Str::random(5).'.'.$this->export->file_type;
 
