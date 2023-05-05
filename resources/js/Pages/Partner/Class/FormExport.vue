@@ -28,7 +28,7 @@
 
 <template>
     <div v-if="initiated" class="space-y-6 text-center">
-        <p>Your export has been successfully initiated.<br>You can find your requested file in the Exports page.</p>
+        <p>Your export has been successfully initiated.<br> You can find your requested file in the Exports page.</p>
 
         <p v-if="ready">Export is complete. Click here to download the file.</p>
         <div v-else>Checking the status...</div>
@@ -135,8 +135,12 @@
                             'name': 'CSV'
                         },
                         {
+                            'id':'xls',
+                            'name': 'Excel xls'
+                        },
+                        {
                             'id':'xlsx',
-                            'name': 'Excel'
+                            'name': 'Excel xlsx'
                         }
                     ]"
                     :searchable="true"

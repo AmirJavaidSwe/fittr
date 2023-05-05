@@ -9,17 +9,16 @@ use App\Models\Partner\ClassLesson;
 use App\Models\Partner\Export;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
-use Maatwebsite\Excel\Excel;
 use Str;
 
 class ExportClassLesson extends Exporter
 {
     protected array $fields = [
         'id',
-        'start_date',
+        'title',
         'status',
+        'start_date',
         'end_date',
         'studio_id',
         'instructor_id',
@@ -72,84 +71,6 @@ class ExportClassLesson extends Exporter
         return $query->select($this->fields);
     }
 
-    protected function getExportData() : Collection
-    {
-        return $this->query()->chunkMap(function ($query){
-
-            $query->start_date = $query->start_date->setTimeZone('Europe/London')->format('Y-m-d H:i:s A');
-            $query->end_date = $query->end_date->setTimeZone('Europe/London')->format('Y-m-d H:i:s A');
-
-            $query->studio = $query->id.':'.$query->studio->title;
-            $query->instructor = $query?->instructor?->email;
-
-            return $query;
-
-        }, 500);
-    }
-
-    protected function exportToFile(): array
-    {
-        $headers = $this->fields;
-
-        $file = fopen('php://temp', 'rw');
-
-        // Insert headers
-        fputcsv($file, $headers);
-
-        // Insert data
-        $exportData = $this->getExportData();
-
-        foreach ($exportData as $record) {
-
-            $record = $record->toArray();
-
-            foreach ($record as $key => $value) {
-                if (str_contains($key, '_date') || str_contains($key, '_at')) {
-                    $record[$key] = Carbon::parse($value)->format('Y-m-d H:i:s A');
-                }
-
-                if ($key == 'studio') {
-                    $record['studio'] = $value['id'].':'.$value['title'];
-                }
-            }
-
-            fputcsv($file, $record);
-        }
-
-        rewind($file);
-        $csv = stream_get_contents($file);
-        fclose($file);
-
-        // Create file name
-        $fileName = $this->export->type.'_'.date('d-m-y_H:i').'_export.csv';
-
-        // Replace spaces with underscores
-        $filename = str_replace(' ', '_', $fileName);
-
-        // Replace special characters with underscores
-        $storagePath = str_replace(['{type}', '{role}', '{file_name}'], [
-            $this->export->type, $this->export->created_by, $filename
-        ], $this->exportPath);
-
-        // Store CSV file
-        Storage::put($storagePath, $csv);
-
-        if (!isset($this->statusMessage)) {
-            $this->statusMessage = "CSV file has been stored as " . $filename;
-        }
-
-        // Update Export model
-        return [
-            'file_path' => $storagePath,
-            'file_name' => $filename,
-            'file_rows' => count($exportData),
-            'file_size' => strlen($csv),
-            'completed_at' => Carbon::now(),
-            'status' => ExportStatus::completed->name,
-            'message' => $this->statusMessage
-        ];
-    }
-
     public function columnFormats(): array
     {
         return [];
@@ -163,13 +84,15 @@ class ExportClassLesson extends Exporter
     public function headings(): array
     {
         return [
-            'User ID',
-            'Start Date',
+            'ID',
+            'Title',
             'Status',
+            'Start Date',
             'End Date',
             'Studio',
+            'Studio ID',
             'Instructor',
-            'Created At',
+            'Instructor ID',
             'Updated At'
         ];
     }
@@ -178,19 +101,21 @@ class ExportClassLesson extends Exporter
     {
         return [
             $row->id,
-            $row->start_date,
+            $row->title,
             $row->status,
+            $row->start_date,
             $row->end_date,
             $row->studio->title,
+            $row->studio_id,
             $row?->instructor?->email,
-            $row->created_at,
+            $row?->instructor_id,
             $row->updated_at
         ];
     }
 
     public function title(): string
     {
-        return 'class-lessons';
+        return 'Fittr Class Lesson Export';
     }
 
     private function exportTo(): array
@@ -199,7 +124,7 @@ class ExportClassLesson extends Exporter
 
         $storagePath = str_replace(['{type}', '{role}', '{file_name}'], [
             $this->export->type, $this->export->created_by, $fileName
-        ], $this->export->file_type);
+        ], $this->exportPath);
 
         $disk = app()->environment('local') ? 'local' : 's3';
 
@@ -208,7 +133,7 @@ class ExportClassLesson extends Exporter
         return [
             'file_path' => $storagePath,
             'file_name' => $fileName,
-            'file_rows' => $this->getExportData()->count(),
+            'file_rows' => $this->query()->count(),
             'file_size' => Storage::size($storagePath),
             'completed_at' => Carbon::now(),
             'status' => ExportStatus::completed->name,

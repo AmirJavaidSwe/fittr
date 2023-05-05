@@ -35,9 +35,9 @@ abstract class Exporter implements FromQuery, WithTitle, WithHeadings, WithMappi
     public abstract function __invoke() : array;
     public abstract function query() : Builder;
     protected abstract function applyFilters() : array;
-    protected abstract function getExportData() : Collection;
+//    protected abstract function getExportData() : Collection;
     protected abstract function relationShips() : array;
-    protected abstract function exportToFile() : array;
+//    protected abstract function exportToFile() : array;
     public function getWriterType()
     {
         $fileType = [

@@ -28,7 +28,8 @@ enum ExportType
     {
         return [
             'csv',
-            'xlsx'
+            'xlsx',
+            'xls'
         ];
     }
 
