@@ -47,11 +47,11 @@ defineProps({
 
             <single-view-row label="Created At"
                              :isEven="true"
-                             :value="dayjs(exporting.created_at).fromNow()"/>
+                             :value="DateTime.fromISO(exporting.created_at).toRelative()"/>
 
-            <single-view-row label="Created At" :value="DateTime.fromISO(exporting.created_at)"/>
+            <single-view-row label="Created At" :value="DateTime.fromISO(exporting.created_at).toRelative()"/>
 
-            <single-view-row label="Completed" :value="DateTime.fromISO(exporting.completed_at).toRelative()"/>
+            <single-view-row label="Completed" :value="DateTime.fromISO(exporting.completed_at)"/>
 
         </template>
     </single-view>

@@ -2,6 +2,7 @@
 
 namespace App\Abstracts;
 
+use App\Models\Partner\Export;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -13,6 +14,7 @@ use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithTitle;
+use Maatwebsite\Excel\Excel;
 
 abstract class Exporter implements FromQuery, WithTitle, WithHeadings, WithMapping, ShouldAutoSize, WithEvents, Responsable, WithColumnFormatting
 {
@@ -21,11 +23,11 @@ abstract class Exporter implements FromQuery, WithTitle, WithHeadings, WithMappi
     protected array $filters;
     protected array $fields;
     protected object $model;
-    protected \App\Models\Partner\Export $export;
+    protected Export $export;
     protected string $statusMessage = '';
     protected string $fileType;
     protected string $exportPath = 'exports/{type}/{role}/{file_name}';
-    protected function __construct(\App\Models\Partner\Export $export, object $model, string $fileType) {
+    protected function __construct(Export $export, object $model, string $fileType) {
         $this->export = $export;
         $this->filters = $export->filters;
         $this->model = $model;
@@ -37,4 +39,19 @@ abstract class Exporter implements FromQuery, WithTitle, WithHeadings, WithMappi
     protected abstract function getExportData() : Collection;
     protected abstract function relationShips() : array;
     protected abstract function exportToFile() : array;
+    public function getWriterType()
+    {
+        $fileType = [
+            'csv' => Excel::CSV,
+            'xls' => Excel::XLS,
+            'xlsx' => Excel::XLSX,
+            'ods' => Excel::ODS,
+            'html' => Excel::HTML,
+            'dompdf' => Excel::DOMPDF,
+            'tcpdf' => Excel::TCPDF,
+            'mpdf' => Excel::MPDF,
+        ];
+
+        return $fileType[$this->fileType];
+    }
 }

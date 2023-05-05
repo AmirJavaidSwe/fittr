@@ -45,8 +45,8 @@ const updateWeekDays = (index) => {
     }
 }
 const formatDate = computed(() => {
-    return props.business_seetings.date_format.format_js + ' ' +
-           props.business_seetings.time_format.format_js;
+    return props.business_seetings.date_format?.format_js + ' ' +
+           props.business_seetings.time_format?.format_js;
 });
 
 </script>

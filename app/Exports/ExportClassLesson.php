@@ -6,10 +6,13 @@ use App\Abstracts\Exporter;
 use App\Enums\ExportStatus;
 use App\Enums\ExportType;
 use App\Models\Partner\ClassLesson;
+use App\Models\Partner\Export;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Excel;
+use Str;
 
 class ExportClassLesson extends Exporter
 {
@@ -24,7 +27,7 @@ class ExportClassLesson extends Exporter
         'updated_at'
     ];
 
-    public function __construct(\App\Models\Partner\Export $export, string $fileType = 'csv')
+    public function __construct(Export $export, string $fileType = 'csv')
     {
         parent::__construct($export, new ClassLesson(), $fileType);
     }
@@ -33,7 +36,7 @@ class ExportClassLesson extends Exporter
     {
         $this->applyFilters();
 
-        return $this->exportToFile();
+        return $this->exportTo();
     }
 
     protected function applyFilters(): array
@@ -149,12 +152,12 @@ class ExportClassLesson extends Exporter
 
     public function columnFormats(): array
     {
-
+        return [];
     }
 
     public function registerEvents(): array
     {
-
+        return [];
     }
 
     public function headings(): array
@@ -179,7 +182,7 @@ class ExportClassLesson extends Exporter
             $row->status,
             $row->end_date,
             $row->studio->title,
-            $row->instructor->email,
+            $row?->instructor?->email,
             $row->created_at,
             $row->updated_at
         ];
@@ -187,6 +190,29 @@ class ExportClassLesson extends Exporter
 
     public function title(): string
     {
-        // TODO: Implement title() method.
+        return 'class-lessons';
+    }
+
+    private function exportTo(): array
+    {
+        $fileName = $this->export->type.'_'.date('y_m_d').'_'.Str::random(5).'.'.$this->fileType;
+
+        $storagePath = str_replace(['{type}', '{role}', '{file_name}'], [
+            $this->export->type, $this->export->created_by, $fileName
+        ], $this->exportPath);
+
+        $disk = app()->environment('local') ? 'local' : 's3';
+
+        $this->store($storagePath, $disk, $this->getWriterType());
+
+        return [
+            'file_path' => $storagePath,
+            'file_name' => $fileName,
+            'file_rows' => $this->getExportData()->count(),
+            'file_size' => Storage::size($storagePath),
+            'completed_at' => Carbon::now(),
+            'status' => ExportStatus::completed->name,
+            'message' => $this->statusMessage
+        ];
     }
 }

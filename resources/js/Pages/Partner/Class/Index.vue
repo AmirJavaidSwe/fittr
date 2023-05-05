@@ -230,8 +230,8 @@ const showLink = (exporting) => {
                     </span>
                 </table-data>
                 <table-data
-                    :title="DateTime.fromISO(class_lesson.start_date).setZone(business_seetings.timezone).toFormat(business_seetings.date_format.format_js)"
-                            :subtitle="DateTime.fromISO(class_lesson.start_date).setZone(business_seetings.timezone).toFormat(business_seetings.time_format.format_js)">
+                    :title="DateTime.fromISO(class_lesson.start_date).setZone(business_seetings.timezone).toFormat(business_seetings.date_format?.format_js)"
+                            :subtitle="DateTime.fromISO(class_lesson.start_date).setZone(business_seetings.timezone).toFormat(business_seetings.time_format?.format_js)">
                 </table-data>
 
                 <table-data :title="class_lesson.duration"/>
