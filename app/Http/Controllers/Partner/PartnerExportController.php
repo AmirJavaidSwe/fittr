@@ -142,8 +142,13 @@ class PartnerExportController extends Controller
 
         $export = Export::where('id', explode(':',base64_decode(request()->route('token')))[0])->first();
 
+        if ($export->status != ExportStatus::completed->name) {
+            return $this->redirectBackError(__('Export is not ready yet'));
+        }
 
-        return response()->download(storage_path('app/exports/classes/'.$export->created_by.'/'.$export->file_name));
+        $file = $export->storage_disk == 'local' ? storage_path('app/'.$export->file_path) : '';
+
+        return response()->download($file);
     }
 
 }

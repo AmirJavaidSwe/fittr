@@ -19,6 +19,8 @@ use Illuminate\Support\Str;
  * @property string $status
  * @property mixed $file_name
  * @property mixed $file_type
+ * @property mixed $storage_disk
+ * @property mixed $file_path
  */
 class Export extends Model
 {
