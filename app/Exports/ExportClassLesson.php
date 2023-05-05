@@ -103,8 +103,8 @@ class ExportClassLesson extends Exporter
             $row->id,
             $row->title,
             $row->status,
-            $row->start_date,
-            $row->end_date,
+            $row->start_date->format('Y-m-d h:i A'),
+            $row->end_date->format('Y-m-d h:i A'),
             $row->studio->title,
             $row->studio_id,
             $row?->instructor?->email,
@@ -137,6 +137,7 @@ class ExportClassLesson extends Exporter
             'file_size' => Storage::size($storagePath),
             'completed_at' => Carbon::now(),
             'status' => ExportStatus::completed->name,
+            'storage_disk' => $disk,
             'message' => $this->statusMessage
         ];
     }

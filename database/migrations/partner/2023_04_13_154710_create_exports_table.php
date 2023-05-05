@@ -22,6 +22,7 @@ return new class extends Migration
             $table->integer('file_size')->unsigned()->nullable(); //bytes (4,294,967,295 max)
             $table->string('file_type')->default('csv')->nullable(); //bytes (4,294,967,295 max)
             $table->string('file_path')->nullable();
+            $table->string('storage_disk')->nullable();
             $table->timestamp('completed_at')->nullable();
             $table->string('status', 100)->default(ExportStatus::pending->name); //pending, processing, completed, failed
             $table->string('messages')->nullable();

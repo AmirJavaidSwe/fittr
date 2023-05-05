@@ -19,7 +19,7 @@ class ClassLesson extends Model
     protected $guarded = ['id'];
 
     protected $casts = [
-        'is_offpeak' => 'boolean',
+        'is_off_peak' => 'boolean',
         'start_date' => 'datetime',
         'end_date' => 'datetime',
         'deleted_at' => 'datetime',
