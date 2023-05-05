@@ -24,6 +24,14 @@ enum ExportType
         return array_column(self::cases(), 'name');
     }
 
+    public static function allFileType(): array
+    {
+        return [
+            'csv',
+            'xlsx'
+        ];
+    }
+
     public static function fileType(string $fileType): ExportType
     {
         return match($fileType) {
@@ -57,10 +65,10 @@ enum ExportType
         };
     }
 
-    public function get(Export $export, $fileType = 'csv')
+    public function get(Export $export)
     {
         return match($this) {
-            static::classes => (new ExportClassLesson($export, $fileType))(),
+            static::classes => (new ExportClassLesson($export))(),
         };
     }
 }

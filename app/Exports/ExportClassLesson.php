@@ -27,9 +27,9 @@ class ExportClassLesson extends Exporter
         'updated_at'
     ];
 
-    public function __construct(Export $export, string $fileType = 'csv')
+    public function __construct(Export $export)
     {
-        parent::__construct($export, new ClassLesson(), $fileType);
+        parent::__construct($export, new ClassLesson());
     }
 
     public function __invoke(): array
@@ -195,11 +195,11 @@ class ExportClassLesson extends Exporter
 
     private function exportTo(): array
     {
-        $fileName = $this->export->type.'_'.date('y_m_d').'_'.Str::random(5).'.'.$this->fileType;
+        $fileName = $this->export->type.'_'.date('y_m_d').'_'.Str::random(5).'.'.$this->export->file_type;
 
         $storagePath = str_replace(['{type}', '{role}', '{file_name}'], [
             $this->export->type, $this->export->created_by, $fileName
-        ], $this->exportPath);
+        ], $this->export->file_type);
 
         $disk = app()->environment('local') ? 'local' : 's3';
 

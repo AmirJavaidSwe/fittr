@@ -134,6 +134,7 @@ const exportClasses = () => {
             studio_id: data.studio_id,
             is_off_peak: data.is_off_peak
         },
+        file_type: data.file_type,
     }))
     .post(route('partner.exports.index'), {
         preserveScroll: true,

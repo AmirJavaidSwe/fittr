@@ -27,11 +27,10 @@ abstract class Exporter implements FromQuery, WithTitle, WithHeadings, WithMappi
     protected string $statusMessage = '';
     protected string $fileType;
     protected string $exportPath = 'exports/{type}/{role}/{file_name}';
-    protected function __construct(Export $export, object $model, string $fileType) {
+    protected function __construct(Export $export, object $model) {
         $this->export = $export;
         $this->filters = $export->filters;
         $this->model = $model;
-        $this->fileType = $fileType;
     }
     public abstract function __invoke() : array;
     public abstract function query() : Builder;
@@ -44,14 +43,9 @@ abstract class Exporter implements FromQuery, WithTitle, WithHeadings, WithMappi
         $fileType = [
             'csv' => Excel::CSV,
             'xls' => Excel::XLS,
-            'xlsx' => Excel::XLSX,
-            'ods' => Excel::ODS,
-            'html' => Excel::HTML,
-            'dompdf' => Excel::DOMPDF,
-            'tcpdf' => Excel::TCPDF,
-            'mpdf' => Excel::MPDF,
+            'xlsx' => Excel::XLSX
         ];
 
-        return $fileType[$this->fileType];
+        return $fileType[$this->export->file_type];
     }
 }

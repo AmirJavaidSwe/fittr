@@ -79,6 +79,7 @@ class PartnerExportController extends Controller
     {
         $export = Export::create([
             'type' => $request->type,
+            'file_type' => $request->file_type,
             'filters' => array_filter($request->filters),
             'created_by' => $request->user()->id,
         ]);

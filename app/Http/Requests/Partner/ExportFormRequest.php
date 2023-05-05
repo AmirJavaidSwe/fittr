@@ -29,6 +29,7 @@ class ExportFormRequest extends FormRequest
     {
         $rules =  [
             'type' => ['required', Rule::in(ExportType::all())],
+            'file_type' => ['required', Rule::in(ExportType::allFileType())],
             'filters' => 'nullable|array',
         ];
 

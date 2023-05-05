@@ -18,6 +18,7 @@ use Illuminate\Support\Str;
  * @property mixed $id
  * @property string $status
  * @property mixed $file_name
+ * @property mixed $file_type
  */
 class Export extends Model
 {
