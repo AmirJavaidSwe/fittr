@@ -2,6 +2,7 @@
 
 namespace App\Models\Partner;
 
+use App\Enums\ExportFileType;
 use App\Enums\ExportStatus;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -53,7 +54,7 @@ class Export extends Model
 
     public function getMimeTypeAttribute(): string
     {
-        return Storage::disk($this->storage_disk)->mimeType($this->file_path);
+        return ExportFileType::getMimeType($this->file_type); // Storage::disk($this->storage_disk)->mimeType($this->file_path);
     }
 
 

@@ -126,7 +126,7 @@ class ExportClassLesson extends Exporter
             $this->export->type, $this->export->created_by, $fileName
         ], $this->exportPath);
 
-        $disk = app()->environment('local') ? 'local' : 's3';
+        $disk = config('app.export_disk');
 
         $this->store($storagePath, $disk, $this->getWriterType());
 
