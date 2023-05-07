@@ -112,7 +112,20 @@ const requestExport = (exporting) => {
         <template #tableData>
             <tr v-for="exporting in exportings.data" >
                 <table-data :title="exporting.id"/>
-                <table-data :title="exporting.file_name"/>
+
+                <table-data>
+                    <template v-if="exporting.status === 'completed'">
+                        <Link
+                            class="text-indigo-600 hover:text-indigo-500 via-indigo-950"
+                            :href="route('partner.exports.show', exporting)">
+                            {{ exporting.file_name }}
+                        </Link>
+                    </template>
+                    <template v-else>
+                        {{ exporting.file_name }}
+                    </template>
+                </table-data>
+
                 <table-data :title="exporting.status"/>
                 <table-data :title="exporting.type"/>
                 <table-data :title="bytesToKibibytes(exporting.file_size)"/>
@@ -129,14 +142,15 @@ const requestExport = (exporting) => {
                 </table-data>
 
                 <table-data>
-                    <button v-if="exporting.status === 'completed'" class="font-medium text-white hover:text-white bg-yellow-500 hover:bg-yellow-600 rounded py-2 px-4 inline-block mr-2"
+                    <button v-if="exporting.status === 'completed'"
+                            class="font-medium text-white hover:text-white bg-green-500 hover:bg-green-600 rounded py-2 px-4 inline-block mr-2"
                             @click.prevent="requestExport(exporting.id)">
                         Download
                     </button>
-                    <Link class="font-medium text-white hover:text-white bg-indigo-600 hover:bg-indigo-700 rounded py-2 px-4 inline-block mr-2"
-                          :href="route('partner.exports.show', exporting)">
-                        View
-                    </Link>
+<!--                    <Link class="font-medium text-white hover:text-white bg-indigo-600 hover:bg-indigo-700 rounded py-2 px-4 inline-block mr-2"-->
+<!--                          :href="route('partner.exports.show', exporting)">-->
+<!--                        View-->
+<!--                    </Link>-->
                     <button class="text-white bg-red-500 hover:bg-red-600 rounded py-2 px-4 inline-block" @click="confirmDeletion(exporting.id)">
                         Delete
                     </button>
