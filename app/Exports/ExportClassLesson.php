@@ -134,7 +134,7 @@ class ExportClassLesson extends Exporter
             'file_path' => $storagePath,
             'file_name' => $fileName,
             'file_rows' => $this->query()->count(),
-            'file_size' => Storage::size($storagePath),
+            'file_size' => Storage::disk($disk)->size($storagePath),
             'completed_at' => Carbon::now(),
             'status' => ExportStatus::completed->name,
             'storage_disk' => $disk,

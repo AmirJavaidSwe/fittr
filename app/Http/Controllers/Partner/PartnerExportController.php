@@ -2,20 +2,25 @@
 
 namespace App\Http\Controllers\Partner;
 
+use App\Enums\ExportFileType;
 use App\Enums\ExportStatus;
 use App\Jobs\ProcessExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Partner\ExportFormRequest;
 use App\Models\Partner\Export;
+use App\Traits\ExportDownloader;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
 
 class PartnerExportController extends Controller
 {
+    use ExportDownloader;
     /**
      * Display a listing of the resource.
      *
@@ -136,19 +141,18 @@ class PartnerExportController extends Controller
 
     public function download()
     {
-        if(!cache()->has(request()->route('token'))) {
+        if (!cache()->has(request()->route('token'))) {
             return $this->redirectBackError(__('Export is not ready yet'));
         }
 
-        $export = Export::where('id', explode(':',base64_decode(request()->route('token')))[0])->first();
+        $export = Export::where('id', explode(':', base64_decode(request()->route('token')))[0])->first();
 
-        if ($export->status != ExportStatus::completed->name) {
-            return $this->redirectBackError(__('Export is not ready yet'));
+        $this->authorize('download', $export);
+
+        if ($export->storage_disk === 's3') {
+            return $this->downloadFromS3($export);
         }
 
-        $file = $export->storage_disk == 'local' ? storage_path('app/'.$export->file_path) : '';
-
-        return response()->download($file);
+        return $this->downloadFromLocalStorage($export);
     }
-
 }

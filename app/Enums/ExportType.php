@@ -16,21 +16,12 @@ enum ExportType
 //    case members;
 //    case orders;
 
-    case fileCsv;
+    case fileCsv  ;
     case fileXlsx;
 
     public static function all(): array
     {
         return array_column(self::cases(), 'name');
-    }
-
-    public static function allFileType(): array
-    {
-        return [
-            'csv',
-            'xlsx',
-            'xls'
-        ];
     }
 
     public static function fileType(string $fileType): ExportType

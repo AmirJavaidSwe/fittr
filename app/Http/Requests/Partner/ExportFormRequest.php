@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Partner;
 
+use App\Enums\ExportFileType;
 use App\Enums\ExportType;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -27,13 +28,11 @@ class ExportFormRequest extends FormRequest
      */
     public function rules()
     {
-        $rules =  [
+        return [
             'type' => ['required', Rule::in(ExportType::all())],
-            'file_type' => ['required', Rule::in(ExportType::allFileType())],
+            'file_type' => ['required', Rule::in(ExportFileType::all())],
             'filters' => 'nullable|array',
         ];
-
-        return $rules;
     }
 
     /**
