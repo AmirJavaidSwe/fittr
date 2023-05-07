@@ -85,13 +85,14 @@ class PartnerExportController extends Controller
         $export = Export::create([
             'type' => $request->type,
             'file_type' => $request->file_type,
+            'file_mime_type' => ExportFileType::getMimeType($request->file_type),
             'filters' => array_filter($request->filters),
             'created_by' => $request->user()->id,
         ]);
 
         $export->setStatusPending();
 
-        ProcessExport::dispatchSync($export);
+        ProcessExport::dispatch($export);
 
         $extra = array('export_id' => $export->id);
 
@@ -122,7 +123,7 @@ class PartnerExportController extends Controller
                     'link' => null,
                 ],
             ),
-            'exporting' => $export,
+            'exporting' => $export->load('user:id,name'),
         ]);
     }
 

@@ -17,9 +17,9 @@ trait ExportDownloader
         $storage = Storage::disk($export->storage_disk);
         $temporaryUrl = $storage->temporaryUrl(
             $export->file_path,
-            Carbon::now()->addMinutes(5),
+            Carbon::now()->addMinutes(),
             [
-                'ResponseContentType' => ExportFileType::getMimeType($export->file_type),
+                'ResponseContentType' => Storage::disk($export->storage_disk)->mimeType($export->file_path),
                 'ResponseContentDisposition' => 'attachment; filename="' . $export->file_name . '"',
             ]
         );
@@ -33,7 +33,7 @@ trait ExportDownloader
         $filePath = $storage->path($export->file_path);
 
         return response()->download($filePath, $export->file_name, [
-            'Content-Type' => ExportFileType::getMimeType($export->file_type),
+            'Content-Type' => Storage::disk($export->storage_disk)->mimeType($export->file_path),
             'Content-Disposition' => 'attachment; filename="' . $export->file_name . '"',
             'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0'
         ]);

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 /**
@@ -30,6 +31,10 @@ class Export extends Model
     protected $connection = 'mysql_partner';
     protected $guarded = ['id'];
 
+    protected $appends = [
+        'mime_type'
+    ];
+
     protected $casts = [
         'filters' => 'array',
         'completed_at' => 'datetime',
@@ -39,9 +44,16 @@ class Export extends Model
     protected static function boot(): void
     {
         parent::boot();
-        static::deleted(function ($menu_model) {
-            // TODO: delete file
+        static::deleted(function ($model) {
+            if ($model->file_path && Storage::disk($model->storage_disk)->exists($model->file_path)) {
+                Storage::disk($model->storage_disk)->delete($model->file_path);
+            }
         });
+    }
+
+    public function getMimeTypeAttribute(): string
+    {
+        return Storage::disk($this->storage_disk)->mimeType($this->file_path);
     }
 
 
