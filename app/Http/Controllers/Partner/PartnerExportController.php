@@ -145,7 +145,7 @@ class PartnerExportController extends Controller
             return $this->redirectBackError(__('Export is not ready yet'));
         }
 
-        $export = Export::where('id', explode(':', base64_decode(request()->route('token')))[0])->first();
+        $export = Export::where('id', (explode(':', base64_decode(request()->route('token')))[0] ?? null))->first();
 
         $this->authorize('download', $export);
 
