@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\AppUserRole;
+use App\Models\Partner\Export;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,6 +16,9 @@ use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 // use DateTimeInterface;
 
+/**
+ * @method static partner()
+ */
 class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens;
@@ -23,6 +27,14 @@ class User extends Authenticatable implements MustVerifyEmail
     use Notifiable;
     use TwoFactorAuthenticatable;
     use SoftDeletes;
+
+    /**
+     * The database connection that should be used by the model.
+     *
+     * @var string
+     */
+    protected $connection = 'mysql'; //must be set for cross DB relationships
+    protected $table = 'users';
 
     /**
      * The attributes that are mass assignable.
@@ -133,5 +145,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function business(): BelongsTo
     {
         return $this->belongsTo(Business::class, 'business_id');
+    }
+
+    public function exports()
+    {
+        return $this->hasMany(Export::class, 'created_by');
     }
 }

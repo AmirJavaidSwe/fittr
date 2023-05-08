@@ -49,9 +49,10 @@ const form_class = useForm({
     start_date: null,
     end_date: null,
     instructor_id: null,
-    classtype_id: null,
+    class_type_id: null,
     studio_id: null,
-    is_offpeak: false,
+    file_type: 'csv',
+    is_off_peak: false,
     does_repeat: false,
     repeat_end_date: null,
     week_days: [],
@@ -124,15 +125,16 @@ const resetExportFilters = () => {
 const exportClasses = () => {
     form_class
     .transform((data) => ({
-        export_type: 'classes',
+        type: 'classes',
         filters : {
             status: data.status,
             start_date: data.start_date,
             end_date: data.end_date,
             instructor_id: data.instructor_id,
             studio_id: data.studio_id,
-            is_offpeak: data.is_offpeak
+            is_off_peak: data.is_off_peak
         },
+        file_type: data.file_type,
     }))
     .post(route('partner.exports.index'), {
         preserveScroll: true,
@@ -148,7 +150,8 @@ const exportClasses = () => {
 const completed_at = ref(null);
 const checkExportStatus = () => {
     setTimeout(() => {
-        // idea is to do quick query here to check for export status. The job may have been complete and we can show a download link inside modal, to avoid visit exports page
+        // idea is to do quick query here to check for export status. The job may have been complete and we can show a
+        // download link inside modal, to avoid visit exports page
 
         axios
         .get(route('partner.exports.show', {id: export_id.value}), {
@@ -221,20 +224,15 @@ const showLink = (exporting) => {
                 </table-data>
                 <table-data :title="class_lesson.studio_id"/>
                 <table-data :title="class_lesson.instructor_id"/>
-                <table-data :title="class_lesson.classtype_id"/>
+                <table-data :title="class_lesson.class_type_id"/>
                 <table-data>
-                    <!-- <span :class="classStatuses[class_lesson.status].color"
-                          class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ">
-                        {{ classStatuses[class_lesson.status].label }}
-                    </span> -->
-                    <span 
-                          class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ">
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ">
                         {{ class_lesson.status_label }}
                     </span>
                 </table-data>
-                <table-data 
-                    :title="DateTime.fromISO(class_lesson.start_date).setZone(business_seetings.timezone).toFormat(business_seetings.date_format.format_js)"
-                    :subtitle="DateTime.fromISO(class_lesson.start_date).setZone(business_seetings.timezone).toFormat(business_seetings.time_format.format_js)">
+                <table-data
+                    :title="DateTime.fromISO(class_lesson.start_date).setZone(business_seetings.timezone).toFormat(business_seetings.date_format?.format_js)"
+                            :subtitle="DateTime.fromISO(class_lesson.start_date).setZone(business_seetings.timezone).toFormat(business_seetings.time_format?.format_js)">
                 </table-data>
 
                 <table-data :title="class_lesson.duration"/>
@@ -268,7 +266,7 @@ const showLink = (exporting) => {
         </template>
 
         <template #content>
-            <FormExport 
+            <FormExport
                 :form="form_class"
                 :initiated="exportInitiated"
                 :ready="completed_at"
@@ -288,7 +286,7 @@ const showLink = (exporting) => {
         </template>
 
         <template #content>
-            <Form 
+            <Form
                 :form="form_class"
                 :isNew="true"
                 :statuses="statuses"
@@ -320,8 +318,7 @@ const showLink = (exporting) => {
                 class="ml-3"
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
-                @click="deleteItem"
-            >
+                @click="deleteItem">
                 Delete
             </DangerButton>
         </template>

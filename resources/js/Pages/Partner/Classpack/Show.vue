@@ -10,6 +10,7 @@ defineProps({
         type: Object,
         required: true,
     },
+    business_seetings: Object,
 })
 
 </script>
@@ -42,9 +43,9 @@ defineProps({
             <single-view-row :even="true" label="Sessions expire" :value="classpack.is_expiring ? 'Yes':'no'"/>
             <single-view-row :even="false" label="Expiration period multiplier" :value="classpack.expiration"/>
             <single-view-row :even="true" label="Expiration period" :value="classpack.expiration_period"/>
-            <single-view-row :even="false" label="Pack active from" :value="DateTime.fromISO(classpack.active_from).toISO()"/>
-            <single-view-row :even="true" label="Pack active to" :value="DateTime.fromISO(classpack.active_to).toISO()"/>
-            <single-view-row :even="false" label="Created At" :value="DateTime.fromISO(classpack.created_at).toISO()"/>
+            <single-view-row :even="false" label="Pack active from" :value="classpack.active_from ? DateTime.fromISO(classpack.active_from).setZone(business_seetings.timezone).toFormat(business_seetings.date_format.format_js) : null"/>
+            <single-view-row :even="true" label="Pack active to" :value="classpack.active_to ? DateTime.fromISO(classpack.active_to).setZone(business_seetings.timezone).toFormat(business_seetings.date_format.format_js) : null"/>
+            <single-view-row :even="false" label="Created At" :value="DateTime.fromISO(classpack.created_at).setZone(business_seetings.timezone).toFormat(business_seetings.date_format.format_js)"/>
             <single-view-row :even="true" label="Updated At" :value="DateTime.fromISO(classpack.updated_at).toRelative()"/>
         </template>
     </single-view>

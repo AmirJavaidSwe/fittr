@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use URL;
+use Illuminate\Support\Facades\Auth;
 
 class PartnerController extends Controller
 {
@@ -38,6 +39,7 @@ class PartnerController extends Controller
                     'created_at' => $user->created_at->format('Y-m-d'),
                     'url_show' => URL::route('admin.partners.show', $user),
                     'url_edit' => URL::route('admin.partners.edit', $user),
+                    'url_login_as' => URL::route('admin.partners.login-as', $user),
                 ])
                 ,
             'search' => $this->search,
@@ -89,4 +91,33 @@ class PartnerController extends Controller
             'header' => __('Partners performance'),
         ]);
     }
+
+    public function loginAs(Request $request, $id)
+    {
+        $user = User::partner()->findOrFail($id);
+
+        if (Auth::guard('web')->id() != $id) {
+            if (! session()->has('orig_user')) {
+                session()->put('orig_user', Auth::guard('web')->id());
+            }
+
+            Auth::guard('web')->loginUsingId($id);
+
+            session()->put('user_switch_url', url()->previous());
+        }
+
+        return redirect()->route('partner.classes.index');
+    }
+
+
+    public function switchBack(Request $request)
+    {
+        if (session()->has('orig_user')) {
+            Auth::guard('web')->loginUsingId(session()->get('orig_user'));
+            session()->forget('orig_user');
+        }
+
+        return redirect(session()->get('user_switch_url', '/'));
+    }
+
 }

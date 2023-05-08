@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch } from 'vue';
-import { Link, useForm } from '@inertiajs/vue3';
+import { Link, useForm, router } from '@inertiajs/vue3';
 import TopMenu from './TopMenu.vue';
 import { DateTime } from "luxon";
 import Search from "@/Components/DataTable/Search.vue";
@@ -65,6 +65,21 @@ const deleteItem = () => {
     });
 };
 
+const bytesToKibibytes = (bytes) => {
+    return Math.floor(bytes / 1024)+' KB';
+}
+
+const requestExport = (exporting) => {
+    axios.get(route('partner.exports.request-to-download', { id: exporting }))
+        .then(response => {
+            window.location.replace(response.data.url);
+        })
+        .catch(error => {
+            console.log(error);
+        });
+};
+
+
 </script>
 
 <template>
@@ -80,12 +95,12 @@ const deleteItem = () => {
                 v-model="form.search"
                 :disable-search="disableSearch"
                 @reset="form.search = null"
-                @pp_changed="setPerPage"
-                />
+                @pp_changed="setPerPage"/>
         </template>
 
         <template #tableHead>
             <table-head title="Id"/>
+            <table-head title="Name"/>
             <table-head title="Status"/>
             <table-head title="Type"/>
             <table-head title="Size"/>
@@ -97,19 +112,47 @@ const deleteItem = () => {
         <template #tableData>
             <tr v-for="exporting in exportings.data" >
                 <table-data :title="exporting.id"/>
-                <table-data :title="exporting.id"/>
-                <table-data :title="exporting.export_type"/>
-                <table-data :title="exporting.file_size"/>
-                <table-data :title="DateTime.fromISO(exporting.created_at).toRelative()"/>
-                <table-data :title="exporting.created_by"/>
 
                 <table-data>
-                    <Link class="font-medium text-indigo-600 hover:text-indigo-500"
-                          :href="route('partner.exports.show', exporting)">
-                        View
-                    </Link>
-                    <br>
-                    <button class="block text-red-500" @click="confirmDeletion(exporting.id)">
+                    <template v-if="exporting.status === 'completed'">
+                        <Link
+                            class="text-indigo-600 hover:text-indigo-500 via-indigo-950"
+                            :href="route('partner.exports.show', exporting)">
+                            {{ exporting.file_name }}
+                        </Link>
+                    </template>
+                    <template v-else>
+                        {{ exporting.file_name }}
+                    </template>
+                </table-data>
+
+                <table-data :title="exporting.status"/>
+                <table-data :title="exporting.type"/>
+                <table-data :title="bytesToKibibytes(exporting.file_size)"/>
+                <table-data :title="DateTime.fromISO(exporting.created_at).toRelative()"/>
+
+                <table-data>
+                    <template v-if="exporting.created_by">
+                        {{$page.props.user.id === exporting.created_by ? 'You' : exporting.user.name }}
+                        <!-- <Link
+                            class="text-indigo-600 hover:text-indigo-500 via-indigo-950"
+                            :href="route('partner.members.show', exporting.created_by)">
+                            {{ 'ID#'+exporting.user.id+': ' +exporting.user.name }}
+                        </Link> -->
+                    </template>
+                </table-data>
+
+                <table-data>
+                    <button v-if="exporting.status === 'completed'"
+                            class="font-medium text-white hover:text-white bg-green-500 hover:bg-green-600 rounded py-2 px-4 inline-block mr-2"
+                            @click.prevent="requestExport(exporting.id)">
+                        Download
+                    </button>
+<!--                    <Link class="font-medium text-white hover:text-white bg-indigo-600 hover:bg-indigo-700 rounded py-2 px-4 inline-block mr-2"-->
+<!--                          :href="route('partner.exports.show', exporting)">-->
+<!--                        View-->
+<!--                    </Link>-->
+                    <button class="text-white bg-red-500 hover:bg-red-600 rounded py-2 px-4 inline-block" @click="confirmDeletion(exporting.id)">
                         Delete
                     </button>
                 </table-data>
@@ -121,8 +164,9 @@ const deleteItem = () => {
                 :links="exportings.links"/>
 
             <p class="p-2 text-xs">Viewing {{exportings.from}} - {{exportings.to}} of {{exportings.total}} results</p>
-        </template>    
+        </template>
     </data-table-layout>
+
     <!-- Delete Confirmation Modal -->
     <ConfirmationModal :show="itemDeleting" @close="itemDeleting = false">
         <template #title>
@@ -142,8 +186,7 @@ const deleteItem = () => {
                 class="ml-3"
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
-                @click="deleteItem"
-            >
+                @click="deleteItem">
                 Delete
             </DangerButton>
         </template>

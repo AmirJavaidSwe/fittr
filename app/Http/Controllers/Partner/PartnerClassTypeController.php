@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Partner;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Partner\ClasstypeFormRequest;
-use App\Models\Partner\Classtype;
+use App\Models\Partner\ClassType;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -23,7 +23,7 @@ class PartnerClassTypeController extends Controller
         $this->order_dir = $request->query('order_dir', 'desc');
 
         return Inertia::render('Partner/Classtype/Index', [
-            'classtypes' => Classtype::orderBy($this->order_by, $this->order_dir)
+            'classtypes' => ClassType::orderBy($this->order_by, $this->order_dir)
                 ->when($this->search, function ($query) {
                     $query->where(function($query) {
                         $query->orWhere('id', intval($this->search))
@@ -97,7 +97,7 @@ class PartnerClassTypeController extends Controller
      */
     public function store(ClasstypeFormRequest $request)
     {
-        Classtype::create($request->validated());
+        ClassType::create($request->validated());
 
         return $this->redirectBackSuccess(__('Class Type created successfully'), 'partner.classtypes.index');
     }
@@ -105,10 +105,10 @@ class PartnerClassTypeController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Partner\Classtype  $classtype
+     * @param  \App\Models\Partner\ClassType  $classtype
      * @return \Illuminate\Http\Response
      */
-    public function show(Classtype $classtype)
+    public function show(ClassType $classtype)
     {
         return Inertia::render('Partner/Classtype/Show', [
             'page_title' => __('Class Type details'),
@@ -141,10 +141,10 @@ class PartnerClassTypeController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Partner\Classtype  $classtype
+     * @param  \App\Models\Partner\ClassType  $classtype
      * @return \Illuminate\Http\Response
      */
-    public function edit(Classtype $classtype)
+    public function edit(ClassType $classtype)
     {
         return Inertia::render('Partner/Classtype/Edit', [
             'page_title' => __('Edit Class Type'),
@@ -178,10 +178,10 @@ class PartnerClassTypeController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\Partner\ClasstypeFormRequest  $request
-     * @param  \App\Models\Partner\Classtype  $classtype
+     * @param  \App\Models\Partner\ClassType  $classtype
      * @return \Illuminate\Http\Response
      */
-    public function update(ClasstypeFormRequest $request, Classtype $classtype)
+    public function update(ClasstypeFormRequest $request, ClassType $classtype)
     {
         $classtype->update($request->validated());
 
@@ -191,10 +191,10 @@ class PartnerClassTypeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Partner\Classtype  $classtype
+     * @param  \App\Models\Partner\ClassType  $classtype
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Classtype $classtype)
+    public function destroy(ClassType $classtype)
     {
         $classtype->delete();
 

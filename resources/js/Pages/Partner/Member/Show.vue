@@ -27,6 +27,7 @@ defineProps({
                 </Link>
             </div>
         </template>
+
         <template #item>
             <single-view-row label="ID" :value="member.id"/>
 
