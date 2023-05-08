@@ -10,7 +10,9 @@ import { Link } from '@inertiajs/vue3';
             <legend class="sr-only">Types</legend>
 
             <!-- Checked: "bg-indigo-600 text-white", Not Checked: "text-gray-500" -->
-            <Link class="cursor-pointer rounded py-1 px-2.5">
+            <Link 
+                class="cursor-pointer rounded py-1 px-2.5"
+                href="#">
                 <svg xmlns="http://www.w3.org/2000/svg"
                      fill="none"
                      viewBox="0 0 24 24"

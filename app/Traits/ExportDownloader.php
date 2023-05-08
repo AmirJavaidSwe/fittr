@@ -12,6 +12,18 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 trait ExportDownloader
 {
+    private function downloadFromDisk($export)
+    {
+        switch ($export->storage_disk) {
+            case 'private-remote':
+                return $this->downloadFromS3($export);
+            case 'private':
+                return $this->downloadFromLocalStorage($export);
+        }
+
+        return redirect()->back();
+    }
+
     private function downloadFromS3($export): Application|Redirector|RedirectResponse|\Illuminate\Contracts\Foundation\Application
     {
         $storage = Storage::disk($export->storage_disk);

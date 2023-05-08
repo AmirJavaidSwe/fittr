@@ -10,11 +10,7 @@ enum ExportFileType
 
     public static function all(): array
     {
-        return [
-            self::csv->name,
-            self::xls->name,
-            self::xlsx->name
-        ];
+        return array_column(self::cases(), 'name');
     }
     public static function getMimeType($type): string
     {

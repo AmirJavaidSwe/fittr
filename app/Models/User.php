@@ -29,6 +29,14 @@ class User extends Authenticatable implements MustVerifyEmail
     use SoftDeletes;
 
     /**
+     * The database connection that should be used by the model.
+     *
+     * @var string
+     */
+    protected $connection = 'mysql'; //must be set for cross DB relationships
+    protected $table = 'users';
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var string[]

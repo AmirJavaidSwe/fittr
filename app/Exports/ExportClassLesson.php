@@ -120,13 +120,13 @@ class ExportClassLesson extends Exporter
 
     protected function export(): array
     {
-        $fileName = $this->export->type.'_'.date('y_m_d').'_'.Str::random(5).'.'.$this->export->file_type;
+        $fileName = $this->export->type.'_'.date('Y_m_d_h_i_s.').$this->export->file_type;
 
         $storagePath = str_replace(['{type}', '{role}', '{file_name}'], [
             $this->export->type, $this->export->created_by, $fileName
         ], $this->exportPath);
 
-        $disk = config('app.export_disk');
+        $disk = config('filesystems.export_disk');
 
         $this->store($storagePath, $disk, $this->getWriterType());
 

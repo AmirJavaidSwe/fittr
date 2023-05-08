@@ -133,11 +133,12 @@ const requestExport = (exporting) => {
 
                 <table-data>
                     <template v-if="exporting.created_by">
-                        <Link
+                        {{$page.props.user.id === exporting.created_by ? 'You' : exporting.user.name }}
+                        <!-- <Link
                             class="text-indigo-600 hover:text-indigo-500 via-indigo-950"
                             :href="route('partner.members.show', exporting.created_by)">
                             {{ 'ID#'+exporting.user.id+': ' +exporting.user.name }}
-                        </Link>
+                        </Link> -->
                     </template>
                 </table-data>
 

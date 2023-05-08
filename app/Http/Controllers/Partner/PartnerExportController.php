@@ -58,22 +58,6 @@ class PartnerExportController extends Controller
         ]);
     }
 
-    public function requestToDownload(Export $export)
-    {
-        if ($export->status != ExportStatus::completed->name) {
-            return response()->json([
-                'message' => __('Export is not completed yet'),
-            ], 400);
-        }
-
-        $token = $export->generateToken();
-
-        return response()->json([
-            'token' => $token,
-            'url' => route('partner.exports.download', $token),
-        ]);
-    }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -140,6 +124,23 @@ class PartnerExportController extends Controller
         return $this->redirectBackSuccess(__('Export deleted successfully'), 'partner.exports.index');
     }
 
+    
+    public function requestToDownload(Export $export)
+    {
+        if ($export->status != ExportStatus::completed->name) {
+            return response()->json([
+                'message' => __('Export is not completed yet'),
+            ], 400);
+        }
+
+        $token = $export->generateToken();
+
+        return response()->json([
+            'token' => $token,
+            'url' => route('partner.exports.download', $token),
+        ]);
+    }
+
     public function download()
     {
         if (!cache()->has(request()->route('token'))) {
@@ -150,10 +151,6 @@ class PartnerExportController extends Controller
 
         $this->authorize('download', $export);
 
-        if ($export->storage_disk === 's3') {
-            return $this->downloadFromS3($export);
-        }
-
-        return $this->downloadFromLocalStorage($export);
+        return $this->downloadFromDisk($export);
     }
 }

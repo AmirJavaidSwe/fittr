@@ -10,14 +10,14 @@ use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
+// use Illuminate\Queue\SerializesModels; // this trait runs __unserialize() on model when we don't have DB connection 
 use Illuminate\Queue\Middleware\WithoutOverlapping;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Crypt;
 
 class ProcessExport implements ShouldQueue, ShouldBeUnique
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable;
 
     private Export $export;
 
@@ -59,14 +59,15 @@ class ProcessExport implements ShouldQueue, ShouldBeUnique
 
     public function handle(): void
     {
-        $this->export->setStatusProcessing();
-
         $this->setPartnerConnection();
+
+        $this->export->setStatusProcessing();
 
         $response = ExportType::from($this->export->type)->get($this->export);
 
         $this->export->update($response);
 
-        $this->export->setStatusCompleted();
+        // above update() sets 'status' and 'completed_at'
+        // $this->export->setStatusCompleted();
     }
 }
