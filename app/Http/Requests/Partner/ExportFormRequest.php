@@ -8,6 +8,11 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 // use Illuminate\Validation\Rules\Enum;
 
+/**
+ * @property mixed $type
+ * @property mixed $file_type
+ * @property mixed $filters
+ */
 class ExportFormRequest extends FormRequest
 {
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Abstracts;
 
+use App\Enums\ExportFileType;
 use App\Models\Partner\Export;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\Builder;
@@ -40,9 +41,9 @@ abstract class Exporter implements FromQuery, WithTitle, WithHeadings, WithMappi
     public function getWriterType()
     {
         $fileType = [
-            'csv' => Excel::CSV,
-            'xls' => Excel::XLS,
-            'xlsx' => Excel::XLSX
+            ExportFileType::csv->name => Excel::CSV,
+            ExportFileType::xls->name => Excel::XLS,
+            ExportFileType::xlsx->name => Excel::XLSX
         ];
 
         return $fileType[$this->export->file_type];
