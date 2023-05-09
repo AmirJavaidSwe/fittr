@@ -8,116 +8,66 @@ use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
+// use Illuminate\Queue\SerializesModels; // this trait runs __unserialize() on model when we don't have DB connection 
 use Illuminate\Queue\Middleware\WithoutOverlapping;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Crypt;
 
 class ProcessExport implements ShouldQueue, ShouldBeUnique
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable;
 
-    public $export;
+    private Export $export;
 
-    /**
-     * Create a new job instance.
-     */
     public function __construct(Export $export)
     {
-        // dd($export);
         $this->export = $export;
     }
 
-    /**
-     * The unique ID of the job.
-     */
     public function uniqueId(): int
     {
-        // dd($this->export->id);
         return $this->export->id;
     }
 
-    /**
-     * Get the middleware the job should pass through.
-     *
-     * @return array<int, object>
-     */
     public function middleware(): array
     {
         return [(new WithoutOverlapping($this->export->id))->expireAfter(300)];
     }
 
-    /**
-     * Execute the job.
-     */
-    public function handle(): void
+    public function setPartnerConnection(): void
     {
-        $enum = ExportType::from($this->export->export_type);
-        $filters = $this->export->filters;
-        $model = $enum->model();
-        // $fields = $enum->fields();
+        $business = User::partner()
+                        ->select('name', 'business_id')
+                        ->where('id', $this->export->created_by)
+                        ->first()->business;
 
-        //this is just a demo of export job
-        // $model is ok for basic exports, however most exports will require extra processing for columns
-        // We need to add abstraction and make this job a proxy calling new App/Exports/{$enum->ExportClass}
-
-        // Idea is: create a class for each of the supported exports under App/Exports namespace
-        // Make this job colling new export class, passing in it's constructor filter_params, produce data and store in the file, return results object back to the job (filename, size, ect)
-
-        $created_by = $this->export->created_by; //creator may be a staff user of partner admin, need to add business_id
-        $partner = User::partner()
-            ->select(
-                'db_host',
-                'db_port',
-                'db_name',
-                'db_user',
-                'db_password',
-            )
-            ->where('id', $created_by)
-            ->first();
-
-        //Set connection to database: (run time)
         Config::set('database.connections.mysql_partner', [
             'driver' => 'mysql',
-            'host' => $partner->db_host,
-            'port' => $partner->db_port,
-            'database' => $partner->db_name,
-            'username' => $partner->db_user,
-            'password' => Crypt::decryptString($partner->db_password),
+            'host' => $business->db_host,
+            'port' => $business->db_port,
+            'database' => $business->db_name,
+            'username' => $business->db_user,
+            'password' => Crypt::decryptString($business->db_password),
             'charset'   => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
             'prefix'    => '',
             'strict'    => true,
         ]);
+    }
 
-        $results = $model
-            ->when($filters, function (Builder $query, array $filters) {
-                foreach ($filters as $key => $value) {
-                    $type = ExportType::operator($key);
-                    $method = $type[0];
-                    $operator = $type[1];
-                    $cast = $type[2];
+    public function handle(): void
+    {
+        $this->setPartnerConnection();
 
-                    if($cast == 'datetime'){
-                        $value = Carbon::parse($value);
-                    }
-                    $query->{$method}($key, $operator, $value);
-                }
-            })
-            ->get();
+        $this->export->setStatusProcessing();
 
-        //CREATE AND STORE FILE
+        $response = ExportType::from($this->export->type)->get($this->export);
 
-        $this->export->update([
-            // 'csv_file_name' => 'string 1024',
-            'file_rows' => rand(10, 100),
-            'file_size' => rand(100, 10000),
-            'completed_at' => now(),
+        $this->export->update($response);
 
-        ]);
+        // above update() sets 'status' and 'completed_at'
+        // $this->export->setStatusCompleted();
     }
 }

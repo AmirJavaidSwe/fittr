@@ -24,6 +24,8 @@ use App\Http\Controllers\Partner\PartnerAmenityController;
 use App\Http\Controllers\Partner\PartnerClassLessonController;
 use App\Http\Controllers\Partner\PartnerStudioController;
 use App\Http\Controllers\Partner\PartnerClassTypeController;
+use App\Http\Controllers\Partner\PartnerMembershipPlanController;
+use App\Http\Controllers\Partner\PartnerClassPackController;
 use App\Http\Controllers\Partner\PartnerExportController;
 use App\Http\Controllers\Admin\RoleController;
 
@@ -51,7 +53,7 @@ Route::domain('app.'.config('app.domain'))->group(function () {
         config('jetstream.auth_session'),
         'verified',
     ])->group(function () {
-        
+
         //ADMIN
         Route::middleware(['auth.role:admin'])->prefix('admin')->name('admin.')->group(function () {
             Route::get('/demo', [DemoController::class, 'index'])->name('demo');
@@ -60,6 +62,7 @@ Route::domain('app.'.config('app.domain'))->group(function () {
                 Route::get('/partners', 'index')->name('index');
                 Route::get('/partners/{id}', 'show')->name('show');
                 Route::get('/partners/{id}/edit', 'edit')->name('edit');
+                Route::get('/partners/{id}/login_as', 'loginAs')->name('login-as');
                 Route::put('/partners/{id}', 'update')->name('update');
                 Route::delete('/partners/{id}', 'destroy')->name('destroy');
                 Route::post('/partners', 'store')->name('store');
@@ -86,20 +89,20 @@ Route::domain('app.'.config('app.domain'))->group(function () {
             });
             Route::resource('roles', RoleController::class);
         });
-    
-        //PARTNER 
+
+        //PARTNER
         // \App\Http\Middleware\ConnectPartnerDatabase::class runs on every request, see App\Http\Kernel $middlewareGroups
         // ConnectPartnerDatabase must run before SubstituteBindings in order for implicit model bindings to work
-    
+
         Route::middleware(['auth.role:partner'])->name('partner.')->group(function () {
             Route::get('/dashboard', [PartnerDashboardController::class, 'index'])->name('dashboard');
-    
+
             Route::get('/subscriptions', [PartnerSubscriptionController::class, 'index'])->name('subscriptions.index');
             Route::put('/subscriptions/{subscription}/cancel', [PartnerSubscriptionController::class, 'cancel'])->name('subscriptions.cancel');
             Route::post('/subscriptions/{package}/store', [PartnerSubscriptionController::class, 'store'])->name('subscriptions.store');
-    
+
             Route::get('/contact-us', [PartnerDashboardController::class, 'index'])->name('contact.index');
-    
+
             Route::get('/settings', [BusinessSettingController::class, 'index'])->name('settings.index');
             Route::get('/settings/general-details', [BusinessSettingController::class, 'generalDetails'])->name('settings.general-details');
             Route::put('/settings/general-details', [BusinessSettingController::class, 'generalDetailsUpdate']);
@@ -109,7 +112,7 @@ Route::domain('app.'.config('app.domain'))->group(function () {
             Route::put('/settings/general-formats', [BusinessSettingController::class, 'generalFormatsUpdate']);
             Route::get('/settings/integrations', [BusinessSettingController::class, 'integrations'])->name('settings.integrations');
             Route::put('/settings/integrations', [BusinessSettingController::class, 'integrationsUpdate']);
-    
+
             Route::get('/settings/service-store-general', [BusinessSettingController::class, 'serviceStoreGeneral'])->name('settings.service-store-general');
             Route::put('/settings/service-store-general', [BusinessSettingController::class, 'serviceStoreGeneralUpdate']);
             Route::get('/settings/service-store-header', [BusinessSettingController::class, 'serviceStoreHeader'])->name('settings.service-store-header');
@@ -118,7 +121,7 @@ Route::domain('app.'.config('app.domain'))->group(function () {
             Route::put('/settings/service-store-seo', [BusinessSettingController::class, 'serviceStoreSeoUpdate']);
             Route::get('/settings/service-store-code', [BusinessSettingController::class, 'serviceStoreCode'])->name('settings.service-store-code');
             Route::put('/settings/service-store-code', [BusinessSettingController::class, 'serviceStoreCodeUpdate']);
-    
+
             // Route::get('/settings/service-store-widgets', [BusinessSettingController::class, 'serviceStoreWidgets'])->name('settings.service-store-widgets');
             // Route::put('/settings/service-store-widgets', [BusinessSettingController::class, 'serviceStoreWidgetsUpdate']);
             Route::get('/settings/service-store-waivers', [BusinessSettingController::class, 'serviceStoreWaivers'])->name('settings.service-store-waivers');
@@ -135,13 +138,17 @@ Route::domain('app.'.config('app.domain'))->group(function () {
             Route::resource('classes', PartnerClassLessonController::class);
             Route::resource('studios', PartnerStudioController::class);
             Route::resource('classtypes', PartnerClassTypeController::class);
+            Route::resource('plans', PartnerMembershipPlanController::class);
+            Route::resource('classpacks', PartnerClassPackController::class);
 
             Route::get('/exports', [PartnerExportController::class, 'index'])->name('exports.index');
             Route::get('/exports/{export}', [PartnerExportController::class, 'show'])->name('exports.show');
+            Route::get('exports/download/{token}', [PartnerExportController::class, 'download'])->name('exports.download');
+            Route::get('exports/download/request/{export}', [PartnerExportController::class, 'requestToDownload'])->name('exports.request-to-download');
             Route::delete('/exports/{export}', [PartnerExportController::class, 'destroy'])->name('exports.destroy');
             Route::post('/exports', [PartnerExportController::class, 'store']);
         });
-    
+
     });
 });
 

@@ -28,7 +28,7 @@ class ClassFormRequest extends FormRequest
         $rules =  [
             'title' => 'required|string|max:255',
             'instructor_id' => 'required|integer|exists:mysql_partner.users,id',
-            'classtype_id' => 'required|integer|exists:mysql_partner.classtypes,id',
+            'class_type_id' => 'required|integer|exists:mysql_partner.class_types,id',
             'studio_id' => 'required|integer|exists:mysql_partner.studios,id',
             'start_date' => 'required|date',
             'end_date' => 'required|date',
@@ -36,7 +36,7 @@ class ClassFormRequest extends FormRequest
             'week_days' => 'required_if:does_repeat,true|nullable',
             'week_days.*' => 'in:0,1,2,3,4,5,6',
             'status' => ['required', new Enum(ClassStatus::class)],
-            'is_offpeak' => 'boolean',
+            'is_off_peak' => 'boolean',
             'does_repeat' => 'boolean',
         ];
 

@@ -4,7 +4,7 @@ import { DateTime } from "luxon";
 import FormSection from "@/Components/FormSection.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import CardIcon from '@/Components/CardIcon.vue';
-import { 
+import {
     faSignHanging,
     faBookOpen,
     faUserTie,
@@ -120,7 +120,7 @@ const form = useForm(props.form_data);
                     </template>
 
                     <template #title>
-                        {{props.form_data.is_offpeak ? 'YES': 'NO'}}
+                        {{props.form_data.is_off_peak ? 'YES': 'NO'}}
                     </template>
 
                     <template #default>

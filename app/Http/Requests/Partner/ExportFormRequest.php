@@ -2,11 +2,17 @@
 
 namespace App\Http\Requests\Partner;
 
+use App\Enums\ExportFileType;
 use App\Enums\ExportType;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 // use Illuminate\Validation\Rules\Enum;
 
+/**
+ * @property mixed $type
+ * @property mixed $file_type
+ * @property mixed $filters
+ */
 class ExportFormRequest extends FormRequest
 {
     /**
@@ -27,11 +33,11 @@ class ExportFormRequest extends FormRequest
      */
     public function rules()
     {
-        $rules =  [
-            'export_type' => ['required', Rule::in(ExportType::all())],
+        return [
+            'type' => ['required', Rule::in(ExportType::all())],
+            'file_type' => ['required', Rule::in(ExportFileType::all())],
+            'filters' => 'nullable|array',
         ];
-
-        return $rules;
     }
 
     /**
@@ -42,7 +48,7 @@ class ExportFormRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'export_type.in' => __('Unsupported export type'),
+            'type.in' => __('Unsupported export type'),
         ];
     }
 }

@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue';
-import { 
+import {
     faMoneyBill1,
     faGears,
     faCodeCompare,
@@ -8,6 +8,7 @@ import {
     faCode,
     faFileContract,
     faTicket,
+    faTicketSimple,
     faCreditCard,
     faFileInvoice,
     faPeopleGroup,
@@ -120,6 +121,40 @@ import CardIcon from '@/Components/CardIcon.vue';
             </div>
             <div class="space-y-4">
                 <div class="text-xl font-bold tracking-tight text-gray-900">
+                    Memberships plans / Class Packs
+                </div>
+
+                <CardIcon :card-link="route('partner.plans.index')">
+                    <template #icon>
+                        <font-awesome-icon :icon="faTicket" />
+                    </template>
+
+                    <template #title>
+                        Memberships
+                    </template>
+
+                    <template #default>
+                        Manage subscription plans (todo)
+                    </template>
+                </CardIcon>
+
+                <CardIcon :card-link="route('partner.classpacks.index')">
+                    <template #icon>
+                        <font-awesome-icon :icon="faTicketSimple" />
+                    </template>
+
+                    <template #title>
+                        Class Packs
+                    </template>
+
+                    <template #default>
+                        Manage class packs
+                    </template>
+                </CardIcon>
+
+            </div>
+            <div class="space-y-4">
+                <div class="text-xl font-bold tracking-tight text-gray-900">
                     Online Store
                 </div>
 
@@ -135,7 +170,7 @@ import CardIcon from '@/Components/CardIcon.vue';
                     <template #default>
                         Customise web store looks and features
                     </template>
-                </CardIcon>     
+                </CardIcon>
 
                 <CardIcon card-link="#">
                     <template #icon>
@@ -227,7 +262,7 @@ import CardIcon from '@/Components/CardIcon.vue';
                     <template #default>
                         Manage your staff and permissions
                     </template>
-                </CardIcon>     
+                </CardIcon>
 
                 <CardIcon card-link="#">
                     <template #icon>

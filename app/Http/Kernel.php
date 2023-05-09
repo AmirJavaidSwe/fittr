@@ -79,7 +79,12 @@ class Kernel extends HttpKernel
      * @var string[]
      */
     protected $middlewarePriority = [
+        \App\Http\Middleware\Authenticate::class,
+        \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+        \Illuminate\Session\Middleware\AuthenticateSession::class,
+        \App\Http\Middleware\AuthenticateRole::class,
         \App\Http\Middleware\AuthenticateSubdomain::class,
+        \App\Http\Middleware\ConnectPartnerDatabase::class,
         \App\Http\Middleware\HandleInertiaRequests::class,
     ];
 }

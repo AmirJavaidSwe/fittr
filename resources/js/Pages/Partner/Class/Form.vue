@@ -45,8 +45,8 @@ const updateWeekDays = (index) => {
     }
 }
 const formatDate = computed(() => {
-    return props.business_seetings.date_format.format_js + ' ' +
-           props.business_seetings.time_format.format_js;
+    return props.business_seetings.date_format?.format_js + ' ' +
+           props.business_seetings.time_format?.format_js;
 });
 
 </script>
@@ -143,7 +143,7 @@ const formatDate = computed(() => {
             <div class="">
                 <InputLabel for="classtype" value="Class Type"/>
                 <Multiselect
-                    v-model="form.classtype_id"
+                    v-model="form.class_type_id"
                     :options="classtypes"
                     :searchable="true"
                     :close-on-select="true"
@@ -151,7 +151,7 @@ const formatDate = computed(() => {
                     placeholder="Select Class Type"
                     >
                 </Multiselect>
-                <InputError :message="form.errors.classtype_id" class="mt-2"/>
+                <InputError :message="form.errors.class_type_id" class="mt-2"/>
             </div>
 
             <!-- Studios -->
@@ -171,7 +171,7 @@ const formatDate = computed(() => {
             <!-- Off-peak -->
             <div class="">
                 <Switcher
-                    v-model="form.is_offpeak"
+                    v-model="form.is_off_peak"
                     title="Off Peak"
                     description="Would you like to tag the class as off peak?"/>
             </div>
@@ -184,7 +184,7 @@ const formatDate = computed(() => {
                     description="Enable to create multiple classes."/>
             </div>
 
-            
+
             <div v-if="form.does_repeat">
                 <InputLabel for="repeat_end_date" value="Repeat until (cutout date)"/>
                 <Datepicker
@@ -205,7 +205,7 @@ const formatDate = computed(() => {
                             class="mb-2"/>
                 <div class="text-xs">Additional classes will be created with same settings but on the days you selected until cutout date inclusive</div>
                 <div class="items-center w-full text-sm font-medium text-gray-900 bg-white flex flex-wrap text-white gap-2 cursor-pointer">
-                    <label 
+                    <label
                         v-for="(weekDay, index) in weekDays"
                         :for="'weekday'+index" class="border border-gray-200 flex font-medium gap-4 items-center p-3 py-2 rounded-md text-gray-900 text-sm">
                         <input :id="'weekday'+index"
@@ -219,7 +219,7 @@ const formatDate = computed(() => {
                 </div>
                 <InputError :message="form.errors.week_days" class="mt-2" />
             </div>
-           
+
 
         </template>
 

@@ -117,7 +117,7 @@ const deleteItem = () => {
                 :links="classtypes.links"/>
 
             <p class="p-2 text-xs">Viewing {{classtypes.from}} - {{classtypes.to}} of {{classtypes.total}} results</p>
-        </template>    
+        </template>
     </data-table-layout>
     <!-- Delete Confirmation Modal -->
     <ConfirmationModal :show="itemDeleting" @close="itemDeleting = false">

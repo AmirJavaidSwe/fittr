@@ -12,7 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('classtypes', function (Blueprint $table) {
+        Schema::create('class_types', function (Blueprint $table) {
             $table->id();
             $table->enum('status', StateType::all())->default(StateType::INACTIVE->value);
             $table->string('title', 255);
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('classtypes');
+        Schema::dropIfExists('class_types');
     }
 };

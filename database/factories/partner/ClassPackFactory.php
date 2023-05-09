@@ -5,9 +5,9 @@ namespace Database\Factories\Partner;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Creditpack>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ClassPack>
  */
-class CreditpackFactory extends Factory
+class ClassPackFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,8 +17,7 @@ class CreditpackFactory extends Factory
     public function definition(): array
     {
         return [
-            'line1' => $this->faker->sentence,
-            'credits' => $this->faker->numberBetween(1, 10),
+            'sessions' => $this->faker->numberBetween(1, 10),
             'price' => $this->faker->randomFloat(2, 10, 30),
         ];
     }

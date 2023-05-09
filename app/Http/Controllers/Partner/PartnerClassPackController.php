@@ -2,14 +2,22 @@
 
 namespace App\Http\Controllers\Partner;
 
+use App\Enums\ClasspackType;
+use App\Enums\ClasspackExpirationPeriod;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Partner\ClasstypeFormRequest;
+use App\Http\Requests\Partner\ClasspackFormRequest;
+use App\Models\Partner\ClassPack;
 use App\Models\Partner\ClassType;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class PartnerClassTypeController extends Controller
+class PartnerClassPackController extends Controller
 {
+    // public function __construct()
+    // {
+        
+    // }
+
     /**
      * Display a listing of the resource.
      *
@@ -22,13 +30,12 @@ class PartnerClassTypeController extends Controller
         $this->order_by = $request->query('order_by', 'id');
         $this->order_dir = $request->query('order_dir', 'desc');
 
-        return Inertia::render('Partner/Classtype/Index', [
-            'classtypes' => ClassType::orderBy($this->order_by, $this->order_dir)
+        return Inertia::render('Partner/Classpack/Index', [
+            'classpacks' => ClassPack::orderBy($this->order_by, $this->order_dir)
                 ->when($this->search, function ($query) {
                     $query->where(function($query) {
                         $query->orWhere('id', intval($this->search))
-                              ->orWhere('title', 'LIKE', '%'.$this->search.'%')
-                              ->orWhere('description', 'LIKE', '%'.$this->search.'%');
+                              ->orWhere('title', 'LIKE', '%'.$this->search.'%');
                     });
                 })
                 ->paginate($this->per_page)
@@ -37,7 +44,7 @@ class PartnerClassTypeController extends Controller
             'per_page' => intval($this->per_page),
             'order_by' => $this->order_by,
             'order_dir' => $this->order_dir,
-            'page_title' => __('Settings - Class Types'),
+            'page_title' => __('Settings - Class Packs'),
             'header' => array(
                 [
                     'title' => __('Settings'),
@@ -48,10 +55,13 @@ class PartnerClassTypeController extends Controller
                     'link' => null,
                 ],
                 [
-                    'title' => __('Class Types'),
+                    'title' => __('Class Packs'),
                     'link' => null,
                 ],
             ),
+            'options_types' => ClasspackType::labels(),
+            'options_periods' => ClasspackExpirationPeriod::labels(),
+            'classtypes' => ClassType::orderBy('id', 'desc')->pluck('title', 'id'),
         ]);
     }
 
@@ -62,8 +72,8 @@ class PartnerClassTypeController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Partner/Classtype/Create', [
-            'page_title' => __('Create Class Type'),
+        return Inertia::render('Partner/Classpack/Create', [
+            'page_title' => __('Create Class Pack'),
             'header' => array(
                 [
                     'title' => __('Settings'),
@@ -74,8 +84,8 @@ class PartnerClassTypeController extends Controller
                     'link' => null,
                 ],
                 [
-                    'title' => __('Class Types'),
-                    'link' => route('partner.classtypes.index'),
+                    'title' => __('Class Packs'),
+                    'link' => route('partner.classpacks.index'),
                 ],
                 [
                     'title' => '/',
@@ -86,32 +96,35 @@ class PartnerClassTypeController extends Controller
                     'link' => null,
                 ],
             ),
+            'options_types' => ClasspackType::labels(),
+            'options_periods' => ClasspackExpirationPeriod::labels(),
+            'classtypes' => ClassType::orderBy('id', 'desc')->pluck('title', 'id'),
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\Partner\ClasstypeFormRequest  $request
+     * @param  \App\Http\Requests\Partner\ClasspackFormRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ClasstypeFormRequest $request)
+    public function store(ClasspackFormRequest $request)
     {
-        ClassType::create($request->validated());
+        ClassPack::create($request->validated());
 
-        return $this->redirectBackSuccess(__('Class Type created successfully'), 'partner.classtypes.index');
+        return $this->redirectBackSuccess(__('Class Pack created successfully'), 'partner.classpacks.index');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Partner\ClassType  $classtype
+     * @param  \App\Models\Partner\ClassPack  $classpack
      * @return \Illuminate\Http\Response
      */
-    public function show(ClassType $classtype)
+    public function show(ClassPack $classpack)
     {
-        return Inertia::render('Partner/Classtype/Show', [
-            'page_title' => __('Class Type details'),
+        return Inertia::render('Partner/Classpack/Show', [
+            'page_title' => __('Class Pack details'),
             'header' => array(
                 [
                     'title' => __('Settings'),
@@ -122,32 +135,32 @@ class PartnerClassTypeController extends Controller
                     'link' => null,
                 ],
                 [
-                    'title' => __('Class Types'),
-                    'link' => route('partner.classtypes.index'),
+                    'title' => __('Class Packs'),
+                    'link' => route('partner.classpacks.index'),
                 ],
                 [
                     'title' => '/',
                     'link' => null,
                 ],
                 [
-                    'title' => __('Class Type details'),
+                    'title' => __('Class Pack details'),
                     'link' => null,
                 ],
             ),
-            'classtype' => $classtype,
+            'classpack' => $classpack,
         ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Partner\ClassType  $classtype
+     * @param  \App\Models\Partner\ClassPack  $classtype
      * @return \Illuminate\Http\Response
      */
-    public function edit(ClassType $classtype)
+    public function edit(ClassPack $classpack)
     {
-        return Inertia::render('Partner/Classtype/Edit', [
-            'page_title' => __('Edit Class Type'),
+        return Inertia::render('Partner/Classpack/Edit', [
+            'page_title' => __('Edit Class Pack'),
             'header' => array(
                 [
                     'title' => __('Settings'),
@@ -158,46 +171,49 @@ class PartnerClassTypeController extends Controller
                     'link' => null,
                 ],
                 [
-                    'title' => __('Class Types'),
-                    'link' => route('partner.classtypes.index'),
+                    'title' => __('Class Packs'),
+                    'link' => route('partner.classpacks.index'),
                 ],
                 [
                     'title' => '/',
                     'link' => null,
                 ],
                 [
-                    'title' => __('Edit Class Type'),
+                    'title' => __('Edit Class Pack'),
                     'link' => null,
                 ],
             ),
-            'classtype' => $classtype
+            'classpack' => $classpack,
+            'options_types' => ClasspackType::labels(),
+            'options_periods' => ClasspackExpirationPeriod::labels(),
+            'classtypes' => ClassType::orderBy('id', 'desc')->pluck('title', 'id'),
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\Partner\ClasstypeFormRequest  $request
-     * @param  \App\Models\Partner\ClassType  $classtype
+     * @param  \App\Http\Requests\Partner\ClasspackFormRequest  $request
+     * @param  \App\Models\Partner\ClassPack  $classpack
      * @return \Illuminate\Http\Response
      */
-    public function update(ClasstypeFormRequest $request, ClassType $classtype)
+    public function update(ClasspackFormRequest $request, ClassPack $classpack)
     {
-        $classtype->update($request->validated());
+        $classpack->update($request->validated());
 
-        return $this->redirectBackSuccess(__('Class Type updated successfully'));
+        return $this->redirectBackSuccess(__('Class Pack updated successfully'));
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Partner\ClassType  $classtype
+     * @param  \App\Models\Partner\ClassPack  $classpack
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ClassType $classtype)
+    public function destroy(ClassPack $classpack)
     {
-        $classtype->delete();
+        $classpack->delete();
 
-        return $this->redirectBackSuccess(__('Class Type deleted successfully'), 'partner.classtypes.index');
+        return $this->redirectBackSuccess(__('Class Pack deleted successfully'), 'partner.classpacks.index');
     }
 }
