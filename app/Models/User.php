@@ -121,7 +121,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     protected function getUserRolesAttribute()
     {
-        return $this->roles()->pluck('name')->toArray();
+        return $this->roles()->pluck('title')->toArray();
     }
 
     //Local scopes

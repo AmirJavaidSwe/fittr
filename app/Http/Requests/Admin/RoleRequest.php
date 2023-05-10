@@ -16,6 +16,7 @@ class RoleRequest extends FormRequest
      */
     public function authorize()
     {
+        //redo
         return auth()->user() ? true : false;
     }
 
@@ -26,14 +27,16 @@ class RoleRequest extends FormRequest
      */
     public function rules()
     {
+        //redo all, this can be just a single line only!
+
         switch (strtoupper($this->method())) {
             case 'POST': // for store method
                 return [
-                    'name' => [
+                    'title' => [
                         'required',
                         'string',
                         'max:191',
-                        Rule::unique('roles', 'name')->whereNull('deleted_at')
+                        Rule::unique('roles', 'title')->whereNull('deleted_at')
                     ]
                 ];
                 break;
@@ -41,11 +44,11 @@ class RoleRequest extends FormRequest
 
                     $role = Role::where('slug', request()->slug)->first();
                     return [
-                        'name' => [
+                        'title' => [
                             'required',
                             'string',
                             'max:191',
-                            Rule::unique('roles', 'name')->ignore($role->id)->whereNull('deleted_at')
+                            Rule::unique('roles', 'title')->ignore($role->id)->whereNull('deleted_at')
                         ]
                 ];
                 break;
@@ -53,11 +56,11 @@ class RoleRequest extends FormRequest
 
                     $role = Role::where('slug', request()->slug)->first();
                     return [
-                        'name' => [
+                        'title' => [
                             'required',
                             'string',
                             'max:191',
-                            Rule::unique('roles', 'name')->ignore($role->id)->whereNull('deleted_at')
+                            Rule::unique('roles', 'title')->ignore($role->id)->whereNull('deleted_at')
                         ]
                 ];
                 break;

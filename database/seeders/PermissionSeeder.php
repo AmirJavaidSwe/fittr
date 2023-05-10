@@ -7,174 +7,133 @@ use App\Models\Permission;
 use Illuminate\Support\Str;
 use App\Models\SystemModule;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Route;
 
 class PermissionSeeder extends Seeder
 {
     /**
-     * Run the database seeds. php artisan db:seed --class=RoleAndPermissionSeeder
+     * Run the database seeds. php artisan db:seed --class=PermissionSeeder
      *
      * @return void
      */
     public function run()
     {
+        // Controller to Policy mapping:
+        // index => viewAny
+        // show => view
+        // create, store => create
+        // edit, update => update
+        // destroy => destroy
+        // restore => restore
+        // import => import
+        // export => export
 
         $modules_and_permissions = [
             'admin' => [
                 'dashboard' => [
-                    'View'
-                ],
-                'Partner performance' => [
-                    'View'
+                    'viewAny',
                 ],
                 'Partner management' => [
-                    'View',
-                    'Create',
-                    'Edit',
-                    'view Any',
-                    'Delete',
-                    'Restore'
+                    'viewAny',
+                    'view',
+                    'create',
+                    'update',
+                    'destroy',
+                    'restore',
                 ],
-                'AWS Instances' => [],
                 'Settings' => [
-                    'View'
+                    'viewAny',
                 ],
                 'Packages' => [
-                    'View',
-                    'Create',
-                    'Edit',
-                    'view Any',
-                    'Delete',
-                    'Restore'
+                    'viewAny',
+                    'view',
+                    'create',
+                    'update',
+                    'destroy',
+                    'restore',
                 ],
                 'Admin Users' => [
-                    'View',
-                    'Create',
-                    'Edit',
-                    'view Any',
-                    'Delete',
-                    'Restore'
+                    'viewAny',
+                    'view',
                 ],
                 'Roles' => [
-                    'View',
-                    'Create',
-                    'Edit',
-                    'view Any',
-                    'Delete',
-                    'Restore'
+                    'viewAny',
+                    'view',
                 ],
             ],
             'partner' => [
                 'Classes' => [
-                    'View',
-                    'Create',
-                    'Edit',
-                    'view Any',
-                    'Delete',
-                    'Restore',
-                    'Import',
-                    'Export',
+                    'viewAny',
+                    'view',
+                    'create',
+                    'update',
+                    'destroy',
+                    'restore',
+                    'import',
+                    'export',
                 ],
                 'Members' => [
-                    'View',
-                    'Create',
-                    'Edit',
-                    'view Any',
-                    'Delete',
-                    'Restore',
-                    'Import',
-                    'Export',
+                    'viewAny',
+                    'view',
+                    'create',
+                    'update',
+                    'destroy',
+                    'restore',
+                    'import',
+                    'export',
                 ],
                 'Instructors' => [
-                    'View',
-                    'Create',
-                    'Edit',
-                    'view Any',
-                    'Delete',
-                    'Restore',
-                    'Import',
-                    'Export',
-                ],
-                'Pricing' => [
-                    'View',
+                    'viewAny',
+                    'view',
+                    'create',
+                    'update',
+                    'destroy',
+                    'restore',
+                    'import',
+                    'export',
                 ],
                 'Partner Settings' => [
-                    'View',
+                    'viewAny',
                 ],
-                'Business' => [
-                    'View',
-                    'Edit'
-                ],
-                'Tax' => [
-                    'View',
-                ],
-                'External App' => [
-                    'View',
-                ],
-                'Team' => [
-                    'View',
-                    'Create',
-                    'Edit',
-                    'can-show',
-                    'Delete',
-                    'Restore',
-                    'Import',
-                    'Export',
+                'Business Settings' => [
+                    'viewAny',
+                    'view',
+                    'update',
                 ],
                 'Studio Class Type' => [
-                    'View',
-                    'Create',
-                    'Edit',
-                    'can-show',
-                    'Delete',
-                    'Restore',
-                    'Import',
-                    'Export',
+                    'viewAny',
+                    'view',
+                    'create',
+                    'update',
+                    'destroy',
+                    'restore',
                 ],
                 'Studio Amenities' => [
-                    'View',
-                    'Create',
-                    'Edit',
-                    'can-show',
-                    'Delete',
-                    'Restore',
-                    'Import',
-                    'Export',
-                ],
-                'Web Store' => [
-                    'View',
-                    'Edit',
-                ],
-                'Waivers' => [
-                    'View',
-                    'Edit',
-                ],
-                'Business Payments' => [
-                    'View'
+                    'viewAny',
+                    'view',
+                    'create',
+                    'update',
+                    'destroy',
+                    'restore',
                 ],
             ]
         ];
-
+        
         foreach ($modules_and_permissions as $moduleFor => $modulesData) {
             foreach ($modulesData as $key => $value) {
-                $name = ucwords(trim($key));
-                $slug = str_replace(' ', '-', strtolower(trim($key)));
-                $module = SystemModule::where('slug', $slug)->where('is_for', $moduleFor)->first();
-                if (!$module) {
-                    $module = SystemModule::create([
-                        'name' => ucwords(trim($key)),
-                        'slug' => str_replace(' ', '-', strtolower($key)),
-                        'is_for' => $moduleFor,
-                    ]);
-                }
+                $title = ucwords(trim($key));
+                $slug = Str::slug($title);
+    
+                $module = SystemModule::updateOrCreate(
+                    ['slug' => $slug, 'is_for' => $moduleFor],
+                    ['title' => $title]
+                );
+
                 if (!empty($value)) {
-                    foreach ($value as $k => $v) {
-                        $name = ucwords(trim($v));
-                        $slug = str_replace(' ', '-', strtolower(trim($v)));
-                        if (!(Permission::where('system_module_id', $module->id)->where('slug', $slug)->exists())) {
+                    foreach ($value as $policy_method) {
+                        if (!(Permission::where('system_module_id', $module->id)->where('slug', $policy_method)->exists())) {
                             Permission::create([
-                                'name' => $name,
-                                'slug' => $slug,
+                                'title' => $policy_method,
+                                'slug' => $policy_method,
                                 'system_module_id' => $module->id,
                             ]);
                         }

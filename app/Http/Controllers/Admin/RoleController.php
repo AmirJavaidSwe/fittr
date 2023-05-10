@@ -34,18 +34,16 @@ class RoleController extends Controller
         return Inertia::render('Admin/Roles/Index', [
             'roles' => Role::orderBy($this->order_by, $this->order_dir)
                 ->when($this->search, function ($query) {
-                    $query->where('name', 'LIKE', '%' . $this->search . '%');
+                    $query->where('title', 'LIKE', '%' . $this->search . '%');
                 })
                 ->paginate($this->per_page)
                 ->withQueryString()
                 //AbstractPaginator@through(), transforms chunk
-                ->through(fn ($role, $index) => [
-                    'indexing' => ++$index,
+                ->through(fn ($role) => [
                     'id' => $role->id,
-                    'name' => $role->name,
+                    'title' => $role->title,
                     'slug' => $role->slug,
                     'created_at' => $role->created_at,
-                    // 'created_by' => $this->createdBy($role),
                     'url_show' => URL::route('admin.roles.show', $role->slug),
                     'url_edit' => URL::route('admin.roles.edit', $role->slug),
                 ]),
@@ -79,18 +77,18 @@ class RoleController extends Controller
     public function store(RoleRequest $request)
     {
         // Gate::authorize('create', Role::class);
-        $request->merge(['slug' => Str::slug($request->name)]);
+        $request->merge(['slug' => Str::slug($request->title)]);
 
         $role = Role::where('slug', $request->slug)->first();
         if(!$role) {
-            $role = Role::create($request->only('name', 'slug'));
+            $role = Role::create($request->only('title', 'slug'));
         }
 
         if(count($request->permissions)) {
             $role->permissions()->sync($request->permissions);
         }
 
-        return redirect()->route('admin.roles.index')->with('flash_type', 'success')->with('flash_timestamp', time());
+        return $this->redirectBackSuccess(__('Role created'));
     }
 
     /**
@@ -99,8 +97,7 @@ class RoleController extends Controller
     public function show($slug)
     {
         // Gate::authorize('view', Role::class);
-        $role = Role::where('slug', $slug)->firstOrFail();
-        $role->created_by = $this->createdBy($role);
+        $role = Role::where('slug', $slug)->with(['business'])->firstOrFail();
         return Inertia::render('Admin/Roles/Show', [
             'role' => $role,
             'page_title' => __('Role details'),
@@ -130,14 +127,12 @@ class RoleController extends Controller
     public function update(RoleRequest $request, $slug)
     {
         $role = Role::where('slug', $slug)->firstOrFail();
-        $request->merge(['slug' => Str::slug($request->name)]);
-        $role->update($request->only('name', 'slug'));
+        $request->merge(['slug' => Str::slug($request->title)]);
+        $role->update($request->only('title', 'slug'));
         if(count($request->permissions)) {
             $role->permissions()->sync($request->permissions);
         }
-        session()->flash('flash_type', 'success');
-        session()->flash('flash_timestamp', time());
-        return redirect()->route('admin.roles.index')->with('flash_timestamp', time());
+        return $this->redirectBackSuccess(__('Role updated'), 'admin.roles.index');
     }
 
     /**
@@ -151,22 +146,6 @@ class RoleController extends Controller
         
         $role->delete();
 
-        return redirect()->route('admin.roles.index')->with('flash_timestamp', time());
-    }
-
-    public function createdBy($role) {
-        $user = User::find($role->created_by);
-        if($user) {
-            $created_by = $user->name;
-            if($user->role) {
-                $created_by .= ' ('.ucwords($user->role).')';
-            }
-            if((!is_null($user->business_id)) && ($user->business && $user->business->name)) {
-                $created_by .= ' ('.ucwords($user->business->name).')';
-            }
-    
-            return $created_by;
-        }
-        return null;
+        return $this->redirectBackSuccess(__('Role deleted'), 'admin.roles.index');
     }
 }

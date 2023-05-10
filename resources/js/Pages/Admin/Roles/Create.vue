@@ -14,7 +14,7 @@ const allowAllPermissions = ref(false)
 const allPermissionIds = ref(roleHelpers.collectAllPermissions(props.modules))
 
 const form = useForm({
-    name: null,
+    title: null,
 });
 
 const togglePermission = (permissionId) => {
@@ -57,9 +57,9 @@ const create = () => {
         <template #form>
             <!-- Name -->
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="name" value="Name" />
-                <TextInput id="name" v-model="form.name" type="text" class="mt-1 block w-full" autocomplete="name" />
-                <InputError :message="form.errors.name" class="mt-2" />
+                <InputLabel for="title" value="Title" />
+                <TextInput id="title" v-model="form.title" type="text" class="mt-1 block w-full" />
+                <InputError :message="form.errors.title" class="mt-2" />
             </div>
             <Section>
                 <SectionTitle>
@@ -77,16 +77,16 @@ const create = () => {
                 <SectionBorder />
 
                 <dl class="max-w-md text-gray-900 divide-y divide-gray-200 dark:text-gray-900 dark:divide-gray-700">
-                    <template v-for="module in props.modules" :key="module.id">
+                    <template v-for="system_module in props.modules" :key="system_module.id">
                         <div class="flex flex-col pb-5 mb-5">
-                            <dt class="mt-2 mb-1 text-gray-500 md:text-lg dark:text-gray-400">{{ module.name }}</dt>
+                            <dt class="mt-2 mb-1 text-gray-500 md:text-lg dark:text-gray-400">{{ system_module.title }}</dt>
                             <div class="flex flex-row items-center justify-start">
-                                <template v-for="permission in module.permissions" :key="permission.id">
-                                    <Checkbox :id="module.slug + '-' + permission.slug" :value="permission.id"
+                                <template v-for="permission in system_module.permissions" :key="permission.id">
+                                    <Checkbox :id="system_module.slug + '-' + permission.slug" :value="permission.id"
                                         :checked="permissions.includes(permission.id)"
                                         @change="togglePermission(permission.id)" class="ml-2 mr-2">
                                     </Checkbox>
-                                    <InputLabel :for="module.slug + '-' + permission.slug" :value="permission.name" class="mr-3 w-full" />
+                                    <InputLabel :for="system_module.slug + '-' + permission.slug" :value="permission.title" class="mr-3 w-full" />
                                 </template>
                             </div>
                         </div>

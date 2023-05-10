@@ -3,22 +3,23 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Role extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'name', 'slug', 'created_by'
+        'title', 'slug'
     ];
 
     public function permissions(){
         return $this->belongsToMany(Permission::class);
     }
-    
-    public function user(){
-        return $this->belongsTo(User::class, 'created_by');
+
+    public function business(): BelongsTo
+    {
+        return $this->belongsTo(Business::class, 'business_id');
     }
 }

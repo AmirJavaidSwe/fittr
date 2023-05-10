@@ -67,9 +67,9 @@ watch(() => form.search, runSearch);
                         :class="form.order_by == 'id' ? 'border-indigo-500' : ''">
                         ID
                     </th>
-                    <th @click="setOrdering('name')" class="px-6 py-3 border-b cursor-pointer"
-                        :class="form.order_by == 'name' ? 'border-indigo-500' : ''">
-                        Name
+                    <th @click="setOrdering('title')" class="px-6 py-3 border-b cursor-pointer"
+                        :class="form.order_by == 'title' ? 'border-indigo-500' : ''">
+                        Title
                     </th>
                     <th @click="setOrdering('created_at')" class="px-6 py-3 border-b cursor-pointer"
                         :class="form.order_by == 'created_at' ? 'border-indigo-500' : ''">
@@ -85,8 +85,8 @@ watch(() => form.search, runSearch);
             <tbody>
                 <tr v-for="role in props.roles.data" :key="role.id"
                     class="border-b whitespace-nowrap bg-white hover:bg-gray-50">
-                    <td class="px-6 py-4">{{ role.indexing }}</td>
-                    <td class="px-6 py-4">{{ role.name }}</td>
+                    <td class="px-6 py-4">{{ role.id }}</td>
+                    <td class="px-6 py-4">{{ role.title }}</td>
                     <td class="px-6 py-4">{{ DateTime.fromISO(role.created_at).toLocaleString({
                         month: 'long',
                         day: 'numeric',

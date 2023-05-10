@@ -30,12 +30,16 @@ const props = defineProps({
 
         <dl class="max-w-md text-gray-900 divide-y divide-gray-200 dark:text-white dark:divide-gray-700">
             <div class="flex flex-col pb-3">
-                <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Name</dt>
-                <dd class="text-lg font-semibold text-gray-900 md:text-lg dark:text-gray-900">{{ role.name }}</dd>
+                <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Title</dt>
+                <dd class="text-lg font-semibold text-gray-900 md:text-lg dark:text-gray-900">{{ role.title }}</dd>
             </div>
             <div class="flex flex-col pb-3">
-                <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Created By</dt>
-                <dd class="text-lg font-semibold text-gray-900 md:text-lg dark:text-gray-900">{{ role.created_by }}</dd>
+                <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Source</dt>
+                <dd class="text-lg font-semibold text-gray-900 md:text-lg dark:text-gray-900">{{ role.source }}</dd>
+            </div>
+            <div v-if="role.business_id" class="flex flex-col pb-3">
+                <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Business ID</dt>
+                <dd class="text-lg font-semibold text-gray-900 md:text-lg dark:text-gray-900">{{ role.business_id }}</dd>
             </div>
             <div class="flex flex-col pb-3">
                 <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Created At</dt>

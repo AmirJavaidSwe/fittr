@@ -35,11 +35,11 @@ class UserSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now()
             ]);
-            $role = Role::whereSlug($user->source)->first();
-            DB::table('role_user')->insert([
-                'role_id' => $role->id,
-                'user_id' => $userId
-            ]);
+            // $role = Role::where('source', $user->source)->whereSlug($user->source)->first();
+            // DB::table('role_user')->insert([
+            //     'role_id' => $role->id,
+            //     'user_id' => $userId
+            // ]);
         }
     }
 }
