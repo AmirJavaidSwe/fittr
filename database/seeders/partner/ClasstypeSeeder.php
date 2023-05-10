@@ -2,7 +2,7 @@
 
 namespace Database\Seeders\Partner;
 
-use App\Models\Partner\Classtype;
+use App\Models\Partner\ClassType;
 use Illuminate\Database\Seeder;
 
 class ClasstypeSeeder extends Seeder
@@ -14,6 +14,6 @@ class ClasstypeSeeder extends Seeder
      */
     public function run()
     {
-        Classtype::factory()->count(5)->create();
+        ClassType::factory()->count(5)->create();
     }
 }

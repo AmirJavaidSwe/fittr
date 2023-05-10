@@ -15,6 +15,8 @@ return [
 
     'default' => env('FILESYSTEM_DISK', 'local'),
 
+    'export_disk' => env('EXPORT_DISK', 'private'),
+
     /*
     |--------------------------------------------------------------------------
     | Filesystem Disks
@@ -79,6 +81,7 @@ return [
             'endpoint' => env('AWS_ENDPOINT'),//not used
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
             'throw' => true,
+            'directory_separator' => '/',
         ],
 
     ],

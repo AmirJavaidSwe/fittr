@@ -9,6 +9,7 @@ defineProps({
         type: Object,
         required: true,
     },
+    business_seetings: Object,
 });
 </script>
 <template>
@@ -33,15 +34,15 @@ defineProps({
 
             <single-view-row label="Instructor" :even="true" :value="class_lesson.instructor?.name"/>
 
-            <single-view-row label="Class Type" :even="true" :value="class_lesson.classtype?.title"/>
+            <single-view-row label="Class Type" :even="true" :value="class_lesson.class_type?.title"/>
 
-            <single-view-row label="Start At" :even="false" :value="DateTime.fromISO(class_lesson.start_date)"/>
+            <single-view-row label="Start At" :even="false" :value="DateTime.fromISO(class_lesson.start_date).setZone(business_seetings.timezone).toFormat(business_seetings.date_format.format_js+' '+business_seetings.time_format.format_js)"/>
 
-            <single-view-row label="End At" :even="true" :value="DateTime.fromISO(class_lesson.end_date)"/>
+            <single-view-row label="End At" :even="true" :value="DateTime.fromISO(class_lesson.end_date).setZone(business_seetings.timezone).toFormat(business_seetings.date_format.format_js+' '+business_seetings.time_format.format_js)"/>
 
-            <single-view-row label="Created At" :even="false" :value="DateTime.fromISO(class_lesson.created_at)"/>
+            <single-view-row label="Created At" :even="false" :value="DateTime.fromISO(class_lesson.created_at).setZone(business_seetings.timezone).toFormat(business_seetings.date_format.format_js)"/>
 
-            <single-view-row label="Updated At" :even="true" :value="DateTime.fromISO(class_lesson.updated_at)"/>
+            <single-view-row label="Updated At" :even="true" :value="DateTime.fromISO(class_lesson.updated_at).toRelative()"/>
         </template>
     </single-view>
 </template>

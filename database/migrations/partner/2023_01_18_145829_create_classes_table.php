@@ -1,7 +1,6 @@
 <?php
 
 use App\Enums\ClassStatus;
-use App\Models\ClassLesson;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -19,12 +18,13 @@ return new class extends Migration
             $table->id();
             $table->string('title', 255);
             $table->enum('status', ClassStatus::all())->default(ClassStatus::INACTIVE->value);
-            $table->boolean('is_offpeak')->default(false);
+            $table->boolean('is_off_peak')->default(false);
             $table->timestamp('start_date')->nullable();
             $table->timestamp('end_date')->nullable();
             $table->integer('instructor_id')->unsigned();
-            $table->integer('classtype_id')->unsigned();
+            $table->integer('class_type_id')->unsigned();
             $table->integer('studio_id')->unsigned();
+            $table->string('file_path')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

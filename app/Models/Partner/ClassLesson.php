@@ -19,7 +19,7 @@ class ClassLesson extends Model
     protected $guarded = ['id'];
 
     protected $casts = [
-        'is_offpeak' => 'boolean',
+        'is_off_peak' => 'boolean',
         'start_date' => 'datetime',
         'end_date' => 'datetime',
         'deleted_at' => 'datetime',
@@ -45,9 +45,9 @@ class ClassLesson extends Model
         return $this->belongsTo(Instructor::class);
     }
 
-    public function classtype(): BelongsTo
+    public function classType(): BelongsTo
     {
-        return $this->belongsTo(Classtype::class);
+        return $this->belongsTo(ClassType::class);
     }
 
     // Accessors

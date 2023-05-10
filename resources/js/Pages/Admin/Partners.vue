@@ -6,7 +6,7 @@ import SectionTitle from '@/Components/SectionTitle.vue';
 import SearchFilter from '@/Components/SearchFilter.vue';
 import Pagination from '@/Components/Pagination.vue';
 import ButtonLink from '@/Components/ButtonLink.vue';
-import { faPencil, faChevronRight} from '@fortawesome/free-solid-svg-icons';
+import { faPencil, faChevronRight, faUser} from '@fortawesome/free-solid-svg-icons';
 
 const props = defineProps({
     users: Object,
@@ -83,6 +83,9 @@ watch(() => form.search, runSearch);
                     <td class="px-6 py-4">{{user.created_at}}</td>
                     <td class="px-6 py-4">
                         <div class="flex gap-4 justify-end">
+                            <Link title="Logged in as partner" :href="user.url_login_as">
+                                <font-awesome-icon :icon="faUser" />
+                            </Link>
                             <Link :href="user.url_edit">
                                 <font-awesome-icon :icon="faPencil" />
                             </Link>

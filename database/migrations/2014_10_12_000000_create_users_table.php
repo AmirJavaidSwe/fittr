@@ -1,6 +1,6 @@
 <?php
 
-use App\Enums\AppUserRole;
+use App\Enums\AppUserSource;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,7 +16,8 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->enum('role', AppUserRole::roles());
+            $table->enum('source', AppUserSource::all());
+            $table->boolean('is_super')->default(false);
             $table->integer('business_id')->nullable();
             $table->string('name');
             $table->string('email')->unique();

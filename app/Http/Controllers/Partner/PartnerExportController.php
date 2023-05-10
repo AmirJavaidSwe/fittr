@@ -2,21 +2,25 @@
 
 namespace App\Http\Controllers\Partner;
 
-use App\Enums\ExportType;
+use App\Enums\ExportFileType;
+use App\Enums\ExportStatus;
 use App\Jobs\ProcessExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Partner\ExportFormRequest;
 use App\Models\Partner\Export;
+use App\Traits\ExportDownloader;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
 
 class PartnerExportController extends Controller
 {
+    use ExportDownloader;
     /**
      * Display a listing of the resource.
      *
@@ -34,9 +38,10 @@ class PartnerExportController extends Controller
                 ->when($this->search, function ($query) {
                     $query->where(function($query) {
                         $query->orWhere('id', intval($this->search))
-                              ->orWhere('csv_file_name', 'LIKE', '%'.$this->search.'%');
+                              ->orWhere('file_name', 'LIKE', '%'.$this->search.'%');
                     });
                 })
+                ->with('user:id,name')
                 ->paginate($this->per_page)
                 ->withQueryString(),
             'search' => $this->search,
@@ -61,13 +66,15 @@ class PartnerExportController extends Controller
      */
     public function store(ExportFormRequest $request)
     {
-        $filters = array_filter($request->filters);
-        $enum = ExportType::from($request->export_type);
         $export = Export::create([
-            'export_type' => $enum->name,
-            'filters' => $filters,
+            'type' => $request->type,
+            'file_type' => $request->file_type,
+            'file_mime_type' => ExportFileType::getMimeType($request->file_type),
+            'filters' => array_filter($request->filters),
             'created_by' => $request->user()->id,
         ]);
+
+        $export->setStatusPending();
 
         ProcessExport::dispatch($export);
 
@@ -79,8 +86,8 @@ class PartnerExportController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Partner\Export  $export
-     * @return \Illuminate\Http\Response
+     * @param Export $export
+     * @return Response
      */
     public function show(Export $export)
     {
@@ -100,15 +107,15 @@ class PartnerExportController extends Controller
                     'link' => null,
                 ],
             ),
-            'exporting' => $export,
+            'exporting' => $export->load('user:id,name'),
         ]);
     }
 
-        /**
+    /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Partner\Export  $studio
-     * @return \Illuminate\Http\Response
+     * @param Export $export
+     * @return RedirectResponse
      */
     public function destroy(Export $export)
     {
@@ -117,4 +124,33 @@ class PartnerExportController extends Controller
         return $this->redirectBackSuccess(__('Export deleted successfully'), 'partner.exports.index');
     }
 
+    
+    public function requestToDownload(Export $export)
+    {
+        if ($export->status != ExportStatus::completed->name) {
+            return response()->json([
+                'message' => __('Export is not completed yet'),
+            ], 400);
+        }
+
+        $token = $export->generateToken();
+
+        return response()->json([
+            'token' => $token,
+            'url' => route('partner.exports.download', $token),
+        ]);
+    }
+
+    public function download()
+    {
+        if (!cache()->has(request()->route('token'))) {
+            return $this->redirectBackError(__('Export is not ready yet'));
+        }
+
+        $export = Export::where('id', (explode(':', base64_decode(request()->route('token')))[0] ?? null))->first();
+
+        $this->authorize('download', $export);
+
+        return $this->downloadFromDisk($export);
+    }
 }

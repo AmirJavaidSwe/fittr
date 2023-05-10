@@ -22,11 +22,11 @@ class ClassLessonFactory extends Factory
         return [
             'title' => $this->faker->sentence,
             'status' => $this->faker->randomElement(['active', 'inactive']),
-            'is_offpeak' => $this->faker->boolean,
+            'is_off_peak' => $this->faker->boolean,
             'start_date' => $dt,
             'end_date' => $dt->copy()->addMinutes(45),
             'instructor_id' => $this->faker->numberBetween(1, 5),
-            'classtype_id' => $this->faker->numberBetween(1, 5),
+            'class_type_id' => $this->faker->numberBetween(1, 5),
             'studio_id' => $this->faker->numberBetween(1, 5),
         ];
     }
