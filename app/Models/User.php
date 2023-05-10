@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\AppUserRole;
+use App\Enums\AppUserSource;
 use App\Models\Partner\Export;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -101,16 +101,12 @@ class User extends Authenticatable implements MustVerifyEmail
     // Accessors
     public function getIsPartnerAttribute()
     {
-        return $this->role == AppUserRole::PARTNER->value;
-    }
-
-    public function roles(){
-        return $this->belongsToMany(Role::class);
+        return $this->source == AppUserSource::partner->name;
     }
 
     public function getIsAdminAttribute()
     {
-        return $this->role == AppUserRole::ADMIN->value;
+        return $this->source == AppUserSource::admin->name;
     }
 
     public function getDashboardRouteAttribute()
@@ -123,15 +119,20 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->subscriptions()->where('status', 1)->whereNull('cancelled_at')->first();
     }
 
+    protected function getUserRolesAttribute()
+    {
+        return $this->roles()->pluck('name')->toArray();
+    }
+
     //Local scopes
     public function scopeAdmin($query)
     {
-        $query->where('role', AppUserRole::ADMIN->value);
+        $query->where('source', AppUserSource::admin->name);
     }
 
     public function scopePartner($query)
     {
-        $query->where('role', AppUserRole::PARTNER->value);
+        $query->where('source', AppUserSource::partner->name);
     }
 
     // public function scopeDatabaseless($query)
@@ -155,13 +156,12 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsTo(Business::class, 'business_id');
     }
 
-    protected function getUserRolesAttribute()
-    {
-        return $this->roles()->pluck('name')->toArray();
-    }
-
     public function exports()
     {
         return $this->hasMany(Export::class, 'created_by');
+    }
+
+    public function roles(){
+        return $this->belongsToMany(Role::class);
     }
 }

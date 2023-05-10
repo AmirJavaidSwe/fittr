@@ -114,7 +114,7 @@ class RoleController extends Controller
     public function edit($slug)
     {
         // Gate::authorize('update', Role::class);
-        $modules = SystemModule::with('permissions')->get();
+        $modules = SystemModule::with('permissions')->where('is_for', 'admin')->get();
         $role = Role::with('permissions')->where('slug', $slug)->firstOrFail();
         return Inertia::render('Admin/Roles/Edit', [
             'role' => $role,

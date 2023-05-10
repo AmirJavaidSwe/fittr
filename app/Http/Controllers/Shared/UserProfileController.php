@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Shared;
 
 use App\Models\User;
-use App\Enums\AppUserRole;
+use App\Enums\AppUserSource;
 use Illuminate\Http\Request;
 use Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController as JetstreamUserProfileController;
 use Laravel\Jetstream\Jetstream;
@@ -51,9 +51,10 @@ class UserProfileController extends JetstreamUserProfileController
             $msg_pass = __('Your password is: :password', ['password' => $password]);
             session()->flash('flash.banner', $msg_pass);
             $user = User::create([
+                'is_super' => true,
                 'name' => $name,
                 'email' => $email,
-                'role' => AppUserRole::PARTNER->value,
+                'role' => AppUserSource::partner->name,
                 'password' => Hash::make($password),
                 'email_verified_at' => now(),
             ]);

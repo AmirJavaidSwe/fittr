@@ -1,55 +1,55 @@
 [
     {
-        "role": "admin",
+        "source": "admin",
         "name": "Default Administrator",
         "email": "support@fittr.tech",
         "password": "support"
     },
     {
-        "role": "admin",
+        "source": "admin",
         "name": "Geoff Bamber",
         "email": "geoff@fittr.tech",
         "password": "geoff"
     },
     {
-        "role": "admin",
+        "source": "admin",
         "name": "Phil Parker",
         "email": "phil@fittr.tech",
         "password": "phil"
     },
     {
-        "role": "admin",
+        "source": "admin",
         "name": "Leo Studenikin",
         "email": "leo@fittr.tech",
         "password": "leo"
     },
     {
-        "role": "admin",
+        "source": "admin",
         "name": "Mishuk Adhikari",
         "email": "mishuk.ad.bd@gmail.com",
         "password": "mishuksecret"
     },
     {
-        "role": "admin",
+        "source": "admin",
         "name": "Amir",
         "email": "softwareengr.1@gmail.com",
         "password": "amir"
     },
     {
-        "role": "admin",
+        "source": "admin",
         "name": "Tung",
         "email": "gslip228@gmail.com",
         "password": "tung"
     },
     {
-        "role": "partner",
+        "source": "partner",
         "name": "Demo Partner1",
         "email": "dummy1@fittr.tech",
         "password": "dummy1",
         "stripe_account_id": "acct_1MlaLVFZgNT1PRCW"
     },
     {
-        "role": "partner",
+        "source": "partner",
         "name": "Demo Partner2",
         "email": "dummy2@fittr.tech",
         "password": "dummy2",

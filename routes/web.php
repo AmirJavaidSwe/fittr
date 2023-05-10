@@ -55,7 +55,7 @@ Route::domain('app.'.config('app.domain'))->group(function () {
     ])->group(function () {
 
         //ADMIN
-        Route::middleware(['auth.role:admin'])->prefix('admin')->name('admin.')->group(function () {
+        Route::middleware(['auth.source:admin'])->prefix('admin')->name('admin.')->group(function () {
             Route::get('/demo', [DemoController::class, 'index'])->name('demo');
             Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
             Route::controller(PartnerController::class)->name('partners.')->group(function () {
@@ -94,7 +94,7 @@ Route::domain('app.'.config('app.domain'))->group(function () {
         // \App\Http\Middleware\ConnectPartnerDatabase::class runs on every request, see App\Http\Kernel $middlewareGroups
         // ConnectPartnerDatabase must run before SubstituteBindings in order for implicit model bindings to work
 
-        Route::middleware(['auth.role:partner'])->name('partner.')->group(function () {
+        Route::middleware(['auth.source:partner'])->name('partner.')->group(function () {
             Route::get('/dashboard', [PartnerDashboardController::class, 'index'])->name('dashboard');
 
             Route::get('/subscriptions', [PartnerSubscriptionController::class, 'index'])->name('subscriptions.index');

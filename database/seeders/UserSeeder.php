@@ -25,8 +25,9 @@ class UserSeeder extends Seeder
         $users = json_decode(Storage::disk('seeders')->get('/data/users.json'));
         foreach ($users as $user) {
             $userId = DB::table('users')->insertGetId([
+                'is_super' => $user->is_super ?? true, 
+                'source' => $user->source,
                 'name' => $user->name, 
-                'role' => $user->role,
                 'email' => $user->email,
                 'password' => Hash::make($user->password), 
                 'remember_token' => Str::random(10),
@@ -34,7 +35,7 @@ class UserSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now()
             ]);
-            $role = Role::whereSlug($user->role)->first();
+            $role = Role::whereSlug($user->source)->first();
             DB::table('role_user')->insert([
                 'role_id' => $role->id,
                 'user_id' => $userId
