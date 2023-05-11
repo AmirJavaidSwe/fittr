@@ -9,9 +9,8 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import GoogleIcon from '@/Icons/Google.vue';
-import TextInputWithIcon from '@/Components/TextInputWithIcon.vue';
-import Eye from "@/Icons/Eye.vue";
-import EyeSlash from "@/Icons/EyeSlash.vue";
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faEye,faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 defineProps({
     canResetPassword: Boolean,
@@ -70,10 +69,10 @@ const togglePasswordVisibility = () => {
                     <button type="button" @click="togglePasswordVisibility"
                         class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 focus:outline-none">
                         <template v-if="showPassword">
-                            <EyeSlash />
+                            <font-awesome-icon :icon="faEyeSlash" />
                         </template>
                         <template v-else>
-                            <Eye />
+                            <font-awesome-icon :icon="faEye" class="text-green-600" />
                         </template>
                     </button>
                 </div>
