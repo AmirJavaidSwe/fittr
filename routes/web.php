@@ -30,6 +30,11 @@ use App\Http\Controllers\Partner\PartnerExportController;
 
 // Service store area, partner subdomains:
 use App\Http\Controllers\Store\StorePublicController;
+use App\Http\Controllers\Store\StoreClassController;
+use App\Http\Controllers\Store\StoreInstructorController;
+use App\Http\Controllers\Store\StoreStudioController;
+use App\Http\Controllers\Store\StoreClassPackController;
+use App\Http\Controllers\Store\StoreMembershipController;
 
 Route::get('/auth/google', function () {
     return Socialite::driver('google')->redirect();
@@ -154,6 +159,11 @@ Route::domain('app.'.config('app.domain'))->group(function () {
 Route::domain('{subdomain}.'.config('app.domain'))->middleware(['auth.subdomain'])->name('ss.')->group(function () {
 
     Route::get('/', [StorePublicController::class, 'index'])->name('home');
+    Route::get('/classes', [StoreClassController::class, 'index'])->name('classes.index');
+    Route::get('/instructors', [StoreInstructorController::class, 'index'])->name('instructors.index');
+    Route::get('/studios', [StoreStudioController::class, 'index'])->name('studios.index');
+    Route::get('/classpacks', [StoreClassPackController::class, 'index'])->name('classpacks.index');
+    Route::get('/memberships', [StoreMembershipController::class, 'index'])->name('memberships.index');
 
     // Route::get('/', function ($subdomain) {
     //     //temp demo

@@ -4,6 +4,7 @@ return [
     'groups' => [
         'admin' => ['admin.*'],
         'partner' => ['partner.*'],
+        'store' => ['ss.*'],
         'common' => [
             'auth.*',
             'current-user-photo.*',

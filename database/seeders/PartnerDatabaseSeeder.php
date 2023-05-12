@@ -139,6 +139,16 @@ class PartnerDatabaseSeeder extends Seeder
                 dump($partner->email.' set stripe connected account for business '.$business->id);
 
                 $business->update(['stripe_account_id' => 'acct_1MlaLVFZgNT1PRCW']);
+
+                //service store domain
+                $business->settings()->updateOrCreate(
+                    ['key' => SettingKey::subdomain->name],
+                    [
+                        'group_name' => SettingGroup::service_store_general->name,
+                        'cast_to' => CastType::string->name,
+                        'val' => 'demo',
+                    ]
+                );
                 // Artisan::call('db:seed --force Database\\\Seeders\\\Partner\\\DatabaseSeeder');
                 Artisan::call('db:seed', ['--class' => 'Database\Seeders\Partner\DatabaseSeeder', '--force' => true]);
             }
