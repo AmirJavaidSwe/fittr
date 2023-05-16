@@ -63,7 +63,7 @@ watch(() => {
                 <td class="px-6 py-4">{{DateTime.fromISO(admin.created_at)}}</td>
                 <td class="px-6 py-4">
                     <div class="flex gap-4 justify-end">
-                        <Link :href="'/admin/settings/edit-admin/'+admin.id">
+                        <Link :href="route(`${$page.props.user.source}.users.edit`,admin.id)">
                             <font-awesome-icon :icon="faPencil" />
                         </Link>
                         <!-- <Link :href="role.url_show">

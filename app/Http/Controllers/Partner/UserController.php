@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Partner;
 use App\Models\Package;
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
 use App\Models\SystemModule;
@@ -24,8 +27,7 @@ class UserController extends Controller
         return Inertia::render('Partner/Users/Index', [
             'page_title' => __('Users'),
             'header' => __('Users'),
-            'admins' => User::admin()
-                ->select('id', 'name', 'email', 'is_super', 'profile_photo_path','created_at')
+            'admins' => User::select('id', 'name', 'email', 'is_super', 'profile_photo_path','created_at')
                 ->where('source', auth()->user()->source)
                 ->where('business_id', auth()->user()->business_id)
                 ->get(),
@@ -48,88 +50,113 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(RoleRequest $request)
+    public function store(Request $request)
     {
-        $role = Role::create($request->only('title'));
-        if(auth()->user()->source) {
-            $role->source = auth()->user()->source;
-            $role->business_id = auth()->user()->business_id;
-            $role->save();
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:191',
+            'email' => [
+                'required',
+                'string',
+                'max:191',
+                Rule::unique('users', 'email')->whereNull('deleted_at')
+            ]
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            return back()->withErrors($errors)->withInput();
         }
-        $role->permissions()->sync($request->permissions);
-        return $this->redirectBackSuccess(__('Role created'));
+
+        $admin = new User();
+        $admin->name = $request->name;
+        $admin->email = $request->email;
+        $admin->password = Hash::make($request->password);
+        $admin->is_super = $request->is_super;
+        $admin->source = auth()->user()->source;
+        $admin->business_id = auth()->user()->business_id;
+        $admin->save();
+        $admin->roles()->sync($request->roles);
+
+        session()->flash('flash_type', 'success');
+        session()->flash('flash_timestamp', time());
+        return redirect()->route('partner.users.index')->with('flash_timestamp', time());
     }
 
     /**
      * Display the specified resource.
      */
-    public function show($slug)
+    public function show($id)
     {
-        $role = Role::where('slug', $slug)
-        ->where('source', auth()->user()->source);
-        if(auth()->user()->business_id) {
-            $role = $role->where('business_id', auth()->user()->business_id);
-        }
-        $role = $role->with(['business'])
-        ->firstOrFail();
-        return Inertia::render('Roles/Show', [
-            'role' => $role,
-            'page_title' => __('Role details'),
-            'header' => __('Role details'),
+        return Inertia::render('Partner/Users/Show', [
+            'page_title' => __('Show User'),
+            'header' => __('Show User'),
+            'roles' => Role::where('source', auth()->user()->source)
+                ->where('business_id', auth()->user()->business_id)->get(),
+            'admin' => User::with('roles')->where('id', $id)->first(), //tab
         ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($slug)
+    public function edit($id)
     {
-        $modules = SystemModule::with('permissions')->where('is_for', auth()->user()->source)->get();
-        $role = Role::with('permissions')
-        ->where('source', auth()->user()->source);
-        if(auth()->user()->business_id) {
-            $role = $role->where('business_id', auth()->user()->business_id);
-        }
-        $role = $role->with(['business'])
-        ->where('slug', $slug)->firstOrFail();
-        return Inertia::render('Roles/Edit', [
-            'role' => $role,
-            'modules' => $modules,
-            'page_title' => __('Role details'),
-            'header' => __('Update role details'),
+        return Inertia::render('Partner/Users/Edit', [
+            'page_title' => __('Edit User'),
+            'header' => __('Edit User'),
+            'roles' => Role::where('source', auth()->user()->source)
+                ->where('business_id', auth()->user()->business_id)->get(),
+            'admin' => User::with('roles')->where('id', $id)->first(),
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(RoleRequest $request, $slug)
+    public function update(Request $request, $id)
     {
-        $role = Role::where('slug', $slug)
-        ->where('source', auth()->user()->source);
-        if(auth()->user()->business_id) {
-            $role = $role->where('business_id', auth()->user()->business_id);
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:191',
+            'email' => [
+                'required',
+                'string',
+                'max:191',
+                Rule::unique('users', 'email')->ignore($id)->whereNull('deleted_at')
+            ]
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            return back()->withErrors($errors)->withInput();
         }
-        $role = $role->firstOrFail();
-        $role->update($request->only('title'));
-        $role->permissions()->sync($request->permissions);
-        return $this->redirectBackSuccess(__('Role updated'), auth()->user()->source.'.roles.index');
+
+        $admin = User::where('id', $id)->first();
+        if($admin) {
+            $admin->name = $request->name;
+            $admin->email = $request->email;
+            $admin->is_super = $request->is_super;
+            $admin->save();
+            $admin->roles()->sync($request->roles);
+        }
+        session()->flash('flash_type', 'success');
+        session()->flash('flash_timestamp', time());
+        return redirect()->route('partner.users.index')->with('flash_timestamp', time());
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($slug)
+    public function destroy($id)
     {
-        $role = Role::where('slug', $slug)
+        $user = User::where('id', $id)
         ->where('source', auth()->user()->source);
         if(auth()->user()->business_id) {
-            $role = $role->where('business_id', auth()->user()->business_id);
+            $user = $user->where('business_id', auth()->user()->business_id);
         }
-        $role = $role->firstOrFail();
+        $user = $user->firstOrFail();
 
-        $role->delete();
+        $user->delete();
 
-        return $this->redirectBackSuccess(__('Role deleted'), auth()->user()->source.'.roles.index');
+        return $this->redirectBackSuccess(__('User deleted'), 'partner.users.index');
     }
 }

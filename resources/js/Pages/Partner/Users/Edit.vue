@@ -1,104 +1,80 @@
 <script setup>
-import { ref, watch, watchEffect, onMounted } from 'vue';
-import { useForm, usePage } from '@inertiajs/vue3';
-import FormSection from '@/Components/FormSection.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import TextInput from '@/Components/TextInput.vue';
-import InputError from '@/Components/InputError.vue';
-import ActionMessage from '@/Components/ActionMessage.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import { RoleHelpers } from "./RoleHelpers/Index.js";
+import { ref, computed, onMounted } from 'vue';
+import { useForm } from '@inertiajs/vue3';
+import Multiselect from '@vueform/multiselect';
+import _ from "lodash";
+
+
+const roles = ref([])
+
 const props = defineProps({
-    role: Object,
-    modules: Object,
+    admin: Object,
+    roles: Object,
 });
-const permissions = ref([])
-const roleHelpers = RoleHelpers()
-const allPermissionIds = ref(roleHelpers.collectAllPermissions(props.modules))
-const rolePermissions = ref([])
-const allowAllPermissions  = ref(false)
 const form = useForm({
-    title: props.role.title,
-    slug: props.role.slug,
+    name: props.admin.name,
+    email: props.admin.email,
+    id: props.admin.id,
+    is_super: props.admin.is_super ? true : false,
 });
-const togglePermission = (permissionId) => {
-    const data = roleHelpers.togglePermission(permissions.value, permissionId, allPermissionIds.value)
-    permissions.value = data.permissions
-    allowAllPermissions.value = data.allowAllPermissions
-}
-const toggleAllPermission = () => {
-    const data = roleHelpers.toggleAllPermission(allowAllPermissions.value, props.modules)
-    if(data.permissions) {
-        permissions.value = data.permissions
-    }
-    allowAllPermissions.value = data.allowAllPermissions
-}
-const updateRole = () => {
+
+const updateAdmin = () => {
     form.transform((data) => ({
         ...data,
-        permissions: permissions.value
-    })).put(route(`${usePage().props.user.source}.roles.update`, { role: props.role.slug }), {
+        roles: data.is_super ? [] : roles.value,
+        is_super: data.is_super === true ? 1 : 0
+    })).put(route('partner.users.update', { id: props.admin.id }), {
         preserveScroll: true
     });
 };
-const roleHasPermission = () => {
-    const data = roleHelpers.roleHasPermission(rolePermissions.value, permissions.value, props.role)
-    rolePermissions.value = data.rolePermissions
-    permissions.value = data.permissions
-}
+
+const rolesList = computed(() => {
+    let roles = []
+    for(let i = 0; i < props.roles.length; i++) {
+        roles.push({
+            value: props.roles[i].id,
+            label: props.roles[i].title
+        })
+    }
+    return roles
+})
+
 onMounted(() => {
-    roleHasPermission()
-    if(permissions.value.length == allPermissionIds.value.length) {
-        allowAllPermissions.value = true
+    if(props.admin.roles.length) {
+        const ids = _.map(props.admin.roles, "id");
+        roles.value = ids
     }
 })
 </script>
 <template>
-    <FormSection @submitted="updateRole">
+    <FormSection @submitted="updateAdmin">
         <template #title>
-            Role Information
+            User Information
         </template>
         <template #description>
-            Update role information.
+            Update user information.
         </template>
         <template #form>
             <!-- Name -->
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="title" value="Role title" />
-                <TextInput id="title" v-model="form.title" type="text" class="mt-1 block w-full" />
-                <InputError :message="form.errors.title" class="mt-2" />
+                <InputLabel for="name" value="Name" />
+                <TextInput id="name" v-model="form.name" type="text" class="mt-1 block w-full" autocomplete="name" />
+                <InputError :message="form.errors.name" class="mt-2" />
             </div>
-            <Section>
-                <SectionTitle>
-                    <template #title>
-                        Permissions
-                    </template>
-                </SectionTitle>
-                <div class="mt-5 flex flex-row items-center justify-start">
-                    <Checkbox id="allow-all" :checked="allowAllPermissions" @change="toggleAllPermission" class="ml-2 mr-2">
-                    </Checkbox>
-                    <InputLabel for="allow-all" value="Allow All" class="mr-3" />
-                </div>
-                <SectionBorder />
-                <dl class="max-w-md text-gray-900 divide-y divide-gray-200 dark:text-gray-900 dark:divide-gray-700">
-                    <template v-for="system_module in props.modules" :key="system_module.id">
-                        <div class="flex flex-col pb-5 mb-5">
-                            <dt class="mt-2 mb-1 text-gray-500 md:text-lg dark:text-gray-400">{{ system_module.title }}</dt>
-                            <div class="flex flex-row items-center justify-start">
-                                <template v-for="permission in system_module.permissions" :key="permission.id">
-                                    <Checkbox :disabled="allowAllPermissions" :id="system_module.slug + '-' + permission.slug"
-                                        :checked="permissions.includes(permission.id)"
-                                        @change="togglePermission(permission.id)" class="ml-2 mr-2"
-                                        :class="[allowAllPermissions && 'opacity-50']">
-                                    </Checkbox>
-                                    <InputLabel :for="system_module.slug + '-' + permission.slug" :value="permission.title"
-                                        class="mr-3" />
-                                </template>
-                            </div>
-                        </div>
-                    </template>
-                </dl>
-            </Section>
+            <div class="col-span-6 sm:col-span-4">
+                <InputLabel for="email" value="Email" />
+                <TextInput id="email" v-model="form.email" type="text" class="mt-1 block w-full" autocomplete="email" />
+                <InputError :message="form.errors.email" class="mt-2" />
+            </div>
+            <div class="flex flex-row items-center justify-start">
+                <Checkbox id="is_super_admin" v-model="form.is_super" :checked="form.is_super" class="mt-3 mr-2 mb-3"></Checkbox>
+                <InputLabel for="is_super_admin" value="Is Super Admin?" class="mr-3 w-full" />
+            </div>
+            <div class="col-span-6 sm:col-span-4" v-if="!form.is_super">
+                <InputLabel for="roles" value="Select Roles" />
+                <Multiselect mode="tags" v-model="roles" :options="rolesList" />
+            </div>
+
         </template>
         <template #actions>
             <ActionMessage :on="form.recentlySuccessful" class="mr-3">
@@ -110,3 +86,5 @@ onMounted(() => {
         </template>
     </FormSection>
 </template>
+
+<style src="@vueform/multiselect/themes/default.css"></style>
