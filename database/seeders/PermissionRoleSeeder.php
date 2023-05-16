@@ -22,7 +22,7 @@ class PermissionRoleSeeder extends Seeder
 
         DB::table('permission_role')->truncate();
         
-        $roles = Role::whereIn('slug', ['super-admin', 'admin'])->get();
+        /* $roles = Role::whereIn('slug', ['super-admin', 'admin'])->get();
         $permissions = SystemModule::with('permissions')
         ->where('is_for', 'admin')
         ->get()
@@ -50,5 +50,6 @@ class PermissionRoleSeeder extends Seeder
         foreach ($roles as $role) {
             $role->permissions()->attach($ids);
         }
-    }
+        */
+    } 
 }

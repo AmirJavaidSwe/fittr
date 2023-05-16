@@ -36,7 +36,10 @@ class RoleRequest extends FormRequest
                         'required',
                         'string',
                         'max:191',
-                        Rule::unique('roles', 'title')->whereNull('deleted_at')
+                        Rule::unique('roles', 'title')
+                        ->where('source', auth()->user()->source)
+                        ->where('business_id', auth()->user()->business_id)
+                        ->whereNull('deleted_at')
                     ]
                 ];
                 break;
@@ -48,7 +51,10 @@ class RoleRequest extends FormRequest
                             'required',
                             'string',
                             'max:191',
-                            Rule::unique('roles', 'title')->ignore($role->id)->whereNull('deleted_at')
+                            Rule::unique('roles', 'title')->ignore($role->id)
+                            ->where('source', auth()->user()->source)
+                            ->where('business_id', auth()->user()->business_id)
+                            ->whereNull('deleted_at')
                         ]
                 ];
                 break;
@@ -60,7 +66,10 @@ class RoleRequest extends FormRequest
                             'required',
                             'string',
                             'max:191',
-                            Rule::unique('roles', 'title')->ignore($role->id)->whereNull('deleted_at')
+                            Rule::unique('roles', 'title')->ignore($role->id)
+                            ->where('source', auth()->user()->source)
+                            ->where('business_id', auth()->user()->business_id)
+                            ->whereNull('deleted_at')
                         ]
                 ];
                 break;

@@ -1,6 +1,6 @@
 <script setup>
 import { watch } from "vue";
-import { Link, useForm } from "@inertiajs/vue3";
+import { Link, useForm, usePage } from "@inertiajs/vue3";
 // import Section from '@/Components/Section.vue';
 import SectionTitle from "@/Components/SectionTitle.vue";
 import SearchFilter from "@/Components/SearchFilter.vue";
@@ -33,7 +33,7 @@ const setOrdering = (col) => {
 };
 
 const runSearch = () => {
-    form.get(route("admin.roles.index"), {
+    form.get(route(`${usePage().props.user.source}.roles.index`), {
         preserveScroll: true,
         preserveState: true,
         replace: true,
@@ -56,7 +56,7 @@ watch(() => form.search, runSearch);
                 <option value="50">50</option>
             </select>
         </search-filter>
-        <ButtonLink v-can="{ module: 'roles', roles: $page.props.user.user_roles, permission: 'create', 'user': $page.props.user }" :href="route('admin.roles.create')" type="primary">Add new</ButtonLink>
+        <ButtonLink v-can="{ module: 'roles', roles: $page.props.user.user_roles, permission: 'create', 'user': $page.props.user }" :href="route(`${$page.props.user.source}.roles.create`)" type="primary">Add new</ButtonLink>
     </div>
 
     <div class="relative overflow-x-auto shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
@@ -102,7 +102,7 @@ watch(() => form.search, runSearch);
                                 <font-awesome-icon :icon="faPencil" />
                             </Link>
                             <Link :href="role.url_show" v-can="{ module: 'roles', roles: $page.props.user.user_roles, permission: 'view', 'user': $page.props.user }">
-                                <font-awesome-icon :icon="faChevronRight" v-can="{ module: 'roles', roles: $page.props.user.user_roles, permission: 'edit', 'user': $page.props.user }" />
+                                <font-awesome-icon :icon="faChevronRight" v-can="{ module: 'roles', roles: $page.props.user.user_roles, permission: 'update', 'user': $page.props.user }" />
                             </Link>
                         </div>
                     </td>

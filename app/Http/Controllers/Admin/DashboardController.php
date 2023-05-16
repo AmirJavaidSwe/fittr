@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\User;
 use Inertia\Inertia;
 use App\Traits\GateHelper;
+use App\Enums\AppUserSource;
 use App\Models\Subscription;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -14,7 +15,7 @@ class DashboardController extends Controller
 {
     public function index(Request $request)
     {
-        if (Gate::denies('view', ['admin', 'dashboard', 'View'])) {
+        if (Gate::denies('viewAny', [AppUserSource::admin->name, 'dashboard', 'viewAny'])) {
             abort(403);            
         }
         return Inertia::render('Admin/Dashboard', [

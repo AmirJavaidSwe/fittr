@@ -21,6 +21,7 @@ const props = defineProps({
                     <th class="px-6 py-3 border-b cursor-pointer">ID</th>
                     <th class="px-6 py-3 border-b cursor-pointer">Name</th>
                     <th class="px-6 py-3 border-b cursor-pointer">Email</th>
+                    <th class="px-6 py-3 border-b cursor-pointer">Is Super Admin</th>
                     <th class="px-6 py-3 border-b cursor-pointer">Roles</th>
                     <th class="px-6 py-3 border-b cursor-pointer">Avatar</th>
                     <th class="px-6 py-3 border-b cursor-pointer">Date created</th>
@@ -33,12 +34,21 @@ const props = defineProps({
                     <td class="px-6 py-4">{{admin.id}}</td>
                     <td class="px-6 py-4">{{admin.name}}</td>
                     <td class="px-6 py-4">{{admin.email}}</td>
+                    <td class="px-6 py-4 text-center">
+                        <div class="ml-4 w-16 rounded my-1 bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 dark:bg-gray-700 dark:text-gray-300">
+                            {{ admin.is_super ? 'Yes' : 'No' }}
+                        </div>
+                    </td>
                     <td class="px-6 py-4">
-                        <template v-for="(role, role_i) in admin.user_roles" :key="role_i">
-                            <div class="block my-1 bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">{{ role }}</div>
+                        <template v-if="!admin.is_super">
+                            <template v-for="(role, role_i) in admin.user_roles" :key="role_i">
+                                <div class="block my-1 bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">{{ role }}</div>
+                            </template>
                         </template>
                     </td>
-                    <td class="px-6 py-4"><img :src="admin.profile_photo_url" :alt="admin.name" class="rounded-full h-8 w-8 object-cover"></td>
+                    <td class="px-6 py-4">
+                        <img :src="admin.profile_photo_url" :alt="admin.name" class="rounded-full h-8 w-8 object-cover" />
+                    </td>
                     <td class="px-6 py-4">{{DateTime.fromISO(admin.created_at)}}</td>
                     <td class="px-6 py-4">
                         <div class="flex gap-4 justify-end">

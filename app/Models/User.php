@@ -15,6 +15,8 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Contracts\Database\Eloquent\Builder;
+
 
 // use DateTimeInterface;
 
@@ -49,6 +51,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'role',
         'password',
         'email_verified_at',
+        'is_super'
     ];
 
 
@@ -84,7 +87,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'dashboard_route',
         'active_subscription',
         'is_partner',
-        'user_roles'
+        'user_roles',
+        'role_permissions'
     ];
 
     /**
@@ -121,7 +125,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     protected function getUserRolesAttribute()
     {
-        return $this->roles()->pluck('title')->toArray();
+        return $this->roles()->pluck('title', 'slug')->toArray();
     }
 
     //Local scopes
@@ -163,5 +167,25 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function roles(){
         return $this->belongsToMany(Role::class);
+    }
+
+    public function getRolePermissionsAttribute()
+    {
+        $for = $this->source;
+        $systemModules = SystemModule::where('is_for', $for)->get();
+
+        $permissionsArray = [];
+
+        foreach ($systemModules as $sysModule) {
+            $rolesWithPermissions = [];
+
+            foreach ($this->roles as $role) {
+                $permissions = $role->permissions->where('system_module_id', $sysModule->id)->pluck('slug')->toArray();
+                $rolesWithPermissions[$role->slug] = $permissions;
+            }
+            
+            $permissionsArray[$sysModule->slug] = $rolesWithPermissions;
+        }
+        return $permissionsArray;
     }
 }

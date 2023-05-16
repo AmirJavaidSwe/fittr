@@ -2,17 +2,22 @@
 
 namespace App\Http\Controllers\Partner;
 
-use App\Http\Controllers\Controller;
-use App\Models\Partner\ClassLesson;
-use App\Models\Partner\Location;
+use Inertia\Inertia;
+use App\Enums\AppUserSource;
 use App\Models\Partner\User;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
+use App\Models\Partner\Location;
+use App\Models\Partner\ClassLesson;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Gate;
 
 class PartnerDashboardController extends Controller
 {
     public function index(Request $request)
     {
+        if (Gate::denies('viewAny', [AppUserSource::partner->name, 'dashboard', 'viewAny'])) {
+            abort(403);            
+        }
         $partner = $request->user();
 
         $totalClasses = ClassLesson::count();

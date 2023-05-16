@@ -2,8 +2,9 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use App\Traits\GateHelper;
+use App\Enums\AppUserSource;
+use Illuminate\Support\ServiceProvider;
 
 class GateServiceProvider extends ServiceProvider
 {
@@ -24,6 +25,8 @@ class GateServiceProvider extends ServiceProvider
     {
         // Custom Gate Policies for authorization checking
 
-        $this->createGate('view', 'admin', 'dashboard', 'View');
+        $this->createGate('viewAny', AppUserSource::admin->name, 'dashboard', "viewAny");
+        $this->createGate('viewAny', AppUserSource::partner->name, 'dashboard', "viewAny");
+        $this->createGate('view', AppUserSource::admin->name, 'dashboard', 'view');
     }
 }

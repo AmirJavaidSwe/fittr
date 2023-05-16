@@ -13,6 +13,7 @@ trait GateHelper
         return Gate::define($gateName, function () use ($for, $module, $permission) {
 
             $user = request()->user();
+            if($user->is_super) return true;
 
             $sysModule = SystemModule::where('slug', $module)->where('is_for', $for)->first();
 

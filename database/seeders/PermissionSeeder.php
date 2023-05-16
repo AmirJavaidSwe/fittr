@@ -32,6 +32,9 @@ class PermissionSeeder extends Seeder
                 'dashboard' => [
                     'viewAny',
                 ],
+                'Partners performance' => [
+                    'viewAny',
+                ],
                 'Partner management' => [
                     'viewAny',
                     'view',
@@ -39,6 +42,9 @@ class PermissionSeeder extends Seeder
                     'update',
                     'destroy',
                     'restore',
+                ],
+                "AWS Instances" => [
+                    'viewAny',
                 ],
                 'Settings' => [
                     'viewAny',
@@ -58,9 +64,20 @@ class PermissionSeeder extends Seeder
                 'Roles' => [
                     'viewAny',
                     'view',
+                    'create',
+                    'update',
                 ],
             ],
             'partner' => [
+                'dashboard' => [
+                    'viewAny',
+                ],
+                'Roles' => [
+                    'viewAny',
+                    'view',
+                    'create',
+                    'update'
+                ],
                 'Classes' => [
                     'viewAny',
                     'view',
@@ -132,7 +149,7 @@ class PermissionSeeder extends Seeder
                     foreach ($value as $policy_method) {
                         if (!(Permission::where('system_module_id', $module->id)->where('slug', $policy_method)->exists())) {
                             Permission::create([
-                                'title' => $policy_method,
+                                'title' => ucwords(trim($policy_method)),
                                 'slug' => $policy_method,
                                 'system_module_id' => $module->id,
                             ]);

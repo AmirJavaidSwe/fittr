@@ -19,7 +19,7 @@ class SettingsController extends Controller
             'page_title' => __('Settings'),
             'header' => __('Settings'),
             'packages' => Package::all(), //tab
-            'admins' => User::admin()->select('id','name','email','profile_photo_path','created_at')->get(), //tab
+            'admins' => User::admin()->select('id', 'name', 'email', 'is_super', 'profile_photo_path','created_at')->get(), // tab
         ]);
     }
     public function editAdmins($id)
@@ -49,21 +49,13 @@ class SettingsController extends Controller
             return back()->withErrors($errors)->withInput();
         }
 
-        if ($validator->fails()) {
-            $errors = $validator->errors();
-            return response()->json([
-                'message' => 'The given data was invalid.',
-                'errors' => $errors,
-            ], 422);
-        }
-
         $admin = User::admin()->where('id', $id)->first();
         if($admin) {
             $admin->name = $request->name;
+            $admin->email = $request->email;
+            $admin->is_super = $request->is_super;
             $admin->save();
-            if(count($request->roles)) {
-                $admin->roles()->sync($request->roles);
-            }
+            $admin->roles()->sync($request->roles);
         }
         session()->flash('flash_type', 'success');
         session()->flash('flash_timestamp', time());

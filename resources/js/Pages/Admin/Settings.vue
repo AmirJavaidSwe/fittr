@@ -18,11 +18,11 @@ const switchTab = (val) => {
         :active="active_tab_index"
         @tab-changed="switchTab"
         >
-        <Tab :on="active_tab_index" :index="0">
+        <Tab :on="active_tab_index" :index="0" v-can="{ module: 'packages', roles: $page.props.user.user_roles, permission: 'viewAny', 'user': $page.props.user }">
             <ButtonLink :href="route('admin.packages.create')" type="primary">Add new</ButtonLink>
             <Packages :packages="$page.props.packages" />
         </Tab>
-        <Tab :on="active_tab_index" :index="1">
+        <Tab :on="active_tab_index" :index="1" v-can="{ module: 'admin-users', roles: $page.props.user.user_roles, permission: 'viewAny', 'user': $page.props.user }">
             <Admins :admins="$page.props.admins" />
         </Tab>
         <Tab :on="active_tab_index" :index="2">

@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\RoleRequest;
+use Illuminate\Support\Facades\Gate;
 
 class RoleController extends Controller
 {
@@ -24,17 +25,21 @@ class RoleController extends Controller
      */
     public function index(Request $request)
     {
-        // Gate::authorize('viewAny', Role::class);
-
         $this->search = $request->query('search', null);
         $this->per_page = $request->query('per_page', 10);
         $this->order_by = $request->query('order_by', 'created_at');
         $this->order_dir = $request->query('order_dir', 'desc');
 
-        return Inertia::render('Admin/Roles/Index', [
+        return Inertia::render('Roles/Index', [
             'roles' => Role::orderBy($this->order_by, $this->order_dir)
                 ->when($this->search, function ($query) {
                     $query->where('title', 'LIKE', '%' . $this->search . '%');
+                })
+                ->when(auth()->user()->source, function ($query) {
+                    $query->where('source', auth()->user()->source);
+                    if(auth()->user()->business_id) {
+                        $query = $query->where('business_id', auth()->user()->business_id);
+                    }
                 })
                 ->paginate($this->per_page)
                 ->withQueryString()
@@ -44,8 +49,8 @@ class RoleController extends Controller
                     'title' => $role->title,
                     'slug' => $role->slug,
                     'created_at' => $role->created_at,
-                    'url_show' => URL::route('admin.roles.show', $role->slug),
-                    'url_edit' => URL::route('admin.roles.edit', $role->slug),
+                    'url_show' => URL::route(auth()->user()->source.'.roles.show', $role->slug),
+                    'url_edit' => URL::route(auth()->user()->source.'.roles.edit', $role->slug),
                 ]),
             'search' => $this->search,
             'per_page' => intval($this->per_page),
@@ -61,10 +66,8 @@ class RoleController extends Controller
      */
     public function create()
     {
-        // Gate::authorize('create', Role::class);
-
-        $modules = SystemModule::with('permissions')->get();
-        return Inertia::render('Admin/Roles/Create', [
+        $modules = SystemModule::with('permissions')->where('is_for', auth()->user()->source)->get();
+        return Inertia::render('Roles/Create', [
             'modules' => $modules,
             'page_title' => __('New role'),
             'header' => __('New role'),
@@ -76,18 +79,13 @@ class RoleController extends Controller
      */
     public function store(RoleRequest $request)
     {
-        // Gate::authorize('create', Role::class);
-        $request->merge(['slug' => Str::slug($request->title)]);
-
-        $role = Role::where('slug', $request->slug)->first();
-        if(!$role) {
-            $role = Role::create($request->only('title', 'slug'));
+        $role = Role::create($request->only('title'));
+        if(auth()->user()->source) {
+            $role->source = auth()->user()->source;
+            $role->business_id = auth()->user()->business_id;
+            $role->save();
         }
-
-        if(count($request->permissions)) {
-            $role->permissions()->sync($request->permissions);
-        }
-
+        $role->permissions()->sync($request->permissions);
         return $this->redirectBackSuccess(__('Role created'));
     }
 
@@ -96,9 +94,14 @@ class RoleController extends Controller
      */
     public function show($slug)
     {
-        // Gate::authorize('view', Role::class);
-        $role = Role::where('slug', $slug)->with(['business'])->firstOrFail();
-        return Inertia::render('Admin/Roles/Show', [
+        $role = Role::where('slug', $slug)
+        ->where('source', auth()->user()->source);
+        if(auth()->user()->business_id) {
+            $role = $role->where('business_id', auth()->user()->business_id);
+        }
+        $role = $role->with(['business'])
+        ->firstOrFail();
+        return Inertia::render('Roles/Show', [
             'role' => $role,
             'page_title' => __('Role details'),
             'header' => __('Role details'),
@@ -110,10 +113,15 @@ class RoleController extends Controller
      */
     public function edit($slug)
     {
-        // Gate::authorize('update', Role::class);
-        $modules = SystemModule::with('permissions')->where('is_for', 'admin')->get();
-        $role = Role::with('permissions')->where('slug', $slug)->firstOrFail();
-        return Inertia::render('Admin/Roles/Edit', [
+        $modules = SystemModule::with('permissions')->where('is_for', auth()->user()->source)->get();
+        $role = Role::with('permissions')
+        ->where('source', auth()->user()->source);
+        if(auth()->user()->business_id) {
+            $role = $role->where('business_id', auth()->user()->business_id);
+        }
+        $role = $role->with(['business'])
+        ->where('slug', $slug)->firstOrFail();
+        return Inertia::render('Roles/Edit', [
             'role' => $role,
             'modules' => $modules,
             'page_title' => __('Role details'),
@@ -126,13 +134,15 @@ class RoleController extends Controller
      */
     public function update(RoleRequest $request, $slug)
     {
-        $role = Role::where('slug', $slug)->firstOrFail();
-        $request->merge(['slug' => Str::slug($request->title)]);
-        $role->update($request->only('title', 'slug'));
-        if(count($request->permissions)) {
-            $role->permissions()->sync($request->permissions);
+        $role = Role::where('slug', $slug)
+        ->where('source', auth()->user()->source);
+        if(auth()->user()->business_id) {
+            $role = $role->where('business_id', auth()->user()->business_id);
         }
-        return $this->redirectBackSuccess(__('Role updated'), 'admin.roles.index');
+        $role = $role->firstOrFail();
+        $role->update($request->only('title'));
+        $role->permissions()->sync($request->permissions);
+        return $this->redirectBackSuccess(__('Role updated'), auth()->user()->source.'.roles.index');
     }
 
     /**
@@ -140,12 +150,15 @@ class RoleController extends Controller
      */
     public function destroy($slug)
     {
-        // Gate::authorize('destroy', Role::class);
-
-        $role = Role::where('slug', $slug)->firstOrFail();
+        $role = Role::where('slug', $slug)
+        ->where('source', auth()->user()->source);
+        if(auth()->user()->business_id) {
+            $role = $role->where('business_id', auth()->user()->business_id);
+        }
+        $role = $role->firstOrFail();
         
         $role->delete();
 
-        return $this->redirectBackSuccess(__('Role deleted'), 'admin.roles.index');
+        return $this->redirectBackSuccess(__('Role deleted'), auth()->user()->source.'.roles.index');
     }
 }

@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue';
+import { ref, computed } from 'vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import AuthenticationCard from '@/Components/AuthenticationCard.vue';
 import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
@@ -9,7 +9,7 @@ const props = defineProps({
     status: String,
 });
 
-const form = useForm();
+const form = useForm({});
 
 const submit = () => {
     form.post(route('verification.send'));

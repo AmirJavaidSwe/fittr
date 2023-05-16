@@ -48,5 +48,9 @@ router.on('navigate', (event) => {
       <font-awesome-icon :icon="faGears" />
       <div>Settings</div>
     </NavLink>
+    <NavLink :href="route('partner.roles.index')" :active="active_route.name == 'partner.roles.index'">
+      <font-awesome-icon :icon="faGears" />
+      <div>Roles</div>
+    </NavLink>
   </div>
 </template>

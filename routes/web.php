@@ -140,6 +140,7 @@ Route::domain('app.'.config('app.domain'))->group(function () {
             Route::resource('classtypes', PartnerClassTypeController::class);
             Route::resource('plans', PartnerMembershipPlanController::class);
             Route::resource('classpacks', PartnerClassPackController::class);
+            Route::resource('roles', RoleController::class);
 
             Route::get('/exports', [PartnerExportController::class, 'index'])->name('exports.index');
             Route::get('/exports/{export}', [PartnerExportController::class, 'show'])->name('exports.show');

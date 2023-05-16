@@ -15,12 +15,14 @@ const form = useForm({
     name: props.admin.name,
     email: props.admin.email,
     id: props.admin.id,
+    is_super: props.admin.is_super ? true : false,
 });
 
 const updateAdmin = () => {
     form.transform((data) => ({
         ...data,
-        roles: roles.value
+        roles: data.is_super ? [] : roles.value,
+        is_super: data.is_super === true ? 1 : 0
     })).put(route('admin.settings.update.admins', { id: props.admin.id }), {
         preserveScroll: true
     });
@@ -31,7 +33,7 @@ const rolesList = computed(() => {
     for(let i = 0; i < props.roles.length; i++) {
         roles.push({
             value: props.roles[i].id,
-            label: props.roles[i].name
+            label: props.roles[i].title
         })
     }
     return roles
@@ -64,7 +66,11 @@ onMounted(() => {
                 <TextInput id="email" v-model="form.email" type="text" class="mt-1 block w-full" autocomplete="email" />
                 <InputError :message="form.errors.email" class="mt-2" />
             </div>
-            <div class="col-span-6 sm:col-span-4">
+            <div class="flex flex-row items-center justify-start">
+                    <Checkbox id="is_super_admin" v-model="form.is_super" :checked="form.is_super" class="mt-3 mr-2 mb-3"></Checkbox>
+                    <InputLabel for="is_super_admin" value="Is Super Admin?" class="mr-3 w-full" />
+            </div>
+            <div class="col-span-6 sm:col-span-4" v-if="!form.is_super">
                 <InputLabel for="roles" value="Select Roles" />
                 <Multiselect mode="tags" v-model="roles" :options="rolesList" />
             </div>

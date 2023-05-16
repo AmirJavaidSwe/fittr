@@ -15,27 +15,27 @@ router.on('navigate', (event) => {
 
 <template>
   <div class="hidden flex-shrink-0 p-4 w-56 bg-gray-100 overflow-y-auto md:block space-y-4">
-    <NavLink :href="route('admin.dashboard')" :active="active_route.name == 'admin.dashboard'">
+    <NavLink :href="route('admin.dashboard')" :active="active_route.name == 'admin.dashboard'" v-can="{ module: 'dashboard', roles: $page.props.user.user_roles, permission: 'viewAny', 'user': $page.props.user }">
       <font-awesome-icon :icon="faHome" />
       <div>Dashboard</div>
     </NavLink>
-    <NavLink :href="route('admin.partners.performance.index')" :active="active_route.name == 'admin.partners.performance.index'">
+    <NavLink :href="route('admin.partners.performance.index')" :active="active_route.name == 'admin.partners.performance.index'" v-can="{ module: 'partners-performance', roles: $page.props.user.user_roles, permission: 'viewAny', 'user': $page.props.user }">
       <font-awesome-icon :icon="faGaugeHigh" />
       <div>Partner performance</div>
     </NavLink>
-    <NavLink :href="route('admin.partners.index')" :active="active_route.name == 'admin.partners.index'">
+    <NavLink :href="route('admin.partners.index')" :active="active_route.name == 'admin.partners.index'" v-can="{ module: 'partner-management', roles: $page.props.user.user_roles, permission: 'viewAny', 'user': $page.props.user }">
       <font-awesome-icon :icon="faUserTie" />
       <div>Partner management</div>
     </NavLink>
-    <NavLink :href="route('admin.instances.index')" :active="active_route.name == 'admin.instances.index'">
+    <NavLink :href="route('admin.instances.index')" :active="active_route.name == 'admin.instances.index'" v-can="{ module: 'aws-instances', roles: $page.props.user.user_roles, permission: 'viewAny', 'user': $page.props.user }">
       <font-awesome-icon :icon="faServer" />
       <div>AWS Instances</div>
     </NavLink>
-    <NavLink :href="route('admin.settings')" :active="active_route.name == 'admin.settings'">
+    <NavLink :href="route('admin.settings')" :active="active_route.name == 'admin.settings'" v-can="{ module: 'settings', roles: $page.props.user.user_roles, permission: 'viewAny', 'user': $page.props.user }">
       <font-awesome-icon :icon="faGears" />
       <div>Settings</div>
     </NavLink>
-    <NavLink :href="route('admin.roles.index')" :active="active_route.name == 'admin.roles.index'">
+    <NavLink :href="route(`${$page.props.user.source}.roles.index`)" :active="active_route.name == `${$page.props.user.source}.roles.index`" v-can="{ module: 'roles', roles: $page.props.user.user_roles, permission: 'viewAny', 'user': $page.props.user }">
       <font-awesome-icon :icon="faGears" />
       <div>Roles</div>
     </NavLink>
