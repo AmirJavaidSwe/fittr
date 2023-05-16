@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Partner;
 
+use App\Models\Package;
 use App\Models\Role;
 use App\Models\User;
 use Inertia\Inertia;
@@ -13,51 +14,21 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\RoleRequest;
 use Illuminate\Support\Facades\Gate;
 
-class RoleController extends Controller
+class UserController extends Controller
 {
-    public $search;
-    public $per_page;
-    public $order_by;
-    public $order_dir;
-
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        $this->search = $request->query('search', null);
-        $this->per_page = $request->query('per_page', 10);
-        $this->order_by = $request->query('order_by', 'created_at');
-        $this->order_dir = $request->query('order_dir', 'desc');
-
-        return Inertia::render('Roles/Index', [
-            'roles' => Role::orderBy($this->order_by, $this->order_dir)
-                ->when($this->search, function ($query) {
-                    $query->where('title', 'LIKE', '%' . $this->search . '%');
-                })
-                ->when(auth()->user()->source, function ($query) {
-                    $query->where('source', auth()->user()->source);
-                    if(auth()->user()->business_id) {
-                        $query = $query->where('business_id', auth()->user()->business_id);
-                    }
-                })
-                ->paginate($this->per_page)
-                ->withQueryString()
-                //AbstractPaginator@through(), transforms chunk
-                ->through(fn ($role) => [
-                    'id' => $role->id,
-                    'title' => $role->title,
-                    'slug' => $role->slug,
-                    'created_at' => $role->created_at,
-                    'url_show' => URL::route(auth()->user()->source.'.roles.show', $role->slug),
-                    'url_edit' => URL::route(auth()->user()->source.'.roles.edit', $role->slug),
-                ]),
-            'search' => $this->search,
-            'per_page' => intval($this->per_page),
-            'order_by' => $this->order_by,
-            'order_dir' => $this->order_dir,
-            'page_title' => __('Roles'),
-            'header' => __('Roles management'),
+        return Inertia::render('Partner/Users/Index', [
+            'page_title' => __('Users'),
+            'header' => __('Users'),
+            'admins' => User::admin()
+                ->select('id', 'name', 'email', 'is_super', 'profile_photo_path','created_at')
+                ->where('source', auth()->user()->source)
+                ->where('business_id', auth()->user()->business_id)
+                ->get(),
         ]);
     }
 
@@ -66,11 +37,11 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $modules = SystemModule::with('permissions')->where('is_for', auth()->user()->source)->get();
-        return Inertia::render('Roles/Create', [
-            'modules' => $modules,
-            'page_title' => __('New role'),
-            'header' => __('New role'),
+        return Inertia::render('Partner/Users/Create', [
+            'page_title' => __('Add User'),
+            'header' => __('Add User'),
+            'roles' => Role::where('source', auth()->user()->source)
+                ->where('business_id', auth()->user()->business_id)->get(),
         ]);
     }
 

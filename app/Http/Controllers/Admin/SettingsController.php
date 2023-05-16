@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Requests\Admin\AdminUserRequest;
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 use App\Models\Package;
 use Illuminate\Http\Request;
@@ -22,6 +24,48 @@ class SettingsController extends Controller
             'admins' => User::admin()->select('id', 'name', 'email', 'is_super', 'profile_photo_path','created_at')->get(), // tab
         ]);
     }
+
+    public function addAdmins()
+    {
+        return Inertia::render('Admin/EditSettings/AddAdmin', [
+            'page_title' => __('Add Admin'),
+            'header' => __('Add Admin'),
+            'roles' => Role::get(),
+        ]);
+    }
+
+    public function saveAdmins(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:191',
+            'email' => [
+                'required',
+                'string',
+                'max:191',
+                Rule::unique('users', 'email')->whereNull('deleted_at')
+            ]
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            return back()->withErrors($errors)->withInput();
+        }
+
+        $admin = new User();
+        $admin->name = $request->name;
+        $admin->email = $request->email;
+        $admin->password = Hash::make($request->password);
+        $admin->is_super = $request->is_super;
+        $admin->source = auth()->user()->source;
+        $admin->business_id = auth()->user()->business_id;
+        $admin->save();
+        $admin->roles()->sync($request->roles);
+
+        session()->flash('flash_type', 'success');
+        session()->flash('flash_timestamp', time());
+        return redirect()->route('admin.settings')->with('flash_timestamp', time());
+    }
+
     public function editAdmins($id)
     {
         return Inertia::render('Admin/EditSettings/EditAdmin', [
@@ -31,7 +75,7 @@ class SettingsController extends Controller
             'admin' => User::admin()->with('roles')->where('id', $id)->first(), //tab
         ]);
     }
-    
+
     public function updateAdmins(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [

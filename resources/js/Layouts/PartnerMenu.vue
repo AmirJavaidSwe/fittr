@@ -3,7 +3,7 @@ import { reactive } from 'vue';
 import { router } from '@inertiajs/vue3'
 import NavLink from '@/Components/NavLink.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { 
+import {
   faHome,
   faBookOpen,
   faUsers,
@@ -52,5 +52,9 @@ router.on('navigate', (event) => {
       <font-awesome-icon :icon="faGears" />
       <div>Roles</div>
     </NavLink>
+      <NavLink :href="route('partner.users.index')" :active="active_route.name == 'partner.users.index'">
+          <font-awesome-icon :icon="faUsers" />
+          <div>Users</div>
+      </NavLink>
   </div>
 </template>

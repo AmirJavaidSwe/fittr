@@ -60,6 +60,8 @@ class PermissionSeeder extends Seeder
                 'Admin Users' => [
                     'viewAny',
                     'view',
+                    'create',
+                    'update',
                 ],
                 'Roles' => [
                     'viewAny',
@@ -71,6 +73,12 @@ class PermissionSeeder extends Seeder
             'partner' => [
                 'dashboard' => [
                     'viewAny',
+                ],
+                'Admin Users' => [
+                    'viewAny',
+                    'view',
+                    'create',
+                    'update',
                 ],
                 'Roles' => [
                     'viewAny',
@@ -134,12 +142,12 @@ class PermissionSeeder extends Seeder
                 ],
             ]
         ];
-        
+
         foreach ($modules_and_permissions as $moduleFor => $modulesData) {
             foreach ($modulesData as $key => $value) {
                 $title = ucwords(trim($key));
                 $slug = Str::slug($title);
-    
+
                 $module = SystemModule::updateOrCreate(
                     ['slug' => $slug, 'is_for' => $moduleFor],
                     ['title' => $title]

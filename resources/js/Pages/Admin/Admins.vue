@@ -14,6 +14,9 @@ const props = defineProps({
             Admins
         </template>
     </SectionTitle>
+    <div class="flex items-center justify-between mb-6">
+        <ButtonLink :href="'/admin/settings/add-admin'" type="primary">Add new</ButtonLink>
+    </div>
     <div class="relative overflow-x-auto shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
         <table class="table-auto text-left border-collapse w-full">
             <thead class="uppercase bg-gray-100 text-sm whitespace-nowrap">

@@ -74,6 +74,8 @@ Route::domain('app.'.config('app.domain'))->group(function () {
             });
             Route::get('/partners-performance', [PartnerController::class, 'performanceIndex'])->name('partners.performance.index');
             Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
+            Route::get('/settings/add-admin', [SettingsController::class, 'addAdmins'])->name('settings.add.admins');
+            Route::post('/settings/save-admin', [SettingsController::class, 'saveAdmins'])->name('settings.save.admins');
             Route::get('/settings/edit-admin/{id}', [SettingsController::class, 'editAdmins'])->name('settings.edit.admins');
             Route::put('/settings/edit-admin/{id}', [SettingsController::class, 'updateAdmins'])->name('settings.update.admins');
             //this can be resource controller, listing methods for clarity
@@ -148,6 +150,8 @@ Route::domain('app.'.config('app.domain'))->group(function () {
             Route::get('exports/download/request/{export}', [PartnerExportController::class, 'requestToDownload'])->name('exports.request-to-download');
             Route::delete('/exports/{export}', [PartnerExportController::class, 'destroy'])->name('exports.destroy');
             Route::post('/exports', [PartnerExportController::class, 'store']);
+
+            Route::resource('users', \App\Http\Controllers\Partner\UserController::class);
         });
 
     });
