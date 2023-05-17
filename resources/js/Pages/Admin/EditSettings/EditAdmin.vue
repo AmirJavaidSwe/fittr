@@ -66,7 +66,7 @@ onMounted(() => {
                 <TextInput id="email" v-model="form.email" type="text" class="mt-1 block w-full" autocomplete="email" />
                 <InputError :message="form.errors.email" class="mt-2" />
             </div>
-            <template v-if="!$page.props.user.id == form.id">
+            <template v-if="!($page.props.user.id == form.id)">
                 <div class="flex flex-row items-center justify-start">
                         <Checkbox id="is_super_admin" v-model="form.is_super" :checked="form.is_super" class="mt-3 mr-2 mb-3"></Checkbox>
                         <InputLabel for="is_super_admin" value="Is Super Admin?" class="mr-3 w-full" />

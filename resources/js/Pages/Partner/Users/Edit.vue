@@ -8,22 +8,22 @@ import _ from "lodash";
 const roles = ref([])
 
 const props = defineProps({
-    admin: Object,
+    editUser: Object,
     roles: Object,
 });
 const form = useForm({
-    name: props.admin.name,
-    email: props.admin.email,
-    id: props.admin.id,
-    is_super: props.admin.is_super ? true : false,
+    name: props.editUser.name,
+    email: props.editUser.email,
+    id: props.editUser.id,
+    is_super: props.editUser.is_super ? true : false,
 });
 
-const updateAdmin = () => {
+const updateUser = () => {
     form.transform((data) => ({
         ...data,
         roles: data.is_super ? [] : roles.value,
         is_super: data.is_super === true ? 1 : 0
-    })).put(route('partner.users.update', { id: props.admin.id }), {
+    })).put(route('partner.users.update', { id: props.editUser.id }), {
         preserveScroll: true
     });
 };
@@ -40,14 +40,14 @@ const rolesList = computed(() => {
 })
 
 onMounted(() => {
-    if(props.admin.roles.length) {
-        const ids = _.map(props.admin.roles, "id");
+    if(props.editUser.roles.length) {
+        const ids = _.map(props.editUser.roles, "id");
         roles.value = ids
     }
 })
 </script>
 <template>
-    <FormSection @submitted="updateAdmin">
+    <FormSection @submitted="updateUser">
         <template #title>
             User Information
         </template>
@@ -66,7 +66,7 @@ onMounted(() => {
                 <TextInput id="email" v-model="form.email" type="text" class="mt-1 block w-full" autocomplete="email" />
                 <InputError :message="form.errors.email" class="mt-2" />
             </div>
-            <template v-if="!$page.props.user.id == form.id">
+            <template v-if="!($page.props.user.id == form.id)">
                 <div class="flex flex-row items-center justify-start">
                     <Checkbox id="is_super_admin" v-model="form.is_super" :checked="form.is_super" class="mt-3 mr-2 mb-3"></Checkbox>
                     <InputLabel for="is_super_admin" value="Is Super Admin?" class="mr-3 w-full" />

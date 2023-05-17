@@ -8,7 +8,7 @@ import ButtonLink from '@/Components/ButtonLink.vue';
 
 
 const props = defineProps({
-    role: Object,
+    user: Object,
 });
 </script>
 
@@ -16,13 +16,13 @@ const props = defineProps({
     <Section>
         <SectionTitle>
             <template #title>
-                Role details
+                Usr details
             </template>
             <template #description>
                 <!-- Role ID: {{role.id}} -->
             </template>
             <template #aside>
-                <ButtonLink :href="route(`${$page.props.user.source}.roles.edit`, {id: role.slug})" type="primary">Edit</ButtonLink>
+                <ButtonLink :href="route(`partner.users.edit`, {id: user.id})" type="primary">Edit</ButtonLink>
             </template>
         </SectionTitle>
 
@@ -30,20 +30,20 @@ const props = defineProps({
 
         <dl class="max-w-md text-gray-900 divide-y divide-gray-200 dark:text-white dark:divide-gray-700">
             <div class="flex flex-col pb-3">
-                <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Title</dt>
-                <dd class="text-lg font-semibold text-gray-900 md:text-lg dark:text-gray-900">{{ role.title }}</dd>
+                <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Name</dt>
+                <dd class="text-lg font-semibold text-gray-900 md:text-lg dark:text-gray-900">{{ props.user.name }}</dd>
             </div>
             <div class="flex flex-col pb-3">
-                <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Source</dt>
-                <dd class="text-lg font-semibold text-gray-900 md:text-lg dark:text-gray-900">{{ role.source }}</dd>
+                <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Email</dt>
+                <dd class="text-lg font-semibold text-gray-900 md:text-lg dark:text-gray-900">{{ props.user.email }}</dd>
             </div>
             <div v-if="role.business_id" class="flex flex-col pb-3">
-                <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Business ID</dt>
-                <dd class="text-lg font-semibold text-gray-900 md:text-lg dark:text-gray-900">{{ role.business_id }}</dd>
-            </div>
-            <div class="flex flex-col pb-3">
-                <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Created At</dt>
-                <dd class="text-lg font-semibold text-gray-900 md:text-lg dark:text-gray-900">{{ DateTime.fromISO(role.created_at).toLocaleString(DateTime.DATETIME_FULL) }}</dd>
+                <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Roles</dt>
+                <dd class="text-lg font-semibold text-gray-900 md:text-lg dark:text-gray-900"> 
+                    <template v-for="(role, role_i) in props.user.roles" :key="role_i">
+                        <div class="block my-1 bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">{{ role.title }}</div>
+                    </template>
+                </dd>
             </div>
         </dl>
     </Section>
