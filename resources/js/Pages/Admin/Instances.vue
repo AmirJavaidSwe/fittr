@@ -46,7 +46,7 @@ const props = defineProps({
                     <td class="px-6 py-4">{{instance.state?.name}}</td>
                     <td class="px-6 py-4">{{DateTime.fromISO(instance.createdAt)}}</td>
                     <td class="px-6 py-4">
-                        <ButtonLink :href="route('admin.instances.show', {name: instance.name})" type="primary">Show</ButtonLink>
+                        <ButtonLink v-can="{ module: 'aws-instances', roles: $page.props.user.user_roles, permission: 'view', 'user': $page.props.user }" :href="route('admin.instances.show', {name: instance.name})" type="primary">Show</ButtonLink>
                     </td>
                 </tr>
             </tbody>

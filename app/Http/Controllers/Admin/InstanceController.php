@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Services\Admin\InstanceService;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Enums\AppUserSource;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Gate;
+use App\Services\Admin\InstanceService;
 
 class InstanceController extends Controller
 {
+    public $service;
+
     public function __construct(InstanceService $service)
     {
         $this->service = $service;
@@ -16,6 +20,9 @@ class InstanceController extends Controller
 
     public function index(Request $request)
     {
+        if (Gate::denies('viewAny-'.AppUserSource::admin->name . '-aws-instances-viewAny')) {
+            abort(403);
+        }
         //get a list of AWS Lightsail instances
         $api_results = $this->service->getInstances();
 
@@ -31,6 +38,9 @@ class InstanceController extends Controller
 
     public function show(Request $request, $name)
     {
+        if (Gate::denies('view-'.AppUserSource::admin->name . '-aws-instances-view')) {
+            abort(403);
+        }
         return Inertia::render('Admin/InstanceShow', [
             'api_results' => $this->service->getInstance($name),
             'page_title' => __('AWS Lightsail Instances'),
@@ -53,6 +63,9 @@ class InstanceController extends Controller
 
     public function showMetric(Request $request, $name, $metric)
     {
+        if (Gate::denies('showMetric-'.AppUserSource::admin->name . '-aws-instances-showMetric')) {
+            abort(403);
+        }
         return Inertia::render('Admin/InstanceMetric', [
             'api_results' => $this->service->GetInstanceMetricData($name, $metric),
             'page_title' => __('Instance metrics'),

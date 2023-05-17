@@ -61,7 +61,7 @@ watch(() => form.search, runSearch);
           <option value="50">50</option>
         </select>
       </search-filter>
-      <ButtonLink :href="route('admin.partners.index')" type="primary">Add new</ButtonLink>
+      <ButtonLink v-can="{ module: 'partner-management', roles: $page.props.user.user_roles, permission: 'create', 'user': $page.props.user }" :href="route('admin.partners.index')" type="primary">Add new</ButtonLink>
     </div>
 
     <div class="relative overflow-x-auto shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
@@ -83,13 +83,13 @@ watch(() => form.search, runSearch);
                     <td class="px-6 py-4">{{user.created_at}}</td>
                     <td class="px-6 py-4">
                         <div class="flex gap-4 justify-end">
-                            <Link title="Logged in as partner" :href="user.url_login_as">
+                            <Link title="Logged in as partner" :href="user.url_login_as" v-can="{ module: 'partner-management', roles: $page.props.user.user_roles, permission: 'loginAs', 'user': $page.props.user }">
                                 <font-awesome-icon :icon="faUser" />
                             </Link>
-                            <Link :href="user.url_edit">
+                            <Link :href="user.url_edit" v-can="{ module: 'partner-management', roles: $page.props.user.user_roles, permission: 'update', 'user': $page.props.user }">
                                 <font-awesome-icon :icon="faPencil" />
                             </Link>
-                            <Link :href="user.url_show">
+                            <Link :href="user.url_show" v-can="{ module: 'partner-management', roles: $page.props.user.user_roles, permission: 'view', 'user': $page.props.user }">
                                 <font-awesome-icon :icon="faChevronRight" />
                             </Link>
                         </div>

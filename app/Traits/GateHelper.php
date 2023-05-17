@@ -10,13 +10,14 @@ trait GateHelper
 
     public function createGate($gateName, $for, $module, $permission)
     {
+        $gateName = $gateName . '-' . $for . '-' . $module . '-' . $permission;
+
         return Gate::define($gateName, function () use ($for, $module, $permission) {
 
             $user = request()->user();
             if($user->is_super) return true;
 
             $sysModule = SystemModule::where('slug', $module)->where('is_for', $for)->first();
-
             if ($sysModule) {
                 return (auth()->user()->roles()->whereHas('permissions', function ($query) use ($permission, $sysModule) {
                     $query->where('system_module_id', $sysModule->id)->where('slug', $permission);

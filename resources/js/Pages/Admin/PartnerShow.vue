@@ -21,7 +21,7 @@ const props = defineProps({
                 User ID: {{partner.id}}
             </template>
             <template #aside>
-                <ButtonLink :href="route('admin.partners.edit', {id: partner.id})" type="primary">Edit</ButtonLink>
+                <ButtonLink v-can="{ module: 'partner-management', roles: $page.props.user.user_roles, permission: 'update', 'user': $page.props.user }" :href="route('admin.partners.edit', {id: partner.id})" type="primary">Edit</ButtonLink>
             </template>
         </SectionTitle>
 

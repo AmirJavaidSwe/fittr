@@ -3,6 +3,7 @@ import { Link, useForm } from "@inertiajs/vue3";
 import SectionTitle from '@/Components/SectionTitle.vue';
 import { DateTime } from "luxon";
 import { faPencil, faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import ButtonLink from '@/Components/ButtonLink.vue';
 const props = defineProps({
     admins: Array,
 });
@@ -55,7 +56,7 @@ const props = defineProps({
                     <td class="px-6 py-4">{{DateTime.fromISO(admin.created_at)}}</td>
                     <td class="px-6 py-4">
                         <div class="flex gap-4 justify-end">
-                            <Link :href="'/admin/settings/edit-admin/'+admin.id">
+                            <Link :href="'/admin/settings/edit-admin/'+admin.id" v-can="{ module: 'admin-users', roles: $page.props.user.user_roles, permission: 'update', 'user': $page.props.user }">
                             <font-awesome-icon :icon="faPencil" />
                             </Link>
                             <!-- <Link :href="role.url_show">

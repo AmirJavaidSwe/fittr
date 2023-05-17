@@ -42,9 +42,12 @@ class PermissionSeeder extends Seeder
                     'update',
                     'destroy',
                     'restore',
+                    'loginAs',
                 ],
                 "AWS Instances" => [
                     'viewAny',
+                    'view',
+                    'showMetric'
                 ],
                 'Settings' => [
                     'viewAny',
@@ -74,7 +77,7 @@ class PermissionSeeder extends Seeder
                 'dashboard' => [
                     'viewAny',
                 ],
-                'Admin Users' => [
+                'Users' => [
                     'viewAny',
                     'view',
                     'create',

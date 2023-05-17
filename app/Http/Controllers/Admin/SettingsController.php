@@ -2,31 +2,55 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\Admin\AdminUserRequest;
 use App\Models\Role;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 use App\Models\Package;
+use App\Enums\AppUserSource;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\Admin\AdminUserRequest;
 
 class SettingsController extends Controller
 {
     public function index()
     {
+        if (Gate::denies('viewAny-'.AppUserSource::admin->name . '-settings-viewAny')) {
+            abort(403);
+        }
+        
         return Inertia::render('Admin/Settings', [
             'page_title' => __('Settings'),
             'header' => __('Settings'),
-            'packages' => Package::all(), //tab
-            'admins' => User::admin()->select('id', 'name', 'email', 'is_super', 'profile_photo_path','created_at')->get(), // tab
+            'packages' => $this->getPackages(), // tab
+            'admins' => $this->getAdminUsers(), // tab
         ]);
+    }
+
+    public function getPackages() {
+        if (Gate::denies('viewAny-'.AppUserSource::admin->name . '-packages-viewAny')) {
+            return [];
+        }
+        return Package::all();
+    }
+    
+    public function getAdminUsers() {
+        if (Gate::denies('viewAny-'.AppUserSource::admin->name . '-admin-users-viewAny')) {
+            return [];
+        }
+        return User::admin()->select('id', 'name', 'email', 'is_super', 'profile_photo_path','created_at')->get();
     }
 
     public function addAdmins()
     {
+        if (Gate::denies('create-'.AppUserSource::admin->name . '-admin-users-create')) {
+            abort(403);
+        }
+
         return Inertia::render('Admin/EditSettings/AddAdmin', [
             'page_title' => __('Add Admin'),
             'header' => __('Add Admin'),
@@ -36,6 +60,10 @@ class SettingsController extends Controller
 
     public function saveAdmins(Request $request)
     {
+        if (Gate::denies('create-'.AppUserSource::admin->name . '-admin-users-create')) {
+            abort(403);
+        }
+
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:191',
             'email' => [
@@ -68,6 +96,10 @@ class SettingsController extends Controller
 
     public function editAdmins($id)
     {
+        if (Gate::denies('update-'.AppUserSource::admin->name . '-admin-users-update')) {
+            abort(403);
+        }
+
         return Inertia::render('Admin/EditSettings/EditAdmin', [
             'page_title' => __('Edit Admin'),
             'header' => __('Edit Admin'),
@@ -78,6 +110,10 @@ class SettingsController extends Controller
 
     public function updateAdmins(Request $request, $id)
     {
+        if (Gate::denies('update-'.AppUserSource::admin->name . '-admin-users-update')) {
+            abort(403);
+        }
+        
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:191',
             'email' => [

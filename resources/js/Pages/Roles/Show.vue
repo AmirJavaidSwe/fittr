@@ -22,7 +22,7 @@ const props = defineProps({
                 <!-- Role ID: {{role.id}} -->
             </template>
             <template #aside>
-                <ButtonLink :href="route(`${$page.props.user.source}.roles.edit`, {id: role.slug})" type="primary">Edit</ButtonLink>
+                <ButtonLink  v-can="{ module: 'roles', roles: $page.props.user.user_roles, permission: 'update', 'user': $page.props.user }" :href="route(`${$page.props.user.source}.roles.edit`, {id: role.slug})" type="primary">Edit</ButtonLink>
             </template>
         </SectionTitle>
 

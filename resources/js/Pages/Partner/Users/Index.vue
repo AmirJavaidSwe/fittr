@@ -11,11 +11,6 @@ import { faPencil, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 const props = defineProps({
     admins: Object,
 });
-
-// form.search getter only;
-watch(() => {
-
-});
 </script>
 <template>
     <SectionTitle>

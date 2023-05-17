@@ -15,9 +15,10 @@ class PartnerDashboardController extends Controller
 {
     public function index(Request $request)
     {
-        if (Gate::denies('viewAny', [AppUserSource::partner->name, 'dashboard', 'viewAny'])) {
-            abort(403);            
+        if (Gate::denies('viewAny-'.AppUserSource::partner->name . '-dashboard-viewAny')) {
+            abort(403);
         }
+
         $partner = $request->user();
 
         $totalClasses = ClassLesson::count();

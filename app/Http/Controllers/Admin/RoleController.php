@@ -6,12 +6,13 @@ use App\Models\Role;
 use App\Models\User;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
+use App\Enums\AppUserSource;
 use App\Models\SystemModule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\RoleRequest;
 use Illuminate\Support\Facades\Gate;
+use App\Http\Requests\Admin\RoleRequest;
 
 class RoleController extends Controller
 {
@@ -25,6 +26,10 @@ class RoleController extends Controller
      */
     public function index(Request $request)
     {
+        if (Gate::denies('viewAny-'.AppUserSource::admin->name . '-roles-viewAny')) {
+            abort(403);
+        }
+        
         $this->search = $request->query('search', null);
         $this->per_page = $request->query('per_page', 10);
         $this->order_by = $request->query('order_by', 'created_at');
@@ -66,6 +71,10 @@ class RoleController extends Controller
      */
     public function create()
     {
+        if (Gate::denies('create-'.AppUserSource::admin->name . '-roles-create')) {
+            abort(403);
+        }
+
         $modules = SystemModule::with('permissions')->where('is_for', auth()->user()->source)->get();
         return Inertia::render('Roles/Create', [
             'modules' => $modules,
@@ -79,6 +88,10 @@ class RoleController extends Controller
      */
     public function store(RoleRequest $request)
     {
+        if (Gate::denies('create-'.AppUserSource::admin->name . '-roles-create')) {
+            abort(403);
+        }
+
         $role = Role::create($request->only('title'));
         if(auth()->user()->source) {
             $role->source = auth()->user()->source;
@@ -94,6 +107,10 @@ class RoleController extends Controller
      */
     public function show($slug)
     {
+        if (Gate::denies('view-'.AppUserSource::admin->name . '-roles-view')) {
+            abort(403);
+        }
+
         $role = Role::where('slug', $slug)
         ->where('source', auth()->user()->source);
         if(auth()->user()->business_id) {
@@ -113,6 +130,10 @@ class RoleController extends Controller
      */
     public function edit($slug)
     {
+        if (Gate::denies('update-'.AppUserSource::admin->name . '-roles-update')) {
+            abort(403);
+        }
+
         $modules = SystemModule::with('permissions')->where('is_for', auth()->user()->source)->get();
         $role = Role::with('permissions')
         ->where('source', auth()->user()->source);
@@ -134,6 +155,10 @@ class RoleController extends Controller
      */
     public function update(RoleRequest $request, $slug)
     {
+        if (Gate::denies('update-'.AppUserSource::admin->name . '-roles-update')) {
+            abort(403);
+        }
+
         $role = Role::where('slug', $slug)
         ->where('source', auth()->user()->source);
         if(auth()->user()->business_id) {
@@ -150,6 +175,10 @@ class RoleController extends Controller
      */
     public function destroy($slug)
     {
+        if (Gate::denies('destroy-'.AppUserSource::admin->name . '-roles-destroy')) {
+            abort(403);
+        }
+
         $role = Role::where('slug', $slug)
         ->where('source', auth()->user()->source);
         if(auth()->user()->business_id) {

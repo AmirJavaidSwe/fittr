@@ -61,7 +61,7 @@ const confirmSubscribe = () => {
             <span v-else>
                 {{pack.title}}
             </span>
-            <Link :href="edit_link" v-if="can_edit" class="text-base text-gray-500 hover:text-gray-900 transition">
+            <Link :href="edit_link" v-if="can_edit" class="text-base text-gray-500 hover:text-gray-900 transition" v-can="{ module: 'packages', roles: $page.props.user.user_roles, permission: 'update', 'user': $page.props.user }">
                 <span v-if="pack.is_private" class="font-normal p-2 text-xs">private</span>
                 <font-awesome-icon :icon="faPencil" />
             </Link>

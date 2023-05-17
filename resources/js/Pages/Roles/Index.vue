@@ -98,11 +98,11 @@ watch(() => form.search, runSearch);
                     <!-- <td class="px-6 py-4">{{ role.created_by }}</td> -->
                     <td class="px-6 py-4">
                         <div class="flex gap-4 justify-end">
-                            <Link :href="role.url_edit">
+                            <Link :href="role.url_edit" v-can="{ module: 'roles', roles: $page.props.user.user_roles, permission: 'update', 'user': $page.props.user }">
                                 <font-awesome-icon :icon="faPencil" />
                             </Link>
                             <Link :href="role.url_show" v-can="{ module: 'roles', roles: $page.props.user.user_roles, permission: 'view', 'user': $page.props.user }">
-                                <font-awesome-icon :icon="faChevronRight" v-can="{ module: 'roles', roles: $page.props.user.user_roles, permission: 'update', 'user': $page.props.user }" />
+                                <font-awesome-icon :icon="faChevronRight" />
                             </Link>
                         </div>
                     </td>
