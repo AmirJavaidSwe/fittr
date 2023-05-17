@@ -2,6 +2,7 @@
 import { ref, computed, defineAsyncComponent } from 'vue';
 import { router, Link, usePage } from '@inertiajs/vue3';
 import AppHead from '@/Layouts/AppHead.vue';
+import StoreMenu from '@/Layouts/StoreMenu.vue';
 import LogoLetter from '@/Components/LogoLetter.vue';
 import Banner from '@/Components/Banner.vue';
 import FlashMessage from '@/Components/FlashMessage.vue';
@@ -28,7 +29,7 @@ const toggleMenu = (v) => {
     showingNavigationDropdown.value = v;
 };
 
-const MainMenu = defineAsyncComponent(() => {
+const LoggedinMenu = defineAsyncComponent(() => {
     // const user = usePage().props.user;
     // if(!user) {
     //     return import('./MemberMenu.vue');
@@ -83,8 +84,9 @@ const headerIsArray = computed(() => {
         <div class="min-h-screen bg-gray-50">
             <!-- Desktop, flex -->
             <div class="md:flex md:flex-col md:h-screen">
+                <!-- Navbar (Logo, navigation, drop/mobile navigation) -->
                 <div class="md:flex md:flex-shrink-0">
-                    <div class="flex items-center justify-between md:flex-shrink-0 md:justify-center md:w-56 bg-white">
+                    <div class="flex items-center justify-between md:flex-shrink-0 bg-green-100 w-full">
                         <!-- Logo -->
                         <Link :href="business_seetings.logo_url ?? '/'" class="">
                             <div v-if="business_seetings.logo" class="h-20 w-56">
@@ -94,6 +96,7 @@ const headerIsArray = computed(() => {
                                 {{business_seetings.business_name ?? 'LOGO'}}
                             </div>
                         </Link>
+                        <StoreMenu class="hidden md:flex gap-2" />
                         <!-- Mobile toggle, visible md and smaller -->
                         <Dropdown align="right" width="48" :content-classes="['bg-gray-100', 'p-1']" @toggled="toggleMenu">
                             <template #trigger>
@@ -122,27 +125,9 @@ const headerIsArray = computed(() => {
                             </button>
                             </template>
                             <template #content>
-                                <MainMenu />
+                                <StoreMenu class="bg-white space-y-4" />
                             </template>
                         </Dropdown>
-                    </div>
-                    <div class="bg-white flex items-center justify-between md:px-6 md:py-0 md:text-md p-4 shadow text-sm w-full gap-4">
-                        <!-- Page Heading / Menu item name-->
-                        <header class="bg-white ">
-                            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                                <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                                    <div v-if="headerIsArray" class="flex flex-wrap gap-2">
-                                        <div v-for="item in header">
-                                            <Link v-if="item.link" :href="item.link" class="text-blue-600">{{item.title}}</Link>
-                                            <span v-else>
-                                                {{item.title}}
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <span v-else>{{header}}</span>
-                                </h2>
-                            </div>
-                        </header>
                         <!-- Settings Dropdown -->
                         <div v-if="$page.props.user" class="relative flex-shrink-0">
                             <Dropdown align="right" width="48" :content-classes="['bg-white']">
@@ -191,9 +176,10 @@ const headerIsArray = computed(() => {
                         </div>
                     </div>
                 </div>
+                <!-- Body -->
                 <div class="md:flex md:flex-grow md:overflow-hidden">
                     <!-- Menu -->
-                    <MainMenu />
+                    <LoggedinMenu />
                     <!-- Page Content -->
                     <div class="md:flex-1 overflow-y-auto">
                         <main class="py-8 sm:px-6 lg:px-8 space-y-8">

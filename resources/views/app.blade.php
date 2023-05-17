@@ -12,7 +12,14 @@
         <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700&display=swap" rel="stylesheet">
 
         <!-- Scripts -->
-        @routes(['common', 'partner', 'admin'])
+        {{-- Ziggy routes, needs work --}}
+        @routes(['common', 'partner', 'admin', 'store'])
+        {{-- @if (auth()->user())
+            @routes(['common', 'partner', 'admin'])
+        @else
+            @routes(['common', 'store'])
+        @endif --}}
+
         @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
         @inertiaHead
     </head>

@@ -35,6 +35,13 @@ class ClassLesson extends Model
         'duration',
     ];
 
+    //Local scopes
+    public function scopeActive($query)
+    {
+        $query->where('status', ClassStatus::ACTIVE->value);
+    }
+
+    //Relationships
     public function studio(): BelongsTo
     {
         return $this->belongsTo(Studio::class);

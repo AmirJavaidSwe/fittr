@@ -91,7 +91,7 @@ const headerIsArray = computed(() => {
                             </button>
                             </template>
                             <template #content>
-                                <MainMenu />
+                                <MainMenu class="hidden:md" />
                             </template>
                         </Dropdown>
                     </div>
@@ -174,7 +174,7 @@ const headerIsArray = computed(() => {
                 </div>
                 <div class="md:flex md:flex-grow md:overflow-hidden">
                     <!-- Menu -->
-                    <MainMenu />
+                    <MainMenu class="hidden md:block w-56" />
                     <!-- Page Content -->
                     <div class="md:flex-1 overflow-y-auto">
                         <main class="py-8 sm:px-6 lg:px-8 space-y-8">

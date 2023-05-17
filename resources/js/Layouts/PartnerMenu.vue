@@ -23,7 +23,7 @@ router.on('navigate', (event) => {
 </script>
 
 <template>
-  <div class="hidden flex-shrink-0 p-4 w-56 bg-gray-100 overflow-y-auto md:block space-y-4">
+  <div class="flex-shrink-0 p-4 bg-gray-100 overflow-y-auto space-y-4">
     <NavLink :href="route('partner.dashboard')" :active="active_route.name == 'partner.dashboard'">
       <font-awesome-icon :icon="faHome" />
       <div>Dashboard</div>
