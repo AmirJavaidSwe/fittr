@@ -48,6 +48,8 @@ class PartnerController extends Controller
                         'id' => $user->id,
                         'name' => $user->name,
                         'email' => $user->email,
+                        'business_id' => $user->business_id,
+                        'business_name' => $user->business->settings->firstWhere('key', 'business_name')?->val,
                         'created_at' => $user->created_at->format('Y-m-d'),
                         'url_show' => URL::route('admin.partners.show', $user),
                         'url_edit' => URL::route('admin.partners.edit', $user),
@@ -103,8 +105,8 @@ class PartnerController extends Controller
         User::partner()
             ->findOrFail($id)
             ->update($validated);
-        session()->flash('flash_type', 'success');
-        session()->flash('flash_timestamp', time());
+
+        return $this->redirectBackSuccess(__('Partner user updated'));
     }
 
     public function performanceIndex(Request $request)

@@ -32,15 +32,8 @@ const submit = () => {
     });
 };
 
-const input = ref(null);
 const showPassword = ref(false);
-
-const inputType = computed(() => (showPassword.value ? "text" : "password"));
-
-const togglePasswordVisibility = () => {
-    showPassword.value = !showPassword.value;
-    input.value.type = showPassword.value ? "text" : "password";
-};
+const inputPasswordType = computed(() => (showPassword.value ? "text" : "password"));
 </script>
 
 <template>
@@ -64,9 +57,9 @@ const togglePasswordVisibility = () => {
 
             <div class="mt-4">
                 <InputLabel for="password" value="Password" class="mb-1" />
-                <div class="relative border-none p-0">
-                    <TextInput ref="input" :type="inputType" id="password" v-model="form.password" class="mt-1 block w-full" required autocomplete="current-password" />
-                    <button type="button" @click="togglePasswordVisibility"
+                <div class="relative">
+                    <TextInput :type="inputPasswordType" id="password" v-model="form.password" class="mt-1 block w-full" required autocomplete="current-password" />
+                    <button type="button" @click="showPassword = !showPassword"
                         class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 focus:outline-none">
                         <template v-if="showPassword">
                             <font-awesome-icon :icon="faEyeSlash" />

@@ -25,22 +25,10 @@ const submit = () => {
         onFinish: () => form.reset('password', 'password_confirmation'),
     });
 };
-const inputPassword = ref(null);
-const inputConfirmPassword = ref(null);
 const showPassword = ref(false);
 const showConfirmPassword = ref(false);
-
 const inputPasswordType = computed(() => (showPassword.value ? "text" : "password"));
 const inputConfirmPasswordType = computed(() => (showConfirmPassword.value ? "text" : "password"));
-
-const togglePasswordVisibility = () => {
-    showPassword.value = !showPassword.value;
-    inputPassword.value.type = showPassword.value ? "text" : "password";
-};
-const toggleConfirmPasswordVisibility = () => {
-    showConfirmPassword.value = !showConfirmPassword.value;
-    inputConfirmPassword.value.type = showConfirmPassword.value ? "text" : "password";
-};
 </script>
 
 <template>
@@ -67,10 +55,10 @@ const toggleConfirmPasswordVisibility = () => {
 
             <div class="mt-4">
                 <InputLabel for="password" value="Password" class="mb-1" />
-                <div class="relative border-none p-0">
-                    <TextInput ref="inputPassword" id="password" v-model="form.password" :type="inputPasswordType" class="mt-1 block w-full" required
+                <div class="relative">
+                    <TextInput id="password" v-model="form.password" :type="inputPasswordType" class="mt-1 block w-full" required
                         autocomplete="new-password" />
-                    <button type="button" @click="togglePasswordVisibility"
+                    <button type="button" @click="showPassword = !showPassword"
                         class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 focus:outline-none">
                         <template v-if="showPassword">
                             <font-awesome-icon :icon="faEyeSlash" />
@@ -85,10 +73,10 @@ const toggleConfirmPasswordVisibility = () => {
 
             <div class="mt-4">
                 <InputLabel for="password_confirmation" value="Confirm Password" class="mb-1" />
-                <div class="relative border-none p-0">
-                    <TextInput ref="inputConfirmPassword" id="password_confirmation" v-model="form.password_confirmation" :type="inputConfirmPasswordType"
+                <div class="relative">
+                    <TextInput id="password_confirmation" v-model="form.password_confirmation" :type="inputConfirmPasswordType"
                         class="mt-1 block w-full" required autocomplete="new-password" />
-                    <button type="button" @click="toggleConfirmPasswordVisibility"
+                    <button type="button" @click="showConfirmPassword = !showConfirmPassword"
                         class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 focus:outline-none">
                         <template v-if="showConfirmPassword">
                             <font-awesome-icon :icon="faEyeSlash" />

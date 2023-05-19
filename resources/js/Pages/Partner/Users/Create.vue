@@ -1,12 +1,18 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { useForm } from '@inertiajs/vue3';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faEye,faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import FormSection from '@/Components/FormSection.vue';
+import InputLabel from '@/Components/InputLabel.vue';
+import InputError from '@/Components/InputError.vue';
+import TextInput from '@/Components/TextInput.vue';
+import Checkbox from '@/Components/Checkbox.vue';
+import ActionMessage from '@/Components/ActionMessage.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
 import Multiselect from '@vueform/multiselect';
-import _ from "lodash";
 
-
-const roles = ref([])
-
+const roles = ref([]);
 const props = defineProps({
     roles: Object,
 });
@@ -21,7 +27,8 @@ const create = () => {
     form.transform((data) => ({
         ...data,
         roles: data.is_super ? [] : roles.value,
-        is_super: data.is_super === true ? 1 : 0
+        is_super: data.is_super,
+        is_new: 1,
     })).post(route('partner.users.store'), {
         preserveScroll: true
     });
@@ -38,8 +45,8 @@ const rolesList = computed(() => {
     return roles
 })
 
-onMounted(() => {
-})
+const showPassword = ref(false);
+const inputPasswordType = computed(() => (showPassword.value ? "text" : "password"));
 </script>
 
 <template>
@@ -64,7 +71,18 @@ onMounted(() => {
             </div>
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="password" value="Password" />
-                <TextInput id="password" v-model="form.password" type="password" class="mt-1 block w-full" />
+                <div class="relative">
+                    <TextInput id="password" v-model="form.password" :type="inputPasswordType" class="mt-1 block w-full" />
+                    <button type="button" @click="showPassword = !showPassword"
+                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 focus:outline-none">
+                        <template v-if="showPassword">
+                            <font-awesome-icon :icon="faEyeSlash" />
+                        </template>
+                        <template v-else>
+                            <font-awesome-icon :icon="faEye" class="text-green-600" />
+                        </template>
+                    </button>
+                </div>
                 <InputError :message="form.errors.password" class="mt-2" />
             </div>
             <div class="flex flex-row items-center justify-start">
@@ -74,6 +92,7 @@ onMounted(() => {
             <div class="col-span-6 sm:col-span-4" v-if="!form.is_super">
                 <InputLabel for="roles" value="Select Roles" />
                 <Multiselect mode="tags" v-model="roles" :options="rolesList" />
+                <InputError :message="form.errors.roles" class="mt-2" />
             </div>
 
         </template>

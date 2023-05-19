@@ -1,23 +1,44 @@
 <script setup>
-import { watch } from "vue";
-import { Link, useForm, usePage } from "@inertiajs/vue3";
+import { ref, watch } from "vue";
+import { Link, useForm } from "@inertiajs/vue3";
 // import Section from '@/Components/Section.vue';
 import SectionTitle from "@/Components/SectionTitle.vue";
 import SearchFilter from "@/Components/SearchFilter.vue";
 import Pagination from "@/Components/Pagination.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
+import SecondaryButton from '@/Components/SecondaryButton.vue';
+import DangerButton from '@/Components/DangerButton.vue';
+import ConfirmationModal from '@/Components/ConfirmationModal.vue';
 import { DateTime } from "luxon";
 import { faPencil, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 const props = defineProps({
     users: Object,
 });
+const form = useForm({});
+//delete confirmation modal:
+const itemDeleting = ref(false);
+const itemIdDeleting = ref(null);
+const confirmDeletion = (id) => {
+    itemIdDeleting.value = id;
+    itemDeleting.value = true;
+};
+const deleteItem = () => {
+    form.delete(route('partner.users.destroy', { id: itemIdDeleting.value }), {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: () => {
+            itemDeleting.value = false;
+            itemIdDeleting.value = null;
+        },
+    });
+};
 </script>
 <template>
     <SectionTitle>
         <template #title> All Users </template>
     </SectionTitle>
     <div class="flex items-center justify-between mb-6">
-        <ButtonLink :href="route(`partner.users.create`)" type="primary">Add new</ButtonLink>
+        <ButtonLink :href="route('partner.users.create')" type="primary">Add new</ButtonLink>
     </div>
 
     <div class="relative overflow-x-auto shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
@@ -58,16 +79,44 @@ const props = defineProps({
                 <td class="px-6 py-4">{{DateTime.fromISO(user.created_at)}}</td>
                 <td class="px-6 py-4">
                     <div class="flex gap-4 justify-end">
-                        <Link :href="route(`partner.users.edit`,user.id)">
+                        <Link :href="route('partner.users.edit',user.id)">
                             <font-awesome-icon :icon="faPencil" />
                         </Link>
                         <!-- <Link :href="role.url_show">
                         <font-awesome-icon :icon="faChevronRight" />
                         </Link> -->
+                        <button class="block text-red-500" v-if="$page.props.user.id != user.id" @click="confirmDeletion(user.id)">
+                            Delete
+                        </button>
                     </div>
                 </td>
             </tr>
             </tbody>
         </table>
     </div>
+    <!-- Delete Confirmation Modal -->
+    <ConfirmationModal :show="itemDeleting" @close="itemDeleting = false">
+        <template #title>
+            Confirmation required
+        </template>
+
+        <template #content>
+            Are you sure you would like to delete this?
+        </template>
+
+        <template #footer>
+            <SecondaryButton @click="itemDeleting = null">
+                Cancel
+            </SecondaryButton>
+
+            <DangerButton
+                class="ml-3"
+                :class="{ 'opacity-25': form.processing }"
+                :disabled="form.processing"
+                @click="deleteItem"
+            >
+                Delete
+            </DangerButton>
+        </template>
+    </ConfirmationModal>
 </template>

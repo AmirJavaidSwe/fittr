@@ -11,6 +11,7 @@ import {
     faTicketSimple,
     faCreditCard,
     faFileInvoice,
+    faShieldHalved,
     faPeopleGroup,
     faEnvelopesBulk,
     faDoorOpen,
@@ -90,7 +91,10 @@ import CardIcon from '@/Components/CardIcon.vue';
                     </template>
                 </CardIcon>
 
-                <CardIcon :card-link="route('partner.classtypes.index')">
+                <CardIcon 
+                    :card-link="route('partner.classtypes.index')"
+                    v-can="{ module: 'studio-class-type', roles: $page.props.user.user_roles, permission: 'viewAny', 'user': $page.props.user }"
+                    >
                     <template #icon>
                         <font-awesome-icon :icon="faGamepad" />
                     </template>
@@ -104,7 +108,10 @@ import CardIcon from '@/Components/CardIcon.vue';
                     </template>
                 </CardIcon>
 
-                <CardIcon :card-link="route('partner.amenity.index')">
+                <CardIcon
+                    :card-link="route('partner.amenity.index')"
+                    v-can="{ module: 'studio-amenities', roles: $page.props.user.user_roles, permission: 'viewAny', 'user': $page.props.user }"
+                    >
                     <template #icon>
                         <font-awesome-icon :icon="faWandMagicSparkles" />
                     </template>
@@ -250,17 +257,31 @@ import CardIcon from '@/Components/CardIcon.vue';
                     Team & Communication
                 </div>
 
-                <CardIcon card-link="#">
+                <CardIcon :card-link="route('partner.users.index')">
                     <template #icon>
                         <font-awesome-icon :icon="faPeopleGroup" />
                     </template>
 
                     <template #title>
-                        Team Access
+                        Team
                     </template>
 
                     <template #default>
-                        Manage your staff and permissions
+                        Manage organization users
+                    </template>
+                </CardIcon>
+
+                <CardIcon :card-link="route('partner.roles.index')">
+                    <template #icon>
+                        <font-awesome-icon :icon="faShieldHalved" />
+                    </template>
+
+                    <template #title>
+                        Roles
+                    </template>
+
+                    <template #default>
+                        Manage roles and permissions
                     </template>
                 </CardIcon>
 

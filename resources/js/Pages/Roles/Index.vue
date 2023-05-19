@@ -1,11 +1,13 @@
 <script setup>
-import { watch } from "vue";
+import { ref, watch } from "vue";
 import { Link, useForm, usePage } from "@inertiajs/vue3";
-// import Section from '@/Components/Section.vue';
 import SectionTitle from "@/Components/SectionTitle.vue";
 import SearchFilter from "@/Components/SearchFilter.vue";
 import Pagination from "@/Components/Pagination.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
+import SecondaryButton from '@/Components/SecondaryButton.vue';
+import DangerButton from '@/Components/DangerButton.vue';
+import ConfirmationModal from '@/Components/ConfirmationModal.vue';
 import { DateTime } from "luxon";
 import { faPencil, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 const props = defineProps({
@@ -14,6 +16,7 @@ const props = defineProps({
     per_page: Number,
     order_by: String,
     order_dir: String,
+    business_seetings: Object,
 });
 
 const form = useForm({
@@ -22,6 +25,24 @@ const form = useForm({
     order_by: props.order_by,
     order_dir: props.order_dir,
 });
+
+//delete confirmation modal:
+const itemDeleting = ref(false);
+const itemIdDeleting = ref(null);
+const confirmDeletion = (slug) => {
+    itemIdDeleting.value = slug;
+    itemDeleting.value = true;
+};
+const deleteItem = () => {
+    form.delete(route('partner.roles.destroy', { id: itemIdDeleting.value }), {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: () => {
+            itemDeleting.value = false;
+            itemIdDeleting.value = null;
+        },
+    });
+};
 
 const setOrdering = (col) => {
     //reverse same col order
@@ -75,10 +96,6 @@ watch(() => form.search, runSearch);
                         :class="form.order_by == 'created_at' ? 'border-indigo-500' : ''">
                         Date created
                     </th>
-                    <!-- <th @click="setOrdering('created_by')" class="px-6 py-3 border-b cursor-pointer"
-                        :class="form.order_by == 'created_by' ? 'border-indigo-500' : ''">
-                        Created by
-                    </th> -->
                     <th class="border-b"></th>
                 </tr>
             </thead>
@@ -87,14 +104,14 @@ watch(() => form.search, runSearch);
                     class="border-b whitespace-nowrap bg-white hover:bg-gray-50">
                     <td class="px-6 py-4">{{ role.id }}</td>
                     <td class="px-6 py-4">{{ role.title }}</td>
-                    <td class="px-6 py-4">{{ DateTime.fromISO(role.created_at).toLocaleString({
-                        month: 'long',
-                        day: 'numeric',
-                        year: 'numeric',
-                        hour: 'numeric',
-                        minute: 'numeric',
-                        hour12: true,
-                    }) }}</td>
+                    <td class="px-6 py-4">
+                        <div v-if="business_seetings">
+                             {{ DateTime.fromISO(role.created_at).setZone(business_seetings.timezone).toFormat(business_seetings.date_format.format_js +' '+ business_seetings.time_format?.format_js) }}
+                        </div>
+                        <div v-else>
+                             {{ DateTime.fromISO(role.created_at).toLocaleString(DateTime.DATETIME_HUGE) }}
+                        </div>
+                    </td>
                     <!-- <td class="px-6 py-4">{{ role.created_by }}</td> -->
                     <td class="px-6 py-4">
                         <div class="flex gap-4 justify-end">
@@ -104,6 +121,9 @@ watch(() => form.search, runSearch);
                             <Link :href="role.url_show" v-can="{ module: 'roles', roles: $page.props.user.user_roles, permission: 'view', 'user': $page.props.user }">
                                 <font-awesome-icon :icon="faChevronRight" />
                             </Link>
+                            <button class="block text-red-500" @click="confirmDeletion(role.slug)">
+                                Delete
+                            </button>
                         </div>
                     </td>
                 </tr>
@@ -113,4 +133,29 @@ watch(() => form.search, runSearch);
 
     <p>Viewing {{ roles.from }} - {{ roles.to }} of {{ roles.total }} results</p>
     <pagination class="mt-6" :links="roles.links" />
+    <!-- Delete Confirmation Modal -->
+    <ConfirmationModal :show="itemDeleting" @close="itemDeleting = false">
+        <template #title>
+            Confirmation required
+        </template>
+
+        <template #content>
+            Are you sure you would like to delete this?
+        </template>
+
+        <template #footer>
+            <SecondaryButton @click="itemDeleting = null">
+                Cancel
+            </SecondaryButton>
+
+            <DangerButton
+                class="ml-3"
+                :class="{ 'opacity-25': form.processing }"
+                :disabled="form.processing"
+                @click="deleteItem"
+            >
+                Delete
+            </DangerButton>
+        </template>
+    </ConfirmationModal>
 </template>

@@ -69,6 +69,8 @@ watch(() => form.search, runSearch);
             <thead class="uppercase bg-gray-100 text-sm whitespace-nowrap">
                 <tr>
                     <th @click="setOrdering('id')" class="px-6 py-3 border-b cursor-pointer" :class="form.order_by == 'id' ? 'border-indigo-500' : ''">ID</th>
+                    <th @click="setOrdering('business_id')" class="px-6 py-3 border-b cursor-pointer" :class="form.order_by == 'business_id' ? 'border-indigo-500' : ''">BID</th>
+                    <th class="px-6 py-3 border-b">Business</th>
                     <th @click="setOrdering('name')" class="px-6 py-3 border-b cursor-pointer" :class="form.order_by == 'name' ? 'border-indigo-500' : ''">Name</th>
                     <th @click="setOrdering('email')" class="px-6 py-3 border-b cursor-pointer" :class="form.order_by == 'email' ? 'border-indigo-500' : ''">Email</th>
                     <th @click="setOrdering('created_at')" class="px-6 py-3 border-b cursor-pointer" :class="form.order_by == 'created_at' ? 'border-indigo-500' : ''">Date created</th>
@@ -78,6 +80,8 @@ watch(() => form.search, runSearch);
             <tbody>
                 <tr v-for="user in props.users.data" :key="user.id" class="border-b whitespace-nowrap bg-white hover:bg-gray-50">
                     <td class="px-6 py-4">{{user.id}}</td>
+                    <td class="px-6 py-4">{{user.business_id}}</td>
+                    <td class="px-6 py-4">{{user.business_name}}</td>
                     <td class="px-6 py-4">{{user.name}}</td>
                     <td class="px-6 py-4">{{user.email}}</td>
                     <td class="px-6 py-4">{{user.created_at}}</td>

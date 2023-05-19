@@ -2,6 +2,16 @@
 import { ref, computed } from 'vue';
 import { useForm, usePage } from '@inertiajs/vue3';
 import { RoleHelpers } from "./RoleHelpers/Index.js";
+import FormSection from '@/Components/FormSection.vue';
+import Section from '@/Components/Section.vue';
+import SectionBorder from '@/Components/SectionBorder.vue';
+import SectionTitle from '@/Components/SectionTitle.vue';
+import Checkbox from '@/Components/Checkbox.vue';
+import InputLabel from '@/Components/InputLabel.vue';
+import TextInput from '@/Components/TextInput.vue';
+import InputError from '@/Components/InputError.vue';
+import ActionMessage from '@/Components/ActionMessage.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
 
 const props = defineProps({
     modules: Object,
@@ -93,6 +103,7 @@ const create = () => {
 
                     </template>
                 </dl>
+                <InputError :message="form.errors.permissions" class="mt-2" />
             </Section>
         </template>
 

@@ -12,22 +12,23 @@ use App\Http\Controllers\Admin\PartnerController;
 use App\Http\Controllers\Admin\InstanceController;
 use App\Http\Controllers\Admin\SettingsController;
 
+use App\Http\Controllers\Shared\RoleController;
 use App\Http\Controllers\Shared\StripeWebhookController;
 use App\Http\Controllers\Shared\UserProfileController;
 
 use App\Http\Controllers\Partner\BusinessSettingController;
-use App\Http\Controllers\Partner\PartnerDashboardController;
-use App\Http\Controllers\Partner\PartnerSubscriptionController;
-use App\Http\Controllers\Partner\PartnerMemberController;
-use App\Http\Controllers\Partner\PartnerInstructorController;
 use App\Http\Controllers\Partner\PartnerAmenityController;
 use App\Http\Controllers\Partner\PartnerClassLessonController;
-use App\Http\Controllers\Partner\PartnerStudioController;
-use App\Http\Controllers\Partner\PartnerClassTypeController;
-use App\Http\Controllers\Partner\PartnerMembershipPlanController;
 use App\Http\Controllers\Partner\PartnerClassPackController;
+use App\Http\Controllers\Partner\PartnerClassTypeController;
+use App\Http\Controllers\Partner\PartnerDashboardController;
 use App\Http\Controllers\Partner\PartnerExportController;
-use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Partner\PartnerInstructorController;
+use App\Http\Controllers\Partner\PartnerMemberController;
+use App\Http\Controllers\Partner\PartnerMembershipPlanController;
+use App\Http\Controllers\Partner\PartnerStudioController;
+use App\Http\Controllers\Partner\PartnerSubscriptionController;
+use App\Http\Controllers\Partner\PartnerUserController;
 
 // Service store area, partner subdomains:
 use App\Http\Controllers\Store\StorePublicController;
@@ -139,15 +140,16 @@ Route::domain('app.'.config('app.domain'))->group(function () {
 
             //partner.members.index
             //partner.members.destroy /members/{member}
-            Route::resource('members', PartnerMemberController::class);
-            Route::resource('instructors', PartnerInstructorController::class);
             Route::resource('amenity', PartnerAmenityController::class);
             Route::resource('classes', PartnerClassLessonController::class);
-            Route::resource('studios', PartnerStudioController::class);
-            Route::resource('classtypes', PartnerClassTypeController::class);
-            Route::resource('plans', PartnerMembershipPlanController::class);
             Route::resource('classpacks', PartnerClassPackController::class);
+            Route::resource('classtypes', PartnerClassTypeController::class);
+            Route::resource('instructors', PartnerInstructorController::class);
+            Route::resource('members', PartnerMemberController::class);
+            Route::resource('plans', PartnerMembershipPlanController::class);
             Route::resource('roles', RoleController::class);
+            Route::resource('studios', PartnerStudioController::class);
+            Route::resource('users', PartnerUserController::class);
 
             Route::get('/exports', [PartnerExportController::class, 'index'])->name('exports.index');
             Route::get('/exports/{export}', [PartnerExportController::class, 'show'])->name('exports.show');
@@ -156,7 +158,6 @@ Route::domain('app.'.config('app.domain'))->group(function () {
             Route::delete('/exports/{export}', [PartnerExportController::class, 'destroy'])->name('exports.destroy');
             Route::post('/exports', [PartnerExportController::class, 'store']);
 
-            Route::resource('users', \App\Http\Controllers\Partner\UserController::class);
         });
 
     });

@@ -24,37 +24,52 @@ router.on('navigate', (event) => {
 
 <template>
   <div class="flex-shrink-0 p-4 bg-gray-100 overflow-y-auto space-y-4">
-    <NavLink :href="route('partner.dashboard')" :active="active_route.name == 'partner.dashboard'">
+    <NavLink
+      :href="route('partner.dashboard')"
+      :active="active_route.name == 'partner.dashboard'"
+      v-can="{ module: 'dashboard', roles: $page.props.user.user_roles, permission: 'viewAny', 'user': $page.props.user }"
+      >
       <font-awesome-icon :icon="faHome" />
       <div>Dashboard</div>
     </NavLink>
-    <NavLink :href="route('partner.classes.index')" :active="active_route.name == 'partner.class-lesson.index'">
+    <NavLink
+      :href="route('partner.classes.index')"
+      :active="active_route.name == 'partner.class-lesson.index'"
+      v-can="{ module: 'classes', roles: $page.props.user.user_roles, permission: 'viewAny', 'user': $page.props.user }"
+      >
       <font-awesome-icon :icon="faBookOpen" />
       <div>Classes</div>
     </NavLink>
-    <NavLink :href="route('partner.members.index')" :active="active_route.name == 'partner.members.index'">
+    <NavLink
+      :href="route('partner.members.index')"
+      :active="active_route.name == 'partner.members.index'"
+      v-can="{ module: 'members', roles: $page.props.user.user_roles, permission: 'viewAny', 'user': $page.props.user }"
+      >
       <font-awesome-icon :icon="faUsers" />
       <div>Members</div>
     </NavLink>
-    <NavLink :href="route('partner.instructors.index')" :active="active_route.name == 'partner.instructors.index'">
+    <NavLink 
+      :href="route('partner.instructors.index')"
+      :active="active_route.name == 'partner.instructors.index'"
+      v-can="{ module: 'instructors', roles: $page.props.user.user_roles, permission: 'viewAny', 'user': $page.props.user }"
+      >
       <font-awesome-icon :icon="faUserTie" />
       <div>Instructors</div>
     </NavLink>
-    <NavLink :href="route('partner.exports.index')" :active="active_route.name == 'partner.exports.index'">
+    <NavLink
+      :href="route('partner.exports.index')"
+      :active="active_route.name == 'partner.exports.index'"
+      >
       <font-awesome-icon :icon="faRepeat" />
       <div>Data Center</div>
     </NavLink>
-    <NavLink :href="route('partner.settings.index')" :active="active_route.name == 'partner.settings.index'">
+    <NavLink
+      :href="route('partner.settings.index')"
+      :active="active_route.name == 'partner.settings.index'"
+      v-can="{ module: 'partner-settings', roles: $page.props.user.user_roles, permission: 'viewAny', 'user': $page.props.user }"
+      >
       <font-awesome-icon :icon="faGears" />
       <div>Settings</div>
     </NavLink>
-    <NavLink :href="route('partner.roles.index')" :active="active_route.name == 'partner.roles.index'">
-      <font-awesome-icon :icon="faGears" />
-      <div>Roles</div>
-    </NavLink>
-      <NavLink :href="route('partner.users.index')" :active="active_route.name == 'partner.users.index'">
-          <font-awesome-icon :icon="faUsers" />
-          <div>Users</div>
-      </NavLink>
   </div>
 </template>
