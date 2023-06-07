@@ -1,14 +1,24 @@
 <script setup>
+import { Link } from "@inertiajs/vue3";
+
 defineProps({
+    href: String,
     type: {
         type: String,
-        default: 'submit',
+        default: "submit",
     },
 });
+
+const classes = `inline-flex items-center justify-center px-3 lg:px-16vw py-3 lg:py-16vw bg-primary-500 rounded-md font-semibold text-sm lg:text-18vw text-white capitalize border border-primary-500 hover:bg-primary-100 hover:shadow-md hover:shadow-primary-300 hover:text-primary-500 focus:bg-primary-100 focus:shadow-md focus:shadow-primary-300 focus:text-primary-500 active:bg-primary-600 active:shadow-none disabled:opacity-25 transition `;
 </script>
 
 <template>
-    <button :type="type" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring focus:ring-gray-300 disabled:opacity-25 transition">
-        <slot />
-    </button>
+    <template v-if="href">
+        <Link :href="href" :class="classes"><slot /></Link>
+    </template>
+    <template v-else>
+        <button :type="type" :class="classes">
+            <slot />
+        </button>
+    </template>
 </template>

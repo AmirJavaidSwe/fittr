@@ -1,55 +1,46 @@
 <script setup>
-import { ref } from 'vue';
-import { faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons';
+import { ref } from "vue";
+import {
+    faFilter,
+    faMagnifyingGlass,
+    faTimes,
+} from "@fortawesome/free-solid-svg-icons";
+import SearchIcon from "@/Icons/SearchIcon.vue";
+import FilterIcon from "@/Icons/Filter.vue";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
 
-import debounce from 'lodash/debounce';
+import debounce from "lodash/debounce";
+
 const emit = defineEmits([
-    'update:modelValue',
-    'reset',
-    'pp_changed'
+    "update:modelValue",
+    "reset",
+    "onFilter",
+    "pp_changed",
 ]);
 const onInput = debounce((event) => {
-            emit('update:modelValue', event.target.value);
-        }, 500);
+    emit("update:modelValue", event.target.value);
+}, 500);
 
 const props = defineProps({
     modelValue: String,
-    per_page:  {
-        type: Number,
-        required: false,
-        default: 10
-    },
     disableSearch: {
         type: Boolean,
         required: false,
-        default: false
-    }
+        default: false,
+    },
+    noFilter: Boolean,
 });
-const pp = ref(props.per_page);
-
-const optionsPP = [
-    {value: 5, text: '5'},
-    {value: 10, text: '10'},
-    {value: 25, text: '25'},
-    {value: 50, text: '50'},
-];
-
 </script>
 <template v-if="!disableSearch">
-    <div class="flex flex-grow">
-        <select v-model="pp" @change="$emit('pp_changed', pp)" class="rounded mr-1">
-          <option v-for="option in optionsPP"
-                  v-bind:selected="option.value === props.per_page"
-                  :value="option.value">
-              {{ option.text }}
-          </option>
-        </select>
-        <label for="search" class="sr-only outline-none">
-            Search
-        </label>
-        <div class="relative rounded-md shadow-sm flex-grow">
-            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <font-awesome-icon :icon="faMagnifyingGlass" class="text-gray-400" />
+    <div class="flex flex-grow justify-end w-full sm:w-auto mb-5 lg:mb-0">
+        <div
+            class="relative rounded-md shadow-sm flex-grow sm:min-w-[300px] lg:min-w-min lg:max-w-sm"
+        >
+            <div
+                class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
+            >
+                <!-- <font-awesome-icon :icon="faMagnifyingGlass" class="text-gray-400" /> -->
+                <SearchIcon />
             </div>
             <input
                 type="text"
@@ -57,19 +48,26 @@ const optionsPP = [
                 id="search"
                 :value="modelValue"
                 @input="onInput"
-                class="block w-full h-full rounded-md border-gray-300 pl-10 focus:border-pink-500 sm:text-sm outline-none"
-                placeholder="Search">
+                class="block w-full rounded-md border-grey pl-10 pr-5 lg:pl-60vw py-3 lg:py-16vw focus:!border-primary-500 focus:!shadow-none sm:text-sm focus:!outline-none"
+                placeholder="Search"
+            />
 
             <button
+                v-if="modelValue && modelValue !== ''"
                 @click="$emit('reset')"
                 type="button"
-                class="absolute top-0 right-0 h-full px-4 text-sm text-gray-700 bg-gray-100 rounded-r-md hover:bg-gray-200
-                       focus:outline-none focus:ring-2 focus:ring-offset-2 border">
-                Reset
+                class="absolute top-0 right-0 h-full px-4 text-sm text-gray-700 focus:outline-none"
+            >
+                <font-awesome-icon :icon="faTimes" />
             </button>
-
         </div>
+        <SecondaryButton
+            v-if="!noFilter"
+            @click="$emit('onFilter')"
+            class="ml-3"
+        >
+            <FilterIcon class="w-4 lg:w-24vw h-4 lg:h-24vw mr-0 md:mr-2" />
+            <span class="hidden md:block">Filter</span>
+        </SecondaryButton>
     </div>
 </template>
-
-

@@ -1,14 +1,14 @@
 <script setup>
-import { ref } from 'vue';
-import { useForm } from '@inertiajs/vue3';
-import FormSection from '@/Components/FormSection.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import TextInput from '@/Components/TextInput.vue';
-import Checkbox from '@/Components/Checkbox.vue';
-import InputError from '@/Components/InputError.vue';
-import ActionMessage from '@/Components/ActionMessage.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import SecondaryButton from '@/Components/SecondaryButton.vue';
+import { ref } from "vue";
+import { useForm } from "@inertiajs/vue3";
+import FormSection from "@/Components/FormSection.vue";
+import InputLabel from "@/Components/InputLabel.vue";
+import TextInput from "@/Components/TextInput.vue";
+import Checkbox from "@/Components/Checkbox.vue";
+import InputError from "@/Components/InputError.vue";
+import ActionMessage from "@/Components/ActionMessage.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
 
 const form = useForm({
     status: false,
@@ -24,7 +24,7 @@ const form = useForm({
 });
 
 const create = () => {
-    form.post(route('admin.packages.store'), {
+    form.post(route("admin.packages.store"), {
         preserveScroll: true,
         onSuccess: () => form.reset(),
     });
@@ -33,21 +33,25 @@ const create = () => {
 
 <template>
     <FormSection @submitted="create">
-        <template #title>
-            Package Information
-        </template>
+        <template #title> Package Information </template>
 
         <template #description>
             <div>Create new package configuration.</div>
         </template>
 
         <template #form>
-             <!-- Status -->
+            <!-- Status -->
             <div class="col-span-6 sm:col-span-4">
                 <label class="flex items-center">
                     <span class="mr-4 text-sm text-gray-700">Status</span>
-                    <Checkbox v-model:checked="form.status" :value="form.status ? '1' : '0'" />
-                    <span class="ml-4 text-sm text-gray-700" v-text="form.status ? 'On' : 'Off'"></span>
+                    <Checkbox
+                        v-model:checked="form.status"
+                        :value="form.status ? '1' : '0'"
+                    />
+                    <span
+                        class="ml-4 text-sm text-gray-700"
+                        v-text="form.status ? 'On' : 'Off'"
+                    ></span>
                 </label>
                 <InputError :message="form.errors.status" class="mt-2" />
             </div>
@@ -93,7 +97,10 @@ const create = () => {
 
             <!-- Transaction - fixed fee -->
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="tx_fixed_fee" value="Transaction - fixed fee" />
+                <InputLabel
+                    for="tx_fixed_fee"
+                    value="Transaction - fixed fee"
+                />
                 <TextInput
                     id="tx_percent"
                     v-model="form.tx_fixed_fee"
@@ -108,7 +115,10 @@ const create = () => {
 
             <!-- Monthly subscription price, Billed Annually -->
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="fee_annually" value="Monthly subscription price (Billed Annually)" />
+                <InputLabel
+                    for="fee_annually"
+                    value="Monthly subscription price (Billed Annually)"
+                />
                 <TextInput
                     id="tx_percent"
                     v-model="form.fee_annually"
@@ -121,7 +131,10 @@ const create = () => {
 
             <!-- Monthly subscription price, Billed Monthly -->
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="fee_monthly" value="Monthly subscription price (Billed Monthly)" />
+                <InputLabel
+                    for="fee_monthly"
+                    value="Monthly subscription price (Billed Monthly)"
+                />
                 <TextInput
                     id="tx_percent"
                     v-model="form.fee_monthly"
@@ -134,7 +147,10 @@ const create = () => {
 
             <!-- Monthly fee per site >1 -->
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="monthly_fee_sites" value="Monthly fee per site >1" />
+                <InputLabel
+                    for="monthly_fee_sites"
+                    value="Monthly fee per site >1"
+                />
                 <TextInput
                     id="tx_percent"
                     v-model="form.monthly_fee_sites"
@@ -142,7 +158,10 @@ const create = () => {
                     min="0"
                     class="mt-1 block w-full"
                 />
-                <InputError :message="form.errors.monthly_fee_sites" class="mt-2" />
+                <InputError
+                    :message="form.errors.monthly_fee_sites"
+                    class="mt-2"
+                />
             </div>
 
             <!-- Admin Users -->
@@ -179,7 +198,10 @@ const create = () => {
                 Saved.
             </ActionMessage>
 
-            <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+            <PrimaryButton
+                :class="{ 'opacity-25': form.processing }"
+                :disabled="form.processing"
+            >
                 Save
             </PrimaryButton>
         </template>

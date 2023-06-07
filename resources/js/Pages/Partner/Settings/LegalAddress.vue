@@ -1,15 +1,15 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useForm } from '@inertiajs/vue3';
-import GeneralSettingsMenu from '@/Pages/Partner/Settings/GeneralSettingsMenu.vue';
+import { ref, onMounted } from "vue";
+import { useForm } from "@inertiajs/vue3";
+import GeneralSettingsMenu from "@/Pages/Partner/Settings/GeneralSettingsMenu.vue";
 
-import FormSection from '@/Components/FormSection.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import TextInput from '@/Components/TextInput.vue';
+import FormSection from "@/Components/FormSection.vue";
+import InputLabel from "@/Components/InputLabel.vue";
+import TextInput from "@/Components/TextInput.vue";
 import SelectInput from "@/Components/SelectInput.vue";
-import InputError from '@/Components/InputError.vue';
-import ActionMessage from '@/Components/ActionMessage.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
+import InputError from "@/Components/InputError.vue";
+import ActionMessage from "@/Components/ActionMessage.vue";
+import WarningButton from "@/Components/WarningButton.vue";
 
 const props = defineProps({
     countries: Array,
@@ -35,8 +35,8 @@ onMounted(() => {
 });
 
 const submitForm = () => {
-    form.put(route('partner.settings.general-address'), {
-        preserveScroll: true
+    form.put(route("partner.settings.general-address"), {
+        preserveScroll: true,
     });
 };
 </script>
@@ -121,9 +121,11 @@ const submitForm = () => {
                     @change="countryChanged"
                 >
                 </SelectInput>
-                <InputError :message="form.errors.legal_country_id" class="mt-2" />
+                <InputError
+                    :message="form.errors.legal_country_id"
+                    class="mt-2"
+                />
             </div>
-
         </template>
 
         <template #actions>
@@ -131,9 +133,12 @@ const submitForm = () => {
                 Saved.
             </ActionMessage>
 
-            <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+            <WarningButton
+                :class="{ 'opacity-25': form.processing }"
+                :disabled="form.processing"
+            >
                 Save
-            </PrimaryButton>
+            </WarningButton>
         </template>
     </FormSection>
 </template>

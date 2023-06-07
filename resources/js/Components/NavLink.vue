@@ -1,6 +1,6 @@
 <script setup>
-import { computed } from 'vue';
-import { Link } from '@inertiajs/vue3';
+import { computed } from "vue";
+import { Link } from "@inertiajs/vue3";
 
 const props = defineProps({
     href: String,
@@ -8,10 +8,15 @@ const props = defineProps({
 });
 
 const classes = computed(() => {
-    let common = 'inline-flex w-full items-center px-1 py-2 rounded text-sm gap-4';
-    return common + ' ' + (props.active
-        ? 'bg-white text-gray-900 transition font-semibold'
-        : 'hover:bg-gray-200 text-gray-500 hover:text-gray-900 font-medium transition');
+    let common =
+        "inline-flex w-full items-center px-3 py-2 rounded-lg text-md lg:text-18vw gap-4";
+    return (
+        common +
+        " " +
+        (props.active
+            ? "bg-[rgba(255,255,255,0.8)] text-dark transition font-semibold"
+            : "hover:bg-[rgba(255,255,255,0.8)] text-white hover:text-dark font-medium transition")
+    );
 });
 </script>
 

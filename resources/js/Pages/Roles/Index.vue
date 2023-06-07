@@ -1,15 +1,22 @@
 <script setup>
 import { ref, watch } from "vue";
 import { Link, useForm, usePage } from "@inertiajs/vue3";
+import DataTableLayout from "@/Components/DataTable/Layout.vue";
+import TableHead from "@/Components/DataTable/TableHead.vue";
+import TableData from "@/Components/DataTable/TableData.vue";
 import SectionTitle from "@/Components/SectionTitle.vue";
-import SearchFilter from "@/Components/SearchFilter.vue";
+import Search from "@/Components/DataTable/Search.vue";
 import Pagination from "@/Components/Pagination.vue";
-import ButtonLink from "@/Components/ButtonLink.vue";
-import SecondaryButton from '@/Components/SecondaryButton.vue';
-import DangerButton from '@/Components/DangerButton.vue';
-import ConfirmationModal from '@/Components/ConfirmationModal.vue';
+import WarningButton from "@/Components/WarningButton.vue";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
+import DangerButton from "@/Components/DangerButton.vue";
+import ConfirmationModal from "@/Components/ConfirmationModal.vue";
 import { DateTime } from "luxon";
-import { faPencil, faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import {
+    faPencil,
+    faChevronRight,
+    faPlus,
+} from "@fortawesome/free-solid-svg-icons";
 const props = defineProps({
     roles: Object,
     search: String,
@@ -34,7 +41,7 @@ const confirmDeletion = (slug) => {
     itemDeleting.value = true;
 };
 const deleteItem = () => {
-    form.delete(route('partner.roles.destroy', { id: itemIdDeleting.value }), {
+    form.delete(route("partner.roles.destroy", { id: itemIdDeleting.value }), {
         preserveScroll: true,
         preserveState: true,
         onSuccess: () => {
@@ -65,79 +72,121 @@ const runSearch = () => {
 watch(() => form.search, runSearch);
 </script>
 <template>
-    <SectionTitle>
-        <template #title> All Roles </template>
-    </SectionTitle>
-    <div class="flex items-center justify-between mb-6">
-        <search-filter v-model="form.search" class="mr-4 w-full max-w-md" @reset="form.search = null">
-            <select v-model="form.per_page" @change="runSearch" class="form-select rounded-l mr-1">
-                <option value="5">5</option>
-                <option value="10">10</option>
-                <option value="25">25</option>
-                <option value="50">50</option>
-            </select>
-        </search-filter>
-        <ButtonLink v-can="{ module: 'roles', roles: $page.props.user.user_roles, permission: 'create', 'user': $page.props.user }" :href="route(`${$page.props.user.source}.roles.create`)" type="primary">Add new</ButtonLink>
+    <div class="flex items-center justify-between">
+        <SectionTitle>
+            <template #title> All Roles </template>
+        </SectionTitle>
+        <Search v-model="form.search" @reset="form.search = null" />
+        <WarningButton
+            v-can="{
+                module: 'roles',
+                roles: $page.props.user.user_roles,
+                permission: 'create',
+                user: $page.props.user,
+            }"
+            :href="route(`${$page.props.user.source}.roles.create`)"
+            type="primary"
+            class="ml-3"
+            >Add new <font-awesome-icon class="ml-2" :icon="faPlus"
+        /></WarningButton>
     </div>
 
-    <div class="relative overflow-x-auto shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-        <table class="table-auto text-left border-collapse w-full">
-            <thead class="uppercase bg-gray-100 text-sm whitespace-nowrap">
-                <tr>
-                    <th @click="setOrdering('id')" class="px-6 py-3 border-b cursor-pointer"
-                        :class="form.order_by == 'id' ? 'border-indigo-500' : ''">
-                        ID
-                    </th>
-                    <th @click="setOrdering('title')" class="px-6 py-3 border-b cursor-pointer"
-                        :class="form.order_by == 'title' ? 'border-indigo-500' : ''">
-                        Title
-                    </th>
-                    <th @click="setOrdering('created_at')" class="px-6 py-3 border-b cursor-pointer"
-                        :class="form.order_by == 'created_at' ? 'border-indigo-500' : ''">
-                        Date created
-                    </th>
-                    <th class="border-b"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="role in props.roles.data" :key="role.id"
-                    class="border-b whitespace-nowrap bg-white hover:bg-gray-50">
-                    <td class="px-6 py-4">{{ role.id }}</td>
-                    <td class="px-6 py-4">{{ role.title }}</td>
-                    <td class="px-6 py-4">
-                        <div v-if="business_seetings">
-                             {{ DateTime.fromISO(role.created_at).setZone(business_seetings.timezone).toFormat(business_seetings.date_format.format_js +' '+ business_seetings.time_format?.format_js) }}
-                        </div>
-                        <div v-else>
-                             {{ DateTime.fromISO(role.created_at).toLocaleString(DateTime.DATETIME_HUGE) }}
-                        </div>
-                    </td>
-                    <!-- <td class="px-6 py-4">{{ role.created_by }}</td> -->
-                    <td class="px-6 py-4">
-                        <div class="flex gap-4 justify-end">
-                            <Link :href="role.url_edit" v-can="{ module: 'roles', roles: $page.props.user.user_roles, permission: 'update', 'user': $page.props.user }">
-                                <font-awesome-icon :icon="faPencil" />
-                            </Link>
-                            <Link :href="role.url_show" v-can="{ module: 'roles', roles: $page.props.user.user_roles, permission: 'view', 'user': $page.props.user }">
-                                <font-awesome-icon :icon="faChevronRight" />
-                            </Link>
-                            <button class="block text-red-500" @click="confirmDeletion(role.slug)">
-                                Delete
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+    <data-table-layout :disableButton="true">
+        <template #tableHead>
+            <table-head
+                title="ID"
+                @click="setOrdering('id')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'id'"
+            />
+            <table-head
+                title="Title"
+                @click="setOrdering('title')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'title'"
+            />
+            <table-head
+                title="Date created"
+                @click="setOrdering('created_at')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'created_at'"
+            />
+            <table-head title="" />
+        </template>
 
-    <p>Viewing {{ roles.from }} - {{ roles.to }} of {{ roles.total }} results</p>
-    <pagination class="mt-6" :links="roles.links" />
+        <template #tableData>
+            <tr v-for="role in props.roles.data" :key="role.id">
+                <table-data>{{ role.id }}</table-data>
+                <table-data>{{ role.title }}</table-data>
+                <table-data>
+                    <div v-if="business_seetings">
+                        {{
+                            DateTime.fromISO(role.created_at)
+                                .setZone(business_seetings.timezone)
+                                .toFormat(
+                                    business_seetings.date_format.format_js +
+                                        " " +
+                                        business_seetings.time_format?.format_js
+                                )
+                        }}
+                    </div>
+                    <div v-else>
+                        {{
+                            DateTime.fromISO(role.created_at).toLocaleString(
+                                DateTime.DATETIME_HUGE
+                            )
+                        }}
+                    </div>
+                </table-data>
+                <table-data>
+                    <div class="flex gap-4 justify-end">
+                        <Link
+                            :href="role.url_edit"
+                            v-can="{
+                                module: 'roles',
+                                roles: $page.props.user.user_roles,
+                                permission: 'update',
+                                user: $page.props.user,
+                            }"
+                        >
+                            <font-awesome-icon :icon="faPencil" />
+                        </Link>
+                        <Link
+                            :href="role.url_show"
+                            v-can="{
+                                module: 'roles',
+                                roles: $page.props.user.user_roles,
+                                permission: 'view',
+                                user: $page.props.user,
+                            }"
+                        >
+                            <font-awesome-icon :icon="faChevronRight" />
+                        </Link>
+                        <button
+                            class="block text-red-500"
+                            @click="confirmDeletion(role.slug)"
+                        >
+                            Delete
+                        </button>
+                    </div>
+                </table-data>
+            </tr>
+        </template>
+
+        <template #pagination>
+            <pagination
+                :links="roles.links"
+                :to="roles.to"
+                :from="roles.from"
+                :total="roles.total"
+                @pp_changed="runSearch"
+            />
+        </template>
+    </data-table-layout>
+
     <!-- Delete Confirmation Modal -->
     <ConfirmationModal :show="itemDeleting" @close="itemDeleting = false">
-        <template #title>
-            Confirmation required
-        </template>
+        <template #title> Confirmation required </template>
 
         <template #content>
             Are you sure you would like to delete this?

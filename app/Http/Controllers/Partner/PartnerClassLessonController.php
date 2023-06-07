@@ -16,6 +16,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Carbon;
 use Inertia\Inertia;
 use Inertia\Response;
+
 // use Spatie\SimpleExcel\SimpleExcelReader;
 // use Spatie\SimpleExcel\SimpleExcelWriter;
 
@@ -39,9 +40,9 @@ class PartnerClassLessonController extends Controller
             // 'classes' => $query,
             'classes' => ClassLesson::orderBy($this->order_by, $this->order_dir)
                 ->when($this->search, function ($query) {
-                    $query->where(function($query) {
+                    $query->where(function ($query) {
                         $query->orWhere('id', intval($this->search))
-                              ->orWhere('name', 'LIKE', '%'.$this->search.'%');
+                            ->orWhere('title', 'LIKE', '%' . $this->search . '%');
                     });
                 })
                 ->paginate($this->per_page)
@@ -50,6 +51,10 @@ class PartnerClassLessonController extends Controller
             'instructors' => Instructor::orderBy('id', 'desc')->pluck('name', 'id'),
             'classtypes' => ClassType::orderBy('id', 'desc')->pluck('title', 'id'),
             'studios' => Studio::orderBy('id', 'desc')->pluck('title', 'id'),
+            'search' => $this->search,
+            'per_page' => intval($this->per_page),
+            'order_by' => $this->order_by,
+            'order_dir' => $this->order_dir,
         ]);
     }
 
@@ -94,7 +99,7 @@ class PartnerClassLessonController extends Controller
         $validated = $request->validated();
 
         //if class will be repeating itself, let's show preview page with a list/number of classes that will be created
-        if($request->does_repeat){
+        if ($request->does_repeat) {
             //parse dates:
             $start_date = Carbon::parse($request->start_date);
             $end_date = Carbon::parse($request->end_date);
@@ -111,7 +116,7 @@ class PartnerClassLessonController extends Controller
             $period = $start_date->toPeriod($repeat_end_date);
 
             //keep period dates that match selected weekdays and keep initial donor class
-            $period->filter(function(Carbon $date) use ($week_days, $start_date) {
+            $period->filter(function (Carbon $date) use ($week_days, $start_date) {
                 return $date->isSameDay($start_date) || in_array($date->isoWeekday(), $week_days);
             });
 
@@ -121,7 +126,7 @@ class PartnerClassLessonController extends Controller
             }
 
             //preview_confirmed comes from confirmation page and if so, we need to create bulk classes and redirect back to index
-            if($request->filled('preview_confirmed')){
+            if ($request->filled('preview_confirmed')) {
                 foreach ($repeats as $start_date) {
                     $class_data = $validated;
                     $class_data['start_date'] = $start_date;
@@ -266,7 +271,7 @@ class PartnerClassLessonController extends Controller
     {
         $classes = ClassLesson::whereIn('id', request('classes'))->get();
 
-        $export = SimpleExcelWriter::streamDownload('classes_'.date('d').'_'.date('M').'_'.date('Y').'.csv');
+        $export = SimpleExcelWriter::streamDownload('classes_' . date('d') . '_' . date('M') . '_' . date('Y') . '.csv');
 
         $export->addHeader(['Title', 'Start Date', 'End Date', 'Instructor ID', 'Studio ID', 'Status']);
 

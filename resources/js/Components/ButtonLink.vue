@@ -11,7 +11,7 @@ const props = defineProps({
 });
 
 const classes = computed(() => {
-    let common = 'inline-flex items-center px-4 py-2 border rounded-md font-semibold text-xs uppercase tracking-widest shadow-sm focus:outline-none focus:ring disabled:opacity-25 transition';
+    let common = 'inline-flex items-center px-4 py-3 border rounded-md font-semibold text-xs uppercase tracking-widest shadow-sm focus:outline-none focus:ring disabled:opacity-25 transition';
 
     switch (props.type) {
         case 'secondary':
@@ -20,7 +20,7 @@ const classes = computed(() => {
         case 'primary':
             common += ' bg-gray-800 border-transparent text-white hover:bg-gray-700 active:bg-gray-900 focus:border-gray-900 focus:ring-gray-300';
             break;
-    
+
         default:
             break;
     }

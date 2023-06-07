@@ -1,5 +1,7 @@
 <template>
-    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+    <td
+        class="whitespace-nowrap border-y-8 border-mainBg px-3 lg:px-16vw py-2 lg:py-16vw text-sm lg:text-20vw text-gray-500 bg-white first:border-l-4 first:rounded-s-2xl last:border-r-4 last:rounded-e-2xl"
+    >
         <div class="font-medium text-gray-900">
             <slot></slot>
             {{ title }}
@@ -11,5 +13,5 @@
 </template>
 
 <script setup>
-    defineProps(['title', 'subtitle']);
+defineProps(["title", "subtitle"]);
 </script>

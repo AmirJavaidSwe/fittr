@@ -1,16 +1,16 @@
 <script setup>
-import { ref } from 'vue';
-import { useForm } from '@inertiajs/vue3';
-import FormSection from '@/Components/FormSection.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import TextInput from '@/Components/TextInput.vue';
-import Checkbox from '@/Components/Checkbox.vue';
-import InputError from '@/Components/InputError.vue';
-import ActionMessage from '@/Components/ActionMessage.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import SecondaryButton from '@/Components/SecondaryButton.vue';
-import DangerButton from '@/Components/DangerButton.vue';
-import ConfirmationModal from '@/Components/ConfirmationModal.vue';
+import { ref } from "vue";
+import { useForm } from "@inertiajs/vue3";
+import FormSection from "@/Components/FormSection.vue";
+import InputLabel from "@/Components/InputLabel.vue";
+import TextInput from "@/Components/TextInput.vue";
+import Checkbox from "@/Components/Checkbox.vue";
+import InputError from "@/Components/InputError.vue";
+import ActionMessage from "@/Components/ActionMessage.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
+import DangerButton from "@/Components/DangerButton.vue";
+import ConfirmationModal from "@/Components/ConfirmationModal.vue";
 
 const props = defineProps({
     package: Object,
@@ -37,13 +37,13 @@ const form = useForm({
 });
 
 const update = () => {
-    form.put(route('admin.packages.update', {id: form.id}), {
+    form.put(route("admin.packages.update", { id: form.id }), {
         preserveScroll: true,
     });
 };
 
 const deletePackage = () => {
-    form.delete(route('admin.packages.destroy', {id: form.id}), {
+    form.delete(route("admin.packages.destroy", { id: form.id }), {
         preserveScroll: true,
         preserveState: true,
         onSuccess: () => (packageBeingDeleted.value = null),
@@ -53,13 +53,14 @@ const deletePackage = () => {
 
 <template>
     <FormSection @submitted="update">
-        <template #title>
-            Package Information
-        </template>
+        <template #title> Package Information </template>
 
         <template #description>
             <div>Update package configuration.</div>
-            <button class="cursor-pointer mt-6 text-sm text-red-500" @click="confirmDeletion">
+            <button
+                class="cursor-pointer mt-6 text-sm text-red-500"
+                @click="confirmDeletion"
+            >
                 Delete
             </button>
         </template>
@@ -69,8 +70,14 @@ const deletePackage = () => {
             <div class="col-span-6 sm:col-span-4">
                 <label class="flex items-center">
                     <span class="mr-4 text-sm text-gray-700">Status</span>
-                    <Checkbox v-model:checked="form.status" :value="form.status ? '1' : '0'" />
-                    <span class="ml-4 text-sm text-gray-700" v-text="form.status ? 'On' : 'Off'"></span>
+                    <Checkbox
+                        v-model:checked="form.status"
+                        :value="form.status ? '1' : '0'"
+                    />
+                    <span
+                        class="ml-4 text-sm text-gray-700"
+                        v-text="form.status ? 'On' : 'Off'"
+                    ></span>
                 </label>
                 <InputError :message="form.errors.status" class="mt-2" />
             </div>
@@ -79,8 +86,14 @@ const deletePackage = () => {
             <div class="col-span-6 sm:col-span-4">
                 <label class="flex items-center">
                     <span class="mr-4 text-sm text-gray-700">Private</span>
-                    <Checkbox v-model:checked="form.is_private" :value="form.is_private ? '1' : '0'" />
-                    <span class="ml-4 text-sm text-gray-700" v-text="form.is_private ? 'Yes' : 'No'"></span>
+                    <Checkbox
+                        v-model:checked="form.is_private"
+                        :value="form.is_private ? '1' : '0'"
+                    />
+                    <span
+                        class="ml-4 text-sm text-gray-700"
+                        v-text="form.is_private ? 'Yes' : 'No'"
+                    ></span>
                 </label>
                 <InputError :message="form.errors.status" class="mt-2" />
             </div>
@@ -126,7 +139,10 @@ const deletePackage = () => {
 
             <!-- Transaction - fixed fee -->
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="tx_fixed_fee" value="Transaction - fixed fee" />
+                <InputLabel
+                    for="tx_fixed_fee"
+                    value="Transaction - fixed fee"
+                />
                 <TextInput
                     id="tx_percent"
                     v-model="form.tx_fixed_fee"
@@ -141,7 +157,10 @@ const deletePackage = () => {
 
             <!-- Monthly subscription price, Billed Annually -->
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="fee_annually" value="Monthly subscription price (Billed Annually)" />
+                <InputLabel
+                    for="fee_annually"
+                    value="Monthly subscription price (Billed Annually)"
+                />
                 <TextInput
                     id="tx_percent"
                     v-model="form.fee_annually"
@@ -154,7 +173,10 @@ const deletePackage = () => {
 
             <!-- Monthly subscription price, Billed Monthly -->
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="fee_monthly" value="Monthly subscription price (Billed Monthly)" />
+                <InputLabel
+                    for="fee_monthly"
+                    value="Monthly subscription price (Billed Monthly)"
+                />
                 <TextInput
                     id="tx_percent"
                     v-model="form.fee_monthly"
@@ -167,7 +189,10 @@ const deletePackage = () => {
 
             <!-- Monthly fee per site >1 -->
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="monthly_fee_sites" value="Monthly fee per site >1" />
+                <InputLabel
+                    for="monthly_fee_sites"
+                    value="Monthly fee per site >1"
+                />
                 <TextInput
                     id="tx_percent"
                     v-model="form.monthly_fee_sites"
@@ -175,7 +200,10 @@ const deletePackage = () => {
                     min="0"
                     class="mt-1 block w-full"
                 />
-                <InputError :message="form.errors.monthly_fee_sites" class="mt-2" />
+                <InputError
+                    :message="form.errors.monthly_fee_sites"
+                    class="mt-2"
+                />
             </div>
 
             <!-- Admin Users -->
@@ -212,16 +240,20 @@ const deletePackage = () => {
                 Saved.
             </ActionMessage>
 
-            <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+            <PrimaryButton
+                :class="{ 'opacity-25': form.processing }"
+                :disabled="form.processing"
+            >
                 Save
             </PrimaryButton>
         </template>
     </FormSection>
-     <!-- Delete Confirmation Modal -->
-    <ConfirmationModal :show="packageBeingDeleted != null" @close="packageBeingDeleted = null">
-        <template #title>
-            Delete package
-        </template>
+    <!-- Delete Confirmation Modal -->
+    <ConfirmationModal
+        :show="packageBeingDeleted != null"
+        @close="packageBeingDeleted = null"
+    >
+        <template #title> Delete package </template>
 
         <template #content>
             Are you sure you would like to delete this package?

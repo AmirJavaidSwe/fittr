@@ -1,68 +1,72 @@
 <template>
-    <div class="px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col lg:flex-row items-end lg:items-center">
+        <slot name="search"></slot>
         <div class="sm:flex sm:items-center">
-            <slot name="search"></slot>
-            <div class="sm:flex sm:items-center">
-                <div class="mt-4 sm:mt-0 sm:ml-8 sm:flex-none">
-                    <slot name="button"></slot>
-                    <Link v-if="!disableButton" :href="buttonLink"
-                       class="cursor-pointer inline-flex items-center justify-center rounded-md border border-transparent
-                                    bg-indigo-600
-                                    px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none
-                                    focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto">
-                        {{ buttonTitle }}
-                    </Link>
+            <div
+                class="mt-4 sm:mt-0 lg:ml-16vw fixed bottom-0 left-0 w-full bg-white py-5 border-t border-t-grey z-10 lg:static lg:bg-transparent lg:border-none lg:py-0 flex flex-wrap justify-center gap-2"
+            >
+                <slot name="button"></slot>
+                <WarningButton v-if="!disableButton" :href="buttonLink">
+                    {{ buttonTitle }}
+                    <font-awesome-icon
+                        v-if="buttonTitle.includes('new')"
+                        class="ml-2"
+                        :icon="faPlus"
+                    />
+                </WarningButton>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-0 lg:mt-8 flex flex-col">
+        <div class="overflow-x-auto overflow-y-hidden">
+            <div class="inline-block min-w-full py-2 align-middle">
+                <div class="overflow-hidden md:rounded-lg">
+                    <table class="min-w-full border-spacing-0 border-separate">
+                        <thead>
+                            <tr>
+                                <slot name="tableHead"></slot>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- <tr> -->
+                            <slot name="tableData"></slot>
+                            <!-- </tr> -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
 
-        <div class="mt-8 flex flex-col">
-            <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-                    <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                        <table class="min-w-full divide-y divide-gray-300">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <slot name="tableHead"></slot>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-200 bg-white">
-<!--                                <tr>-->
-                                    <slot name="tableData"></slot>
-<!--                                </tr>-->
-                            </tbody>
-                        </table>
-                        <slot name="pagination"/>
-                    </div>
-                </div>
-            </div>
+        <div class="mt-3">
+            <slot name="pagination" />
         </div>
     </div>
 </template>
 
 <script setup>
-
-import {Link} from "@inertiajs/vue3";
+import { Link } from "@inertiajs/vue3";
+import WarningButton from "@/Components/WarningButton.vue";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 defineProps({
     disableButton: {
         type: Boolean,
-        default: false
+        default: false,
     },
     disableSearch: {
         type: Boolean,
-        default: false
+        default: false,
     },
     buttonTitle: {
-        default: 'Add data',
+        default: "Add data",
         type: String,
-        required: false
+        required: false,
     },
     buttonLink: {
-        default: '#',
+        default: "#",
         type: String,
-        required: false
-    }
-})
-
+        required: false,
+    },
+});
 </script>

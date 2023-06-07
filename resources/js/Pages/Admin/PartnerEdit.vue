@@ -1,11 +1,11 @@
 <script setup>
-import { useForm } from '@inertiajs/vue3';
-import FormSection from '@/Components/FormSection.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import TextInput from '@/Components/TextInput.vue';
-import InputError from '@/Components/InputError.vue';
-import ActionMessage from '@/Components/ActionMessage.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
+import { useForm } from "@inertiajs/vue3";
+import FormSection from "@/Components/FormSection.vue";
+import InputLabel from "@/Components/InputLabel.vue";
+import TextInput from "@/Components/TextInput.vue";
+import InputError from "@/Components/InputError.vue";
+import ActionMessage from "@/Components/ActionMessage.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
 
 const props = defineProps({
     partner: Object,
@@ -18,25 +18,23 @@ const form = useForm({
 });
 
 const updateProfileInformation = () => {
-    form.put(route('admin.partners.update', {id: form.id}), {
-        errorBag: 'updateProfileInformation',
-        preserveScroll: true
+    form.put(route("admin.partners.update", { id: form.id }), {
+        errorBag: "updateProfileInformation",
+        preserveScroll: true,
     });
 };
 </script>
 
 <template>
     <FormSection @submitted="updateProfileInformation">
-        <template #title>
-            Profile Information
-        </template>
+        <template #title> Profile Information </template>
 
         <template #description>
             Update partner account's profile information and email address.
         </template>
 
         <template #form>
-             <!-- Name -->
+            <!-- Name -->
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="name" value="Name" />
                 <TextInput
@@ -67,7 +65,10 @@ const updateProfileInformation = () => {
                 Saved.
             </ActionMessage>
 
-            <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+            <PrimaryButton
+                :class="{ 'opacity-25': form.processing }"
+                :disabled="form.processing"
+            >
                 Save
             </PrimaryButton>
         </template>

@@ -1,15 +1,15 @@
 <script setup>
-import { computed, ref, onMounted  } from 'vue';
-import { useForm } from '@inertiajs/vue3';
+import { computed, ref, onMounted } from "vue";
+import { useForm } from "@inertiajs/vue3";
 import { DateTime } from "luxon";
-import GeneralSettingsMenu from '@/Pages/Partner/Settings/GeneralSettingsMenu.vue';
-import FormSection from '@/Components/FormSection.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import TextInput from '@/Components/TextInput.vue';
+import GeneralSettingsMenu from "@/Pages/Partner/Settings/GeneralSettingsMenu.vue";
+import FormSection from "@/Components/FormSection.vue";
+import InputLabel from "@/Components/InputLabel.vue";
+import TextInput from "@/Components/TextInput.vue";
 import SelectInput from "@/Components/SelectInput.vue";
-import InputError from '@/Components/InputError.vue';
-import ActionMessage from '@/Components/ActionMessage.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
+import InputError from "@/Components/InputError.vue";
+import ActionMessage from "@/Components/ActionMessage.vue";
+import WarningButton from "@/Components/WarningButton.vue";
 import Switcher from "@/Components/Switcher.vue";
 
 const props = defineProps({
@@ -22,7 +22,7 @@ const props = defineProps({
 const business_phone = ref(props.form_data.business_phone);
 const testPhone = (e) => {
     setTimeout(() => {
-        business_phone.value = e.target.value.replace(/\D+/, '');
+        business_phone.value = e.target.value.replace(/\D+/, "");
     }, 1);
 };
 
@@ -35,16 +35,16 @@ const form = useForm({
     show_timezone: props.form_data.show_timezone,
 });
 
-const currency = ref('');
-const flag = ref('');
-const flag_img = ref('');
-const mask = ref('');
-const dial_code = ref('');
+const currency = ref("");
+const flag = ref("");
+const flag_img = ref("");
+const mask = ref("");
+const dial_code = ref("");
 const countryChanged = () => {
     let country = props.countries.find(({ id }) => id == form.country_id);
     currency.value = country?.currency;
     flag.value = country?.iso;
-    flag_img.value = '/images/flags/' + flag.value + '.svg';
+    flag_img.value = "/images/flags/" + flag.value + ".svg";
     mask.value = country?.mask;
     dial_code.value = country?.dial_code;
 };
@@ -54,14 +54,18 @@ onMounted(() => {
 
 const localtime = computed(() => {
     let local = DateTime.now().setZone(form.timezone);
-    return local.toFormat(props.business_seetings.date_format.format_js) + ' ' +
-           local.toFormat(props.business_seetings.time_format.format_js) + ' UTC ' +
-           local.toFormat('ZZ') ;
+    return (
+        local.toFormat(props.business_seetings.date_format.format_js) +
+        " " +
+        local.toFormat(props.business_seetings.time_format.format_js) +
+        " UTC " +
+        local.toFormat("ZZ")
+    );
 });
 
 const submitForm = () => {
-    form.put(route('partner.settings.general-details'), {
-        preserveScroll: true
+    form.put(route("partner.settings.general-details"), {
+        preserveScroll: true,
     });
 };
 </script>
@@ -73,7 +77,7 @@ const submitForm = () => {
         </template>
 
         <template #form>
-             <!-- Name -->
+            <!-- Name -->
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="business_name" value="Business Name" />
                 <TextInput
@@ -94,7 +98,10 @@ const submitForm = () => {
                     type="email"
                     class="mt-1 block w-full"
                 />
-                <InputError :message="form.errors.business_email" class="mt-2" />
+                <InputError
+                    :message="form.errors.business_email"
+                    class="mt-2"
+                />
             </div>
 
             <!-- Country -->
@@ -114,13 +121,18 @@ const submitForm = () => {
             </div>
 
             <div class="col-span-6 sm:col-span-4">
-                <div class="bg-gray-100 flex font-medium gap-4 items-center mt-1 text-gray-700 text-sm">
+                <div
+                    class="bg-gray-100 flex font-medium gap-4 items-center mt-1 text-gray-700 text-sm"
+                >
                     <div class="w-20 h-10">
-                        <img v-if="flag" :src="flag_img" :alt="flag" class="border h-full">
+                        <img
+                            v-if="flag"
+                            :src="flag_img"
+                            :alt="flag"
+                            class="border h-full"
+                        />
                     </div>
-                    <div>
-                        Default currency: <b v-text="currency"></b>
-                    </div>
+                    <div>Default currency: <b v-text="currency"></b></div>
                 </div>
             </div>
 
@@ -128,7 +140,7 @@ const submitForm = () => {
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="business_phone" value="Phone Number" />
                 <div class="flex gap-2 items-center">
-                    <div v-text="dial_code"></div>
+                    <div class="input-field mt-1" v-text="dial_code"></div>
                     <TextInput
                         id="business_phone"
                         v-model="business_phone"
@@ -139,13 +151,19 @@ const submitForm = () => {
                         :placeholder="mask"
                     />
                 </div>
-                <InputError :message="form.errors.business_phone" class="mt-2" />
+                <InputError
+                    :message="form.errors.business_phone"
+                    class="mt-2"
+                />
             </div>
 
             <!-- Timezone -->
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="timezone" value="Timezone" />
-                <div class="mt-1">Note: Change of timezone will affect your store schedules and all resources using dates.</div>
+                <div class="mt-1">
+                    Note: Change of timezone will affect your store schedules
+                    and all resources using dates.
+                </div>
                 <SelectInput
                     id="timezone"
                     v-model="form.timezone"
@@ -156,7 +174,9 @@ const submitForm = () => {
                 >
                 </SelectInput>
                 <InputError :message="form.errors.timezone" class="mt-2" />
-                <div v-if="localtime" class="mt-1">Local time: {{ localtime }}</div>
+                <div v-if="localtime" class="mt-1">
+                    Local time: {{ localtime }}
+                </div>
             </div>
 
             <!-- Show timezone in store -->
@@ -164,7 +184,8 @@ const submitForm = () => {
                 <Switcher
                     v-model="form.show_timezone"
                     title="Timezone in Service Store"
-                    description="Enable this option to inform visitors about business time zone."/>
+                    description="Enable this option to inform visitors about business time zone."
+                />
                 <InputError :message="form.errors.show_timezone" class="mt-2" />
             </div>
         </template>
@@ -174,9 +195,12 @@ const submitForm = () => {
                 Saved.
             </ActionMessage>
 
-            <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+            <WarningButton
+                :class="{ 'opacity-25': form.processing }"
+                :disabled="form.processing"
+            >
                 Save
-            </PrimaryButton>
+            </WarningButton>
         </template>
     </FormSection>
 </template>

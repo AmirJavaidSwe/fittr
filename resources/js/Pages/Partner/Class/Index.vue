@@ -1,26 +1,40 @@
 <script setup>
-import { ref, watch, computed } from 'vue';
-import { Link, useForm, usePage } from '@inertiajs/vue3';
+import { ref, watch, computed } from "vue";
+import { Link, useForm, usePage } from "@inertiajs/vue3";
 import { DateTime } from "luxon";
 import Form from "./Form.vue";
 import FormExport from "./FormExport.vue";
+import FormFilter from "./FormFilter.vue";
 import Search from "@/Components/DataTable/Search.vue";
 import Pagination from "@/Components/Pagination.vue";
 import TableHead from "@/Components/DataTable/TableHead.vue";
 import TableData from "@/Components/DataTable/TableData.vue";
 import DataTableLayout from "@/Components/DataTable/Layout.vue";
-import DialogModal from '@/Components/DialogModal.vue';
-import ConfirmationModal from '@/Components/ConfirmationModal.vue';
+import DialogModal from "@/Components/DialogModal.vue";
+import SideModal from "@/Components/SideModal.vue";
+import ConfirmationModal from "@/Components/ConfirmationModal.vue";
+import ImportIcon from "@/Icons/Import.vue";
+import ExportIcon from "@/Icons/Export.vue";
+import EditIcon from "@/Icons/Edit.vue";
+import DuplicateIcon from "@/Icons/Duplicate.vue";
+import DeleteIcon from "@/Icons/Delete.vue";
+import Dropdown from "@/Components/Dropdown.vue";
+import DropdownLink from "@/Components/DropdownLink.vue";
 
 // import PrimaryButton from '@/Components/PrimaryButton.vue';
-import SecondaryButton from '@/Components/SecondaryButton.vue';
-import DangerButton from '@/Components/DangerButton.vue';
-import ButtonLink from '@/Components/ButtonLink.vue';
+import SecondaryButton from "@/Components/SecondaryButton.vue";
+import DangerButton from "@/Components/DangerButton.vue";
+import WarningButton from "@/Components/WarningButton.vue";
+import { faCog, faPlus } from "@fortawesome/free-solid-svg-icons";
+import StatusLabel from "@/Components/StatusLabel.vue";
+import ColoredValue from "@/Components/DataTable/ColoredValue.vue";
+import AvatarValue from "@/Components/DataTable/AvatarValue.vue";
+import DateValue from "@/Components/DataTable/DateValue.vue";
 
 const props = defineProps({
     disableSearch: {
         type: Boolean,
-        default: false
+        default: false,
     },
     classes: Object,
     search: String,
@@ -51,24 +65,33 @@ const form_class = useForm({
     instructor_id: null,
     class_type_id: null,
     studio_id: null,
-    file_type: 'csv',
+    file_type: "csv",
     is_off_peak: false,
     does_repeat: false,
     repeat_end_date: null,
     week_days: [],
 });
 
-const runSearch = () => {
-    form.get(route('partner.classes.index'), {
-        preserveScroll: true,
-        preserveState: true,
-        replace: true,
-    });
+const setOrdering = (col) => {
+    //reverse same col order
+    if (form.order_by == col) {
+        form.order_dir = form.order_dir == "asc" ? "desc" : "asc";
+    }
+    form.order_by = col;
+    runSearch();
 };
 
 const setPerPage = (n) => {
     form.per_page = n;
     runSearch();
+};
+
+const runSearch = () => {
+    form.get(route("partner.classes.index"), {
+        preserveScroll: true,
+        preserveState: true,
+        replace: true,
+    });
 };
 
 // form.search getter only;
@@ -82,14 +105,23 @@ const confirmDeletion = (id) => {
     itemDeleting.value = true;
 };
 const deleteItem = () => {
-    form.delete(route('partner.classes.destroy', { id: itemIdDeleting.value }), {
-        preserveScroll: true,
-        preserveState: true,
-        onSuccess: () => {
-            itemDeleting.value = false;
-            itemIdDeleting.value = null;
-        },
-    });
+    form.delete(
+        route("partner.classes.destroy", { id: itemIdDeleting.value }),
+        {
+            preserveScroll: true,
+            preserveState: true,
+            onSuccess: () => {
+                itemDeleting.value = false;
+                itemIdDeleting.value = null;
+            },
+        }
+    );
+};
+
+// Filter modal:
+const showFilterModal = ref(false);
+const closeFilterModal = () => {
+    showFilterModal.value = false;
 };
 
 //create confirmation modal:
@@ -100,13 +132,13 @@ const closeCreateModal = () => {
 };
 
 const storeClass = () => {
-    console.log('storeClass');
-    form_class.post(route('partner.classes.store'), {
+    console.log("storeClass");
+    form_class.post(route("partner.classes.store"), {
         preserveScroll: true,
         onSuccess: () => {
             form_class.reset();
             closeCreateModal();
-        }
+        },
     });
 };
 
@@ -118,34 +150,34 @@ const closeExportModal = () => {
     showExportModal.value = false;
 };
 const resetExportFilters = () => {
-    console.log('resetExportFilters');
+    console.log("resetExportFilters");
     form_class.reset();
 };
 
 const exportClasses = () => {
     form_class
-    .transform((data) => ({
-        type: 'classes',
-        filters : {
-            status: data.status,
-            start_date: data.start_date,
-            end_date: data.end_date,
-            instructor_id: data.instructor_id,
-            studio_id: data.studio_id,
-            is_off_peak: data.is_off_peak
-        },
-        file_type: data.file_type,
-    }))
-    .post(route('partner.exports.index'), {
-        preserveScroll: true,
-        preserveState: true,
-        onSuccess: (data) => {
-            form_class.reset();
-            exportInitiated.value = true;
-            export_id.value = data.props.extra?.export_id;
-            checkExportStatus();
-        }
-    });
+        .transform((data) => ({
+            type: "classes",
+            filters: {
+                status: data.status,
+                start_date: data.start_date,
+                end_date: data.end_date,
+                instructor_id: data.instructor_id,
+                studio_id: data.studio_id,
+                is_off_peak: data.is_off_peak,
+            },
+            file_type: data.file_type,
+        }))
+        .post(route("partner.exports.index"), {
+            preserveScroll: true,
+            preserveState: true,
+            onSuccess: (data) => {
+                form_class.reset();
+                exportInitiated.value = true;
+                export_id.value = data.props.extra?.export_id;
+                checkExportStatus();
+            },
+        });
 };
 const completed_at = ref(null);
 const checkExportStatus = () => {
@@ -154,43 +186,44 @@ const checkExportStatus = () => {
         // download link inside modal, to avoid visit exports page
 
         axios
-        .get(route('partner.exports.show', {id: export_id.value}), {
-            headers: {
-                'X-Inertia': true,
-                'X-Inertia-Version': usePage().version,
-            }
-        })
-        .then((response) => {
-            // completed_at.value = null;
-            showLink(response.data.props.exporting);
-        });
+            .get(route("partner.exports.show", { id: export_id.value }), {
+                headers: {
+                    "X-Inertia": true,
+                    "X-Inertia-Version": usePage().version,
+                },
+            })
+            .then((response) => {
+                // completed_at.value = null;
+                showLink(response.data.props.exporting);
+            });
     }, 5000);
 };
 
 const showLink = (exporting) => {
     completed_at.value = exporting.completed_at;
 };
-
 </script>
 <template>
-    <data-table-layout
-        :disableButton="true">
-
+    <data-table-layout :disableButton="true">
         <template #button>
-            <div class="flex gap-2">
-                <SecondaryButton @click="null">
-                    Import
-                </SecondaryButton>
-                <SecondaryButton @click="showExportModal = true">
-                    Export
-                </SecondaryButton>
-                <SecondaryButton @click="showCreateModal = true">
-                    Create new (modal)
-                </SecondaryButton>
-                <ButtonLink :href="route('partner.classes.create')" type="primary">
-                    Create new (direct)
-                </ButtonLink>
-            </div>
+            <SecondaryButton @click="null">
+                <ImportIcon class="w-4 lg:w-24vw h-4 lg:h-24vw mr-0 md:mr-2" />
+                <span class="hidden md:block">Import</span>
+            </SecondaryButton>
+            <SecondaryButton @click="showExportModal = true">
+                <ExportIcon class="w-4 lg:w-24vw h-4 lg:h-24vw mr-0 md:mr-2" />
+                <span class="hidden md:block">Export</span>
+            </SecondaryButton>
+            <WarningButton @click="showCreateModal = true">
+                Create new
+                <font-awesome-icon class="ml-2" :icon="faPlus" />
+            </WarningButton>
+            <WarningButton
+                :href="route('partner.classes.create')"
+                type="primary"
+            >
+                Create new (direct)
+            </WarningButton>
         </template>
 
         <template #search>
@@ -198,72 +231,203 @@ const showLink = (exporting) => {
                 v-model="form.search"
                 :disable-search="disableSearch"
                 @reset="form.search = null"
-                @pp_changed="setPerPage"
-                />
+                @onFilter="showFilterModal = true"
+            />
         </template>
 
         <template #tableHead>
-            <table-head title="Id"/>
-            <table-head title="Title"/>
-            <table-head title="Studio ID"/>
-            <table-head title="Instructor ID"/>
-            <table-head title="Class Type ID"/>
-            <table-head title="Status"/>
-            <table-head title="Start"/>
-            <table-head title="Duration"/>
-            <table-head title="Updated At"/>
-            <table-head title="Action"/>
+            <table-head
+                title="Id"
+                @click="setOrdering('id')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'id'"
+            />
+            <table-head
+                title="Title"
+                @click="setOrdering('title')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'title'"
+            />
+            <table-head
+                title="Studio ID"
+                @click="setOrdering('studio_id')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'studio_id'"
+            />
+            <table-head
+                title="Class Type ID"
+                @click="setOrdering('class_type_id')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'class_type_id'"
+            />
+            <table-head
+                title="Instructor ID"
+                @click="setOrdering('instructor_id')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'instructor_id'"
+            />
+            <table-head
+                title="Status"
+                @click="setOrdering('status_label')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'status_label'"
+            />
+            <table-head
+                title="Date"
+                @click="setOrdering('start_date')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'start_date'"
+            />
+            <table-head
+                title="Time"
+                @click="setOrdering('start_date')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'start_date'"
+            />
+            <table-head
+                title="Duration"
+                @click="setOrdering('duration')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'duration'"
+            />
+            <table-head
+                title="Updated At"
+                @click="setOrdering('updated_at')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'updated_at'"
+            />
+            <table-head title="Action" />
         </template>
 
         <template #tableData>
-            <tr v-for="class_lesson in classes.data" >
-                <table-data :title="class_lesson.id"/>
+            <tr v-for="class_lesson in classes.data">
+                <table-data :title="class_lesson.id" />
                 <table-data>
-                    <Link class="font-medium text-indigo-600 hover:text-indigo-500"
-                          :href="route('partner.classes.show', class_lesson)"> {{ class_lesson.title }} </Link>
+                    <Link
+                        class="font-medium text-indigo-600 hover:text-indigo-500"
+                        :href="route('partner.classes.show', class_lesson)"
+                    >
+                        {{ class_lesson.title }}
+                    </Link>
                 </table-data>
-                <table-data :title="class_lesson.studio_id"/>
-                <table-data :title="class_lesson.instructor_id"/>
-                <table-data :title="class_lesson.class_type_id"/>
+                <table-data :title="class_lesson.studio_id" />
+                <!-- <table-data :title="class_lesson.class_type_id" /> -->
                 <table-data>
-                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ">
-                        {{ class_lesson.status_label }}
-                    </span>
+                    <ColoredValue color="#F47560" title="Yoga" />
                 </table-data>
-                <table-data
-                    :title="DateTime.fromISO(class_lesson.start_date).setZone(business_seetings.timezone).toFormat(business_seetings.date_format?.format_js)"
-                            :subtitle="DateTime.fromISO(class_lesson.start_date).setZone(business_seetings.timezone).toFormat(business_seetings.time_format?.format_js)">
+                <table-data>
+                    <AvatarValue title="Demo Instructor 1" />
+                </table-data>
+                <table-data>
+                    <StatusLabel :status="class_lesson.status_label" />
+                </table-data>
+                <table-data>
+                    <DateValue
+                        :date="
+                            DateTime.fromISO(class_lesson.start_date)
+                                .setZone(business_seetings.timezone)
+                                .toFormat(
+                                    business_seetings.date_format?.format_js
+                                )
+                        "
+                    />
+                </table-data>
+                <table-data>
+                    <DateValue
+                        isTime
+                        :date="
+                            DateTime.fromISO(class_lesson.start_date)
+                                .setZone(business_seetings.timezone)
+                                .toFormat(
+                                    business_seetings.time_format?.format_js
+                                )
+                        "
+                    />
                 </table-data>
 
-                <table-data :title="class_lesson.duration"/>
-                <table-data :title="DateTime.fromISO(class_lesson.updated_at).toRelative()"/>
+                <table-data :title="class_lesson.duration + ' minutes'" />
+                <table-data
+                    :title="
+                        DateTime.fromISO(class_lesson.updated_at).toRelative()
+                    "
+                />
                 <table-data>
-                    <Link class="font-medium text-indigo-600 hover:text-indigo-500"
-                          :href="route('partner.classes.edit', class_lesson)">
-                        Edit
-                    </Link>
-                    <br>
-                    <button class="block text-red-500"
-                            @click="confirmDeletion(class_lesson.id)">
-                        Delete
-                    </button>
+                    <Dropdown
+                        align="right"
+                        width="48"
+                        :content-classes="['bg-white']"
+                    >
+                        <template #trigger>
+                            <button class="text-dark text-lg">
+                                <font-awesome-icon :icon="faCog" />
+                            </button>
+                        </template>
+
+                        <template #content>
+                            <DropdownLink
+                                :href="
+                                    route('partner.classes.edit', class_lesson)
+                                "
+                            >
+                                <EditIcon
+                                    class="w-4 lg:w-24vw h-4 lg:h-24vw mr-0 md:mr-2"
+                                />
+                                Edit
+                            </DropdownLink>
+                            <DropdownLink href="#">
+                                <DuplicateIcon
+                                    class="w-4 lg:w-24vw h-4 lg:h-24vw mr-0 md:mr-2"
+                                />
+                                Duplicate
+                            </DropdownLink>
+                            <DropdownLink
+                                as="button"
+                                @click="confirmDeletion(class_lesson.id)"
+                            >
+                                <span class="text-danger flex items-center">
+                                    <DeleteIcon
+                                        class="w-4 lg:w-24vw h-4 lg:h-24vw mr-0 md:mr-2"
+                                    />
+                                    <span> Delete </span>
+                                </span>
+                            </DropdownLink>
+                        </template>
+                    </Dropdown>
                 </table-data>
             </tr>
         </template>
 
         <template #pagination>
             <pagination
-                :links="classes.links"/>
-
-            <p class="p-2 text-xs">Viewing {{classes.from}} - {{classes.to}} of {{classes.total}} results</p>
+                :links="classes.links"
+                :to="classes.to"
+                :from="classes.from"
+                :total="classes.total"
+                @pp_changed="setPerPage"
+            />
         </template>
     </data-table-layout>
 
     <!-- Export form Modal -->
-    <DialogModal :show="showExportModal" @close="closeExportModal">
-        <template #title>
-            Export Classes
+    <SideModal :show="showFilterModal" @close="closeFilterModal">
+        <template #title>Filter</template>
+        <template #content>
+            <FormFilter
+                :form="form_class"
+                :initiated="exportInitiated"
+                :ready="completed_at"
+                :statuses="statuses"
+                :studios="studios"
+                :instructors="instructors"
+                @submitted="exportClasses"
+                @reset="resetExportFilters"
+            />
         </template>
+    </SideModal>
+
+    <!-- Export form Modal -->
+    <SideModal :show="showExportModal" @close="closeExportModal">
+        <template #title> Export Classes </template>
 
         <template #content>
             <FormExport
@@ -273,17 +437,16 @@ const showLink = (exporting) => {
                 :statuses="statuses"
                 :studios="studios"
                 :instructors="instructors"
+                modal
                 @submitted="exportClasses"
                 @reset="resetExportFilters"
-                />
+            />
         </template>
-    </DialogModal>
+    </SideModal>
 
     <!-- Create new class Modal -->
-    <DialogModal :show="showCreateModal" @close="closeCreateModal">
-        <template #title>
-            Create new Class
-        </template>
+    <SideModal :show="showCreateModal" @close="closeCreateModal">
+        <template #title> Create new Class </template>
 
         <template #content>
             <Form
@@ -295,15 +458,14 @@ const showLink = (exporting) => {
                 :classtypes="classtypes"
                 :business_seetings="business_seetings"
                 :submitted="storeClass"
-                />
+                modal
+            />
         </template>
-    </DialogModal>
+    </SideModal>
 
     <!-- Delete Confirmation Modal -->
     <ConfirmationModal :show="itemDeleting" @close="itemDeleting = false">
-        <template #title>
-            Confirmation required
-        </template>
+        <template #title> Confirmation required </template>
 
         <template #content>
             Are you sure you would like to delete this?
@@ -318,7 +480,8 @@ const showLink = (exporting) => {
                 class="ml-3"
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
-                @click="deleteItem">
+                @click="deleteItem"
+            >
                 Delete
             </DangerButton>
         </template>

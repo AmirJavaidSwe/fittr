@@ -1,20 +1,23 @@
 <script setup>
-import { computed, ref, onMounted  } from 'vue';
-import { router, useForm, usePage } from '@inertiajs/vue3';
-import ServiceStoreMenu from '@/Pages/Partner/Settings/ServiceStoreMenu.vue';
+import { computed, ref, onMounted } from "vue";
+import { router, useForm, usePage } from "@inertiajs/vue3";
+import ServiceStoreMenu from "@/Pages/Partner/Settings/ServiceStoreMenu.vue";
 
-import SectionTitle from '@/Components/SectionTitle.vue';
-import FormSection from '@/Components/FormSection.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import TextInput from '@/Components/TextInput.vue';
-import Checkbox from '@/Components/Checkbox.vue';
-import InputError from '@/Components/InputError.vue';
-import ActionMessage from '@/Components/ActionMessage.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import SecondaryButton from '@/Components/SecondaryButton.vue';
+import SectionTitle from "@/Components/SectionTitle.vue";
+import FormSection from "@/Components/FormSection.vue";
+import InputLabel from "@/Components/InputLabel.vue";
+import TextInput from "@/Components/TextInput.vue";
+import Checkbox from "@/Components/Checkbox.vue";
+import InputError from "@/Components/InputError.vue";
+import ActionMessage from "@/Components/ActionMessage.vue";
+import WarningButton from "@/Components/WarningButton.vue";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
 
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faArrowsDownToLine, faArrowsUpToLine } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import {
+    faArrowsDownToLine,
+    faArrowsUpToLine,
+} from "@fortawesome/free-solid-svg-icons";
 
 const props = defineProps({
     business_seetings: Object,
@@ -22,7 +25,7 @@ const props = defineProps({
 });
 
 const form = useForm({
-    _method: 'PUT', //use spoofing for multipart/form-data support
+    _method: "PUT", //use spoofing for multipart/form-data support
     logo: props.form_data.logo, //file
     logo_url: props.form_data.logo_url,
     favicon: props.form_data.favicon, //file
@@ -38,11 +41,11 @@ const form = useForm({
 const section_header = ref(null);
 const section_footer = ref(null);
 const scrollToHeader = () => {
-    section_header.value?.scrollIntoView({behavior: "smooth"});
-}
+    section_header.value?.scrollIntoView({ behavior: "smooth" });
+};
 const scrollToFooter = () => {
-    section_footer.value?.scrollIntoView({behavior: "smooth"});
-}
+    section_footer.value?.scrollIntoView({ behavior: "smooth" });
+};
 
 const logoPreview = ref(null);
 const logoInput = ref(null);
@@ -106,17 +109,15 @@ const submitForm = () => {
     //when form sent as json and not multipart/form-data, inertia will exclude props with undefined values
     form.logo = logoDelete.value ? null : logoInput.value.files[0];
     form.favicon = faviconDelete.value ? null : faviconInput.value.files[0];
-    form.transform(
-        (data) => {
-            if(data.logo === undefined){
-                delete data.logo;
-            }
-            if(data.favicon === undefined){
-                delete data.favicon;
-            }
-            return data;
+    form.transform((data) => {
+        if (data.logo === undefined) {
+            delete data.logo;
         }
-    ).post(route('partner.settings.service-store-header'), {
+        if (data.favicon === undefined) {
+            delete data.favicon;
+        }
+        return data;
+    }).post(route("partner.settings.service-store-header"), {
         preserveScroll: true,
     });
 };
@@ -132,9 +133,7 @@ const submitForm = () => {
             <!-- HEADER -->
             <div ref="section_header" class="col-span-full">
                 <SectionTitle>
-                    <template #title>
-                        Header Settings
-                    </template>
+                    <template #title> Header Settings </template>
                     <template #aside>
                         <div @click="scrollToFooter" class="cursor-pointer">
                             <font-awesome-icon :icon="faArrowsDownToLine" />
@@ -150,7 +149,7 @@ const submitForm = () => {
                     type="file"
                     class="hidden"
                     @change="updateLogoPreview"
-                >
+                />
 
                 <InputLabel for="logo" value="Business Logo" />
                 <div class="text-sm text-gray-600">
@@ -160,16 +159,20 @@ const submitForm = () => {
                 <div v-if="show_logo">
                     <!-- Current Logo -->
                     <div v-show="!logoPreview && form.logo" class="mt-2">
-                        <img :src="logo_img_url" class="h-32">
+                        <img :src="logo_img_url" class="h-32" />
                     </div>
 
                     <!-- New Logo Preview -->
                     <div v-show="logoPreview" class="mt-2">
-                        <img :src="logoPreview" class="h-32">
+                        <img :src="logoPreview" class="h-32" />
                     </div>
                 </div>
 
-                <SecondaryButton class="mt-2 mr-2" type="button" @click.prevent="selectNewLogo">
+                <SecondaryButton
+                    class="mt-2 mr-2"
+                    type="button"
+                    @click.prevent="selectNewLogo"
+                >
                     Select new logo
                 </SecondaryButton>
 
@@ -186,8 +189,14 @@ const submitForm = () => {
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="logo_url" value="Logo URL" />
                 <div class="text-sm text-gray-600">
-                    <p>Add a redirect to home or any other page when clients click on the logo.</p>
-                    <p>NOTE : By default, a click on the logo will redirect to the Service Store homepage.</p>
+                    <p>
+                        Add a redirect to home or any other page when clients
+                        click on the logo.
+                    </p>
+                    <p>
+                        NOTE : By default, a click on the logo will redirect to
+                        the Service Store homepage.
+                    </p>
                 </div>
                 <TextInput
                     id="logo_url"
@@ -204,7 +213,7 @@ const submitForm = () => {
                     type="file"
                     class="hidden"
                     @change="updateFaviconPreview"
-                >
+                />
 
                 <InputLabel for="favicon" value="Favicon" />
                 <div class="text-sm text-gray-600">
@@ -214,16 +223,26 @@ const submitForm = () => {
                 <div v-if="show_favicon">
                     <!-- Current favicon -->
                     <div v-show="!faviconPreview && form.favicon" class="mt-2">
-                        <img :src="favicon_img_url" class="bg-gray-900 h-12 p-2">
+                        <img
+                            :src="favicon_img_url"
+                            class="bg-gray-900 h-12 p-2"
+                        />
                     </div>
 
                     <!-- New favicon -->
                     <div v-show="faviconPreview" class="mt-2">
-                        <img :src="faviconPreview" class="bg-gray-900 h-12 p-2">
+                        <img
+                            :src="faviconPreview"
+                            class="bg-gray-900 h-12 p-2"
+                        />
                     </div>
                 </div>
 
-                <SecondaryButton class="mt-2 mr-2" type="button" @click.prevent="selectNewFavicon">
+                <SecondaryButton
+                    class="mt-2 mr-2"
+                    type="button"
+                    @click.prevent="selectNewFavicon"
+                >
                     Select new icon
                 </SecondaryButton>
 
@@ -240,9 +259,7 @@ const submitForm = () => {
             <!-- FOOTER -->
             <div ref="section_footer" class="col-span-full">
                 <SectionTitle>
-                    <template #title>
-                        Footer Settings
-                    </template>
+                    <template #title> Footer Settings </template>
                     <template #aside>
                         <div @click="scrollToHeader" class="cursor-pointer">
                             <font-awesome-icon :icon="faArrowsUpToLine" />
@@ -251,13 +268,19 @@ const submitForm = () => {
                     </template>
                 </SectionTitle>
                 <div class="font-medium">Social Accounts</div>
-                <div class="text-sm">Please make sure that all links start with https://</div>
+                <div class="text-sm">
+                    Please make sure that all links start with https://
+                </div>
             </div>
 
             <!-- Facebook -->
             <div class="col-span-6 sm:col-span-4">
                 <div class="flex gap-2 items-center">
-                    <InputLabel class="w-36" for="link_facebook" value="Facebook" />
+                    <InputLabel
+                        class="w-36"
+                        for="link_facebook"
+                        value="Facebook"
+                    />
                     <TextInput
                         id="link_facebook"
                         v-model="form.link_facebook"
@@ -271,7 +294,11 @@ const submitForm = () => {
             <!-- Instagram -->
             <div class="col-span-6 sm:col-span-4">
                 <div class="flex gap-2 items-center">
-                    <InputLabel class="w-36" for="link_instagram" value="Instagram" />
+                    <InputLabel
+                        class="w-36"
+                        for="link_instagram"
+                        value="Instagram"
+                    />
                     <TextInput
                         id="link_instagram"
                         v-model="form.link_instagram"
@@ -280,12 +307,19 @@ const submitForm = () => {
                         placeholder="Paste URL here"
                     />
                 </div>
-                <InputError :message="form.errors.link_instagram" class="mt-2" />
+                <InputError
+                    :message="form.errors.link_instagram"
+                    class="mt-2"
+                />
             </div>
             <!-- Twitter -->
             <div class="col-span-6 sm:col-span-4">
                 <div class="flex gap-2 items-center">
-                    <InputLabel class="w-36" for="link_twitter" value="Twitter" />
+                    <InputLabel
+                        class="w-36"
+                        for="link_twitter"
+                        value="Twitter"
+                    />
                     <TextInput
                         id="link_twitter"
                         v-model="form.link_twitter"
@@ -299,7 +333,11 @@ const submitForm = () => {
             <!-- YouTube -->
             <div class="col-span-6 sm:col-span-4">
                 <div class="flex gap-2 items-center">
-                    <InputLabel class="w-36" for="link_youtube" value="YouTube" />
+                    <InputLabel
+                        class="w-36"
+                        for="link_youtube"
+                        value="YouTube"
+                    />
                     <TextInput
                         id="link_twitter"
                         v-model="form.link_youtube"
@@ -315,26 +353,49 @@ const submitForm = () => {
                 <div class="font-medium">Footer options</div>
 
                 <label class="flex items-center">
-                    <span class="mr-4 w-6 text-sm text-gray-700" v-text="form.show_address ? 'On' : 'Off'"></span>
-                    <Checkbox v-model:checked="form.show_address" :value="form.show_address ? '1' : '0'" />
-                    <span class="ml-4 text-sm text-gray-700">Show Address in Service Store</span>
+                    <span
+                        class="mr-4 w-6 text-sm text-gray-700"
+                        v-text="form.show_address ? 'On' : 'Off'"
+                    ></span>
+                    <Checkbox
+                        v-model:checked="form.show_address"
+                        :value="form.show_address ? '1' : '0'"
+                    />
+                    <span class="ml-4 text-sm text-gray-700"
+                        >Show Address in Service Store</span
+                    >
                 </label>
                 <InputError :message="form.errors.show_address" class="mt-2" />
 
                 <label class="flex items-center">
-                    <span class="mr-4 w-6 text-sm text-gray-700" v-text="form.show_phone ? 'On' : 'Off'"></span>
-                    <Checkbox v-model:checked="form.show_phone" :value="form.show_phone ? '1' : '0'" />
-                    <span class="ml-4 text-sm text-gray-700">Show Phone Number in Service Store</span>
+                    <span
+                        class="mr-4 w-6 text-sm text-gray-700"
+                        v-text="form.show_phone ? 'On' : 'Off'"
+                    ></span>
+                    <Checkbox
+                        v-model:checked="form.show_phone"
+                        :value="form.show_phone ? '1' : '0'"
+                    />
+                    <span class="ml-4 text-sm text-gray-700"
+                        >Show Phone Number in Service Store</span
+                    >
                 </label>
                 <InputError :message="form.errors.show_phone" class="mt-2" />
 
                 <label class="flex items-center">
-                    <span class="mr-4 w-6 text-sm text-gray-700" v-text="form.show_email ? 'On' : 'Off'"></span>
-                    <Checkbox v-model:checked="form.show_email" :value="form.show_email ? '1' : '0'" />
-                    <span class="ml-4 text-sm text-gray-700">Show Email in Service Store</span>
+                    <span
+                        class="mr-4 w-6 text-sm text-gray-700"
+                        v-text="form.show_email ? 'On' : 'Off'"
+                    ></span>
+                    <Checkbox
+                        v-model:checked="form.show_email"
+                        :value="form.show_email ? '1' : '0'"
+                    />
+                    <span class="ml-4 text-sm text-gray-700"
+                        >Show Email in Service Store</span
+                    >
                 </label>
                 <InputError :message="form.errors.show_email" class="mt-2" />
-                
             </div>
         </template>
 
@@ -343,9 +404,12 @@ const submitForm = () => {
                 Saved.
             </ActionMessage>
 
-            <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+            <WarningButton
+                :class="{ 'opacity-25': form.processing }"
+                :disabled="form.processing"
+            >
                 Save
-            </PrimaryButton>
+            </WarningButton>
         </template>
     </FormSection>
 </template>

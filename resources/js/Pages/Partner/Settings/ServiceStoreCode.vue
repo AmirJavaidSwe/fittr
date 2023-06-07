@@ -1,15 +1,15 @@
 <script setup>
-import { computed, ref, onMounted  } from 'vue';
-import { useForm } from '@inertiajs/vue3';
-import ServiceStoreMenu from '@/Pages/Partner/Settings/ServiceStoreMenu.vue';
+import { computed, ref, onMounted } from "vue";
+import { useForm } from "@inertiajs/vue3";
+import ServiceStoreMenu from "@/Pages/Partner/Settings/ServiceStoreMenu.vue";
 
-import SectionTitle from '@/Components/SectionTitle.vue';
-import FormSection from '@/Components/FormSection.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import TextInput from '@/Components/TextInput.vue';
-import InputError from '@/Components/InputError.vue';
-import ActionMessage from '@/Components/ActionMessage.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
+import SectionTitle from "@/Components/SectionTitle.vue";
+import FormSection from "@/Components/FormSection.vue";
+import InputLabel from "@/Components/InputLabel.vue";
+import TextInput from "@/Components/TextInput.vue";
+import InputError from "@/Components/InputError.vue";
+import ActionMessage from "@/Components/ActionMessage.vue";
+import WarningButton from "@/Components/WarningButton.vue";
 
 const props = defineProps({
     form_data: Object,
@@ -23,8 +23,8 @@ const form = useForm({
 });
 
 const submitForm = () => {
-    form.put(route('partner.settings.service-store-code'), {
-        preserveScroll: true
+    form.put(route("partner.settings.service-store-code"), {
+        preserveScroll: true,
     });
 };
 </script>
@@ -38,9 +38,7 @@ const submitForm = () => {
         <template #form>
             <div class="col-span-full">
                 <SectionTitle>
-                    <template #title>
-                        Custom code
-                    </template>
+                    <template #title> Custom code </template>
                 </SectionTitle>
                 <div class="text-sm text-gray-600">
                     <p>Add analytics, event tracking code and more.</p>
@@ -49,7 +47,9 @@ const submitForm = () => {
             <!-- Google Analytics -->
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="meta_title" value="Google Analytics" />
-                <div class="text-sm text-gray-600">Google Universal Analytics Tracking ID.</div>
+                <div class="text-sm text-gray-600">
+                    Google Universal Analytics Tracking ID.
+                </div>
                 <TextInput
                     id="logo_url"
                     v-model="form.google_analytics"
@@ -57,13 +57,20 @@ const submitForm = () => {
                     class="mt-1 block w-full"
                     placeholder="e.g UA-XXXXXXX"
                 />
-                <InputError :message="form.errors.google_analytics" class="mt-2" />
+                <InputError
+                    :message="form.errors.google_analytics"
+                    class="mt-2"
+                />
             </div>
 
             <!-- Google Tag Manager -->
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="meta_title" value="Google Tag Manager" />
-                <div class="text-sm text-gray-600">With Google Tag Manager you can add and manage various types of tags (Google Analytics, Google Ads Conversion, Facebook Pixel and many more) with single integration.</div>
+                <div class="text-sm text-gray-600">
+                    With Google Tag Manager you can add and manage various types
+                    of tags (Google Analytics, Google Ads Conversion, Facebook
+                    Pixel and many more) with single integration.
+                </div>
                 <TextInput
                     id="logo_url"
                     v-model="form.google_gtag"
@@ -77,7 +84,10 @@ const submitForm = () => {
             <!-- Google AdSense - ads -->
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="meta_title" value="Google AdSense" />
-                <div class="text-sm text-gray-600">Add your publisher ID if you plan showing ads on your website.</div>
+                <div class="text-sm text-gray-600">
+                    Add your publisher ID if you plan showing ads on your
+                    website.
+                </div>
                 <TextInput
                     id="logo_url"
                     v-model="form.google_adsense"
@@ -85,7 +95,10 @@ const submitForm = () => {
                     class="mt-1 block w-full"
                     placeholder="e.g ca-pub-1234XXXXXXXXXXXX"
                 />
-                <InputError :message="form.errors.google_adsense" class="mt-2" />
+                <InputError
+                    :message="form.errors.google_adsense"
+                    class="mt-2"
+                />
             </div>
 
             <!-- Facebook Pixel -->
@@ -101,7 +114,6 @@ const submitForm = () => {
                 />
                 <InputError :message="form.errors.fb_pixel" class="mt-2" />
             </div>
-            
         </template>
 
         <template #actions>
@@ -109,9 +121,12 @@ const submitForm = () => {
                 Saved.
             </ActionMessage>
 
-            <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+            <WarningButton
+                :class="{ 'opacity-25': form.processing }"
+                :disabled="form.processing"
+            >
                 Save
-            </PrimaryButton>
+            </WarningButton>
         </template>
     </FormSection>
 </template>

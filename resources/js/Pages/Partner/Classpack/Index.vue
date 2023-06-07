@@ -1,6 +1,6 @@
 <script setup>
-import { ref, watch } from 'vue';
-import { Link, useForm, usePage } from '@inertiajs/vue3';
+import { ref, watch } from "vue";
+import { Link, useForm, usePage } from "@inertiajs/vue3";
 import { DateTime } from "luxon";
 import Form from "./Form.vue";
 import Search from "@/Components/DataTable/Search.vue";
@@ -8,16 +8,22 @@ import Pagination from "@/Components/Pagination.vue";
 import TableHead from "@/Components/DataTable/TableHead.vue";
 import TableData from "@/Components/DataTable/TableData.vue";
 import DataTableLayout from "@/Components/DataTable/Layout.vue";
-import DialogModal from '@/Components/DialogModal.vue';
-import ConfirmationModal from '@/Components/ConfirmationModal.vue';
-import SecondaryButton from '@/Components/SecondaryButton.vue';
-import DangerButton from '@/Components/DangerButton.vue';
-import ButtonLink from '@/Components/ButtonLink.vue';
+import DialogModal from "@/Components/DialogModal.vue";
+import ConfirmationModal from "@/Components/ConfirmationModal.vue";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
+import DangerButton from "@/Components/DangerButton.vue";
+import WarningButton from "@/Components/WarningButton.vue";
+import SideModal from "@/Components/SideModal.vue";
+import { faPlus, faCog } from "@fortawesome/free-solid-svg-icons";
+import Dropdown from "@/Components/Dropdown.vue";
+import DropdownLink from "@/Components/DropdownLink.vue";
+import EditIcon from "@/Icons/Edit.vue";
+import DeleteIcon from "@/Icons/Delete.vue";
 
 const props = defineProps({
     disableSearch: {
         type: Boolean,
-        default: false
+        default: false,
     },
     business_seetings: Object,
     options_types: Object,
@@ -58,11 +64,20 @@ const form_fields = {
 const form_item = useForm(form_fields);
 
 const runSearch = () => {
-    form.get(route('partner.classpacks.index'), {
+    form.get(route("partner.classpacks.index"), {
         preserveScroll: true,
         preserveState: true,
         replace: true,
     });
+};
+
+const setOrdering = (col) => {
+    //reverse same col order
+    if (form.order_by == col) {
+        form.order_dir = form.order_dir == "asc" ? "desc" : "asc";
+    }
+    form.order_by = col;
+    runSearch();
 };
 
 const setPerPage = (n) => {
@@ -81,14 +96,17 @@ const confirmDeletion = (id) => {
     itemDeleting.value = true;
 };
 const deleteItem = () => {
-    form.delete(route('partner.classpacks.destroy', { id: itemIdDeleting.value }), {
-        preserveScroll: true,
-        preserveState: true,
-        onSuccess: () => {
-            itemDeleting.value = false;
-            itemIdDeleting.value = null;
-        },
-    });
+    form.delete(
+        route("partner.classpacks.destroy", { id: itemIdDeleting.value }),
+        {
+            preserveScroll: true,
+            preserveState: true,
+            onSuccess: () => {
+                itemDeleting.value = false;
+                itemIdDeleting.value = null;
+            },
+        }
+    );
 };
 
 //create modal:
@@ -99,12 +117,12 @@ const closeCreateModal = () => {
 };
 //create item from modal
 const storeItem = () => {
-    form_item.post(route('partner.classpacks.store'), {
+    form_item.post(route("partner.classpacks.store"), {
         preserveScroll: true,
         onSuccess: () => {
             form_item.reset();
             closeCreateModal();
-        }
+        },
     });
 };
 
@@ -126,27 +144,29 @@ const closeEditModal = () => {
 };
 //save item from modal:
 const updateItem = () => {
-    form_item.put(route('partner.classpacks.update', {id: editedId.value}), {
+    form_item.put(route("partner.classpacks.update", { id: editedId.value }), {
         preserveScroll: true,
         onSuccess: () => {
             form_item.reset();
             closeEditModal();
-        }
+        },
     });
 };
 </script>
 <template>
-    <data-table-layout
-        :disableButton="true"
-       >
+    <data-table-layout :disableButton="true">
         <template #button>
             <div class="flex gap-2">
-                <SecondaryButton @click="showCreateModal = true">
-                    Create new (modal)
-                </SecondaryButton>
-                <ButtonLink :href="route('partner.classpacks.create')" type="primary">
+                <WarningButton @click="showCreateModal = true">
+                    Create new
+                    <font-awesome-icon class="ml-2" :icon="faPlus" />
+                </WarningButton>
+                <WarningButton
+                    :href="route('partner.classpacks.create')"
+                    type="primary"
+                >
                     Create new (direct)
-                </ButtonLink>
+                </WarningButton>
             </div>
         </template>
 
@@ -156,89 +176,163 @@ const updateItem = () => {
                 :disable-search="disableSearch"
                 @reset="form.search = null"
                 @pp_changed="setPerPage"
-                />
+            />
         </template>
 
         <template #tableHead>
-            <table-head title="Id"/>
-            <table-head title="Title"/>
-            <table-head title="Sessions"/>
-            <table-head title="Price"/>
-            <table-head title="Type"/>
-            <table-head title="Created At"/>
-            <table-head title="Updated At"/>
-            <table-head title="Action"/>
+            <table-head
+                title="Id"
+                @click="setOrdering('id')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'id'"
+            />
+            <table-head
+                title="Title"
+                @click="setOrdering('title')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'title'"
+            />
+            <table-head
+                title="Sessions"
+                @click="setOrdering('sessions')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'sessions'"
+            />
+            <table-head
+                title="Price"
+                @click="setOrdering('price')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'price'"
+            />
+            <table-head
+                title="Type"
+                @click="setOrdering('type')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'type'"
+            />
+            <table-head
+                title="Created At"
+                @click="setOrdering('created_at')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'created_at'"
+            />
+            <table-head
+                title="Updated At"
+                @click="setOrdering('updated_at')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'updated_at'"
+            />
+            <table-head title="Action" />
         </template>
 
         <template #tableData>
-            <tr v-for="classpack in classpacks.data" >
-                <table-data :title="classpack.id"/>
+            <tr v-for="classpack in classpacks.data">
+                <table-data :title="classpack.id" />
                 <table-data>
-                    <Link class="font-medium text-indigo-600 hover:text-indigo-500"
-                          :href="route('partner.classpacks.show', classpack)"> {{ classpack.title }} </Link>
-                </table-data>
-                <table-data :title="classpack.sessions"/>
-                <table-data :title="classpack.price"/>
-                <table-data :title="classpack.type"/>
-                <table-data :title="DateTime.fromISO(classpack.created_at).setZone(business_seetings.timezone).toFormat(business_seetings.date_format.format_js)"/>
-                <table-data :title="DateTime.fromISO(classpack.updated_at).toRelative()"/>
-                <table-data>
-                    <Link class="font-medium text-indigo-600 hover:text-indigo-500"
-                          :href="route('partner.classpacks.edit', classpack)">
-                        Edit
+                    <Link
+                        class="font-medium text-indigo-600 hover:text-indigo-500"
+                        :href="route('partner.classpacks.show', classpack)"
+                    >
+                        {{ classpack.title }}
                     </Link>
-                    <a @click.stop="showEditModal(classpack)" class="cursor-pointer">Edit2</a>
-                    <br>
-                    <button class="block text-red-500" @click="confirmDeletion(classpack.id)">
-                        Delete
-                    </button>
+                </table-data>
+                <table-data :title="classpack.sessions" />
+                <table-data :title="classpack.price" />
+                <table-data :title="classpack.type" />
+                <table-data
+                    :title="
+                        DateTime.fromISO(classpack.created_at)
+                            .setZone(business_seetings.timezone)
+                            .toFormat(business_seetings.date_format.format_js)
+                    "
+                />
+                <table-data
+                    :title="DateTime.fromISO(classpack.updated_at).toRelative()"
+                />
+                <table-data>
+                    <Dropdown
+                        align="right"
+                        width="48"
+                        :content-classes="['bg-white']"
+                    >
+                        <template #trigger>
+                            <button class="text-dark text-lg">
+                                <font-awesome-icon :icon="faCog" />
+                            </button>
+                        </template>
+
+                        <template #content>
+                            <DropdownLink
+                                :href="
+                                    route('partner.classpacks.edit', classpack)
+                                "
+                            >
+                                <EditIcon
+                                    class="w-4 lg:w-24vw h-4 lg:h-24vw mr-0 md:mr-2"
+                                />
+                                Edit
+                            </DropdownLink>
+                            <DropdownLink
+                                as="button"
+                                @click="confirmDeletion(classpack.id)"
+                            >
+                                <span class="text-danger flex items-center">
+                                    <DeleteIcon
+                                        class="w-4 lg:w-24vw h-4 lg:h-24vw mr-0 md:mr-2"
+                                    />
+                                    <span> Delete </span>
+                                </span>
+                            </DropdownLink>
+                        </template>
+                    </Dropdown>
                 </table-data>
             </tr>
         </template>
 
         <template #pagination>
-            <pagination
-                :links="classpacks.links"/>
-            <p class="p-2 text-xs">Viewing {{classpacks.from}} - {{classpacks.to}} of {{classpacks.total}} results</p>
-        </template>    
+            <pagination :links="classpacks.links" />
+            <p class="p-2 text-xs">
+                Viewing {{ classpacks.from }} - {{ classpacks.to }} of
+                {{ classpacks.total }} results
+            </p>
+        </template>
     </data-table-layout>
 
     <!-- Create new Modal -->
-    <DialogModal :show="showCreateModal" @close="closeCreateModal">
-        <template #title>
-            Create new Class pack
-        </template>
+    <SideModal :show="showCreateModal" @close="closeCreateModal">
+        <template #title> Create new Class pack </template>
 
         <template #content>
-            <Form :form="form_item"
+            <Form
+                :form="form_item"
                 :isNew="true"
                 :options_types="options_types"
                 :options_periods="options_periods"
                 :classtypes="classtypes"
-                :submitted="storeItem"/>
+                :submitted="storeItem"
+                modal
+            />
         </template>
-    </DialogModal>
+    </SideModal>
 
     <!-- Edit Modal -->
-    <DialogModal :show="editModalOpened" @close="closeEditModal">
-        <template #title>
-            Edit Class pack
-        </template>
+    <SideModal :show="editModalOpened" @close="closeEditModal">
+        <template #title> Edit Class pack </template>
 
         <template #content>
-            <Form :form="form_item"
+            <Form
+                :form="form_item"
                 :options_types="options_types"
                 :options_periods="options_periods"
                 :classtypes="classtypes"
-                :submitted="updateItem"/>
+                :submitted="updateItem"
+            />
         </template>
-    </DialogModal>
+    </SideModal>
 
     <!-- Delete Confirmation Modal -->
     <ConfirmationModal :show="itemDeleting" @close="itemDeleting = false">
-        <template #title>
-            Confirmation required
-        </template>
+        <template #title> Confirmation required </template>
 
         <template #content>
             Are you sure you would like to delete this?

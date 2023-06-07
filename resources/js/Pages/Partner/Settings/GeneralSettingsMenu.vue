@@ -1,27 +1,33 @@
-
 <script setup>
-import { Link } from '@inertiajs/vue3';
+import { Link } from "@inertiajs/vue3";
 </script>
 
 <template>
-    <ul class="font-medium text-base">
+    <ul class="tabs-wrapper">
         <li>
-            <Link 
-                class="p-2 block hover:underline transition"
+            <Link
                 :href="route('partner.settings.general-details')"
-                :class="$page.component.endsWith('BusinessDetails') ? 'font-bold bg-gray-200' : ''">Business Details</Link>
+                :class="
+                    $page.component.endsWith('BusinessDetails') ? 'active' : ''
+                "
+                >Business Details</Link
+            >
         </li>
         <li>
-            <Link 
-                class="p-2 block hover:underline transition"
+            <Link
                 :href="route('partner.settings.general-address')"
-                :class="$page.component.endsWith('LegalAddress')  ? 'font-bold bg-gray-200' : ''">Legal Address</Link>
+                :class="
+                    $page.component.endsWith('LegalAddress') ? 'active' : ''
+                "
+                >Legal Address</Link
+            >
         </li>
         <li>
-            <Link 
-                class="p-2 block hover:underline transition"
-                :href="route('partner.settings.general-formats')" 
-                :class="$page.component.endsWith('Formats')  ? 'font-bold bg-gray-200' : ''">Formats</Link>
+            <Link
+                :href="route('partner.settings.general-formats')"
+                :class="$page.component.endsWith('Formats') ? 'active' : ''"
+                >Formats</Link
+            >
         </li>
     </ul>
 </template>

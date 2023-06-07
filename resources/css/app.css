@@ -1,3 +1,54 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+    --input-bg: #f6f7f6;
+}
+
+html {
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+/* Form Common Styles */
+.dp__theme_light {
+    --dp-background-color: var(--input-bg) !important;
+}
+.input-field,
+.multiselect,
+.dp__theme_light input,
+select {
+    @apply rounded-md lg:h-48vw py-1 px-3 flex items-center min-h-full lg:text-20vw border border-gray-300 !important;
+    background-color: var(--input-bg) !important;
+}
+.multiselect {
+    @apply mt-1;
+}
+.multiselect input {
+    background-color: var(--input-bg) !important;
+}
+.input-checkbox {
+    @apply rounded border-gray-300 text-primary-500 focus:border-primary-500 focus:outline-none focus:shadow-none focus:ring-0;
+}
+.input-radio {
+    @apply w-4 h-4 text-primary-500 bg-white border-gray-300 focus:ring-0;
+}
+
+.switcher-button {
+    @apply relative bg-dark/25 inline-flex h-4 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out;
+}
+.switcher-nob {
+    @apply pointer-events-none inline-block h-6 w-6 relative -top-1.5 transform rounded-full bg-primary-500 transition duration-200 ease-in-out;
+}
+
+/* Tabs Styles */
+.tabs-wrapper {
+    @apply flex items-center bg-white rounded-xl font-medium text-base lg:text-20vw mb-3;
+}
+.tabs-wrapper li a {
+    @apply py-3 px-4 block rounded-xl !no-underline;
+}
+.tabs-wrapper li a.active {
+    @apply bg-primary-500 text-white;
+}

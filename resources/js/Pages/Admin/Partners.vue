@@ -1,12 +1,20 @@
 <script setup>
-import { watch } from 'vue';
-import { Link, useForm } from '@inertiajs/vue3';
+import { watch } from "vue";
+import { Link, useForm } from "@inertiajs/vue3";
 // import Section from '@/Components/Section.vue';
-import SectionTitle from '@/Components/SectionTitle.vue';
-import SearchFilter from '@/Components/SearchFilter.vue';
-import Pagination from '@/Components/Pagination.vue';
-import ButtonLink from '@/Components/ButtonLink.vue';
-import { faPencil, faChevronRight, faUser} from '@fortawesome/free-solid-svg-icons';
+import DataTableLayout from "@/Components/DataTable/Layout.vue";
+import TableHead from "@/Components/DataTable/TableHead.vue";
+import TableData from "@/Components/DataTable/TableData.vue";
+import SectionTitle from "@/Components/SectionTitle.vue";
+import Search from "@/Components/DataTable/Search.vue";
+import Pagination from "@/Components/Pagination.vue";
+import WarningButton from "@/Components/WarningButton.vue";
+import {
+    faPencil,
+    faChevronRight,
+    faUser,
+    faPlus,
+} from "@fortawesome/free-solid-svg-icons";
 
 const props = defineProps({
     users: Object,
@@ -25,15 +33,15 @@ const form = useForm({
 
 const setOrdering = (col) => {
     //reverse same col order
-    if(form.order_by == col){
-        form.order_dir = form.order_dir == 'asc' ? 'desc' : 'asc';
+    if (form.order_by == col) {
+        form.order_dir = form.order_dir == "asc" ? "desc" : "asc";
     }
     form.order_by = col;
     runSearch();
 };
 
 const runSearch = () => {
-    form.get(route('admin.partners.index'), {
+    form.get(route("admin.partners.index"), {
         preserveScroll: true,
         preserveState: true,
         replace: true,
@@ -42,68 +50,121 @@ const runSearch = () => {
 
 // form.search getter only;
 watch(() => form.search, runSearch);
-
 </script>
 
 <template>
-    <SectionTitle>
-        <template #title>
-            All partners
+    <div class="flex items-center justify-between">
+        <SectionTitle>
+            <template #title>All partners</template>
+        </SectionTitle>
+        <Search v-model="form.search" @reset="form.search = null" />
+        <WarningButton
+            v-can="{
+                module: 'partner-management',
+                roles: $page.props.user.user_roles,
+                permission: 'create',
+                user: $page.props.user,
+            }"
+            :href="route('admin.partners.index')"
+            type="primary"
+            class="ml-3"
+            >Add new <font-awesome-icon class="ml-2" :icon="faPlus"
+        /></WarningButton>
+    </div>
+
+    <data-table-layout :disableButton="true">
+        <template #tableHead>
+            <table-head
+                title="ID"
+                @click="setOrdering('id')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'id'"
+            />
+            <table-head
+                title="BID"
+                @click="setOrdering('business_id')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'business_id'"
+            />
+            <table-head title="Business" />
+            <table-head
+                title="Name"
+                @click="setOrdering('name')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'name'"
+            />
+            <table-head
+                title="Email"
+                @click="setOrdering('email')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'email'"
+            />
+            <table-head
+                title="Date created"
+                @click="setOrdering('created_at')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'created_at'"
+            />
+            <table-head title="" />
         </template>
-    </SectionTitle>
 
-    <div class="flex items-center justify-between mb-6">
-      <search-filter v-model="form.search" class="mr-4 w-full max-w-md" @reset="form.search = null">
-        <select v-model="form.per_page" @change="runSearch" class="form-select rounded-l mr-1">
-          <option value="5">5</option>
-          <option value="10">10</option>
-          <option value="25">25</option>
-          <option value="50">50</option>
-        </select>
-      </search-filter>
-      <ButtonLink v-can="{ module: 'partner-management', roles: $page.props.user.user_roles, permission: 'create', 'user': $page.props.user }" :href="route('admin.partners.index')" type="primary">Add new</ButtonLink>
-    </div>
+        <template #tableData>
+            <tr v-for="user in props.users.data" :key="user.id">
+                <table-data>{{ user.id }}</table-data>
+                <table-data>{{ user.business_id }}</table-data>
+                <table-data>{{ user.business_name }}</table-data>
+                <table-data>{{ user.name }}</table-data>
+                <table-data>{{ user.email }}</table-data>
+                <table-data>{{ user.created_at }}</table-data>
+                <table-data>
+                    <div class="flex gap-4 justify-end">
+                        <Link
+                            title="Logged in as partner"
+                            :href="user.url_login_as"
+                            v-can="{
+                                module: 'partner-management',
+                                roles: $page.props.user.user_roles,
+                                permission: 'loginAs',
+                                user: $page.props.user,
+                            }"
+                        >
+                            <font-awesome-icon :icon="faUser" />
+                        </Link>
+                        <Link
+                            :href="user.url_edit"
+                            v-can="{
+                                module: 'partner-management',
+                                roles: $page.props.user.user_roles,
+                                permission: 'update',
+                                user: $page.props.user,
+                            }"
+                        >
+                            <font-awesome-icon :icon="faPencil" />
+                        </Link>
+                        <Link
+                            :href="user.url_show"
+                            v-can="{
+                                module: 'partner-management',
+                                roles: $page.props.user.user_roles,
+                                permission: 'view',
+                                user: $page.props.user,
+                            }"
+                        >
+                            <font-awesome-icon :icon="faChevronRight" />
+                        </Link>
+                    </div>
+                </table-data>
+            </tr>
+        </template>
 
-    <div class="relative overflow-x-auto shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-        <table class="table-auto text-left border-collapse w-full">
-            <thead class="uppercase bg-gray-100 text-sm whitespace-nowrap">
-                <tr>
-                    <th @click="setOrdering('id')" class="px-6 py-3 border-b cursor-pointer" :class="form.order_by == 'id' ? 'border-indigo-500' : ''">ID</th>
-                    <th @click="setOrdering('business_id')" class="px-6 py-3 border-b cursor-pointer" :class="form.order_by == 'business_id' ? 'border-indigo-500' : ''">BID</th>
-                    <th class="px-6 py-3 border-b">Business</th>
-                    <th @click="setOrdering('name')" class="px-6 py-3 border-b cursor-pointer" :class="form.order_by == 'name' ? 'border-indigo-500' : ''">Name</th>
-                    <th @click="setOrdering('email')" class="px-6 py-3 border-b cursor-pointer" :class="form.order_by == 'email' ? 'border-indigo-500' : ''">Email</th>
-                    <th @click="setOrdering('created_at')" class="px-6 py-3 border-b cursor-pointer" :class="form.order_by == 'created_at' ? 'border-indigo-500' : ''">Date created</th>
-                    <th class="border-b"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="user in props.users.data" :key="user.id" class="border-b whitespace-nowrap bg-white hover:bg-gray-50">
-                    <td class="px-6 py-4">{{user.id}}</td>
-                    <td class="px-6 py-4">{{user.business_id}}</td>
-                    <td class="px-6 py-4">{{user.business_name}}</td>
-                    <td class="px-6 py-4">{{user.name}}</td>
-                    <td class="px-6 py-4">{{user.email}}</td>
-                    <td class="px-6 py-4">{{user.created_at}}</td>
-                    <td class="px-6 py-4">
-                        <div class="flex gap-4 justify-end">
-                            <Link title="Logged in as partner" :href="user.url_login_as" v-can="{ module: 'partner-management', roles: $page.props.user.user_roles, permission: 'loginAs', 'user': $page.props.user }">
-                                <font-awesome-icon :icon="faUser" />
-                            </Link>
-                            <Link :href="user.url_edit" v-can="{ module: 'partner-management', roles: $page.props.user.user_roles, permission: 'update', 'user': $page.props.user }">
-                                <font-awesome-icon :icon="faPencil" />
-                            </Link>
-                            <Link :href="user.url_show" v-can="{ module: 'partner-management', roles: $page.props.user.user_roles, permission: 'view', 'user': $page.props.user }">
-                                <font-awesome-icon :icon="faChevronRight" />
-                            </Link>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <p>Viewing {{users.from}} - {{users.to}} of {{users.total}} results</p>
-    <pagination class="mt-6" :links="users.links" />
-
+        <template #pagination>
+            <pagination
+                :links="users.links"
+                :to="users.to"
+                :from="users.from"
+                :total="users.total"
+                @pp_changed="runSearch"
+            />
+        </template>
+    </data-table-layout>
 </template>

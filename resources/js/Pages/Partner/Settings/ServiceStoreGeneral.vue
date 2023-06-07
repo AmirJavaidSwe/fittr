@@ -1,14 +1,14 @@
 <script setup>
-import { computed, ref, onMounted  } from 'vue';
-import { useForm } from '@inertiajs/vue3';
-import ServiceStoreMenu from '@/Pages/Partner/Settings/ServiceStoreMenu.vue';
+import { computed, ref, onMounted } from "vue";
+import { useForm } from "@inertiajs/vue3";
+import ServiceStoreMenu from "@/Pages/Partner/Settings/ServiceStoreMenu.vue";
 
-import FormSection from '@/Components/FormSection.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import TextInput from '@/Components/TextInput.vue';
-import InputError from '@/Components/InputError.vue';
-import ActionMessage from '@/Components/ActionMessage.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
+import FormSection from "@/Components/FormSection.vue";
+import InputLabel from "@/Components/InputLabel.vue";
+import TextInput from "@/Components/TextInput.vue";
+import InputError from "@/Components/InputError.vue";
+import ActionMessage from "@/Components/ActionMessage.vue";
+import WarningButton from "@/Components/WarningButton.vue";
 
 const props = defineProps({
     form_data: Object,
@@ -20,8 +20,8 @@ const form = useForm({
 });
 
 const submitForm = () => {
-    form.put(route('partner.settings.service-store-general'), {
-        preserveScroll: true
+    form.put(route("partner.settings.service-store-general"), {
+        preserveScroll: true,
     });
 };
 </script>
@@ -44,7 +44,14 @@ const submitForm = () => {
                 />
                 <InputError :message="form.errors.subdomain" class="mt-2" />
                 <InputError :message="form.errors.unique" class="mt-2" />
-                <p v-if="form.subdomain">Your service store URL will be: <b>https://{{form.subdomain}}.{{$page.props.app_domain}}</b></p>
+                <p v-if="form.subdomain">
+                    Your service store URL will be:
+                    <b
+                        >https://{{ form.subdomain }}.{{
+                            $page.props.app_domain
+                        }}</b
+                    >
+                </p>
             </div>
             <!-- Custom Domain -->
             <div class="col-span-6 sm:col-span-4">
@@ -64,9 +71,12 @@ const submitForm = () => {
                 Saved.
             </ActionMessage>
 
-            <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+            <WarningButton
+                :class="{ 'opacity-25': form.processing }"
+                :disabled="form.processing"
+            >
                 Save
-            </PrimaryButton>
+            </WarningButton>
         </template>
     </FormSection>
 </template>
