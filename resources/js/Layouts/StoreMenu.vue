@@ -36,12 +36,8 @@ router.on('navigate', (event) => {
       <font-awesome-icon :icon="faDoorOpen" />
       <div>Studios</div>
     </NavLink>
-    <NavLink :href="route('ss.classpacks.index', {subdomain})" :active="active_route.name == 'ss.classpacks.index'" class="text-lg">
-      <font-awesome-icon :icon="faTicketSimple" />
-      <div>Classpacks</div>
-    </NavLink>
     <NavLink :href="route('ss.memberships.index', {subdomain})" :active="active_route.name == 'ss.memberships.index'" class="text-lg">
-      <font-awesome-icon :icon="faTicket" />
+      <font-awesome-icon :icon="faTicketSimple" />
       <div>Memberships</div>
     </NavLink>
   </div>

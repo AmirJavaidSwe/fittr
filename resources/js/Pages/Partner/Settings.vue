@@ -128,34 +128,20 @@ import CardIcon from '@/Components/CardIcon.vue';
             </div>
             <div class="space-y-4">
                 <div class="text-xl font-bold tracking-tight text-gray-900">
-                    Memberships plans / Class Packs
+                    Memberships
                 </div>
 
-                <CardIcon :card-link="route('partner.plans.index')">
-                    <template #icon>
-                        <font-awesome-icon :icon="faTicket" />
-                    </template>
-
-                    <template #title>
-                        Memberships
-                    </template>
-
-                    <template #default>
-                        Manage subscription plans (todo)
-                    </template>
-                </CardIcon>
-
-                <CardIcon :card-link="route('partner.classpacks.index')">
+                <CardIcon :card-link="route('partner.packs.index')">
                     <template #icon>
                         <font-awesome-icon :icon="faTicketSimple" />
                     </template>
 
                     <template #title>
-                        Class Packs
+                        Packs
                     </template>
 
                     <template #default>
-                        Manage class packs
+                        Manage class packs and memberships
                     </template>
                 </CardIcon>
 

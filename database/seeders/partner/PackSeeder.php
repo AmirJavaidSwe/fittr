@@ -2,11 +2,11 @@
 
 namespace Database\Seeders\Partner;
 
-use App\Models\Partner\ClassPack;
+use App\Models\Partner\Pack;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
 
-class ClasspackSeeder extends Seeder
+class PackSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,7 +15,7 @@ class ClasspackSeeder extends Seeder
      */
     public function run()
     {
-        return ClassPack::factory()
+        $packs = Pack::factory()
             ->count(3)
             ->state(
                 new Sequence(

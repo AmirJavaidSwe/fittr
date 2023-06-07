@@ -3,17 +3,18 @@
 namespace App\Http\Controllers\Store;
 
 use App\Http\Controllers\Controller;
+use App\Models\Partner\Pack;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class StoreMembershipController extends Controller
+class StorePackController extends Controller
 {
     public function index(Request $request)
     {
-        return Inertia::render('Store/Memberships', [
+        return Inertia::render('Store/Packs', [
             'page_title' => __('Memberships'),
             'header' => __('Memberships'),
-            'memberships' => [],
+            'packs' => Pack::with(['prices'])->get(),
         ]);
     }
 }

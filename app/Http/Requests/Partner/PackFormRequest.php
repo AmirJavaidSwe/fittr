@@ -2,12 +2,12 @@
 
 namespace App\Http\Requests\Partner;
 
-use App\Enums\ClasspackType;
-use App\Enums\ClasspackExpirationPeriod;
+use App\Enums\PackType;
+use App\Enums\StripePeriod;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ClasspackFormRequest extends FormRequest
+class PackFormRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,19 +27,18 @@ class ClasspackFormRequest extends FormRequest
     public function rules()
     {
         $rules =  [
+            'type' => ['required', Rule::in(PackType::all())],
             'title' => 'required|string|max:255',
-            'sessions' => 'required|integer|min:1',
+            'sub_title' => 'nullable|string|max:255',
+            'description' => 'nullable|string|max:65535',
             'is_active' => 'boolean',
-            'is_expiring' => 'boolean',
             'is_restricted' => 'boolean',
+            'is_unlimited' => 'boolean|exclude_if:type,'.PackType::default->name,
+            'is_fap' => 'boolean',
+            'is_private' => 'boolean',
             'restrictions' => 'exclude_if:is_restricted,false|array:offpeak,classtypes',
             'expiration' => 'required_if:is_expiring,true|nullable|integer',
-            'expiration_period' => ['required_if:is_expiring,true', 'nullable', Rule::in(ClasspackExpirationPeriod::all())],
-            'price' => 'required|numeric',
-            'type' => ['required', Rule::in(ClasspackType::all())],
-            'is_renewable' => 'boolean|declined_if:is_intro,true',
-            'is_intro' => 'boolean|declined_if:is_renewable,true',
-            'is_private' => 'boolean',
+            'expiration_period' => ['required_if:is_expiring,true', 'nullable', Rule::in(StripePeriod::all())],
             'private_url' => 'required_if:is_private,true|nullable|regex:"^[a-z0-9-]+$"|unique:mysql_partner.classpacks,private_url,'.$this->classpack?->id,
             'active_from' => 'nullable|date|exclude_if:active_to,null|before:active_to',
             'active_to' => 'nullable|date|after:active_from',

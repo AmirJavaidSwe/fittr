@@ -62,6 +62,7 @@ class Kernel extends HttpKernel
         'auth.source' => \App\Http\Middleware\AuthenticateSource::class,
         'auth.subdomain' => \App\Http\Middleware\AuthenticateSubdomain::class,
         'partner.connect' => \App\Http\Middleware\ConnectPartnerDatabase::class,
+        'business.ready' => \App\Http\Middleware\BusinessReady::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
@@ -85,6 +86,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\AuthenticateSource::class,
         \App\Http\Middleware\AuthenticateSubdomain::class,
         \App\Http\Middleware\ConnectPartnerDatabase::class,
+        \App\Http\Middleware\BusinessReady::class,
         \App\Http\Middleware\HandleInertiaRequests::class,
     ];
 }
