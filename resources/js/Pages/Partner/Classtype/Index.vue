@@ -2,6 +2,8 @@
 import { ref, watch } from "vue";
 import { Link, useForm } from "@inertiajs/vue3";
 import { DateTime } from "luxon";
+import Form from "./Form.vue";
+import SideModal from "@/Components/SideModal.vue";
 import Search from "@/Components/DataTable/Search.vue";
 import Pagination from "@/Components/Pagination.vue";
 import TableHead from "@/Components/DataTable/TableHead.vue";
@@ -9,12 +11,13 @@ import TableData from "@/Components/DataTable/TableData.vue";
 import DataTableLayout from "@/Components/DataTable/Layout.vue";
 import ConfirmationModal from "@/Components/ConfirmationModal.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
+import WarningButton from "@/Components/WarningButton.vue";
 import DangerButton from "@/Components/DangerButton.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import EditIcon from "@/Icons/Edit.vue";
 import DeleteIcon from "@/Icons/Delete.vue";
-import { faCog } from "@fortawesome/free-solid-svg-icons";
+import { faCog, faPlus } from "@fortawesome/free-solid-svg-icons";
 
 const props = defineProps({
     disableSearch: {
@@ -60,6 +63,48 @@ const setPerPage = (n) => {
 // form.search getter only;
 watch(() => form.search, runSearch);
 
+// Create/Edit classtypes Queries
+let form_class = useForm({
+    title: null,
+    description: null,
+});
+
+const showCreateModal = ref(false);
+const closeCreateModal = () => {
+    showCreateModal.value = false;
+};
+
+const storeItem = () => {
+    form.post(route("partner.classtypes.store"), {
+        preserveScroll: true,
+        onSuccess: () => form.reset(),
+    });
+};
+
+let form_edit = useForm({
+    id: "",
+    title: null,
+    description: null,
+});
+
+const showEditModal = ref(false);
+const closeEditModal = () => {
+    showEditModal.value = false;
+};
+
+const handleUpdateForm = (data) => {
+    showEditModal.value = true;
+    form_edit.id = data.id;
+    form_edit.title = data.title;
+    form_edit.description = data.description;
+};
+
+const updateItem = () => {
+    form_edit.put(route("partner.classtypes.update", form_edit), {
+        preserveScroll: true,
+    });
+};
+
 //delete confiramtion modal:
 const itemDeleting = ref(false);
 const itemIdDeleting = ref(null);
@@ -82,11 +127,19 @@ const deleteItem = () => {
 };
 </script>
 <template>
-    <data-table-layout
-        button-title="Create new"
-        :button-link="route('partner.classtypes.create')"
-        :disable-search="disableSearch"
-    >
+    <data-table-layout :disable-search="disableSearch" :disableButton="true">
+        <template #button>
+            <WarningButton @click="showCreateModal = true">
+                Create a new classtype
+                <font-awesome-icon class="ml-2" :icon="faPlus" />
+            </WarningButton>
+            <WarningButton
+                :href="route('partner.classtypes.create')"
+                type="primary"
+            >
+                Create a new classtype (direct)
+            </WarningButton>
+        </template>
         <template #search>
             <Search
                 v-model="form.search"
@@ -132,7 +185,7 @@ const deleteItem = () => {
         </template>
 
         <template #tableData>
-            <tr v-for="classtype in classtypes.data">
+            <tr v-for="(classtype, index) in classtypes.data">
                 <table-data :title="classtype.id" />
                 <table-data>
                     <Link
@@ -151,6 +204,7 @@ const deleteItem = () => {
                     <Dropdown
                         align="right"
                         width="48"
+                        :top="index > classtypes.data.length - 3"
                         :content-classes="['bg-white']"
                     >
                         <template #trigger>
@@ -172,6 +226,17 @@ const deleteItem = () => {
                             </DropdownLink>
                             <DropdownLink
                                 as="button"
+                                @click="handleUpdateForm(classtype)"
+                            >
+                                <span class="text-danger flex items-center">
+                                    <EditIcon
+                                        class="w-4 lg:w-24vw h-4 lg:h-24vw mr-0 md:mr-2"
+                                    />
+                                    <span> Edit (Modal) </span>
+                                </span>
+                            </DropdownLink>
+                            <DropdownLink
+                                as="button"
                                 @click="confirmDeletion(classtype.id)"
                             >
                                 <span class="text-danger flex items-center">
@@ -188,14 +253,34 @@ const deleteItem = () => {
         </template>
 
         <template #pagination>
-            <pagination :links="classtypes.links" />
-
-            <p class="p-2 text-xs">
-                Viewing {{ classtypes.from }} - {{ classtypes.to }} of
-                {{ classtypes.total }} results
-            </p>
+            <pagination
+                :links="classtypes.links"
+                :to="classtypes.to"
+                :from="classtypes.from"
+                :total="classtypes.total"
+                @pp_changed="setPerPage"
+            />
         </template>
     </data-table-layout>
+
+    <!-- Create new classtype Modal -->
+    <SideModal :show="showCreateModal" @close="closeCreateModal">
+        <template #title> Create new classtype </template>
+
+        <template #content>
+            <Form :form="form_class" :submitted="storeItem" modal />
+        </template>
+    </SideModal>
+
+    <!-- Update classtype Modal -->
+    <SideModal :show="showEditModal" @close="closeEditModal">
+        <template #title> Update classtype </template>
+
+        <template #content>
+            <Form :form="form_edit" :submitted="updateItem" modal />
+        </template>
+    </SideModal>
+
     <!-- Delete Confirmation Modal -->
     <ConfirmationModal :show="itemDeleting" @close="itemDeleting = false">
         <template #title> Confirmation required </template>

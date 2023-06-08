@@ -39,7 +39,6 @@ const props = defineProps({
             <div
                 class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
             >
-                <!-- <font-awesome-icon :icon="faMagnifyingGlass" class="text-gray-400" /> -->
                 <SearchIcon />
             </div>
             <input
@@ -48,7 +47,7 @@ const props = defineProps({
                 id="search"
                 :value="modelValue"
                 @input="onInput"
-                class="block w-full rounded-md border-grey pl-10 pr-5 lg:pl-60vw py-3 lg:py-16vw focus:!border-primary-500 focus:!shadow-none sm:text-sm focus:!outline-none"
+                class="block w-full rounded-md pl-10 pr-5 lg:pl-60vw !py-3 lg:!py-16vw !h-full input-field"
                 placeholder="Search"
             />
 

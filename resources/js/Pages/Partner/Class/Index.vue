@@ -132,13 +132,47 @@ const closeCreateModal = () => {
 };
 
 const storeClass = () => {
-    console.log("storeClass");
     form_class.post(route("partner.classes.store"), {
         preserveScroll: true,
         onSuccess: () => {
             form_class.reset();
             closeCreateModal();
         },
+    });
+};
+
+// Edit Class Query
+const showEditModal = ref(false);
+const editModalData = ref({});
+const closeEditModal = () => {
+    showEditModal.value = false;
+};
+
+let formEdit = useForm({
+    title: "",
+    status: "",
+    start_date: "",
+    end_date: "",
+    instructor_id: "",
+    class_type_id: "",
+    studio_id: "",
+    is_off_peak: "",
+});
+const handleUpdateForm = (data) => {
+    showEditModal.value = true;
+    formEdit.title = data.title;
+    formEdit.status = data.status;
+    formEdit.start_date = data.start_date;
+    formEdit.end_date = data.end_date;
+    formEdit.instructor_id = data.instructor_id;
+    formEdit.class_type_id = data.class_type_id;
+    formEdit.studio_id = data.studio_id;
+    formEdit.is_off_peak = data.is_off_peak;
+};
+
+const updateClass = () => {
+    formEdit.put(route("partner.classes.edit", formEdit), {
+        preserveScroll: true,
     });
 };
 
@@ -150,7 +184,6 @@ const closeExportModal = () => {
     showExportModal.value = false;
 };
 const resetExportFilters = () => {
-    console.log("resetExportFilters");
     form_class.reset();
 };
 
@@ -300,7 +333,7 @@ const showLink = (exporting) => {
         </template>
 
         <template #tableData>
-            <tr v-for="class_lesson in classes.data">
+            <tr v-for="(class_lesson, index) in classes.data">
                 <table-data :title="class_lesson.id" />
                 <table-data>
                     <Link
@@ -355,6 +388,7 @@ const showLink = (exporting) => {
                     <Dropdown
                         align="right"
                         width="48"
+                        :top="index > classes.data.length - 3"
                         :content-classes="['bg-white']"
                     >
                         <template #trigger>
@@ -364,6 +398,15 @@ const showLink = (exporting) => {
                         </template>
 
                         <template #content>
+                            <DropdownLink
+                                as="button"
+                                @click="handleUpdateForm(class_lesson)"
+                            >
+                                <EditIcon
+                                    class="w-4 lg:w-24vw h-4 lg:h-24vw mr-0 md:mr-2"
+                                />
+                                Edit (Modal)
+                            </DropdownLink>
                             <DropdownLink
                                 :href="
                                     route('partner.classes.edit', class_lesson)
@@ -458,6 +501,24 @@ const showLink = (exporting) => {
                 :classtypes="classtypes"
                 :business_seetings="business_seetings"
                 :submitted="storeClass"
+                modal
+            />
+        </template>
+    </SideModal>
+
+    <!-- Edit class Modal -->
+    <SideModal :show="showEditModal" @close="closeEditModal">
+        <template #title> Edit Class </template>
+
+        <template #content>
+            <Form
+                :form="formEdit"
+                :statuses="statuses"
+                :studios="studios"
+                :instructors="instructors"
+                :classtypes="classtypes"
+                :business_seetings="business_seetings"
+                :submitted="updateClass"
                 modal
             />
         </template>

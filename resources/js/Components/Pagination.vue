@@ -1,6 +1,11 @@
 <script setup>
 import { ref } from "vue";
 import { Link } from "@inertiajs/vue3";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import {
+    faChevronLeft,
+    faChevronRight,
+} from "@fortawesome/free-solid-svg-icons";
 
 const props = defineProps({
     links: Array,
@@ -23,17 +28,20 @@ const optionsPP = [
     { value: 25, text: "25" },
     { value: 50, text: "50" },
 ];
+console.log(props.links);
 </script>
 <template>
     <div
         class="flex flex-col md:flex-row items-center justify-center md:justify-end overflow-hidden mb-10 lg:mb-0"
     >
         <div class="flex items-center mb-5 md:mb-0">
-            <p class="mr-2 text-sm">Rows per page:</p>
+            <p class="mr-2 text-sm lg:text-20vw text-dark/80 font-medium">
+                Rows per page:
+            </p>
             <select
                 v-model="pp"
                 @change="$emit('pp_changed', pp)"
-                class="rounded mr-1 py-1"
+                class="rounded mr-1 py-1 pr-8 pl-1 bg-transparent border-0 focus:ring-0 focus:outline-none focus:shadow-none focus:border-0"
             >
                 <option
                     v-for="option in optionsPP"
@@ -51,21 +59,32 @@ const optionsPP = [
         </div>
         <div v-if="links.length > 3">
             <div class="flex flex-wrap">
-                <template v-for="(link, key) in props.links">
-                    <div
-                        v-if="link.url === null"
-                        :key="key"
-                        class="mr-1 px-4 py-2 text-gray-400 text-sm border rounded"
-                        v-html="link.label"
-                    />
+                <template v-for="(link, key, index) in props.links">
                     <Link
-                        v-else
-                        :key="`link-${key}`"
-                        class="mr-1 px-4 py-2 focus:text-indigo-500 text-sm hover:bg-white border focus:border-indigo-500 rounded"
-                        :class="{ 'bg-white': link.active }"
+                        v-if="link.label.includes('Previous')"
+                        :key="key"
                         :href="link.url"
-                        v-html="link.label"
-                    />
+                        class="px-4 py-2 text-dark text-sm lg:text-20vw"
+                        :class="
+                            link.url === null
+                                ? 'pointer-events-none opacity-40'
+                                : null
+                        "
+                    >
+                        <font-awesome-icon :icon="faChevronLeft" />
+                    </Link>
+                    <Link
+                        v-else-if="link.label.includes('Next')"
+                        :href="link.url"
+                        class="px-4 py-2 text-dark text-sm lg:text-20vw"
+                        :class="
+                            link.url === null
+                                ? 'pointer-events-none opacity-40'
+                                : null
+                        "
+                    >
+                        <font-awesome-icon :icon="faChevronRight" />
+                    </Link>
                 </template>
             </div>
         </div>

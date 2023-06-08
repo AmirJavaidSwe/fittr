@@ -7,26 +7,23 @@
 }
 
 html {
-    overflow-x: hidden;
-    overflow-y: hidden;
+    @apply lg:overflow-x-hidden lg:overflow-x-hidden;
 }
 
 /* Form Common Styles */
-.dp__theme_light {
-    --dp-background-color: var(--input-bg) !important;
-}
 .input-field,
 .multiselect,
-.dp__theme_light input,
 select {
-    @apply rounded-md lg:h-48vw py-1 px-3 flex items-center min-h-full lg:text-20vw border border-gray-300 !important;
-    background-color: var(--input-bg) !important;
+    @apply rounded-md lg:h-48vw py-1 flex items-center min-h-full lg:text-20vw border border-gray-300 focus:border-[1.5px] focus:border-primary-500 focus:outline-none focus:shadow-none focus:ring-0;
+}
+.dp__theme_light input {
+    @apply lg:text-20vw border border-gray-300 focus:border-primary-500 rounded-md focus:ring-0 !important;
 }
 .multiselect {
     @apply mt-1;
 }
-.multiselect input {
-    background-color: var(--input-bg) !important;
+.multiselect.is-active {
+    @apply mt-1 border border-primary-500 ring-0 !important;
 }
 .input-checkbox {
     @apply rounded border-gray-300 text-primary-500 focus:border-primary-500 focus:outline-none focus:shadow-none focus:ring-0;
@@ -36,7 +33,7 @@ select {
 }
 
 .switcher-button {
-    @apply relative bg-dark/25 inline-flex h-4 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out;
+    @apply relative bg-primary-500/25 inline-flex h-4 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out;
 }
 .switcher-nob {
     @apply pointer-events-none inline-block h-6 w-6 relative -top-1.5 transform rounded-full bg-primary-500 transition duration-200 ease-in-out;
@@ -51,4 +48,9 @@ select {
 }
 .tabs-wrapper li a.active {
     @apply bg-primary-500 text-white;
+}
+
+/* App Layout */
+.headerIcon {
+    @apply bg-primary-100 rounded-md flex items-center justify-center text-lg text-primary-500 mr-1 w-8 h-8 lg:w-56vw lg:h-56vw lg:text-24vw;
 }

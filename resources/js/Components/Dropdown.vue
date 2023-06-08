@@ -14,6 +14,7 @@ const props = defineProps({
         type: Array,
         default: () => ["py-1", "bg-white"],
     },
+    top: Boolean,
 });
 
 let open = ref(false);
@@ -50,6 +51,14 @@ const alignmentClasses = computed(() => {
 
     return "origin-top";
 });
+
+const alignmentVerticalClasses = computed(() => {
+    if (props.top) {
+        return "bottom-full";
+    }
+
+    return "origin-top";
+});
 </script>
 
 <template>
@@ -76,7 +85,11 @@ const alignmentClasses = computed(() => {
             <div
                 v-show="open"
                 class="absolute z-50 mt-2 rounded-md shadow-lg overflow-hidden"
-                :class="[widthClass, alignmentClasses]"
+                :class="[
+                    widthClass,
+                    alignmentVerticalClasses,
+                    alignmentClasses,
+                ]"
                 style="display: none"
                 @click="open = false"
             >

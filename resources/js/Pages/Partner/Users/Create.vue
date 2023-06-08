@@ -94,13 +94,13 @@ const inputPasswordType = computed(() =>
                         class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 focus:outline-none"
                     >
                         <template v-if="showPassword">
-                            <font-awesome-icon :icon="faEyeSlash" />
-                        </template>
-                        <template v-else>
                             <font-awesome-icon
                                 :icon="faEye"
                                 class="text-green-600"
                             />
+                        </template>
+                        <template v-else>
+                            <font-awesome-icon :icon="faEyeSlash" />
                         </template>
                     </button>
                 </div>

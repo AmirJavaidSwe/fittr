@@ -9,7 +9,12 @@ import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import NavLink from "@/Components/NavLink.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
-import { faBars, faHeart, faTimes } from "@fortawesome/free-solid-svg-icons";
+import {
+    faBars,
+    faChevronLeft,
+    faHeart,
+    faTimes,
+} from "@fortawesome/free-solid-svg-icons";
 import Notifications from "@/Icons/Notifications.vue";
 import Messages from "@/Icons/Messages.vue";
 import Avatar from "@/Components/Avatar.vue";
@@ -50,6 +55,12 @@ const headerIsArray = computed(() => {
 
 // Sidebar Collapse
 const sidebarCollapsed = ref(true);
+
+// Back function
+let back = function (e) {
+    e.preventDefault();
+    window.history.back();
+};
 </script>
 
 <template>
@@ -186,8 +197,17 @@ const sidebarCollapsed = ref(true);
                                         >
                                             <div
                                                 v-if="headerIsArray"
-                                                class="flex flex-wrap gap-2"
+                                                class="flex flex-wrap gap-2 items-center"
                                             >
+                                                <Link
+                                                    href="#"
+                                                    @click="back"
+                                                    class="headerIcon"
+                                                >
+                                                    <font-awesome-icon
+                                                        :icon="faChevronLeft"
+                                                    />
+                                                </Link>
                                                 <div v-for="item in header">
                                                     <Link
                                                         v-if="item.link"

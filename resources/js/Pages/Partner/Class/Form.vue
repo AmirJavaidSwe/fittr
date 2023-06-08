@@ -103,7 +103,7 @@ const formatDate = computed(() => {
                 <div class="mb-5">
                     <InputLabel for="end_date" value="End Date and Time" />
                     <Datepicker
-                        class="mt-1 block w-full bg-gray-100 border-transparent rounded-md shadow-sm focus:border-gray-300 focus:bg-white focus:ring-0"
+                        class="mt-1 block w-full"
                         v-model="form.end_date"
                         :enable-time-picker="true"
                         :flow="['calendar', 'time']"
