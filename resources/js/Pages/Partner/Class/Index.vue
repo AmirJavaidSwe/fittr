@@ -149,17 +149,19 @@ const closeEditModal = () => {
 };
 
 let formEdit = useForm({
-    title: "",
-    status: "",
-    start_date: "",
-    end_date: "",
-    instructor_id: "",
-    class_type_id: "",
-    studio_id: "",
-    is_off_peak: "",
+    id: null,
+    title: null,
+    status: null,
+    start_date: null,
+    end_date: null,
+    instructor_id: null,
+    class_type_id: null,
+    studio_id: null,
+    is_off_peak: null,
 });
 const handleUpdateForm = (data) => {
     showEditModal.value = true;
+    formEdit.id = data.id;
     formEdit.title = data.title;
     formEdit.status = data.status;
     formEdit.start_date = data.start_date;
@@ -171,8 +173,9 @@ const handleUpdateForm = (data) => {
 };
 
 const updateClass = () => {
-    formEdit.put(route("partner.classes.edit", formEdit), {
+    formEdit.put(route('partner.classes.update', formEdit.id), {
         preserveScroll: true,
+        onSuccess: () => showEditModal.value = false
     });
 };
 
@@ -282,19 +285,19 @@ const showLink = (exporting) => {
                 :currentSort="form.order_by === 'title'"
             />
             <table-head
-                title="Studio ID"
+                title="Studio"
                 @click="setOrdering('studio_id')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'studio_id'"
             />
             <table-head
-                title="Class Type ID"
+                title="Class Type"
                 @click="setOrdering('class_type_id')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'class_type_id'"
             />
             <table-head
-                title="Instructor ID"
+                title="Instructor"
                 @click="setOrdering('instructor_id')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'instructor_id'"
@@ -333,7 +336,7 @@ const showLink = (exporting) => {
         </template>
 
         <template #tableData>
-            <tr v-for="(class_lesson, index) in classes.data">
+            <tr v-for="(class_lesson, index) in classes.data" :key="class_lesson.id">
                 <table-data :title="class_lesson.id" />
                 <table-data>
                     <Link
@@ -343,13 +346,13 @@ const showLink = (exporting) => {
                         {{ class_lesson.title }}
                     </Link>
                 </table-data>
-                <table-data :title="class_lesson.studio_id" />
+                <table-data :title="class_lesson?.studio?.title ?? class_lesson?.studio?.id" />
                 <!-- <table-data :title="class_lesson.class_type_id" /> -->
                 <table-data>
-                    <ColoredValue color="#F47560" title="Yoga" />
+                    <ColoredValue color="#F47560" :title="class_lesson?.classType?.title ?? 'Test'" />
                 </table-data>
                 <table-data>
-                    <AvatarValue title="Demo Instructor 1" />
+                    <AvatarValue :title="class_lesson?.instructor?.name ?? 'Demo Ins'" />
                 </table-data>
                 <table-data>
                     <StatusLabel :status="class_lesson.status_label" />
@@ -439,9 +442,8 @@ const showLink = (exporting) => {
                 </table-data>
             </tr>
         </template>
-
         <template #pagination>
-            <pagination
+            <Pagination
                 :links="classes.links"
                 :to="classes.to"
                 :from="classes.from"

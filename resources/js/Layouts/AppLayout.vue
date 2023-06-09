@@ -54,7 +54,7 @@ const headerIsArray = computed(() => {
 });
 
 // Sidebar Collapse
-const sidebarCollapsed = ref(true);
+const sidebarCollapsed = ref(false);
 
 // Back function
 let back = function (e) {
@@ -87,7 +87,7 @@ let back = function (e) {
         </AppHead>
 
         <Banner />
-        <FlashMessage :flash="$page.props.flash" :errors="$page.props.errors" />
+        <FlashMessage :flash="$page.props.flash" :errors="$page.props.errors" :show-at="$page.props.show_class" />
 
         <div class="min-h-screen bg-gray-50 overflow-hidden">
             <!-- Desktop, flex -->
