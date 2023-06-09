@@ -29,6 +29,7 @@ module.exports = {
                 )}")`,
             }),
             colors: {
+                //green
                 primary: {
                     100: "#D6DFD9",
                     200: "#66ff99",
@@ -40,6 +41,7 @@ module.exports = {
                     800: "#163c22",
                     900: "#0e3019",
                 },
+                //orange
                 secondary: {
                     100: "#FCE7D6",
                     200: "#f9e2bb",
@@ -63,9 +65,9 @@ module.exports = {
                     900: "#480202",
                 },
                 dark: "#292D32",
-                grey: "#939393",
-                blue: "#007AFF",
-                mainBg: "#E8EAE9",
+                grey: "#939393", //darker grey
+                blue: "#1269FB",
+                mainBg: "#E8EAE9", //soft grey
             },
             fontFamily: {
                 sans: ["Urbanist", ...defaultTheme.fontFamily.sans],
