@@ -28,7 +28,6 @@ const optionsPP = [
     { value: 25, text: "25" },
     { value: 50, text: "50" },
 ];
-console.log(props.links);
 </script>
 <template>
     <div

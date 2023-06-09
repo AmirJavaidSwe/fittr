@@ -1,31 +1,29 @@
 <script setup>
-
 import FormSection from "@/Components/FormSection.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
 import InputError from "@/Components/InputError.vue";
 import ActionMessage from "@/Components/ActionMessage.vue";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
+import WarningButton from "@/Components/WarningButton.vue";
 import Checkbox from "@/Components/Checkbox.vue";
 
 defineProps({
     form: {
         type: Object,
-        required: true
+        required: true,
     },
     submitted: {
         type: Function,
-        required: true
-    }
-})
-
+        required: true,
+    },
+});
 </script>
 
 <template>
     <FormSection @submitted="submitted">
         <template #form>
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="title" value="Title"/>
+                <InputLabel for="title" value="Title" />
                 <TextInput
                     id="title"
                     v-model="form.title"
@@ -33,11 +31,11 @@ defineProps({
                     class="mt-1 block w-full"
                     autocomplete="one-time-code"
                 />
-                <InputError :message="form.errors.title" class="mt-2"/>
+                <InputError :message="form.errors.title" class="mt-2" />
             </div>
 
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="icon" value="Icon"/>
+                <InputLabel for="icon" value="Icon" />
                 <TextInput
                     id="icon"
                     v-model="form.icon"
@@ -45,11 +43,11 @@ defineProps({
                     class="mt-1 block w-full"
                     autocomplete="one-time-code"
                 />
-                <InputError :message="form.errors.icon" class="mt-2"/>
+                <InputError :message="form.errors.icon" class="mt-2" />
             </div>
 
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="contents" value="Contents"/>
+                <InputLabel for="contents" value="Contents" />
                 <TextInput
                     id="icon"
                     v-model="form.contents"
@@ -57,41 +55,41 @@ defineProps({
                     class="mt-1 block w-full"
                     autocomplete="one-time-code"
                 />
-                <InputError :message="form.errors.contents" class="mt-2"/>
+                <InputError :message="form.errors.contents" class="mt-2" />
             </div>
 
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="ordering" value="Ordering"/>
+                <InputLabel for="ordering" value="Ordering" />
                 <TextInput
                     id="icon"
                     v-model="form.ordering"
                     type="number"
                     class="mt-1 block w-full"
                 />
-                <InputError :message="form.errors.ordering" class="mt-2"/>
+                <InputError :message="form.errors.ordering" class="mt-2" />
             </div>
 
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="studio_id" value="studio id"/>
+                <InputLabel for="studio_id" value="studio id" />
                 <TextInput
                     id="icon"
                     v-model="form.studio_id"
                     type="number"
                     class="mt-1 block w-full"
                 />
-                <InputError :message="form.errors.studio_id" class="mt-2"/>
+                <InputError :message="form.errors.studio_id" class="mt-2" />
             </div>
 
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="status" value="Status"/>
+                <InputLabel for="status" value="Status" />
                 <Checkbox
                     id="status"
                     v-model="form.status"
                     :checked="form.status === 1"
-                    class="mt-1 w-4"/>
-                <InputError :message="form.errors.status" class="mt-2"/>
+                    class="mt-1 w-4"
+                />
+                <InputError :message="form.errors.status" class="mt-2" />
             </div>
-
         </template>
 
         <template #actions>
@@ -99,9 +97,13 @@ defineProps({
                 Saved.
             </ActionMessage>
 
-            <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+            <WarningButton
+                type="submit"
+                :class="{ 'opacity-25': form.processing }"
+                :disabled="form.processing"
+            >
                 Save
-            </PrimaryButton>
+            </WarningButton>
         </template>
     </FormSection>
 </template>

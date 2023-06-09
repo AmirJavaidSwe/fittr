@@ -1,12 +1,11 @@
 <script setup>
-
 import Form from "./Form.vue";
-import {useForm} from "@inertiajs/vue3";
+import { useForm } from "@inertiajs/vue3";
 
 const storeItem = () => {
-    form.post(route('partner.classpacks.store'), {
+    form.post(route("partner.classpacks.store"), {
         preserveScroll: true,
-        onSuccess: () => form.reset()
+        onSuccess: () => form.reset(),
     });
 };
 
@@ -15,7 +14,6 @@ const props = defineProps({
     options_periods: Object,
     classtypes: Object,
 });
-
 
 const form = useForm({
     title: null,
@@ -35,15 +33,15 @@ const form = useForm({
     is_restricted: false,
     restrictions: null,
 });
-
-
 </script>
 
 <template>
-    <Form :form="form"
-          :isNew="true"
-          :options_types="options_types"
-          :options_periods="options_periods"
-          :classtypes="classtypes"
-          :submitted="storeItem"/>
+    <Form
+        :form="form"
+        :isNew="true"
+        :options_types="options_types"
+        :options_periods="options_periods"
+        :classtypes="classtypes"
+        :submitted="storeItem"
+    />
 </template>
