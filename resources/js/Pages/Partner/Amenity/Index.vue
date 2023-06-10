@@ -2,6 +2,8 @@
 import { ref, watch } from "vue";
 import { Link, useForm } from "@inertiajs/vue3";
 import { DateTime } from "luxon";
+import Form from "./Form.vue";
+import SideModal from "@/Components/SideModal.vue";
 import TableHead from "@/Components/DataTable/TableHead.vue";
 import TableData from "@/Components/DataTable/TableData.vue";
 import DataTableLayout from "@/Components/DataTable/Layout.vue";
@@ -9,12 +11,13 @@ import Search from "@/Components/DataTable/Search.vue";
 import Pagination from "@/Components/Pagination.vue";
 import ConfirmationModal from "@/Components/ConfirmationModal.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
+import WarningButton from "@/Components/WarningButton.vue";
 import DangerButton from "@/Components/DangerButton.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import EditIcon from "@/Icons/Edit.vue";
 import DeleteIcon from "@/Icons/Delete.vue";
-import { faCog } from "@fortawesome/free-solid-svg-icons";
+import { faCog, faPlus } from "@fortawesome/free-solid-svg-icons";
 
 const props = defineProps({
     disableSearch: {
@@ -60,6 +63,52 @@ const setPerPage = (n) => {
 // form.search getter only;
 watch(() => form.search, runSearch);
 
+// Create/Edit Class
+let form_class = useForm({
+    title: "",
+    icon: "",
+    contents: "",
+    ordering: "",
+    studio_id: "",
+    status: false,
+});
+
+const showCreateModal = ref(false);
+const closeCreateModal = () => {
+    showCreateModal.value = false;
+};
+
+const storeAmenity = () => {
+    form_class.post(route("partner.amenity.store"), {
+        preserveScroll: true,
+        onSuccess: () => form.reset(),
+    });
+};
+
+let form_edit = form_class;
+const showEditModal = ref(false);
+const closeEditModal = () => {
+    showEditModal.value = false;
+};
+
+const handleUpdateForm = (data) => {
+    console.log(data);
+    showEditModal.value = true;
+    form_edit["id"] = data.id;
+    form_edit["title"] = data.title;
+    form_edit["icon"] = data.icon;
+    form_edit["ordering"] = data.ordering;
+    form_edit["status"] = data.status;
+    form_edit["studio_id"] = data.studio_id;
+    form_edit["contents"] = data.contents;
+};
+
+const updateAmenities = () => {
+    form_edit.put(route("partner.amenity.update", form_edit), {
+        preserveScroll: true,
+    });
+};
+
 //delete confiramtion modal:
 const itemDeleting = ref(false);
 const itemIdDeleting = ref(null);
@@ -82,10 +131,20 @@ const deleteItem = () => {
 };
 </script>
 <template>
-    <data-table-layout
-        button-title="Create new"
-        :button-link="route('partner.amenity.create')"
-    >
+    <data-table-layout :disableButton="true">
+        <template #button>
+            <WarningButton @click="showCreateModal = true">
+                Create a new amenity
+                <font-awesome-icon class="ml-2" :icon="faPlus" />
+            </WarningButton>
+            <WarningButton
+                :href="route('partner.amenity.create')"
+                type="primary"
+            >
+                Create a new amenity (direct)
+            </WarningButton>
+        </template>
+
         <template #search>
             <Search
                 v-model="form.search"
@@ -138,7 +197,7 @@ const deleteItem = () => {
         </template>
 
         <template #tableData>
-            <tr v-for="amenity in amenities.data">
+            <tr v-for="(amenity, index) in amenities.data">
                 <table-data :title="amenity.id" />
                 <table-data>
                     <img
@@ -177,6 +236,7 @@ const deleteItem = () => {
                     <Dropdown
                         align="right"
                         width="48"
+                        :top="index > amenities.data.length - 3"
                         :content-classes="['bg-white']"
                     >
                         <template #trigger>
@@ -196,6 +256,17 @@ const deleteItem = () => {
                             </DropdownLink>
                             <DropdownLink
                                 as="button"
+                                @click="handleUpdateForm(amenity)"
+                            >
+                                <span class="text-danger flex items-center">
+                                    <EditIcon
+                                        class="w-4 lg:w-24vw h-4 lg:h-24vw mr-0 md:mr-2"
+                                    />
+                                    <span> Edit (Modal) </span>
+                                </span>
+                            </DropdownLink>
+                            <DropdownLink
+                                as="button"
                                 @click="confirmDeletion(amenity.id)"
                             >
                                 <span class="text-danger flex items-center">
@@ -212,13 +283,33 @@ const deleteItem = () => {
         </template>
 
         <template #pagination>
-            <pagination :links="amenities.links" />
-            <p class="p-2 text-xs">
-                Viewing {{ amenities.from }} - {{ amenities.to }} of
-                {{ amenities.total }} results
-            </p>
+            <pagination
+                :links="amenities.links"
+                :to="amenities.to"
+                :from="amenities.from"
+                :total="amenities.total"
+                @pp_changed="setPerPage"
+            />
         </template>
     </data-table-layout>
+
+    <!-- Create new amenity Modal -->
+    <SideModal :show="showCreateModal" @close="closeCreateModal">
+        <template #title> Create new amenity </template>
+
+        <template #content>
+            <Form :form="form_class" :submitted="storeAmenity" modal />
+        </template>
+    </SideModal>
+
+    <!-- Update studio Modal -->
+    <SideModal :show="showEditModal" @close="closeEditModal">
+        <template #title> Update studio </template>
+
+        <template #content>
+            <Form :form="form_edit" :submitted="updateAmenities" modal />
+        </template>
+    </SideModal>
 
     <!-- Delete Confirmation Modal -->
     <ConfirmationModal :show="itemDeleting" @close="itemDeleting = false">

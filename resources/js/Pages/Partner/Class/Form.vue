@@ -295,7 +295,7 @@ const formatDate = computed(() => {
 
             <WarningButton
                 :class="{ 'opacity-25': form.processing }"
-                :disabled="form.processing"
+                :disabled="form.processing" type="submit"
             >
                 <span v-if="isNew">Create</span>
                 <span v-else>Save changes</span>

@@ -19,6 +19,7 @@ import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import EditIcon from "@/Icons/Edit.vue";
 import DeleteIcon from "@/Icons/Delete.vue";
+import FormFilter from "./FormFilter.vue";
 
 const props = defineProps({
     disableSearch: {
@@ -152,6 +153,12 @@ const updateItem = () => {
         },
     });
 };
+
+//create modal:
+const showFilterModal = ref(false);
+const closeFilterModal = () => {
+    showFilterModal.value = false;
+};
 </script>
 <template>
     <data-table-layout :disableButton="true">
@@ -176,6 +183,7 @@ const updateItem = () => {
                 :disable-search="disableSearch"
                 @reset="form.search = null"
                 @pp_changed="setPerPage"
+                @onFilter="showFilterModal = true"
             />
         </template>
 
@@ -226,7 +234,7 @@ const updateItem = () => {
         </template>
 
         <template #tableData>
-            <tr v-for="classpack in classpacks.data">
+            <tr v-for="(classpack, index) in classpacks.data">
                 <table-data :title="classpack.id" />
                 <table-data>
                     <Link
@@ -253,6 +261,7 @@ const updateItem = () => {
                     <Dropdown
                         align="right"
                         width="48"
+                        :top="index > classpacks.data.length - 3"
                         :content-classes="['bg-white']"
                     >
                         <template #trigger>
@@ -274,6 +283,17 @@ const updateItem = () => {
                             </DropdownLink>
                             <DropdownLink
                                 as="button"
+                                @click="showEditModal(classpack)"
+                            >
+                                <span class="text-danger flex items-center">
+                                    <EditIcon
+                                        class="w-4 lg:w-24vw h-4 lg:h-24vw mr-0 md:mr-2"
+                                    />
+                                    <span> Edit (Modal) </span>
+                                </span>
+                            </DropdownLink>
+                            <DropdownLink
+                                as="button"
                                 @click="confirmDeletion(classpack.id)"
                             >
                                 <span class="text-danger flex items-center">
@@ -290,11 +310,13 @@ const updateItem = () => {
         </template>
 
         <template #pagination>
-            <pagination :links="classpacks.links" />
-            <p class="p-2 text-xs">
-                Viewing {{ classpacks.from }} - {{ classpacks.to }} of
-                {{ classpacks.total }} results
-            </p>
+            <pagination
+                :links="classpacks.links"
+                :to="classpacks.to"
+                :from="classpacks.from"
+                :total="classpacks.total"
+                @pp_changed="setPerPage"
+            />
         </template>
     </data-table-layout>
 
@@ -326,6 +348,22 @@ const updateItem = () => {
                 :options_periods="options_periods"
                 :classtypes="classtypes"
                 :submitted="updateItem"
+                modal
+            />
+        </template>
+    </SideModal>
+
+    <!-- Filter Modal -->
+    <SideModal :show="showFilterModal" @close="closeFilterModal">
+        <template #title> Filter Class pack </template>
+
+        <template #content>
+            <FormFilter
+                :form="form_item"
+                :options_types="options_types"
+                :options_periods="options_periods"
+                :classtypes="classtypes"
+                modal
             />
         </template>
     </SideModal>

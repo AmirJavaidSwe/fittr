@@ -26,17 +26,17 @@ select {
     @apply mt-1 border border-primary-500 ring-0 !important;
 }
 .input-checkbox {
-    @apply rounded border-gray-300 text-primary-500 focus:border-primary-500 focus:outline-none focus:shadow-none focus:ring-0;
+    @apply rounded border-gray-300 text-primary-500 focus:border-primary-500 focus:outline-none focus:shadow-none focus:ring-offset-0 focus:ring-8 focus:ring-primary-100;
 }
 .input-radio {
-    @apply w-4 h-4 text-primary-500 bg-white border-gray-300 focus:ring-0;
+    @apply w-4 h-4 text-primary-500 bg-white border-gray-300 focus:ring-offset-0 focus:ring-8 focus:ring-primary-100;
 }
 
 .switcher-button {
     @apply relative bg-primary-500/25 inline-flex h-4 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out;
 }
 .switcher-nob {
-    @apply pointer-events-none inline-block h-6 w-6 relative -top-1.5 transform rounded-full bg-primary-500 transition duration-200 ease-in-out;
+    @apply pointer-events-none inline-block h-6 w-6 relative -top-1.5 transform rounded-full bg-primary-500 transition duration-200 ease-in-out focus:ring-offset-0 focus:ring-4 focus:ring-primary-100;
 }
 
 /* Tabs Styles */

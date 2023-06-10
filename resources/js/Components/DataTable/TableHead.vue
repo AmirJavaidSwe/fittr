@@ -1,7 +1,7 @@
 <template>
     <th
         scope="col"
-        class="whitespace-nowrap px-3 lg:px-16vw py-3.5 lg:py-16vw text-left text-sm lg:text-20vw font-semibold text-gray-900 cursor-pointer"
+        class="text-center whitespace-nowrap px-3 lg:px-16vw py-3.5 lg:py-16vw text-left text-sm lg:text-20vw font-semibold text-gray-900 cursor-pointer"
         @click="click"
     >
         <div class="flex items-center">
@@ -17,7 +17,7 @@
             <template v-else>
                 <div
                     v-if="title && arrowSide"
-                    class="flex flex-col items-center justify-center ml-2"
+                    class="flex flex-col items-center justify-center ml-2 opacity-50"
                 >
                     <font-awesome-icon
                         :icon="faSortUp"
