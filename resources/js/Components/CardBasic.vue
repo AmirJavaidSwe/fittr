@@ -30,12 +30,12 @@ const classes = computed(() => {
 
 <template>
     <div
-        class="w-full bg-white border border-gray-200 flex flex-col gap-4 p-3 lg:p-16vw rounded-lg shadow-md"
+        class="w-full bg-white border border-gray-200 flex flex-col gap-4 p-3 lg:p-4 rounded-lg shadow-md"
         :class="classes"
     >
         <div
             v-if="$slots.header"
-            class="text-xl lg:text-30vw font-bold tracking-tight text-gray-900"
+            class="text-xl 2xl:text-3xl font-bold tracking-tight text-gray-900"
         >
             <slot name="header"></slot>
         </div>

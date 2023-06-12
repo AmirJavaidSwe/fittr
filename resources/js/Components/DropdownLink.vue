@@ -6,7 +6,7 @@ defineProps({
     as: String,
 });
 
-const classes = `block px-4 py-2 text-sm lg:text-20vw w-full text-left leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition flex items-center`;
+const classes = `block px-4 py-2 text-sm lg:text-md 2xl:text-lg w-full text-left leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition flex items-center`;
 </script>
 
 <template>

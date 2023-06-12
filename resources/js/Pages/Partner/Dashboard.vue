@@ -28,7 +28,7 @@ const props = defineProps({
 
 <template>
     <Section bg="bg-transparent">
-        <div class="text-xl lg:text-24vw">Hello, {{ partner.name }}</div>
+        <div class="md:text-lg xl:text-xl">Hello, {{ partner.name }}</div>
         <hr class="mb-4" />
         <div></div>
 

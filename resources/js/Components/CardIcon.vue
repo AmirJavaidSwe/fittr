@@ -8,7 +8,7 @@ const props = defineProps({
 
 <template>
     <div
-        class="bg-gray-50 flex hover:bg-gray-100 items-center p-12vw gap-4 relative transition"
+        class="bg-gray-50 flex hover:bg-gray-100 items-center p-3 gap-4 relative transition"
     >
         <Link
             v-if="cardLink"
@@ -20,12 +20,12 @@ const props = defineProps({
         </div>
         <div class="flex-1 min-w-0">
             <p
-                class="text-sm lg:text-18vw font-bold text-gray-900 truncate dark:text-white"
+                class="text-sm lg:text-md 2xl:text-lg font-bold text-gray-900 truncate dark:text-white"
             >
                 <slot name="title"></slot>
             </p>
             <p
-                class="text-sm lg:text-18vw text-gray-500 truncate dark:text-gray-400"
+                class="text-sm lg:text-md 2xl:text-lg text-gray-500 truncate dark:text-gray-400"
             >
                 <slot></slot>
             </p>

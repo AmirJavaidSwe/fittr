@@ -15,13 +15,15 @@ const classes = computed(() => {
 
     switch (props.size) {
         case "small":
-            common += "w-6 h-6 lg:w-33vw lg:h-33vw text-sm lg:text-16vw";
+            common += "w-6 h-6 2xl:w-8 2xl:h-8 text-sm lg:text-md 2xl:text-lg";
             break;
         case "medium":
-            common += "w-8 h-8 lg:w-48vw lg:h-48vw text-md lg:text-20vw";
+            common +=
+                "w-10 h-10 2xl:w-12 2xl:h-12 text-md lg:text-md 2xl:text-lg";
             break;
         case "large":
-            common += "w-12 h-12 lg:w-60vw lg:h-60vw text-lg lg:text-30vw";
+            common +=
+                "w-14 h-14 2xl:w-16 2xl:h-16 text-lg lg:text-lg 2xl:text-xl";
             break;
 
         default:

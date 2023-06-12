@@ -1,6 +1,6 @@
 <template>
     <svg
-        class="w-5 lg:w-30vw h-5 lg:h-30vw"
+        class="w-5 h-5 2xl:w-76 2xl:h-6"
         width="18"
         height="21"
         viewBox="0 0 18 21"

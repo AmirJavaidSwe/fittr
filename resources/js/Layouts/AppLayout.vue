@@ -98,18 +98,19 @@ let back = function (e) {
                         class="flex-col transition-all duration-300 fixed z-[99] top-0 left-0 h-full md:relative md:inset-0 md:z-10 w-3/4 hidden md:flex"
                         :class="{
                             'md:w-0': sidebarCollapsed,
-                            'md:w-56 lg:w-[13.54vw]': !sidebarCollapsed,
+                            'md:w-56 xl:w-[220px] 2xl:w-[260px]':
+                                !sidebarCollapsed,
                             '-translate-x-full': sidebarCollapsed,
                             'translate-x-0': !sidebarCollapsed,
                         }"
                     >
                         <div
-                            class="w-full md:w-56 lg:w-[13.54vw] h-full bg-primary-500"
+                            class="w-full md:w-56 xl:w-[220px] 2xl:w-[260px] h-full bg-primary-500"
                         >
                             <div class="flex items-center flex-shrink-0">
                                 <!-- Logo -->
                                 <div
-                                    class="relative w-full px-6 py-4 lg:py-40vw"
+                                    class="relative w-full px-6 py-4 xl:py-6 2xl:py-8"
                                 >
                                     <Link
                                         :href="
@@ -120,7 +121,7 @@ let back = function (e) {
                                         class="mt-1"
                                     >
                                         <LogoLetter
-                                            class="w-auto h-12 lg:h-40vw"
+                                            class="w-auto h-10"
                                             fill="#fff"
                                         />
                                     </Link>
@@ -134,7 +135,7 @@ let back = function (e) {
                                     >
                                         <font-awesome-icon
                                             :icon="faTimes"
-                                            class="w-6 lg:w-30vw h-6 lg:h-30vw"
+                                            class="w-6 h-6"
                                         />
                                     </button>
                                 </div>
@@ -150,7 +151,7 @@ let back = function (e) {
                         class="flex flex-col flex-1 overflow-hidden md:relative md:z-10 h-full md:h-auto"
                     >
                         <div
-                            class="bg-primary-500 md:bg-white flex items-center justify-between md:px-6 lg:px-20vw md:py-5 lg:py-20vw md:text-md p-4 shadow text-sm lg:text-20vw w-full gap-4 relative"
+                            class="bg-primary-500 md:bg-white flex items-center justify-between md:px-6 md:py-4 xl:py-5 p-4 shadow w-full gap-4 relative"
                         >
                             <!-- Page Heading / Menu item name-->
                             <header>
@@ -164,7 +165,7 @@ let back = function (e) {
                                     >
                                         <font-awesome-icon
                                             :icon="faBars"
-                                            class="mr-3 w-6 lg:w-30vw h-6 lg:h-30vw"
+                                            class="mr-3 w-6 h-6 2xl:w-8 2xl:h-8"
                                         />
                                     </button>
                                     <!-- Mobile toggle, visible md and smaller -->
@@ -183,7 +184,7 @@ let back = function (e) {
                                             >
                                                 <font-awesome-icon
                                                     :icon="faBars"
-                                                    class="mr-3 w-6 lg:w-30vw h-6 lg:h-30vw"
+                                                    class="mr-3 w-6 h-6"
                                                 />
                                             </button>
                                         </template>
@@ -191,9 +192,10 @@ let back = function (e) {
                                             <MainMenu class="hidden:md" />
                                         </template>
                                     </Dropdown>
+
                                     <div class="max-w-7xl mx-auto">
                                         <h2
-                                            class="font-semibold text-base md:text-xl lg:text-30vw text-white md:text-gray-800 leading-tight"
+                                            class="font-semibold text-base md:text-xl xl:text-2xl 2xl:text-3xl text-white md:text-gray-800 leading-tight"
                                         >
                                             <div
                                                 v-if="headerIsArray"
@@ -267,7 +269,7 @@ let back = function (e) {
                                             >
                                                 <div class="pr-4 text-right">
                                                     <div
-                                                        class="font-bold text-white md:text-dark lg:text-20vw"
+                                                        class="font-bold text-white md:text-dark md:text-sm xl:text-md 2xl:text-lg"
                                                     >
                                                         {{
                                                             $page.props.user
@@ -275,7 +277,7 @@ let back = function (e) {
                                                         }}
                                                     </div>
                                                     <div
-                                                        class="text-gray-400 lg:text-20vw hidden md:block"
+                                                        class="text-gray-400 md:text-sm xl:text-md 2xl:text-lg hidden md:block"
                                                     >
                                                         {{
                                                             $page.props.user
@@ -289,7 +291,7 @@ let back = function (e) {
                                                     "
                                                 />
                                                 <!-- <img
-                                                    class="w-8 lg:h-60vw h-8 lg:w-60vw rounded-full object-cover"
+                                                    class="w-8 h-8 rounded-full object-cover"
                                                     :src="
                                                         $page.props.user
                                                             .profile_photo_url
@@ -304,7 +306,7 @@ let back = function (e) {
                                             >
                                                 <button
                                                     type="button"
-                                                    class="inline-flex items-center px-3 py-2 border border-transparent text-sm lg:text-20vw leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition"
+                                                    class="inline-flex items-center px-3 py-2 border border-transparent text-sm lg:text-md leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition"
                                                 >
                                                     {{ $page.props.user.name }}
 
