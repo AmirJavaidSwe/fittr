@@ -17,7 +17,7 @@
             <template v-else>
                 <div
                     v-if="title && arrowSide"
-                    class="flex flex-col items-center justify-center ml-2 text-sm"
+                    class="flex flex-col items-center justify-center ml-2 text-sm opacity-25"
                 >
                     <font-awesome-icon
                         :icon="faSortUp"
