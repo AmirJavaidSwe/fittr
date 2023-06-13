@@ -22,6 +22,11 @@ use Inertia\Response;
 
 class PartnerClassLessonController extends Controller
 {
+
+    public $search;
+    public $per_page;
+    public $order_by;
+    public $order_dir;
     /**
      * Display a listing of the resource.
      *
@@ -38,7 +43,7 @@ class PartnerClassLessonController extends Controller
             'page_title' => __('Classes'),
             'header' => __('Classes'),
             // 'classes' => $query,
-            'classes' => ClassLesson::orderBy($this->order_by, $this->order_dir)
+            'classes' => ClassLesson::with('studio', 'classType', 'instructor')->orderBy($this->order_by, $this->order_dir)
                 ->when($this->search, function ($query) {
                     $query->where(function ($query) {
                         $query->orWhere('id', intval($this->search))

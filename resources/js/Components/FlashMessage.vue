@@ -71,7 +71,7 @@ watch(errors, (newValue, oldValue) => {
           leave-from-class="opacity-100"
           leave-to-class="opacity-0 translate-x-full"
           >
-        <div v-if="show" @click="show = false" class="cursor-pointer fixed right-8 top-24 transform transition-all z-20">
+        <div v-if="show" @click="show = false" class="cursor-pointer fixed right-8 top-24 transform transition-all z-[1040]">
             <div class="bg-gray-900 border-l-4 overflow-hidden px-4 py-2 rounded-lg shadow-md text-white w-80" :class="classes">
                 <div v-if="title" class="font-bold">
                     {{ title }}

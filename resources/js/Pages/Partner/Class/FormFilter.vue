@@ -148,18 +148,25 @@ const emit = defineEmits(["reset", "submitted"]);
 
         <template #actions>
             <div class="flex-grow text-left">
-                <SecondaryButton type="button" @click="emit('reset')" class="">
+                <ButtonLink
+                    type="button"
+                    @click="emit('reset')"
+                    styling="default"
+                    size="default"
+                >
                     <span>Reset filters</span>
-                </SecondaryButton>
+                </ButtonLink>
             </div>
 
-            <WarningButton
+            <ButtonLink
                 type="submit"
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
+                styling="secondary"
+                size="default"
             >
                 <span>Apply Filters</span>
-            </WarningButton>
+            </ButtonLink>
         </template>
     </FormSection>
 </template>

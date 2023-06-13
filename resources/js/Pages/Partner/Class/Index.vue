@@ -10,7 +10,6 @@ import Pagination from "@/Components/Pagination.vue";
 import TableHead from "@/Components/DataTable/TableHead.vue";
 import TableData from "@/Components/DataTable/TableData.vue";
 import DataTableLayout from "@/Components/DataTable/Layout.vue";
-import DialogModal from "@/Components/DialogModal.vue";
 import SideModal from "@/Components/SideModal.vue";
 import ConfirmationModal from "@/Components/ConfirmationModal.vue";
 import ImportIcon from "@/Icons/Import.vue";
@@ -21,10 +20,7 @@ import DeleteIcon from "@/Icons/Delete.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 
-// import PrimaryButton from '@/Components/PrimaryButton.vue';
-import SecondaryButton from "@/Components/SecondaryButton.vue";
-import DangerButton from "@/Components/DangerButton.vue";
-import WarningButton from "@/Components/WarningButton.vue";
+import ButtonLink from "@/Components/ButtonLink.vue";
 import { faCog, faPlus } from "@fortawesome/free-solid-svg-icons";
 import StatusLabel from "@/Components/StatusLabel.vue";
 import ColoredValue from "@/Components/DataTable/ColoredValue.vue";
@@ -149,17 +145,19 @@ const closeEditModal = () => {
 };
 
 let formEdit = useForm({
-    title: "",
-    status: "",
-    start_date: "",
-    end_date: "",
-    instructor_id: "",
-    class_type_id: "",
-    studio_id: "",
-    is_off_peak: "",
+    id: null,
+    title: null,
+    status: null,
+    start_date: null,
+    end_date: null,
+    instructor_id: null,
+    class_type_id: null,
+    studio_id: null,
+    is_off_peak: null,
 });
 const handleUpdateForm = (data) => {
     showEditModal.value = true;
+    formEdit.id = data.id;
     formEdit.title = data.title;
     formEdit.status = data.status;
     formEdit.start_date = data.start_date;
@@ -171,8 +169,9 @@ const handleUpdateForm = (data) => {
 };
 
 const updateClass = () => {
-    formEdit.put(route("partner.classes.edit", formEdit), {
+    formEdit.put(route("partner.classes.update", formEdit.id), {
         preserveScroll: true,
+        onSuccess: () => (showEditModal.value = false),
     });
 };
 
@@ -239,24 +238,33 @@ const showLink = (exporting) => {
 <template>
     <data-table-layout :disableButton="true">
         <template #button>
-            <SecondaryButton @click="null">
-                <ImportIcon class="w-4 lg:w-24vw h-4 lg:h-24vw mr-0 md:mr-2" />
+            <ButtonLink styling="default" size="default" @click="null">
+                <ImportIcon class="w-4 h-4 2xl:w-6 2xl:h-6 mr-0 md:mr-2" />
                 <span class="hidden md:block">Import</span>
-            </SecondaryButton>
-            <SecondaryButton @click="showExportModal = true">
-                <ExportIcon class="w-4 lg:w-24vw h-4 lg:h-24vw mr-0 md:mr-2" />
+            </ButtonLink>
+            <ButtonLink
+                styling="default"
+                size="default"
+                @click="showExportModal = true"
+            >
+                <ExportIcon class="w-4 h-4 2xl:w-6 2xl:h-6 mr-0 md:mr-2" />
                 <span class="hidden md:block">Export</span>
-            </SecondaryButton>
-            <WarningButton @click="showCreateModal = true">
+            </ButtonLink>
+            <ButtonLink
+                styling="secondary"
+                size="default"
+                @click="showCreateModal = true"
+            >
                 Create new
                 <font-awesome-icon class="ml-2" :icon="faPlus" />
-            </WarningButton>
-            <WarningButton
+            </ButtonLink>
+            <ButtonLink
+                styling="secondary"
+                size="default"
                 :href="route('partner.classes.create')"
-                type="primary"
             >
                 Create new (direct)
-            </WarningButton>
+            </ButtonLink>
         </template>
 
         <template #search>
@@ -282,19 +290,19 @@ const showLink = (exporting) => {
                 :currentSort="form.order_by === 'title'"
             />
             <table-head
-                title="Studio ID"
+                title="Studio"
                 @click="setOrdering('studio_id')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'studio_id'"
             />
             <table-head
-                title="Class Type ID"
+                title="Class Type"
                 @click="setOrdering('class_type_id')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'class_type_id'"
             />
             <table-head
-                title="Instructor ID"
+                title="Instructor"
                 @click="setOrdering('instructor_id')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'instructor_id'"
@@ -333,7 +341,10 @@ const showLink = (exporting) => {
         </template>
 
         <template #tableData>
-            <tr v-for="(class_lesson, index) in classes.data">
+            <tr
+                v-for="(class_lesson, index) in classes.data"
+                :key="class_lesson.id"
+            >
                 <table-data :title="class_lesson.id" />
                 <table-data>
                     <Link
@@ -343,13 +354,22 @@ const showLink = (exporting) => {
                         {{ class_lesson.title }}
                     </Link>
                 </table-data>
-                <table-data :title="class_lesson.studio_id" />
+                <table-data
+                    :title="
+                        class_lesson?.studio?.title ?? class_lesson?.studio?.id
+                    "
+                />
                 <!-- <table-data :title="class_lesson.class_type_id" /> -->
                 <table-data>
-                    <ColoredValue color="#F47560" title="Yoga" />
+                    <ColoredValue
+                        color="#F47560"
+                        :title="class_lesson?.classType?.title ?? 'Test'"
+                    />
                 </table-data>
                 <table-data>
-                    <AvatarValue title="Demo Instructor 1" />
+                    <AvatarValue
+                        :title="class_lesson?.instructor?.name ?? 'Demo Ins'"
+                    />
                 </table-data>
                 <table-data>
                     <StatusLabel :status="class_lesson.status_label" />
@@ -399,27 +419,27 @@ const showLink = (exporting) => {
 
                         <template #content>
                             <DropdownLink
-                                as="button"
-                                @click="handleUpdateForm(class_lesson)"
-                            >
-                                <EditIcon
-                                    class="w-4 lg:w-24vw h-4 lg:h-24vw mr-0 md:mr-2"
-                                />
-                                Edit (Modal)
-                            </DropdownLink>
-                            <DropdownLink
                                 :href="
                                     route('partner.classes.edit', class_lesson)
                                 "
                             >
                                 <EditIcon
-                                    class="w-4 lg:w-24vw h-4 lg:h-24vw mr-0 md:mr-2"
+                                    class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
                                 />
                                 Edit
                             </DropdownLink>
+                            <DropdownLink
+                                as="button"
+                                @click="handleUpdateForm(class_lesson)"
+                            >
+                                <EditIcon
+                                    class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
+                                />
+                                Edit (Modal)
+                            </DropdownLink>
                             <DropdownLink href="#">
                                 <DuplicateIcon
-                                    class="w-4 lg:w-24vw h-4 lg:h-24vw mr-0 md:mr-2"
+                                    class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
                                 />
                                 Duplicate
                             </DropdownLink>
@@ -427,9 +447,9 @@ const showLink = (exporting) => {
                                 as="button"
                                 @click="confirmDeletion(class_lesson.id)"
                             >
-                                <span class="text-danger flex items-center">
+                                <span class="text-danger-500 flex items-center">
                                     <DeleteIcon
-                                        class="w-4 lg:w-24vw h-4 lg:h-24vw mr-0 md:mr-2"
+                                        class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
                                     />
                                     <span> Delete </span>
                                 </span>
@@ -439,9 +459,8 @@ const showLink = (exporting) => {
                 </table-data>
             </tr>
         </template>
-
         <template #pagination>
-            <pagination
+            <Pagination
                 :links="classes.links"
                 :to="classes.to"
                 :from="classes.from"
@@ -533,18 +552,24 @@ const showLink = (exporting) => {
         </template>
 
         <template #footer>
-            <SecondaryButton @click="itemDeleting = null">
+            <ButtonLink
+                size="default"
+                styling="default"
+                @click="itemDeleting = null"
+            >
                 Cancel
-            </SecondaryButton>
+            </ButtonLink>
 
-            <DangerButton
+            <ButtonLink
+                size="default"
+                styling="danger"
                 class="ml-3"
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
                 @click="deleteItem"
             >
                 Delete
-            </DangerButton>
+            </ButtonLink>
         </template>
     </ConfirmationModal>
 </template>

@@ -9,8 +9,9 @@ import TableHead from "@/Components/DataTable/TableHead.vue";
 import TableData from "@/Components/DataTable/TableData.vue";
 import DataTableLayout from "@/Components/DataTable/Layout.vue";
 import ConfirmationModal from "@/Components/ConfirmationModal.vue";
-import SecondaryButton from "@/Components/SecondaryButton.vue";
-import DangerButton from "@/Components/DangerButton.vue";
+import DateValue from "@/Components/DataTable/DateValue.vue";
+import ColoredValue from "@/Components/DataTable/ColoredValue.vue";
+import ButtonLink from "@/Components/ButtonLink.vue";
 
 const props = defineProps({
     disableSearch: {
@@ -174,12 +175,20 @@ const requestExport = (exporting) => {
                     </template>
                 </table-data>
 
-                <table-data :title="exporting.status" />
-                <table-data :title="exporting.type" />
+                <table-data>
+                    <ColoredValue color="#F47560" :title="exporting.status" />
+                </table-data>
+                <table-data>
+                    <ColoredValue color="#334455" :title="exporting.type" />
+                </table-data>
                 <table-data :title="bytesToKibibytes(exporting.file_size)" />
-                <table-data
-                    :title="DateTime.fromISO(exporting.created_at).toRelative()"
-                />
+                <table-data>
+                    <DateValue
+                        :date="
+                            DateTime.fromISO(exporting.created_at).toRelative()
+                        "
+                    />
+                </table-data>
 
                 <table-data>
                     <template v-if="exporting.created_by">
@@ -197,23 +206,25 @@ const requestExport = (exporting) => {
                 </table-data>
 
                 <table-data>
-                    <button
+                    <ButtonLink
                         v-if="exporting.status === 'completed'"
-                        class="font-medium text-white hover:text-white bg-green-500 hover:bg-green-600 rounded py-2 px-4 inline-block mr-2"
+                        size="default"
+                        styling="secondary"
                         @click.prevent="requestExport(exporting.id)"
                     >
                         Download
-                    </button>
+                    </ButtonLink>
                     <!--                    <Link class="font-medium text-white hover:text-white bg-indigo-600 hover:bg-indigo-700 rounded py-2 px-4 inline-block mr-2"-->
                     <!--                          :href="route('partner.exports.show', exporting)">-->
                     <!--                        View-->
                     <!--                    </Link>-->
-                    <button
-                        class="text-white bg-red-500 hover:bg-red-600 rounded py-2 px-4 inline-block"
+                    <ButtonLink
+                        size="default"
+                        styling="danger"
                         @click="confirmDeletion(exporting.id)"
                     >
                         Delete
-                    </button>
+                    </ButtonLink>
                 </table-data>
             </tr>
         </template>
@@ -237,18 +248,24 @@ const requestExport = (exporting) => {
         </template>
 
         <template #footer>
-            <SecondaryButton @click="itemDeleting = null">
+            <ButtonLink
+                size="default"
+                styling="default"
+                @click="itemDeleting = null"
+            >
                 Cancel
-            </SecondaryButton>
+            </ButtonLink>
 
-            <DangerButton
+            <ButtonLink
+                size="default"
+                styling="danger"
                 class="ml-3"
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
                 @click="deleteItem"
             >
                 Delete
-            </DangerButton>
+            </ButtonLink>
         </template>
     </ConfirmationModal>
 </template>

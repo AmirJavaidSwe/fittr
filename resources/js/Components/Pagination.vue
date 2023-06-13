@@ -9,9 +9,9 @@ import {
 
 const props = defineProps({
     links: Array,
-    to: String,
-    from: String,
-    total: String,
+    to: Number,
+    from: Number,
+    total: Number,
     per_page: {
         type: Number,
         required: false,
@@ -34,7 +34,7 @@ const optionsPP = [
         class="flex flex-col md:flex-row items-center justify-center md:justify-end overflow-hidden mb-10 lg:mb-0"
     >
         <div class="flex items-center mb-5 md:mb-0">
-            <p class="mr-2 text-sm lg:text-20vw text-dark/80 font-medium">
+            <p class="mr-2 text-sm lg:text-md text-dark/80 font-medium">
                 Rows per page:
             </p>
             <select
@@ -43,7 +43,8 @@ const optionsPP = [
                 class="rounded mr-1 py-1 pr-8 pl-1 bg-transparent border-0 focus:ring-0 focus:outline-none focus:shadow-none focus:border-0"
             >
                 <option
-                    v-for="option in optionsPP"
+                    v-for="(option, index) in optionsPP"
+                    :key="index"
                     v-bind:selected="option.value === props.per_page"
                     :value="option.value"
                 >
@@ -58,12 +59,12 @@ const optionsPP = [
         </div>
         <div v-if="links.length > 3">
             <div class="flex flex-wrap">
-                <template v-for="(link, key, index) in props.links">
+                <template v-for="(link, key) in props.links">
                     <Link
                         v-if="link.label.includes('Previous')"
                         :key="key"
-                        :href="link.url"
-                        class="px-4 py-2 text-dark text-sm lg:text-20vw"
+                        :href="link.url ?? 'javascript:;'"
+                        class="px-4 py-2 text-dark text-sm lg:text-md"
                         :class="
                             link.url === null
                                 ? 'pointer-events-none opacity-40'
@@ -74,8 +75,9 @@ const optionsPP = [
                     </Link>
                     <Link
                         v-else-if="link.label.includes('Next')"
-                        :href="link.url"
-                        class="px-4 py-2 text-dark text-sm lg:text-20vw"
+                        :href="link.url ?? 'javascript:;'"
+                        :key="key + '-' + key"
+                        class="px-4 py-2 text-dark text-sm lg:text-md"
                         :class="
                             link.url === null
                                 ? 'pointer-events-none opacity-40'

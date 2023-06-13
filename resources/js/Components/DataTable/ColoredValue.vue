@@ -14,7 +14,7 @@ const props = defineProps({
 <template>
     <div class="flex items-center">
         <span
-            class="w-3 h-3 lg:w-16vw lg:h-16vw rounded-full mr-2"
+            class="w-3 h-3 rounded-full mr-2"
             :style="'background-color:' + color + ';'"
         ></span>
         {{ title }}

@@ -1,9 +1,9 @@
 <script setup>
-import {useForm} from "@inertiajs/vue3";
+import { useForm } from "@inertiajs/vue3";
 import { DateTime } from "luxon";
 import FormSection from "@/Components/FormSection.vue";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
-import CardIcon from '@/Components/CardIcon.vue';
+import ButtonLink from "@/Components/ButtonLink.vue";
+import CardIcon from "@/Components/CardIcon.vue";
 import {
     faSignHanging,
     faBookOpen,
@@ -11,11 +11,11 @@ import {
     faLocationDot,
     faGamepad,
     faTornado,
-    faRetweet
-} from '@fortawesome/free-solid-svg-icons';
+    faRetweet,
+} from "@fortawesome/free-solid-svg-icons";
 
 const confirm = () => {
-    form.post(route('partner.classes.store'));
+    form.post(route("partner.classes.store"));
 };
 
 const props = defineProps({
@@ -29,7 +29,6 @@ const props = defineProps({
 });
 
 const form = useForm(props.form_data);
-
 </script>
 
 <template>
@@ -42,12 +41,10 @@ const form = useForm(props.form_data);
                     </template>
 
                     <template #title>
-                        {{props.form_data.status}}
+                        {{ props.form_data.status }}
                     </template>
 
-                    <template #default>
-                        Status
-                    </template>
+                    <template #default> Status </template>
                 </CardIcon>
                 <CardIcon class="w-full sm:w-auto">
                     <template #icon>
@@ -55,12 +52,10 @@ const form = useForm(props.form_data);
                     </template>
 
                     <template #title>
-                        {{props.repeats_count}}
+                        {{ props.repeats_count }}
                     </template>
 
-                    <template #default>
-                        Total Classes
-                    </template>
+                    <template #default> Total Classes </template>
                 </CardIcon>
                 <CardIcon class="w-full sm:w-auto">
                     <template #icon>
@@ -68,12 +63,10 @@ const form = useForm(props.form_data);
                     </template>
 
                     <template #title>
-                        {{props.class_duration}}
+                        {{ props.class_duration }}
                     </template>
 
-                    <template #default>
-                        Duration, minutes
-                    </template>
+                    <template #default> Duration, minutes </template>
                 </CardIcon>
                 <CardIcon class="w-full sm:w-auto">
                     <template #icon>
@@ -81,12 +74,10 @@ const form = useForm(props.form_data);
                     </template>
 
                     <template #title>
-                        {{props.instructor.name}}
+                        {{ props.instructor.name }}
                     </template>
 
-                    <template #default>
-                        Instructor
-                    </template>
+                    <template #default> Instructor </template>
                 </CardIcon>
                 <CardIcon class="w-full sm:w-auto">
                     <template #icon>
@@ -94,12 +85,10 @@ const form = useForm(props.form_data);
                     </template>
 
                     <template #title>
-                        {{props.studio.title}}
+                        {{ props.studio.title }}
                     </template>
 
-                    <template #default>
-                        Studio
-                    </template>
+                    <template #default> Studio </template>
                 </CardIcon>
                 <CardIcon class="w-full sm:w-auto">
                     <template #icon>
@@ -107,12 +96,10 @@ const form = useForm(props.form_data);
                     </template>
 
                     <template #title>
-                        {{props.classtype.title}}
+                        {{ props.classtype.title }}
                     </template>
 
-                    <template #default>
-                        Class Type
-                    </template>
+                    <template #default> Class Type </template>
                 </CardIcon>
                 <CardIcon class="w-full sm:w-auto">
                     <template #icon>
@@ -120,29 +107,35 @@ const form = useForm(props.form_data);
                     </template>
 
                     <template #title>
-                        {{props.form_data.is_off_peak ? 'YES': 'NO'}}
+                        {{ props.form_data.is_off_peak ? "YES" : "NO" }}
                     </template>
 
-                    <template #default>
-                        Offpeak class
-                    </template>
+                    <template #default> Offpeak class </template>
                 </CardIcon>
             </div>
 
             <p>Starts on:</p>
             <dl class="max-w-md text-gray-900 divide-y divide-gray-200">
                 <div v-for="repeat in props.repeats" class="flex flex-col py-3">
-                    <dt class="mb-1 text-gray-500">{{DateTime.fromISO(repeat).toFormat('cccc')}}</dt>
-                    <dd class="text-lg font-semibold">{{DateTime.fromISO(repeat)}}</dd>
+                    <dt class="mb-1 text-gray-500">
+                        {{ DateTime.fromISO(repeat).toFormat("cccc") }}
+                    </dt>
+                    <dd class="text-lg font-semibold">
+                        {{ DateTime.fromISO(repeat) }}
+                    </dd>
                 </div>
             </dl>
         </template>
 
         <template #actions>
-
-            <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                Confirm and Create {{props.repeats_count}} classes
-            </PrimaryButton>
+            <ButtonLink
+                :class="{ 'opacity-25': form.processing }"
+                :disabled="form.processing"
+                size="default"
+                styling="primary"
+            >
+                Confirm and Create {{ props.repeats_count }} classes
+            </ButtonLink>
         </template>
     </FormSection>
 </template>

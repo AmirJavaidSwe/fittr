@@ -10,7 +10,7 @@ import TextInput from "@/Components/TextInput.vue";
 import Checkbox from "@/Components/Checkbox.vue";
 import InputError from "@/Components/InputError.vue";
 import ActionMessage from "@/Components/ActionMessage.vue";
-import WarningButton from "@/Components/WarningButton.vue";
+import ButtonLink from "@/Components/ButtonLink.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -168,22 +168,26 @@ const submitForm = () => {
                     </div>
                 </div>
 
-                <SecondaryButton
+                <ButtonLink
+                    styling="default"
+                    size="small"
                     class="mt-2 mr-2"
                     type="button"
                     @click.prevent="selectNewLogo"
                 >
                     Select new logo
-                </SecondaryButton>
+                </ButtonLink>
 
-                <SecondaryButton
+                <ButtonLink
+                    styling="default"
+                    size="small"
                     v-if="!logoDelete && form.logo"
                     type="button"
                     class="mt-2"
                     @click="deleteLogo"
                 >
                     Delete logo
-                </SecondaryButton>
+                </ButtonLink>
             </div>
             <!-- Logo URL -->
             <div class="col-span-6 sm:col-span-4">
@@ -238,22 +242,26 @@ const submitForm = () => {
                     </div>
                 </div>
 
-                <SecondaryButton
+                <ButtonLink
+                    styling="default"
+                    size="default"
                     class="mt-2 mr-2"
                     type="button"
                     @click.prevent="selectNewFavicon"
                 >
                     Select new icon
-                </SecondaryButton>
+                </ButtonLink>
 
-                <SecondaryButton
+                <ButtonLink
+                    styling="default"
+                    size="default"
                     v-if="!faviconDelete && form.favicon"
                     type="button"
                     class="mt-2"
                     @click="deleteFavicon"
                 >
                     Delete favicon
-                </SecondaryButton>
+                </ButtonLink>
             </div>
 
             <!-- FOOTER -->
@@ -404,12 +412,14 @@ const submitForm = () => {
                 Saved.
             </ActionMessage>
 
-            <WarningButton
+            <ButtonLink
+                styling="secondary"
+                size="default"
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
             >
                 Save
-            </WarningButton>
+            </ButtonLink>
         </template>
     </FormSection>
 </template>

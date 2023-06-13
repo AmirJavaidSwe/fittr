@@ -9,15 +9,13 @@ import "@vueform/multiselect/themes/tailwind.css";
 import FormSection from "@/Components/FormSection.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
-import SelectInput from "@/Components/SelectInput.vue";
 import InputError from "@/Components/InputError.vue";
 import ActionMessage from "@/Components/ActionMessage.vue";
-import WarningButton from "@/Components/WarningButton.vue";
 import Switcher from "@/Components/Switcher.vue";
 import Avatar from "@/Components/Avatar.vue";
 import ColoredValue from "@/Components/DataTable/ColoredValue.vue";
 import MapMarker from "@/Icons/MapMarker.vue";
-import { faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
+import ButtonLink from "@/Components/ButtonLink.vue";
 
 const props = defineProps({
     statuses: Object,
@@ -272,14 +270,14 @@ const formatDate = computed(() => {
                     <label
                         v-for="(weekDay, index) in weekDays"
                         :for="'weekday' + index"
-                        class="bg-primary-500/10 flex font-medium gap-2 items-center p-2 lg:p-12vw lg:py-10vw rounded-xl text-dark text-sm lg:text-18vw cursor-pointer"
+                        class="bg-primary-500/10 flex font-medium gap-2 items-center p-2 rounded-xl text-dark text-sm lg:text-md cursor-pointer"
                     >
                         <input
                             :id="'weekday' + index"
                             type="checkbox"
                             :value="index"
                             @change="updateWeekDays(index)"
-                            class="w-4 h-4 lg:w-20vw lg:h-20vw text-primary-600 !bg-transparent border-dark rounded-full focus:ring-0 focus:outline-none focus:shadow-none focus:border-0 checked:border-primary-600 checked:!bg-primary-600"
+                            class="w-4 h-4 lg:w-4 lg:h-4 text-primary-600 !bg-transparent border-dark rounded-full focus:ring-0 focus:outline-none focus:shadow-none focus:border-0 checked:border-primary-600 checked:!bg-primary-600"
                         />
                         {{ weekDay }}
                     </label>
@@ -293,13 +291,16 @@ const formatDate = computed(() => {
                 Saved.
             </ActionMessage>
 
-            <WarningButton
+            <ButtonLink
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
+                styling="secondary"
+                size="default"
+                type="submit"
             >
                 <span v-if="isNew">Create</span>
                 <span v-else>Save changes</span>
-            </WarningButton>
+            </ButtonLink>
         </template>
     </FormSection>
 </template>

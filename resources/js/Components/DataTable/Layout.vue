@@ -3,17 +3,22 @@
         <slot name="search"></slot>
         <div class="sm:flex sm:items-center">
             <div
-                class="mt-4 sm:mt-0 lg:ml-16vw fixed bottom-0 left-0 w-full bg-white py-5 border-t border-t-grey z-10 lg:static lg:bg-transparent lg:border-none lg:py-0 flex flex-wrap justify-center gap-2"
+                class="mt-4 sm:mt-0 lg:ml-2 fixed bottom-0 left-0 w-full bg-white py-5 border-t border-t-grey z-10 lg:static lg:bg-transparent lg:border-none lg:py-0 flex flex-wrap justify-center gap-2"
             >
                 <slot name="button"></slot>
-                <WarningButton v-if="!disableButton" :href="buttonLink">
+                <ButtonLink
+                    styling="secondary"
+                    size="default"
+                    v-if="!disableButton"
+                    :href="buttonLink"
+                >
                     {{ buttonTitle }}
                     <font-awesome-icon
                         v-if="buttonTitle.includes('new')"
                         class="ml-2"
                         :icon="faPlus"
                     />
-                </WarningButton>
+                </ButtonLink>
             </div>
         </div>
     </div>
@@ -46,7 +51,7 @@
 
 <script setup>
 import { Link } from "@inertiajs/vue3";
-import WarningButton from "@/Components/WarningButton.vue";
+import ButtonLink from "@/Components/ButtonLink.vue";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 defineProps({

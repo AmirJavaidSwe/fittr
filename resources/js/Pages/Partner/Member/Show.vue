@@ -4,6 +4,7 @@ import { DateTime } from "luxon";
 import SingleView from "@/Components/DataTable/SingleView.vue";
 import SingleViewRow from "@/Components/DataTable/SingleViewRow.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import ButtonLink from "@/Components/ButtonLink.vue";
 
 defineProps({
     member: {
@@ -17,9 +18,13 @@ defineProps({
     <single-view title="Details" description="second line">
         <template #head>
             <div class="flex flex-row items-center mr-10">
-                <PrimaryButton :href="route('partner.members.edit', member)">
+                <ButtonLink
+                    styling="primary"
+                    size="default"
+                    :href="route('partner.members.edit', member)"
+                >
                     Edit
-                </PrimaryButton>
+                </ButtonLink>
             </div>
         </template>
 

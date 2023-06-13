@@ -9,7 +9,7 @@ const props = defineProps({
 
 const classes = computed(() => {
     let common =
-        "inline-flex w-full items-center px-3 py-2 rounded-lg text-md lg:text-18vw gap-4";
+        "inline-flex w-full items-center px-3 py-2 rounded-lg text-md lg:text-md gap-4";
     return (
         common +
         " " +

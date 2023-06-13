@@ -7,9 +7,6 @@ import FormSection from "@/Components/FormSection.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import SelectInput from "@/Components/SelectInput.vue";
 import InputError from "@/Components/InputError.vue";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
-import SecondaryButton from "@/Components/SecondaryButton.vue";
-import WarningButton from "@/Components/WarningButton.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
 import Switcher from "@/Components/Switcher.vue";
 
@@ -168,18 +165,25 @@ const emit = defineEmits(["reset", "submitted"]);
 
         <template #actions>
             <div class="flex-grow text-left">
-                <SecondaryButton type="button" @click="emit('reset')" class="">
+                <ButtonLink
+                    type="button"
+                    @click="emit('reset')"
+                    styling="default"
+                    size="default"
+                >
                     <span>Reset filters</span>
-                </SecondaryButton>
+                </ButtonLink>
             </div>
 
-            <WarningButton
+            <ButtonLink
                 type="submit"
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
+                styling="secondary"
+                size="default"
             >
                 <span>Export</span>
-            </WarningButton>
+            </ButtonLink>
         </template>
     </FormSection>
 </template>

@@ -10,7 +10,7 @@ import TextInput from "@/Components/TextInput.vue";
 import TextArea from "@/Components/TextArea.vue";
 import InputError from "@/Components/InputError.vue";
 import ActionMessage from "@/Components/ActionMessage.vue";
-import WarningButton from "@/Components/WarningButton.vue";
+import ButtonLink from "@/Components/ButtonLink.vue";
 import CardBasic from "@/Components/CardBasic.vue";
 
 const props = defineProps({
@@ -131,12 +131,14 @@ const submitForm = () => {
                 Saved.
             </ActionMessage>
 
-            <WarningButton
+            <ButtonLink
+                styling="secondary"
+                size="default"
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
             >
                 Save
-            </WarningButton>
+            </ButtonLink>
         </template>
     </FormSection>
 </template>

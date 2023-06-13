@@ -14,10 +14,10 @@ html {
 .input-field,
 .multiselect,
 select {
-    @apply rounded-md lg:h-48vw py-1 flex items-center min-h-full lg:text-20vw border border-gray-300 focus:border-[1.5px] focus:border-primary-500 focus:outline-none focus:shadow-none focus:ring-0;
+    @apply rounded-md lg:h-10 py-1 flex items-center min-h-full lg:text-base border border-gray-300 focus:border-[1.5px] focus:border-primary-500 focus:outline-none focus:shadow-none focus:ring-0;
 }
 .dp__theme_light input {
-    @apply lg:text-20vw border border-gray-300 focus:border-primary-500 rounded-md focus:ring-0 !important;
+    @apply lg:text-base border border-gray-300 focus:border-primary-500 rounded-md focus:ring-0 !important;
 }
 .multiselect {
     @apply mt-1;
@@ -41,10 +41,13 @@ select {
 
 /* Tabs Styles */
 .tabs-wrapper {
-    @apply flex items-center bg-white rounded-xl font-medium text-base lg:text-20vw mb-3;
+    @apply inline-flex items-center bg-white rounded-xl font-medium text-base mb-3;
 }
 .tabs-wrapper li a {
-    @apply py-3 px-4 block rounded-xl !no-underline;
+    @apply py-3 px-4 block rounded-xl !no-underline flex items-center;
+}
+.tabs-wrapper li a svg {
+    @apply mr-2;
 }
 .tabs-wrapper li a.active {
     @apply bg-primary-500 text-white;
@@ -52,5 +55,5 @@ select {
 
 /* App Layout */
 .headerIcon {
-    @apply bg-primary-100 rounded-md flex items-center justify-center text-lg text-primary-500 mr-1 w-8 h-8 lg:w-56vw lg:h-56vw lg:text-24vw;
+    @apply bg-primary-100 rounded-md flex items-center justify-center text-lg text-primary-500 mr-1 w-8 h-8 lg:w-11 lg:h-11 lg:text-xl;
 }

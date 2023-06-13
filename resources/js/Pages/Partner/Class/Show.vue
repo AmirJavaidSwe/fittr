@@ -2,6 +2,7 @@
 import SingleView from "@/Components/DataTable/SingleView.vue";
 import SingleViewRow from "@/Components/DataTable/SingleViewRow.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import ButtonLink from "@/Components/ButtonLink.vue";
 import { Link } from "@inertiajs/vue3";
 import { DateTime } from "luxon";
 
@@ -20,11 +21,13 @@ defineProps({
     >
         <template #head>
             <div class="flex flex-row items-center mr-10">
-                <PrimaryButton
+                <ButtonLink
+                    size="default"
+                    styling="primary"
                     :href="route('partner.classes.edit', class_lesson)"
                 >
                     Edit
-                </PrimaryButton>
+                </ButtonLink>
             </div>
         </template>
         <template #item>

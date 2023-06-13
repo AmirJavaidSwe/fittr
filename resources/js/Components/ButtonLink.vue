@@ -1,27 +1,70 @@
 <script setup>
-import { computed } from 'vue';
-import { Link } from '@inertiajs/vue3';
+import { computed } from "vue";
+import { Link } from "@inertiajs/vue3";
 
 const props = defineProps({
-    href: String,
-    type: {
+    href: {
         type: String,
-        default: 'default'
-    }
+        default: null,
+    },
+    styling: {
+        type: String,
+        default: "link",
+    },
+    size: {
+        type: String,
+        default: "none",
+    },
 });
 
 const classes = computed(() => {
-    let common = 'inline-flex items-center px-4 py-3 border rounded-md font-semibold text-xs uppercase tracking-widest shadow-sm focus:outline-none focus:ring disabled:opacity-25 transition';
+    let common =
+        "inline-flex items-center disabled:opacity-25 transition font-semibold";
 
-    switch (props.type) {
-        case 'secondary':
-            common += ' bg-white border-gray-300 text-gray-700 hover:text-gray-500 focus:border-blue-300 focus:ring-blue-200 active:text-gray-800 active:bg-gray-50';
-            break;
-        case 'primary':
-            common += ' bg-gray-800 border-transparent text-white hover:bg-gray-700 active:bg-gray-900 focus:border-gray-900 focus:ring-gray-300';
+    switch (props.styling) {
+        case "primary":
+            common +=
+                "  bg-primary-500 hover:bg-primary-100 focus:bg-primary-100 active:bg-primary-600 text-white hover:text-primary-500 focus:text-primary-500 active:text-white rounded-md border border-primary-500 hover:bg-primary-100 hover:shadow-md hover:shadow-primary-100 focus:shadow-md focus:shadow-primary-100 active:shadow-none";
             break;
 
-        default:
+        case "secondary":
+            common +=
+                " bg-secondary-500 hover:bg-secondary-100 focus:bg-secondary-100 active:bg-secondary-600 text-dark active:text-white rounded-md border border-secondary-500 hover:bg-secondary-100 hover:text-secondary-500 hover:shadow-md hover:shadow-secondary-200 focus:shadow-md focus:text-secondary-500 focus:shadow-secondary-100 active:shadow-none";
+            break;
+
+        case "danger":
+            common +=
+                " bg-danger-500 hover:bg-danger-100 focus:bg-danger-100 active:bg-danger-600 text-white active:text-white rounded-md border border-danger-500 hover:text-danger-500 hover:bg-danger-100 hover:shadow-md hover:shadow-danger-200 focus:shadow-md focus:shadow-danger-100 focus:text-danger-500 active:shadow-none";
+            break;
+
+        case "default":
+            common +=
+                " bg-white rounded-md border border-grey hover:border-secondary-500 hover:bg-secondary-100 hover:shadow-md hover:shadow-secondary-300 hover:text-secondary-500 focus:bg-secondary-100 focus:shadow-md focus:shadow-secondary-300 focus:text-secondary-500 active:bg-white active:text-secondary-500 active:border-secondary-500 active:shadow-none";
+            break;
+
+        case "blank":
+            common += " text-primary-500 hover:text-primary-900";
+            break;
+
+        default: //link
+            common += " text-primary-500 hover:text-primary-900";
+            break;
+    }
+    switch (props.size) {
+        case "small":
+            common += " px-3 h-9 text-sm";
+            break;
+        case "default":
+            common += " px-4 h-11 text-sm";
+            break;
+        case "medium":
+            common += " px-4 h-14 text-md";
+            break;
+        case "large":
+            common += " px-5 h-16 text-md";
+            break;
+
+        default: //none
             break;
     }
 
@@ -30,7 +73,14 @@ const classes = computed(() => {
 </script>
 
 <template>
-    <Link :href="href" :class="classes">
-        <slot />
-    </Link>
+    <template v-if="href">
+        <Link :href="href" :class="classes">
+            <slot />
+        </Link>
+    </template>
+    <template v-else>
+        <button :class="classes">
+            <slot />
+        </button>
+    </template>
 </template>

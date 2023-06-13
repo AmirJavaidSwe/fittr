@@ -3,7 +3,7 @@ import { Link } from "@inertiajs/vue3";
 import { DateTime } from "luxon";
 import SingleView from "@/Components/DataTable/SingleView.vue";
 import SingleViewRow from "@/Components/DataTable/SingleViewRow.vue";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
+import ButtonLink from "@/Components/ButtonLink.vue";
 
 defineProps({
     studio: {
@@ -17,9 +17,13 @@ defineProps({
     <single-view title="Details" description="second line">
         <template #head>
             <div class="flex flex-row items-center mr-10">
-                <PrimaryButton :href="route('partner.studios.edit', studio)">
+                <ButtonLink
+                    styling="primary"
+                    size="default"
+                    :href="route('partner.studios.edit', studio)"
+                >
                     Edit
-                </PrimaryButton>
+                </ButtonLink>
             </div>
         </template>
         <template #item>

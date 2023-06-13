@@ -10,14 +10,13 @@ import TableHead from "@/Components/DataTable/TableHead.vue";
 import TableData from "@/Components/DataTable/TableData.vue";
 import DataTableLayout from "@/Components/DataTable/Layout.vue";
 import ConfirmationModal from "@/Components/ConfirmationModal.vue";
-import SecondaryButton from "@/Components/SecondaryButton.vue";
-import WarningButton from "@/Components/WarningButton.vue";
-import DangerButton from "@/Components/DangerButton.vue";
+import ButtonLink from "@/Components/ButtonLink.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import EditIcon from "@/Icons/Edit.vue";
 import DeleteIcon from "@/Icons/Delete.vue";
 import { faCog, faPlus } from "@fortawesome/free-solid-svg-icons";
+import DateValue from "@/Components/DataTable/DateValue.vue";
 
 const props = defineProps({
     disableSearch: {
@@ -130,16 +129,22 @@ const deleteItem = () => {
 <template>
     <data-table-layout :disable-search="disableSearch" :disableButton="true">
         <template #button>
-            <WarningButton @click="showCreateModal = true">
+            <ButtonLink
+                styling="secondary"
+                size="default"
+                @click="showCreateModal = true"
+            >
                 Create a new instructor
                 <font-awesome-icon class="ml-2" :icon="faPlus" />
-            </WarningButton>
-            <WarningButton
+            </ButtonLink>
+            <ButtonLink
+                styling="secondary"
+                size="default"
                 :href="route('partner.instructors.create')"
                 type="primary"
             >
                 Create a new instructor (direct)
-            </WarningButton>
+            </ButtonLink>
         </template>
 
         <template #search>
@@ -197,12 +202,18 @@ const deleteItem = () => {
                     </Link>
                 </table-data>
                 <table-data :title="instructor.email" />
-                <table-data :title="DateTime.fromISO(instructor.created_at)" />
-                <table-data
-                    :title="
-                        DateTime.fromISO(instructor.updated_at).toRelative()
-                    "
-                />
+                <table-data>
+                    <DateValue
+                        :date="DateTime.fromISO(instructor.created_at)"
+                    />
+                </table-data>
+                <table-data>
+                    <DateValue
+                        :date="
+                            DateTime.fromISO(instructor.updated_at).toRelative()
+                        "
+                    />
+                </table-data>
                 <table-data>
                     <Dropdown
                         align="right"
@@ -226,7 +237,7 @@ const deleteItem = () => {
                                 "
                             >
                                 <EditIcon
-                                    class="w-4 lg:w-24vw h-4 lg:h-24vw mr-0 md:mr-2"
+                                    class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
                                 />
                                 Edit
                             </DropdownLink>
@@ -234,20 +245,18 @@ const deleteItem = () => {
                                 as="button"
                                 @click="handleUpdateForm(instructor)"
                             >
-                                <span class="text-danger flex items-center">
-                                    <EditIcon
-                                        class="w-4 lg:w-24vw h-4 lg:h-24vw mr-0 md:mr-2"
-                                    />
-                                    <span> Edit (Modal) </span>
-                                </span>
+                                <EditIcon
+                                    class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
+                                />
+                                <span> Edit (Modal) </span>
                             </DropdownLink>
                             <DropdownLink
                                 as="button"
                                 @click="confirmDeletion(instructor.id)"
                             >
-                                <span class="text-danger flex items-center">
+                                <span class="text-danger-500 flex items-center">
                                     <DeleteIcon
-                                        class="w-4 lg:w-24vw h-4 lg:h-24vw mr-0 md:mr-2"
+                                        class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
                                     />
                                     <span> Delete </span>
                                 </span>
@@ -296,18 +305,24 @@ const deleteItem = () => {
         </template>
 
         <template #footer>
-            <SecondaryButton @click="itemDeleting = null">
+            <ButtonLink
+                size="default"
+                styling="default"
+                @click="itemDeleting = null"
+            >
                 Cancel
-            </SecondaryButton>
+            </ButtonLink>
 
-            <DangerButton
+            <ButtonLink
+                size="default"
+                styling="danger"
                 class="ml-3"
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
                 @click="deleteItem"
             >
                 Delete
-            </DangerButton>
+            </ButtonLink>
         </template>
     </ConfirmationModal>
 </template>

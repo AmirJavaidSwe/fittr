@@ -4,7 +4,7 @@ import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
 import InputError from "@/Components/InputError.vue";
 import ActionMessage from "@/Components/ActionMessage.vue";
-import WarningButton from "@/Components/WarningButton.vue";
+import ButtonLink from "@/Components/ButtonLink.vue";
 import Checkbox from "@/Components/Checkbox.vue";
 
 defineProps({
@@ -97,13 +97,15 @@ defineProps({
                 Saved.
             </ActionMessage>
 
-            <WarningButton
+            <ButtonLink
+                styling="secondary"
+                size="default"
                 type="submit"
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
             >
                 Save
-            </WarningButton>
+            </ButtonLink>
         </template>
     </FormSection>
 </template>

@@ -8,12 +8,17 @@ import Pagination from "@/Components/Pagination.vue";
 import DataTableLayout from "@/Components/DataTable/Layout.vue";
 import TableHead from "@/Components/DataTable/TableHead.vue";
 import TableData from "@/Components/DataTable/TableData.vue";
-import WarningButton from "@/Components/WarningButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import DangerButton from "@/Components/DangerButton.vue";
+import ButtonLink from "@/Components/ButtonLink.vue";
 import ConfirmationModal from "@/Components/ConfirmationModal.vue";
 import { DateTime } from "luxon";
 import { faPencil, faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import EditIcon from "@/Icons/Edit.vue";
+import DeleteIcon from "@/Icons/Delete.vue";
+import DateValue from "@/Components/DataTable/DateValue.vue";
+import Avatar from "@/Components/Avatar.vue";
+
 const props = defineProps({
     users: Object,
 });
@@ -41,9 +46,13 @@ const deleteItem = () => {
         <SectionTitle>
             <template #title>All Users</template>
         </SectionTitle>
-        <WarningButton :href="route('partner.users.create')" class="ml-3"
+        <ButtonLink
+            styling="secondary"
+            size="default"
+            :href="route('partner.users.create')"
+            class="ml-3"
             >Add new <font-awesome-icon class="ml-2" :icon="faPlus"
-        /></WarningButton>
+        /></ButtonLink>
     </div>
 
     <data-table-layout :disableButton="true">
@@ -105,28 +114,33 @@ const deleteItem = () => {
                     </template>
                 </table-data>
                 <table-data>
-                    <img
-                        :src="user.profile_photo_url"
-                        :alt="user.name"
-                        class="rounded-full h-8 w-8 object-cover"
-                    />
+                    <Avatar :title="user.name" size="small" />
                 </table-data>
                 <table-data>
-                    {{ DateTime.fromISO(user.created_at) }}
+                    <DateValue :date="DateTime.fromISO(user.created_at)" />
                 </table-data>
                 <table-data>
                     <div class="flex gap-4 justify-end">
-                        <Link :href="route('partner.users.edit', user.id)">
-                            <font-awesome-icon :icon="faPencil" />
+                        <Link
+                            class="flex items-center"
+                            :href="route('partner.users.edit', user.id)"
+                        >
+                            <EditIcon
+                                class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
+                            />
+                            Edit
                         </Link>
                         <!-- <Link :href="role.url_show">
                         <font-awesome-icon :icon="faChevronRight" />
                         </Link> -->
                         <button
-                            class="block text-red-500"
+                            class="flex items-center text-danger-500"
                             v-if="$page.props.user.id != user.id"
                             @click="confirmDeletion(user.id)"
                         >
+                            <DeleteIcon
+                                class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
+                            />
                             Delete
                         </button>
                     </div>

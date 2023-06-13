@@ -7,8 +7,6 @@ import Banner from "@/Components/Banner.vue";
 import FlashMessage from "@/Components/FlashMessage.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
-import NavLink from "@/Components/NavLink.vue";
-import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
 import {
     faBars,
     faChevronLeft,
@@ -54,7 +52,7 @@ const headerIsArray = computed(() => {
 });
 
 // Sidebar Collapse
-const sidebarCollapsed = ref(true);
+const sidebarCollapsed = ref(false);
 
 // Back function
 let back = function (e) {
@@ -87,20 +85,25 @@ let back = function (e) {
         </AppHead>
 
         <Banner />
-        <FlashMessage :flash="$page.props.flash" :errors="$page.props.errors" />
+        <FlashMessage
+            :flash="$page.props.flash"
+            :errors="$page.props.errors"
+            :show-at="$page.props.show_class"
+        />
 
         <div class="min-h-screen bg-gray-50 overflow-hidden">
             <!-- Desktop, flex -->
             <div class="h-screen">
-                <div class="flex h-full">
+                <div class="flex h-full relative">
                     <!-- Sidebar -->
                     <div
-                        class="flex-col transition-all duration-300 fixed z-[99] top-0 left-0 h-full md:relative md:inset-0 md:z-10 w-3/4 hidden md:flex"
+                        class="transition-all duration-500 fixed md:relative z-[99] top-0 left-0 h-full"
                         :class="{
                             'md:w-0': sidebarCollapsed,
                             'md:w-56 xl:w-[220px] 2xl:w-[260px]':
                                 !sidebarCollapsed,
-                            '-translate-x-full': sidebarCollapsed,
+                            '-translate-x-full md:-translate-x-56 xl:-translate-x-[220px] 2xl:-translate-x-[260px]':
+                                sidebarCollapsed,
                             'translate-x-0': !sidebarCollapsed,
                         }"
                     >
@@ -127,7 +130,7 @@ let back = function (e) {
                                     </Link>
 
                                     <button
-                                        type="type"
+                                        type="button"
                                         class="border-0 p-0 bg-transparent text-white absolute top-2.5 right-2.5 md:hidden"
                                         @click="
                                             sidebarCollapsed = !sidebarCollapsed
@@ -135,7 +138,10 @@ let back = function (e) {
                                     >
                                         <font-awesome-icon
                                             :icon="faTimes"
-                                            class="w-6 h-6"
+                                            class="w-6 h-6 transition-all duration-100"
+                                            :class="{
+                                                'opacity-0': sidebarCollapsed,
+                                            }"
                                         />
                                     </button>
                                 </div>
@@ -150,89 +156,61 @@ let back = function (e) {
                     <div
                         class="flex flex-col flex-1 overflow-hidden md:relative md:z-10 h-full md:h-auto"
                     >
-                        <div
-                            class="bg-primary-500 md:bg-white flex items-center justify-between md:px-6 md:py-4 xl:py-5 p-4 shadow w-full gap-4 relative"
+                        <!-- Page Heading / Menu item name-->
+                        <header
+                            class="bg-primary-500 md:bg-white flex items-center justify-between md:px-6 md:py-6 md:text-md p-4 shadow text-sm w-full gap-4 relative"
                         >
-                            <!-- Page Heading / Menu item name-->
-                            <header>
-                                <div class="flex items-center">
-                                    <button
-                                        type="type"
-                                        class="border-0 p-0 bg-transparent text-white md:text-dark hidden md:block"
-                                        @click="
-                                            sidebarCollapsed = !sidebarCollapsed
-                                        "
+                            <div class="flex items-center">
+                                <!-- Menu toggle -->
+                                <button
+                                    type="button"
+                                    class="text-white md:text-dark mr-4"
+                                    @click="
+                                        sidebarCollapsed = !sidebarCollapsed
+                                    "
+                                >
+                                    <font-awesome-icon
+                                        :icon="faBars"
+                                        class="w-6 h-6 2xl:w-7 2xl:h-7"
+                                    />
+                                </button>
+                                <div class="max-w-7xl mx-auto">
+                                    <h2
+                                        class="font-semibold text-base md:text-xl xl:text-2xl 2xl:text-3xl text-white md:text-gray-800 leading-tight"
                                     >
-                                        <font-awesome-icon
-                                            :icon="faBars"
-                                            class="mr-3 w-6 h-6 2xl:w-8 2xl:h-8"
-                                        />
-                                    </button>
-                                    <!-- Mobile toggle, visible md and smaller -->
-                                    <Dropdown
-                                        align="left"
-                                        width="56"
-                                        :content-classes="[
-                                            'bg-gray-100',
-                                            'p-1',
-                                        ]"
-                                        @toggled="toggleMenu"
-                                    >
-                                        <template #trigger>
-                                            <button
-                                                class="md:hidden inline-flex items-center justify-center p-2 rounded-md focus:outline-none transition text-white"
+                                        <div
+                                            v-if="headerIsArray"
+                                            class="flex flex-wrap gap-2 items-center"
+                                        >
+                                            <Link
+                                                href="#"
+                                                @click="back"
+                                                class="headerIcon"
                                             >
                                                 <font-awesome-icon
-                                                    :icon="faBars"
-                                                    class="mr-3 w-6 h-6"
+                                                    :icon="faChevronLeft"
                                                 />
-                                            </button>
-                                        </template>
-                                        <template #content>
-                                            <MainMenu class="hidden:md" />
-                                        </template>
-                                    </Dropdown>
-
-                                    <div class="max-w-7xl mx-auto">
-                                        <h2
-                                            class="font-semibold text-base md:text-xl xl:text-2xl 2xl:text-3xl text-white md:text-gray-800 leading-tight"
-                                        >
-                                            <div
-                                                v-if="headerIsArray"
-                                                class="flex flex-wrap gap-2 items-center"
-                                            >
+                                            </Link>
+                                            <div v-for="item in header">
                                                 <Link
-                                                    href="#"
-                                                    @click="back"
-                                                    class="headerIcon"
+                                                    v-if="item.link"
+                                                    :href="item.link"
+                                                    class="text-blue-600"
+                                                    >{{ item.title }}</Link
                                                 >
-                                                    <font-awesome-icon
-                                                        :icon="faChevronLeft"
-                                                    />
-                                                </Link>
-                                                <div v-for="item in header">
-                                                    <Link
-                                                        v-if="item.link"
-                                                        :href="item.link"
-                                                        class="text-blue-600"
-                                                        >{{ item.title }}</Link
-                                                    >
-                                                    <span v-else>
-                                                        {{ item.title }}
-                                                    </span>
-                                                </div>
+                                                <span v-else>
+                                                    {{ item.title }}
+                                                </span>
                                             </div>
-                                            <span v-else>{{ header }}</span>
-                                        </h2>
-                                    </div>
+                                        </div>
+                                        <span v-else>{{ header }}</span>
+                                    </h2>
                                 </div>
-                            </header>
-
+                            </div>
                             <div class="flex items-center">
                                 <!-- Setting Links -->
-
                                 <ul
-                                    class="gap-5 pe-6 py-2 mr-5 border-r-2 border-gray-200 hidden md:flex"
+                                    class="gap-5 pr-6 py-2 mr-5 border-r-2 border-gray-200 hidden md:flex"
                                 >
                                     <li>
                                         <a
@@ -269,7 +247,7 @@ let back = function (e) {
                                             >
                                                 <div class="pr-4 text-right">
                                                     <div
-                                                        class="font-bold text-white md:text-dark md:text-sm xl:text-md 2xl:text-lg"
+                                                        class="font-bold text-white md:text-dark md:text-sm xl:text-md"
                                                     >
                                                         {{
                                                             $page.props.user
@@ -277,7 +255,7 @@ let back = function (e) {
                                                         }}
                                                     </div>
                                                     <div
-                                                        class="text-gray-400 md:text-sm xl:text-md 2xl:text-lg hidden md:block"
+                                                        class="text-gray-400 hidden md:block md:text-sm xl:text-md"
                                                     >
                                                         {{
                                                             $page.props.user
@@ -291,13 +269,13 @@ let back = function (e) {
                                                     "
                                                 />
                                                 <!-- <img
-                                                    class="w-8 h-8 rounded-full object-cover"
-                                                    :src="
-                                                        $page.props.user
-                                                            .profile_photo_url
-                                                    "
-                                                    :alt="$page.props.user.name"
-                                                /> -->
+                                                        class="w-8 h-8 rounded-full object-cover"
+                                                        :src="
+                                                            $page.props.user
+                                                                .profile_photo_url
+                                                        "
+                                                        :alt="$page.props.user.name"
+                                                    /> -->
                                             </div>
 
                                             <span
@@ -346,8 +324,8 @@ let back = function (e) {
                                             </DropdownLink>
 
                                             <!-- <DropdownLink v-if="$page.props.jetstream.hasApiFeatures" :href="route('api-tokens.index')">
-                                            API Tokens
-                                        </DropdownLink> -->
+                                                API Tokens
+                                            </DropdownLink> -->
 
                                             <DropdownLink
                                                 v-if="
@@ -389,7 +367,7 @@ let back = function (e) {
                                     </Dropdown>
                                 </div>
                             </div>
-                        </div>
+                        </header>
                         <!-- Page Content -->
                         <div
                             class="md:flex-1 overflow-y-auto bg-mainBg h-full md:h-auto"

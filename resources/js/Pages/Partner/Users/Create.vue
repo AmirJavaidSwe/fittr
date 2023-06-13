@@ -9,7 +9,7 @@ import InputError from "@/Components/InputError.vue";
 import TextInput from "@/Components/TextInput.vue";
 import Checkbox from "@/Components/Checkbox.vue";
 import ActionMessage from "@/Components/ActionMessage.vue";
-import WarningButton from "@/Components/WarningButton.vue";
+import ButtonLink from "@/Components/ButtonLink.vue";
 import Multiselect from "@vueform/multiselect";
 
 const roles = ref([]);
@@ -129,12 +129,14 @@ const inputPasswordType = computed(() =>
             <ActionMessage :on="form.recentlySuccessful" class="mr-3">
                 Add.
             </ActionMessage>
-            <WarningButton
+            <ButtonLink
+                styling="secondary"
+                size="default"
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
             >
                 Add
-            </WarningButton>
+            </ButtonLink>
         </template>
     </FormSection>
 </template>

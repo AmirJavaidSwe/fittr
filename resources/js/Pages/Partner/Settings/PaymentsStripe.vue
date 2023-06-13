@@ -8,8 +8,7 @@ import MastercardIcon from "@/Icons/Mastercard.vue";
 import AmexIcon from "@/Icons/Amex.vue";
 import DiscoverIcon from "@/Icons/Discover.vue";
 import DinersclubIcon from "@/Icons/Dinersclub.vue";
-import WarningButton from "@/Components/WarningButton.vue";
-import SecondaryButton from "@/Components/SecondaryButton.vue";
+import ButtonLink from "@/Components/ButtonLink.vue";
 
 const props = defineProps({
     has_account: Boolean,
@@ -100,22 +99,26 @@ const submitForm = () => {
         </div>
 
         <form @submit.prevent="submitForm">
-            <WarningButton
+            <ButtonLink
+                styling="secondary"
+                size="default"
                 v-if="!has_account"
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
                 type="submit"
             >
                 Connect Stripe account
-            </WarningButton>
-            <SecondaryButton
+            </ButtonLink>
+            <ButtonLink
+                styling="default"
+                size="default"
                 v-if="has_account"
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
                 type="submit"
             >
                 Update details
-            </SecondaryButton>
+            </ButtonLink>
         </form>
 
         <!-- temp -->

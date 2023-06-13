@@ -8,7 +8,7 @@ import TextArea from "@/Components/TextArea.vue";
 import Checkbox from "@/Components/Checkbox.vue";
 import InputError from "@/Components/InputError.vue";
 import ActionMessage from "@/Components/ActionMessage.vue";
-import WarningButton from "@/Components/WarningButton.vue";
+import ButtonLink from "@/Components/ButtonLink.vue";
 
 const props = defineProps({
     default_waiver: String,
@@ -90,12 +90,14 @@ const submitForm = () => {
                 Saved.
             </ActionMessage>
 
-            <WarningButton
+            <ButtonLink
+                styling="secondary"
+                size="default"
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
             >
                 Save
-            </WarningButton>
+            </ButtonLink>
         </template>
     </FormSection>
 </template>
