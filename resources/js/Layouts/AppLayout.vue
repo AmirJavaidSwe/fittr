@@ -97,7 +97,7 @@ let back = function (e) {
                 <div class="flex h-full relative">
                     <!-- Sidebar -->
                     <div
-                        class="transition-all duration-500 fixed md:relative z-[99] top-0 left-0 h-full"
+                        class="transition-all duration-500 fixed md:relative z-[99] top-0 left-0 h-full hidden md:block"
                         :class="{
                             'md:w-0': sidebarCollapsed,
                             'md:w-56 xl:w-[220px] 2xl:w-[260px]':
@@ -187,7 +187,7 @@ let back = function (e) {
                                         >
                                             <font-awesome-icon
                                                 :icon="faBars"
-                                                class="mr-3 w-6 lg:w-30vw h-6 lg:h-30vw"
+                                                class="mr-3 w-6 h-6 2xl:w-7 2xl:h-7"
                                             />
                                         </button>
                                     </template>

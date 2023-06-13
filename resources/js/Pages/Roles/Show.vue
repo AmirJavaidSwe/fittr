@@ -1,11 +1,9 @@
 <script setup>
-import { Link } from '@inertiajs/vue3';
+import { Link } from "@inertiajs/vue3";
 import { DateTime } from "luxon";
-import Section from '@/Components/Section.vue';
-import SectionTitle from '@/Components/SectionTitle.vue';
-import SectionBorder from '@/Components/SectionBorder.vue';
-import ButtonLink from '@/Components/ButtonLink.vue';
-
+import SingleView from "@/Components/DataTable/SingleView.vue";
+import SingleViewRow from "@/Components/DataTable/SingleViewRow.vue";
+import ButtonLink from "@/Components/ButtonLink.vue";
 
 const props = defineProps({
     role: Object,
@@ -13,38 +11,48 @@ const props = defineProps({
 </script>
 
 <template>
-    <Section>
-        <SectionTitle>
-            <template #title>
-                Role details
-            </template>
-            <template #description>
-                <!-- Role ID: {{role.id}} -->
-            </template>
-            <template #aside>
-                <ButtonLink  v-can="{ module: 'roles', roles: $page.props.user.user_roles, permission: 'update', 'user': $page.props.user }" :href="route(`${$page.props.user.source}.roles.edit`, {id: role.slug})" type="primary">Edit</ButtonLink>
-            </template>
-        </SectionTitle>
+    <single-view title="Role details" :description="'Role ID:' + role.id">
+        <template #head>
+            <div class="flex flex-row items-center mr-10">
+                <ButtonLink
+                    size="default"
+                    styling="primary"
+                    v-can="{
+                        module: 'roles',
+                        roles: $page.props.user.user_roles,
+                        permission: 'update',
+                        user: $page.props.user,
+                    }"
+                    :href="
+                        route(`${$page.props.user.source}.roles.edit`, {
+                            id: role.slug,
+                        })
+                    "
+                    type="primary"
+                >
+                    Edit
+                </ButtonLink>
+            </div>
+        </template>
 
-        <SectionBorder />
-
-        <dl class="max-w-md text-gray-900 divide-y divide-gray-200 dark:text-white dark:divide-gray-700">
-            <div class="flex flex-col pb-3">
-                <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Title</dt>
-                <dd class="text-lg font-semibold text-gray-900 md:text-lg dark:text-gray-900">{{ role.title }}</dd>
-            </div>
-            <div class="flex flex-col pb-3">
-                <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Source</dt>
-                <dd class="text-lg font-semibold text-gray-900 md:text-lg dark:text-gray-900">{{ role.source }}</dd>
-            </div>
-            <div v-if="role.business_id" class="flex flex-col pb-3">
-                <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Business ID</dt>
-                <dd class="text-lg font-semibold text-gray-900 md:text-lg dark:text-gray-900">{{ role.business_id }}</dd>
-            </div>
-            <div class="flex flex-col pb-3">
-                <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Created At</dt>
-                <dd class="text-lg font-semibold text-gray-900 md:text-lg dark:text-gray-900">{{ DateTime.fromISO(role.created_at).toLocaleString(DateTime.DATETIME_FULL) }}</dd>
-            </div>
-        </dl>
-    </Section>
+        <template #item>
+            <single-view-row label="Title" :even="false" :value="role.title" />
+            <single-view-row label="Source" :even="true" :value="role.source" />
+            <single-view-row
+                v-if="role.business_id"
+                label="Business ID"
+                :even="false"
+                :value="role.business_id"
+            />
+            <single-view-row label="Created At" :even="true">
+                <template #value>
+                    {{
+                        DateTime.fromISO(role.created_at).toLocaleString(
+                            DateTime.DATETIME_FULL
+                        )
+                    }}
+                </template>
+            </single-view-row>
+        </template>
+    </single-view>
 </template>

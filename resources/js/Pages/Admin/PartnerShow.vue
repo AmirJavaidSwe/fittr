@@ -1,10 +1,8 @@
 <script setup>
-import { Link } from '@inertiajs/vue3';
 import { DateTime } from "luxon";
-import Section from '@/Components/Section.vue';
-import SectionTitle from '@/Components/SectionTitle.vue';
-import SectionBorder from '@/Components/SectionBorder.vue';
-import ButtonLink from '@/Components/ButtonLink.vue';
+import SingleView from "@/Components/DataTable/SingleView.vue";
+import SingleViewRow from "@/Components/DataTable/SingleViewRow.vue";
+import ButtonLink from "@/Components/ButtonLink.vue";
 
 const props = defineProps({
     partner: Object,
@@ -12,41 +10,51 @@ const props = defineProps({
 </script>
 
 <template>
-    <Section>
-        <SectionTitle>
-            <template #title>
-                Partner details
-            </template>
-            <template #description>
-                User ID: {{partner.id}}
-            </template>
-            <template #aside>
-                <ButtonLink v-can="{ module: 'partner-management', roles: $page.props.user.user_roles, permission: 'update', 'user': $page.props.user }" :href="route('admin.partners.edit', {id: partner.id})" type="primary">Edit</ButtonLink>
-            </template>
-        </SectionTitle>
+    <single-view title="Partner details" :description="'User ID:' + partner.id">
+        <template #head>
+            <div class="flex flex-row items-center mr-10">
+                <ButtonLink
+                    size="default"
+                    styling="primary"
+                    v-can="{
+                        module: 'partner-management',
+                        roles: $page.props.user.user_roles,
+                        permission: 'update',
+                        user: $page.props.user,
+                    }"
+                    :href="route('admin.partners.edit', { id: partner.id })"
+                    type="primary"
+                >
+                    Edit
+                </ButtonLink>
+            </div>
+        </template>
 
-        <SectionBorder />
-
-        <dl class="max-w-md text-gray-900 divide-y divide-gray-200 dark:text-white dark:divide-gray-700">
-            <div class="flex flex-col pb-3">
-                <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Name</dt>
-                <dd class="text-lg font-semibold">{{partner.name}}</dd>
-            </div>
-            <div class="flex flex-col pb-3">
-                <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Email address</dt>
-                <dd class="text-lg font-semibold">{{partner.email}}</dd>
-            </div>
-            <div class="flex flex-col pb-3">
-                <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Email verified</dt>
-                <dd class="text-lg font-semibold">
-                    <span v-if="partner.email_verified_at">YES, {{ DateTime.fromISO(partner.email_verified_at).toRelative() }}</span>
-                    <span v-else>NO</span>
-                </dd>
-            </div>
-            <div class="flex flex-col pb-3">
-                <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Date created</dt>
-                <dd class="text-lg font-semibold">{{ DateTime.fromISO(partner.created_at) }} {{ DateTime.fromISO(partner.created_at).toRelative() }}</dd>
-            </div>
-        </dl>
-    </Section>
+        <template #item>
+            <single-view-row label="Name" :even="false" :value="partner.name" />
+            <single-view-row
+                label="Email address"
+                :even="true"
+                :value="partner.email"
+            />
+            <single-view-row label="Email verified" :even="false">
+                <template #value>
+                    <span v-if="partner.email_verified_at"
+                        >YES,
+                        {{
+                            DateTime.fromISO(
+                                partner.email_verified_at
+                            ).toRelative()
+                        }}
+                    </span>
+                </template>
+            </single-view-row>
+            <single-view-row label="Date created" :even="true">
+                <template #value>
+                    {{ DateTime.fromISO(partner.created_at) }}
+                    {{ DateTime.fromISO(partner.created_at).toRelative() }}
+                </template>
+            </single-view-row>
+        </template>
+    </single-view>
 </template>

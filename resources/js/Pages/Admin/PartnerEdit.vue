@@ -5,7 +5,7 @@ import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
 import InputError from "@/Components/InputError.vue";
 import ActionMessage from "@/Components/ActionMessage.vue";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
+import ButtonLink from "@/Components/ButtonLink.vue";
 
 const props = defineProps({
     partner: Object,
@@ -65,12 +65,14 @@ const updateProfileInformation = () => {
                 Saved.
             </ActionMessage>
 
-            <PrimaryButton
+            <ButtonLink
+                size="default"
+                styling="secondary"
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
             >
                 Save
-            </PrimaryButton>
+            </ButtonLink>
         </template>
     </FormSection>
 </template>

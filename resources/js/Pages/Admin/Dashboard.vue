@@ -2,6 +2,7 @@
 import Section from "@/Components/Section.vue";
 import CardBasic from "@/Components/CardBasic.vue";
 import WarningButton from "@/Components/WarningButton.vue";
+import ButtonLink from "@/Components/ButtonLink.vue";
 </script>
 
 <template>
@@ -16,10 +17,12 @@ import WarningButton from "@/Components/WarningButton.vue";
                 </template>
 
                 <template #footer>
-                    <WarningButton
+                    <ButtonLink
+                        styling="secondary"
+                        size="default"
                         :href="route('admin.partners.index')"
                         type="primary"
-                        >Manage</WarningButton
+                        >Manage</ButtonLink
                     >
                 </template>
             </CardBasic>
@@ -39,10 +42,12 @@ import WarningButton from "@/Components/WarningButton.vue";
                     <div class="text-3xl">1</div>
                 </template>
                 <template #footer>
-                    <WarningButton
+                    <ButtonLink
+                        styling="secondary"
+                        size="default"
                         :href="route('admin.instances.index')"
                         type="primary"
-                        >Manage</WarningButton
+                        >Manage</ButtonLink
                     >
                 </template>
             </CardBasic>
