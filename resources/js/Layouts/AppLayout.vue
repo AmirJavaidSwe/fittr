@@ -164,7 +164,7 @@ let back = function (e) {
                                 <!-- Menu toggle -->
                                 <button
                                     type="button"
-                                    class="text-white md:text-dark mr-4"
+                                    class="text-white md:text-dark mr-4 hidden md:block"
                                     @click="
                                         sidebarCollapsed = !sidebarCollapsed
                                     "
@@ -174,6 +174,27 @@ let back = function (e) {
                                         class="w-6 h-6 2xl:w-7 2xl:h-7"
                                     />
                                 </button>
+                                <!-- Mobile toggle, visible md and smaller -->
+                                <Dropdown
+                                    align="left"
+                                    width="56"
+                                    :content-classes="['bg-gray-100', 'p-1']"
+                                    @toggled="toggleMenu"
+                                >
+                                    <template #trigger>
+                                        <button
+                                            class="md:hidden inline-flex items-center justify-center p-2 rounded-md focus:outline-none transition text-white"
+                                        >
+                                            <font-awesome-icon
+                                                :icon="faBars"
+                                                class="mr-3 w-6 lg:w-30vw h-6 lg:h-30vw"
+                                            />
+                                        </button>
+                                    </template>
+                                    <template #content>
+                                        <MainMenu class="hidden:md" />
+                                    </template>
+                                </Dropdown>
                                 <div class="max-w-7xl mx-auto">
                                     <h2
                                         class="font-semibold text-base md:text-xl xl:text-2xl 2xl:text-3xl text-white md:text-gray-800 leading-tight"

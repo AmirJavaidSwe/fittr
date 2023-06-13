@@ -368,7 +368,11 @@ const showLink = (exporting) => {
                         class="font-medium text-indigo-600 hover:text-indigo-500"
                         :href="route('partner.classes.show', class_lesson)"
                     >
-                        {{ class_lesson.title }}
+                        {{
+                            class_lesson.title.length > 25
+                                ? class_lesson.title.substring(0, 25) + "..."
+                                : class_lesson.title
+                        }}
                     </Link>
                 </table-data>
                 <table-data

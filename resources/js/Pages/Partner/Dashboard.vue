@@ -3,7 +3,6 @@ import Section from "@/Components/Section.vue";
 import Package from "@/Components/Package.vue";
 import CardBasic from "@/Components/CardBasic.vue";
 import CardIcon from "@/Components/CardIcon.vue";
-import WarningButton from "@/Components/WarningButton.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
 import {
     faBookOpen,
@@ -172,10 +171,12 @@ const showAlert = () => {
             <template #header> Your service package is active </template>
 
             <template #footer>
-                <WarningButton
+                <ButtonLink
+                    styling="secondary"
+                    size="default"
                     :href="route('partner.subscriptions.index')"
                     type="primary"
-                    >Manage</WarningButton
+                    >Manage</ButtonLink
                 >
             </template>
         </CardBasic>
@@ -184,9 +185,9 @@ const showAlert = () => {
 
             <template #footer>
                 <ButtonLink
-                    :href="route('partner.subscriptions.index')"
                     styling="secondary"
-                    size="medium"
+                    size="default"
+                    :href="route('partner.subscriptions.index')"
                 >
                     Select package
                 </ButtonLink>
