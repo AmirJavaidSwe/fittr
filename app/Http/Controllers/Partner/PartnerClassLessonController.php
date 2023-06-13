@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers\Partner;
 
-use App\Enums\ClassStatus;
-use App\Http\Controllers\Controller;
-// use App\Http\Requests\ImportFile;
-use App\Http\Requests\Partner\ClassFormRequest;
-use App\Models\Partner\ClassLesson;
-use App\Models\Partner\ClassType;
-use App\Models\Partner\Instructor;
-use App\Models\Partner\Studio;
-use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Carbon;
 use Inertia\Inertia;
 use Inertia\Response;
+// use App\Http\Requests\ImportFile;
+use App\Enums\ClassStatus;
+use Illuminate\Http\Request;
+use App\Models\Partner\Studio;
+use Illuminate\Support\Carbon;
+use App\Models\Partner\ClassType;
+use Illuminate\Http\JsonResponse;
+use App\Models\Partner\Instructor;
+use Illuminate\Support\Facades\DB;
+use App\Models\Partner\ClassLesson;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
+use App\Http\Requests\Partner\ClassFormRequest;
 
 // use Spatie\SimpleExcel\SimpleExcelReader;
 // use Spatie\SimpleExcel\SimpleExcelWriter;
@@ -42,70 +43,90 @@ class PartnerClassLessonController extends Controller
         $this->order_dir = $request->query('order_dir', 'desc');
         $this->runFilter = $request->input('runFilter');
 
+        \DB::connection('mysql_partner')->enableQueryLog();
+
+        $classes = ClassLesson::with('studio', 'classType', 'instructor')->orderBy($this->order_by, $this->order_dir)
+        ->when($this->search, function ($query) {
+            $query->where(function ($query) {
+                $query->orWhere('id', intval($this->search))
+                    ->orWhere('title', 'LIKE', '%' . $this->search . '%');
+            });
+        })
+        // if applied filters
+        ->when($this->runFilter == true, function ($query) use ($request) {
+            // both starta and end date
+            if(($request->has('start_date') && $request->start_date != null) || ($request->has('end_date') && $request->end_date != null)) {
+                if(($request->has('start_date') && $request->start_date != null) && ($request->has('end_date') && $request->end_date != null)) {
+                    $start_date = Carbon::parse($request->start_date)->startOfDay()->format('Y-m-d H:i:s');
+                    $end_date = Carbon::parse($request->end_date)->endOfDay()->format('Y-m-d H:i:s');
+                    $query->where(function ($query) use ($request, $start_date, $end_date) {
+                        $query->whereBetween(DB::raw('CONCAT(start_date, " ", end_date)'), [$start_date, $end_date]);
+                    });
+                }
+
+                // only start date
+                else if ($request->has('start_date') && $request->start_date != null) {
+                    $start_date = Carbon::parse($request->start_date)->startOfDay()->format('Y-m-d H:i:s');
+                    $query->where(function ($query) use ($request, $start_date) {
+                        $query->where('start_date', '>=', $start_date);
+                    });
+                }
+
+                // only end date
+                else if($request->has('end_date') && $request->end_date != null) {
+                    $end_date = Carbon::parse($request->end_date)->endOfDay()->format('Y-m-d H:i:s');
+                    $query->where(function ($query) use ($request, $end_date) {
+                        $query->where('end_date', '<=', $end_date);
+                    });
+                }
+            }
+
+            // apply instructors filters
+            if($request->has('instructor_id') && count($request->instructor_id)) {
+                $query->where(function ($query) use ($request) {
+                    $query->whereIn('instructor_id', $request->instructor_id);
+                });
+            }
+            
+            // apply class_type filters
+            if($request->has('class_type_id') && count($request->class_type_id)) {
+                $query->where(function ($query) use ($request) {
+                    $query->whereIn('class_type_id', $request->class_type_id);
+                });
+            }
+            
+            // apply studio_id filters
+            if($request->has('studio_id') && count($request->studio_id)) {
+                $query->where(function ($query) use ($request) {
+                    $query->whereIn('studio_id', $request->studio_id);
+                });
+            }
+            // apply off_peak filter
+            if($request->has('is_off_peak')) {
+                $is_off_peak =  $request->is_off_peak == 'false' ? 0 : 1;
+                if($is_off_peak) {
+                    $query->where(function ($query) use ($request, $is_off_peak) {
+                        $query->where('is_off_peak', $is_off_peak);
+                    });
+                }
+            }
+            
+            // apply off_peak filter
+            if($request->has('status')) {
+                $query->where(function ($query) use ($request) {
+                    $query->whereIn('status', $request->status);
+                });
+            }
+        })
+        ->paginate($this->per_page)
+        ->withQueryString();
+
+        // dd(\DB::connection('mysql_partner')->getQueryLog());
+
         return Inertia::render('Partner/Class/Index', [
             'page_title' => __('Classes'),
             'header' => __('Classes'),
-            // 'classes' => $query,
-            'classes' => ClassLesson::with('studio', 'classType', 'instructor')->orderBy($this->order_by, $this->order_dir)
-                ->when($this->search, function ($query) {
-                    $query->where(function ($query) {
-                        $query->orWhere('id', intval($this->search))
-                            ->orWhere('title', 'LIKE', '%' . $this->search . '%');
-                    });
-                })
-                // if applied filters
-                ->when($this->runFilter == true, function ($query) use ($request) {
-                    // make start date
-                    if($request->has('start_date') && $request->start_date != null) {
-                        $start_date = Carbon::parse($request->start_date)->startOfDay()->format('Y-m-d H:i:s');
-                    } else {
-                        $start_date = Carbon::now()->startOfYear()->format('Y-m-d H:i:s');
-                    }
-                    // start date filter applied
-                    $query->where(function ($query) use ($request, $start_date) {
-                        $query->whereDate('start_date', '>=', $start_date);
-                    });
-
-                    // make end date
-                    if($request->has('end_date') && $request->end_date != null) {
-                        $end_date = Carbon::parse($request->end_date)->endOfDay()->format('Y-m-d H:i:s');
-                    } else {
-                        $end_date = Carbon::now()->endOfDay()->format('Y-m-d H:i:s');
-                    }
-                    // end date filter applied
-                    $query->where(function ($query) use ($request, $end_date) {
-                        $query->whereDate('end_date', '<=', $end_date);
-                    });
-
-                    // apply instructors filters
-                    if($request->has('instructor_id') && count($request->instructor_id)) {
-                        $query->where(function ($query) use ($request) {
-                            $query->whereIn('instructor_id', $request->instructor_id);
-                        });
-                    }
-                    
-                    // apply class_type filters
-                    if($request->has('class_type_id') && count($request->class_type_id)) {
-                        $query->where(function ($query) use ($request) {
-                            $query->whereIn('class_type_id', $request->class_type_id);
-                        });
-                    }
-                    
-                    // apply studio_id filters
-                    if($request->has('studio_id') && count($request->studio_id)) {
-                        $query->where(function ($query) use ($request) {
-                            $query->whereIn('studio_id', $request->studio_id);
-                        });
-                    }
-                    // apply off_peak filter
-                    if($request->has('is_off_peak') && $request->is_off_peak == true) {
-                        $query->where(function ($query) use ($request) {
-                            $query->where('is_off_peak', 1);
-                        });
-                    }
-                })
-                ->paginate($this->per_page)
-                ->withQueryString(),
+            'classes' => $classes,
             'statuses' => ClassStatus::labels(),
             'instructors' => Instructor::orderBy('id', 'desc')->pluck('name', 'id'),
             'classtypes' => ClassType::orderBy('id', 'desc')->pluck('title', 'id'),

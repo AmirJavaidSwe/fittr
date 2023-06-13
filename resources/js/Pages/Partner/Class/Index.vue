@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch, computed } from "vue";
-import { Link, useForm, usePage } from "@inertiajs/vue3";
+import { Link, useForm, usePage, router } from "@inertiajs/vue3";
 import { DateTime } from "luxon";
 import Form from "./Form.vue";
 import FormExport from "./FormExport.vue";
@@ -134,7 +134,8 @@ const closeFilterModal = () => {
 };
 const resetClassFilters = () => {
     form.runFilter = false;
-    form.reset().clearErrors();
+    form.reset();
+    router.visit(route("partner.classes.index"))
 };
 
 //create confirmation modal:
