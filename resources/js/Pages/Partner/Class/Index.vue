@@ -48,6 +48,14 @@ const props = defineProps({
 
 const form = useForm({
     search: props.search,
+    status: [],
+    start_date: null,
+    end_date: null,
+    instructor_id: [],
+    class_type_id: [],
+    studio_id: [],
+    is_off_peak: false,
+    runFilter: false,
     per_page: props.per_page,
     order_by: props.order_by,
     order_dir: props.order_dir,
@@ -116,8 +124,17 @@ const deleteItem = () => {
 
 // Filter modal:
 const showFilterModal = ref(false);
+const openFilterModal = () => {
+    form.reset().clearErrors();
+    form.runFilter = true;
+    showFilterModal.value = true;
+};
 const closeFilterModal = () => {
     showFilterModal.value = false;
+};
+const resetClassFilters = () => {
+    form.runFilter = false;
+    form.reset().clearErrors();
 };
 
 //create confirmation modal:
@@ -272,7 +289,7 @@ const showLink = (exporting) => {
                 v-model="form.search"
                 :disable-search="disableSearch"
                 @reset="form.search = null"
-                @onFilter="showFilterModal = true"
+                @onFilter="openFilterModal"
             />
         </template>
 
@@ -475,14 +492,13 @@ const showLink = (exporting) => {
         <template #title>Filter</template>
         <template #content>
             <FormFilter
-                :form="form_class"
-                :initiated="exportInitiated"
-                :ready="completed_at"
+                :form="form"
                 :statuses="statuses"
                 :studios="studios"
                 :instructors="instructors"
-                @submitted="exportClasses"
-                @reset="resetExportFilters"
+                :classtypes="classtypes"
+                @submitted="runSearch"
+                @reset="resetClassFilters"
             />
         </template>
     </SideModal>

@@ -38,7 +38,7 @@ defineProps({
                 <TextInput
                     id="icon"
                     v-model="form.email"
-                    type="text"
+                    type="email"
                     class="mt-1 block w-full"
                     autocomplete="one-time-code"
                 />

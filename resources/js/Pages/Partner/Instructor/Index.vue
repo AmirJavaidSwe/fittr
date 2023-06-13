@@ -99,7 +99,7 @@ const handleUpdateForm = (data) => {
 };
 
 const updateInstructors = () => {
-    form_edit.post(route("partner.instructors.update", form_edit), {
+    form_edit.put(route('partner.instructors.update', form_edit.id), {
         preserveScroll: true,
         onSuccess: () => [form_class.reset(), closeEditModal()],
     });

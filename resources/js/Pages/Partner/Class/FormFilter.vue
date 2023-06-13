@@ -16,13 +16,12 @@ import Switcher from "@/Components/Switcher.vue";
 const props = defineProps({
     statuses: Object,
     instructors: Object,
+    classtypes: Object,
     studios: Object,
     form: {
         type: Object,
         required: true,
     },
-    initiated: Boolean,
-    ready: String,
 });
 
 const emit = defineEmits(["reset", "submitted"]);
@@ -67,9 +66,13 @@ const emit = defineEmits(["reset", "submitted"]);
             <!-- Status -->
             <div class="">
                 <InputLabel for="status" value="Status" />
-                <Multiselect
+                <Multiselect mode="tags"
                     v-model="form.status"
-                    :options="statuses"
+                    :groups="true"
+                    :options="[{
+                        label: (form.status.length == Object.values(statuses).length) ? 'Deselect All' : 'Select All',
+                        options: statuses,
+                    }]"
                     :searchable="true"
                     :close-on-select="true"
                     :show-labels="true"
@@ -81,9 +84,13 @@ const emit = defineEmits(["reset", "submitted"]);
             <!-- Instructors -->
             <div class="">
                 <InputLabel for="instructors" value="Instructor" />
-                <Multiselect
+                <Multiselect mode="tags"
+                    :groups="true"
+                    :options="[{
+                        label: (form.instructor_id.length == Object.values(instructors).length) ? 'Deselect All' : 'Select All',
+                        options: instructors,
+                    }]"
                     v-model="form.instructor_id"
-                    :options="instructors"
                     :searchable="true"
                     :close-on-select="true"
                     :show-labels="true"
@@ -95,9 +102,13 @@ const emit = defineEmits(["reset", "submitted"]);
             <!-- Studios -->
             <div class="">
                 <InputLabel for="studios" value="Studio" />
-                <Multiselect
+                <Multiselect mode="tags"
                     v-model="form.studio_id"
-                    :options="studios"
+                    :groups="true"
+                    :options="[{
+                        label: (form.studio_id.length == Object.values(studios).length) ? 'Deselect All' : 'Select All',
+                        options: studios,
+                    }]"
                     :searchable="true"
                     :close-on-select="true"
                     :show-labels="true"
@@ -106,35 +117,25 @@ const emit = defineEmits(["reset", "submitted"]);
                 </Multiselect>
             </div>
 
-            <!-- File Type -->
-            <div class="w-full">
-                <InputLabel for="file_type" value="File Type" />
-                <select-input
-                    class="w-full"
-                    v-model="form.file_type"
-                    option_value="id"
-                    option_text="name"
-                    :options="[
-                        {
-                            id: 'csv',
-                            name: 'CSV',
-                        },
-                        {
-                            id: 'xls',
-                            name: 'Excel xls',
-                        },
-                        {
-                            id: 'xlsx',
-                            name: 'Excel xlsx',
-                        },
-                    ]"
+            <!-- Class Type -->
+            <div class="">
+                <InputLabel for="classtype" value="Class Type" />
+                <Multiselect mode="tags"
+                    v-model="form.class_type_id"
+                    :groups="true"
+                    :options="[{
+                        label: (form.studio_id.length == Object.values(classtypes).length) ? 'Deselect All' : 'Select All',
+                        options: classtypes,
+                    }]"
                     :searchable="true"
                     :close-on-select="true"
                     :show-labels="true"
                     placeholder="Select Studio"
                 >
-                </select-input>
+                </Multiselect>
+                <InputError :message="form.errors.class_type_id" class="mt-2" />
             </div>
+
 
             <!-- Off-peak -->
             <div class="">

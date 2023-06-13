@@ -315,7 +315,7 @@ const submitForm = () => {
                 styling="secondary"
                 size="default"
                 :class="{ 'opacity-25': form.processing }"
-                :disabled="form.processing"
+                :disabled="form.processing" type="submit"
             >
                 Save
             </ButtonLink>

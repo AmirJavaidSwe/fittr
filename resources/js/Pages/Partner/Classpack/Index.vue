@@ -373,6 +373,7 @@ const closeFilterModal = () => {
                 :options_types="options_types"
                 :options_periods="options_periods"
                 :classtypes="classtypes"
+                :submitted="filterPack"
                 modal
             />
         </template>

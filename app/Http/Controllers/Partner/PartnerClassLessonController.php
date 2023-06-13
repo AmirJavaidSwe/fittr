@@ -27,6 +27,7 @@ class PartnerClassLessonController extends Controller
     public $per_page;
     public $order_by;
     public $order_dir;
+    public $runFilter;
     /**
      * Display a listing of the resource.
      *
@@ -34,10 +35,12 @@ class PartnerClassLessonController extends Controller
      */
     public function index(Request $request)
     {
+        // dd($request->all());
         $this->search = $request->query('search', null);
         $this->per_page = $request->query('per_page', 10);
         $this->order_by = $request->query('order_by', 'id');
         $this->order_dir = $request->query('order_dir', 'desc');
+        $this->runFilter = $request->input('runFilter');
 
         return Inertia::render('Partner/Class/Index', [
             'page_title' => __('Classes'),
@@ -49,6 +52,57 @@ class PartnerClassLessonController extends Controller
                         $query->orWhere('id', intval($this->search))
                             ->orWhere('title', 'LIKE', '%' . $this->search . '%');
                     });
+                })
+                // if applied filters
+                ->when($this->runFilter == true, function ($query) use ($request) {
+                    // make start date
+                    if($request->has('start_date') && $request->start_date != null) {
+                        $start_date = Carbon::parse($request->start_date)->startOfDay()->format('Y-m-d H:i:s');
+                    } else {
+                        $start_date = Carbon::now()->startOfYear()->format('Y-m-d H:i:s');
+                    }
+                    // start date filter applied
+                    $query->where(function ($query) use ($request, $start_date) {
+                        $query->whereDate('start_date', '>=', $start_date);
+                    });
+
+                    // make end date
+                    if($request->has('end_date') && $request->end_date != null) {
+                        $end_date = Carbon::parse($request->end_date)->endOfDay()->format('Y-m-d H:i:s');
+                    } else {
+                        $end_date = Carbon::now()->endOfDay()->format('Y-m-d H:i:s');
+                    }
+                    // end date filter applied
+                    $query->where(function ($query) use ($request, $end_date) {
+                        $query->whereDate('end_date', '<=', $end_date);
+                    });
+
+                    // apply instructors filters
+                    if($request->has('instructor_id') && count($request->instructor_id)) {
+                        $query->where(function ($query) use ($request) {
+                            $query->whereIn('instructor_id', $request->instructor_id);
+                        });
+                    }
+                    
+                    // apply class_type filters
+                    if($request->has('class_type_id') && count($request->class_type_id)) {
+                        $query->where(function ($query) use ($request) {
+                            $query->whereIn('class_type_id', $request->class_type_id);
+                        });
+                    }
+                    
+                    // apply studio_id filters
+                    if($request->has('studio_id') && count($request->studio_id)) {
+                        $query->where(function ($query) use ($request) {
+                            $query->whereIn('studio_id', $request->studio_id);
+                        });
+                    }
+                    // apply off_peak filter
+                    if($request->has('is_off_peak') && $request->is_off_peak == true) {
+                        $query->where(function ($query) use ($request) {
+                            $query->where('is_off_peak', 1);
+                        });
+                    }
                 })
                 ->paginate($this->per_page)
                 ->withQueryString(),
