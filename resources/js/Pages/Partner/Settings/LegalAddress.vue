@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useForm } from "@inertiajs/vue3";
 import GeneralSettingsMenu from "@/Pages/Partner/Settings/GeneralSettingsMenu.vue";
 
@@ -10,6 +10,8 @@ import SelectInput from "@/Components/SelectInput.vue";
 import InputError from "@/Components/InputError.vue";
 import ActionMessage from "@/Components/ActionMessage.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
+import Multiselect from "@vueform/multiselect";
+import "@vueform/multiselect/themes/tailwind.css";
 
 const props = defineProps({
     countries: Array,
@@ -26,6 +28,10 @@ const form = useForm({
 });
 
 const show_states = ref(false);
+const clearSelectedCountry = () => {
+    form.legal_country_id = null;
+    countryChanged();
+}
 const countryChanged = () => {
     let country = props.countries.find(({ id }) => id == form.legal_country_id);
     show_states.value = country?.has_states ?? false;
@@ -39,6 +45,16 @@ const submitForm = () => {
         preserveScroll: true,
     });
 };
+
+const countriesOptions = computed(() => {
+    const options = props.countries;
+    const data = {};
+    for (const option in options) {
+        const value = options[option];
+        data[value.id] = value.name;
+    }
+    return data;
+})
 </script>
 
 <template>
@@ -111,16 +127,16 @@ const submitForm = () => {
             <!-- Country -->
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="legal_country_id" value="Country" />
-                <SelectInput
+                <Multiselect
                     id="legal_country_id"
                     v-model="form.legal_country_id"
-                    :options="props.countries"
-                    option_value="id"
-                    option_text="name"
+                    :options="countriesOptions"
+                    :searchable="true"
+                    @select="countryChanged"
+                    @clear="clearSelectedCountry"
                     class="mt-1 block w-full"
-                    @change="countryChanged"
-                >
-                </SelectInput>
+                />
+                
                 <InputError
                     :message="form.errors.legal_country_id"
                     class="mt-2"

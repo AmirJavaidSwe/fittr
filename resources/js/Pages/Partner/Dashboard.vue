@@ -28,12 +28,13 @@ const props = defineProps({
 const showAlert = () => {
     alert("button clicked");
 };
+const showDemoOnly = false
 </script>
 
 <template>
     <Section bg="bg-transparent">
         <!-- buttons demo -->
-        <div class="space-y-4 mb-8">
+        <div class="space-y-4 mb-8" v-if="showDemoOnly">
             <p>Demo only</p>
             <h2 class="font-bold text-lg">
                 @\Components\ButtonLink.vue - single component to replace all

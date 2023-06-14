@@ -11,6 +11,8 @@ import InputError from "@/Components/InputError.vue";
 import ActionMessage from "@/Components/ActionMessage.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
 import Switcher from "@/Components/Switcher.vue";
+import Multiselect from "@vueform/multiselect";
+import "@vueform/multiselect/themes/tailwind.css";
 
 const props = defineProps({
     countries: Array,
@@ -30,7 +32,7 @@ const form = useForm({
     business_name: props.form_data.business_name,
     business_email: props.form_data.business_email,
     country_id: props.form_data.country_id,
-    business_phone: business_phone,
+    business_phone: business_phone.value,
     timezone: props.form_data.timezone,
     show_timezone: props.form_data.show_timezone,
 });
@@ -40,6 +42,10 @@ const flag = ref("");
 const flag_img = ref("");
 const mask = ref("");
 const dial_code = ref("");
+const clearSelectedCountry = () => {
+    form.country_id = null;
+    countryChanged()
+}
 const countryChanged = () => {
     let country = props.countries.find(({ id }) => id == form.country_id);
     currency.value = country?.currency;
@@ -64,10 +70,33 @@ const localtime = computed(() => {
 });
 
 const submitForm = () => {
-    form.put(route("partner.settings.general-details"), {
+    form.transform((data) => ({
+        ...data,
+        business_phone: business_phone.value
+    })).put(route("partner.settings.general-details"), {
         preserveScroll: true,
     });
 };
+
+const countriesOptions = computed(() => {
+    const options = props.countries;
+    const data = {};
+    for (const option in options) {
+        const value = options[option];
+        data[value.id] = value.name;
+    }
+    return data;
+})
+const timezoneOptions = computed(() => {
+    const options = props.timezones;
+    const data = {};
+    for (const option in options) {
+        const value = options[option];
+        data[value.title] = value.title;
+    }
+    return data;
+});
+
 </script>
 
 <template>
@@ -107,16 +136,15 @@ const submitForm = () => {
             <!-- Country -->
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="country" value="Country" />
-                <SelectInput
+                <Multiselect
                     id="country"
                     v-model="form.country_id"
-                    :options="props.countries"
-                    option_value="id"
-                    option_text="name"
+                    :options="countriesOptions"
+                    :searchable="true"
+                    @select="countryChanged"
+                    @clear="clearSelectedCountry"
                     class="mt-1 block w-full"
-                    @change="countryChanged"
-                >
-                </SelectInput>
+                />
                 <InputError :message="form.errors.country_id" class="mt-2" />
             </div>
 
@@ -164,15 +192,13 @@ const submitForm = () => {
                     Note: Change of timezone will affect your store schedules
                     and all resources using dates.
                 </div>
-                <SelectInput
+                <Multiselect
                     id="timezone"
                     v-model="form.timezone"
-                    :options="props.timezones"
-                    option_value="title"
-                    option_text="title"
+                    :options="timezoneOptions"
+                    :searchable="true"
                     class="mt-1 block w-full"
-                >
-                </SelectInput>
+                />
                 <InputError :message="form.errors.timezone" class="mt-2" />
                 <div v-if="localtime" class="mt-1">
                     Local time: {{ localtime }}

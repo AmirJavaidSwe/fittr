@@ -59,17 +59,17 @@ watch(() => form.search, runSearch);
 <template>
     <data-table-layout :disableButton="true">
         <template #search>
-            <Search v-model="form.search" @reset="form.search = null" />
+            <Search :noFilter="true" v-model="form.search" @reset="form.search = null" />
         </template>
 
         <template #button>
-            <ButtonLink
+            <!-- <ButtonLink
                 :href="route('admin.partners.index')"
                 type="primary"
                 styling="secondary"
                 size="default"
                 >Add new <font-awesome-icon class="ml-2" :icon="faPlus"
-            /></ButtonLink>
+            /></ButtonLink> -->
         </template>
 
         <template #tableHead>

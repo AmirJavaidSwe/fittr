@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch } from "vue";
-import { Link, useForm } from "@inertiajs/vue3";
+import { Link, useForm, usePage } from "@inertiajs/vue3";
 // import Section from '@/Components/Section.vue';
 import SectionTitle from "@/Components/SectionTitle.vue";
 import SearchFilter from "@/Components/SearchFilter.vue";
@@ -13,16 +13,35 @@ import DangerButton from "@/Components/DangerButton.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
 import ConfirmationModal from "@/Components/ConfirmationModal.vue";
 import { DateTime } from "luxon";
-import { faPencil, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import EditIcon from "@/Icons/Edit.vue";
 import DeleteIcon from "@/Icons/Delete.vue";
 import DateValue from "@/Components/DataTable/DateValue.vue";
 import Avatar from "@/Components/Avatar.vue";
+import Search from "@/Components/DataTable/Search.vue";
+import Dropdown from "@/Components/Dropdown.vue";
+import DropdownLink from "@/Components/DropdownLink.vue";
+import {
+    faPencil,
+    faChevronRight,
+    faPlus,
+    faEye,
+    faCog,
+} from "@fortawesome/free-solid-svg-icons";
 
 const props = defineProps({
     users: Object,
+    search: String,
+    per_page: Number,
+    order_by: String,
+    order_dir: String,
+    business_seetings: Object,
 });
-const form = useForm({});
+const form = useForm({
+    search: props.search,
+    per_page: props.per_page,
+    order_by: props.order_by,
+    order_dir: props.order_dir,
+});
 //delete confirmation modal:
 const itemDeleting = ref(false);
 const itemIdDeleting = ref(null);
@@ -40,74 +59,74 @@ const deleteItem = () => {
         },
     });
 };
+
+const setOrdering = (col) => {
+    //reverse same col order
+    if (form.order_by == col) {
+        form.order_dir = form.order_dir == "asc" ? "desc" : "asc";
+    }
+    form.order_by = col;
+    runSearch();
+};
+
+const runSearch = () => {
+    form.get(route(`partner.users.index`), {
+        preserveScroll: true,
+        preserveState: true,
+        replace: true,
+    });
+};
+
+// form.search getter only;
+watch(() => form.search, runSearch);
 </script>
 <template>
-    <div class="flex items-center justify-between">
-        <SectionTitle>
-            <template #title>All Users</template>
-        </SectionTitle>
-        <ButtonLink
-            styling="secondary"
-            size="default"
-            :href="route('partner.users.create')"
-            class="ml-3"
-            >Add new <font-awesome-icon class="ml-2" :icon="faPlus"
-        /></ButtonLink>
-    </div>
-
     <data-table-layout :disableButton="true">
+        <template #search>
+            <Search :noFilter="true" v-model="form.search" @reset="form.search = null" />
+        </template>
+
+        <template #button>
+            <ButtonLink v-can="{
+                module: 'users',
+                roles: $page.props.user.user_roles,
+                permission: 'create',
+                user: $page.props.user,
+            }" :href="route(`partner.users.create`)" type="primary" styling="secondary" size="default">Add new
+                <font-awesome-icon class="ml-2" :icon="faPlus" /></ButtonLink>
+        </template>
+
         <template #tableHead>
-            <table-head
-                title="ID"
-                @click="setOrdering('id')"
-                :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'id'"
-            />
-            <table-head
-                title="Name"
-                @click="setOrdering('name')"
-                :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'name'"
-            />
-            <table-head
-                title="Email"
-                @click="setOrdering('email')"
-                :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'email'"
-            />
+            <table-head title="ID" @click="setOrdering('id')" :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'id'" />
+            <table-head title="Name" @click="setOrdering('name')" :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'name'" />
+            <table-head title="Email" @click="setOrdering('email')" :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'email'" />
             <table-head title="Is Super Admin" />
             <table-head title="Roles" />
             <table-head title="Avatar" />
-            <table-head
-                title="Date created"
-                @click="setOrdering('created_at')"
-                :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'created_at'"
-            />
+            <table-head title="Date created" @click="setOrdering('created_at')" :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'created_at'" />
             <table-head title="" />
         </template>
 
         <template #tableData>
-            <tr v-for="user in props.users" :key="user.id">
+            <tr v-for="(user, index) in props.users.data" :key="user.id">
                 <table-data>{{ user.id }}</table-data>
                 <table-data>{{ user.name }}</table-data>
                 <table-data>{{ user.email }}</table-data>
                 <table-data>
                     <div
-                        class="ml-4 w-16 rounded my-1 bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 dark:bg-gray-700 dark:text-gray-300 text-center"
-                    >
+                        class="ml-4 w-16 rounded my-1 bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 dark:bg-gray-700 dark:text-gray-300 text-center">
                         {{ user.is_super ? "Yes" : "No" }}
                     </div>
                 </table-data>
                 <table-data>
                     <template v-if="!user.is_super">
-                        <template
-                            v-for="(role, role_i) in user.user_roles"
-                            :key="role_i"
-                        >
+                        <template v-for="(role, role_i) in user.user_roles" :key="role_i">
                             <div
-                                class="block my-1 bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300"
-                            >
+                                class="block my-1 bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">
                                 {{ role }}
                             </div>
                         </template>
@@ -120,32 +139,58 @@ const deleteItem = () => {
                     <DateValue :date="DateTime.fromISO(user.created_at)" />
                 </table-data>
                 <table-data>
-                    <div class="flex gap-4 justify-end">
-                        <Link
-                            class="flex items-center"
-                            :href="route('partner.users.edit', user.id)"
-                        >
-                            <EditIcon
-                                class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
-                            />
-                            Edit
-                        </Link>
-                        <!-- <Link :href="role.url_show">
-                        <font-awesome-icon :icon="faChevronRight" />
-                        </Link> -->
-                        <button
-                            class="flex items-center text-danger-500"
-                            v-if="$page.props.user.id != user.id"
-                            @click="confirmDeletion(user.id)"
-                        >
-                            <DeleteIcon
-                                class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
-                            />
-                            Delete
-                        </button>
-                    </div>
+                    <Dropdown
+                        align="right"
+                        width="48"
+                        :top="index > props.users.data.length - 3"
+                        :content-classes="['bg-white']"
+                    >
+                        <template #trigger>
+                            <button class="text-dark text-lg">
+                                <font-awesome-icon :icon="faCog" />
+                            </button>
+                        </template>
+
+                        <template #content>
+                            <DropdownLink
+                                :href="route('partner.users.edit', user.id)"
+                                v-can="{
+                                    module: 'users',
+                                    roles: $page.props.user.user_roles,
+                                    permission: 'update',
+                                    user: $page.props.user,
+                                }"
+                            >
+                                <EditIcon
+                                    class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
+                                />
+                                Edit
+                            </DropdownLink>
+                            <DropdownLink v-if="$page.props.user.id != user.id" v-can="{
+                                    module: 'users',
+                                    roles: $page.props.user.user_roles,
+                                    permission: 'destroy',
+                                    user: $page.props.user,
+                                }"
+                                as="button"
+                                @click="confirmDeletion(user.id)"
+                            >
+                                <span class="text-danger-500 flex items-center">
+                                    <DeleteIcon
+                                        class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
+                                    />
+                                    <span> Delete </span>
+                                </span>
+                            </DropdownLink>
+                        </template>
+                    </Dropdown>
                 </table-data>
             </tr>
+        </template>
+
+        <template #pagination>
+            <pagination :links="users.links" :to="users.to" :from="users.from" :total="users.total"
+                @pp_changed="runSearch" />
         </template>
     </data-table-layout>
 
@@ -153,23 +198,17 @@ const deleteItem = () => {
     <ConfirmationModal :show="itemDeleting" @close="itemDeleting = false">
         <template #title> Confirmation required </template>
 
-        <template #content>
-            Are you sure you would like to delete this?
-        </template>
+        <template #content> Are you sure you would like to delete this? </template>
 
         <template #footer>
-            <SecondaryButton @click="itemDeleting = null">
+            <ButtonLink size="default" styling="default" @click="itemDeleting = null">
                 Cancel
-            </SecondaryButton>
+            </ButtonLink>
 
-            <DangerButton
-                class="ml-3"
-                :class="{ 'opacity-25': form.processing }"
-                :disabled="form.processing"
-                @click="deleteItem"
-            >
+            <ButtonLink size="default" styling="danger" class="ml-3" :class="{ 'opacity-25': form.processing }"
+                :disabled="form.processing" @click="deleteItem">
                 Delete
-            </DangerButton>
+            </ButtonLink>
         </template>
     </ConfirmationModal>
 </template>

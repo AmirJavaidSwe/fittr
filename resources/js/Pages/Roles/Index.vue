@@ -78,7 +78,7 @@ watch(() => form.search, runSearch);
 <template>
     <data-table-layout :disableButton="true">
         <template #search>
-            <Search v-model="form.search" @reset="form.search = null" />
+            <Search :noFilter="true" v-model="form.search" @reset="form.search = null" />
         </template>
 
         <template #button>
