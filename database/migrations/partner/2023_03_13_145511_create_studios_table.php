@@ -19,15 +19,8 @@ return new class extends Migration
             $table->string('title', 255);
             $table->string('page_title', 255)->nullable();
             $table->string('brief', 500)->nullable();
-            $table->string('address_line_1', 255)->nullable();
-            $table->string('address_line_2', 255)->nullable();
-            $table->string('city', 255)->nullable();
-            $table->string('county', 255)->nullable();
-            $table->string('postcode', 255)->nullable();
-            $table->string('tel', 50)->nullable();
-            $table->string('map_latitude', 50)->nullable();
-            $table->string('map_longitude', 50)->nullable();
             $table->integer('ordering')->default(0);
+            $table->integer('location_id')->index('location_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

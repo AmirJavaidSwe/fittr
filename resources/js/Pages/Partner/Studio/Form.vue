@@ -6,6 +6,7 @@ import TextInput from "@/Components/TextInput.vue";
 import InputError from "@/Components/InputError.vue";
 import ActionMessage from "@/Components/ActionMessage.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import SelectInput from "@/Components/SelectInput.vue";
 
 defineProps({
     form: {
@@ -35,6 +36,20 @@ defineProps({
             </div>
 
             <div class="col-span-6 sm:col-span-4">
+                <InputLabel for="location" value="Location"/>
+                <SelectInput
+                    id="location"
+                    v-model="form.location"
+                    :options="[]"
+                    option_value="id"
+                    option_text="name"
+                    class="mt-1 block w-full"
+                >
+                </SelectInput>
+                <InputError :message="form.errors.location" class="mt-2"/>
+            </div>
+
+            <!-- <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="ordering" value="Ordering"/>
                 <TextInput
                     id="ordering"
@@ -43,7 +58,7 @@ defineProps({
                     class="mt-1 block w-full"
                     />
                 <InputError :message="form.errors.ordering" class="mt-2"/>
-            </div>
+            </div> -->
         </template>
 
         <template #actions>

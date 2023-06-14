@@ -20,16 +20,9 @@ class StudioFactory extends Factory
             'title' => 'Studio '.$this->faker->randomLetter(),
             'page_title' => $this->faker->sentence(3),
             'brief' => $this->faker->sentence(3),
-            'address_line_1' => $this->faker->streetAddress(),
-            'address_line_2' => $this->faker->cityPrefix(),
-            'city' => $this->faker->city(),
-            'county' => $this->faker->sentence(3),
-            'postcode' => $this->faker->postcode(),
-            'tel' => $this->faker->phoneNumber(),
-            'map_latitude' => $this->faker->latitude(),
-            'map_longitude' => $this->faker->longitude(),
             'ordering' => rand(1, 100),
-            'status' => rand(0, 1)
+            'status' => rand(0, 1),
+            'location_id' => rand(1, 5)
         ];
     }
 }

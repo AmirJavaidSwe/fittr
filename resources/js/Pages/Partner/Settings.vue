@@ -74,8 +74,22 @@ import CardIcon from '@/Components/CardIcon.vue';
             </div>
             <div class="space-y-4">
                 <div class="text-xl font-bold tracking-tight text-gray-900">
-                    Studios
+                    Locations & Studios
                 </div>
+
+                <CardIcon :card-link="route('partner.locations.index')">
+                    <template #icon>
+                        <font-awesome-icon :icon="faDoorOpen" />
+                    </template>
+
+                    <template #title>
+                        Locations
+                    </template>
+
+                    <template #default>
+                        Manage locations
+                    </template>
+                </CardIcon>
 
                 <CardIcon :card-link="route('partner.studios.index')">
                     <template #icon>
@@ -91,7 +105,7 @@ import CardIcon from '@/Components/CardIcon.vue';
                     </template>
                 </CardIcon>
 
-                <CardIcon 
+                <CardIcon
                     :card-link="route('partner.classtypes.index')"
                     v-can="{ module: 'studio-class-type', roles: $page.props.user.user_roles, permission: 'viewAny', 'user': $page.props.user }"
                     >

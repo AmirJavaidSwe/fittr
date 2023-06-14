@@ -25,6 +25,7 @@
         "@inertiajs/vue3": "^1.0.2",
         "@vueform/multiselect": "^2.6.2",
         "@vuepic/vue-datepicker": "^3.6.5",
-        "luxon": "^3.3.0"
+        "luxon": "^3.3.0",
+        "vue3-dropzone": "^2.0.1"
     }
 }

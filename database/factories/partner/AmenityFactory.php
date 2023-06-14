@@ -25,7 +25,6 @@ class AmenityFactory extends Factory
         $filename = $this->faker->image($path, 100, 100, null, false);
 
         return [
-            'studio_id' => 1,
             'title' => $this->faker->word,
             'icon' => $filename,
             'contents' => $this->faker->paragraph,
