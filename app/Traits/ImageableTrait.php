@@ -27,7 +27,7 @@ trait ImageableTrait
                 $filename = $item->hashName();
                 $size = $item->getSize();
 
-                $item->storeAs($path, $filename, $disk);
+                $item->storePubliclyAs($path, $filename, $disk);
 
                 $model->images()->create([
                     'original_filename' => $original_filename,

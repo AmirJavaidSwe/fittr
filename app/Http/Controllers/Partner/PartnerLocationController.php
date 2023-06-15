@@ -231,6 +231,8 @@ class PartnerLocationController extends Controller
     public function update(LocationFormRequest $request, Location $location)
     {
         $validated = $request->validated();
+        //Do we really need a transaction here? 
+        //Can simply ->update($request->validated()) and move file upload process to try/catch block?
         DB::beginTransaction();
 
         try {
@@ -252,9 +254,10 @@ class PartnerLocationController extends Controller
             $location->email = $validated['email'];
             $location->save();
 
-            $location->amenities()->sync($validated['amenity_ids']);
+            $location->amenities()->sync($validated['amenity_ids'] ?? []); //could be empty
 
-            $this->updateFiles($request->file('image'), $request->uploaded_files, $location, 'images/location', 'public');
+            //this will delete existing file, even when no file is present on update, need to tweak the logic a bit or something like if $request->filled('image)
+            $this->updateFiles($request->file('image'), $request->uploaded_files, $location, 'images/location'); //5th param defaults to filesystems.default - removed from here
 
             DB::commit();
 

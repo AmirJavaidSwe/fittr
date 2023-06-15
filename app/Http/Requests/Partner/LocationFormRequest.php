@@ -27,24 +27,24 @@ class LocationFormRequest extends FormRequest
     {
         $rules =  [
             'title' => 'required|string|max:250',
-            'brief' => 'required|string|max:500',
+            'brief' => 'nullable|string|max:500',
             'manager_id' => 'required|numeric',
-            'address_line_1' => 'required|string|max:250',
-            'address_line_2' => 'required|string|max:250',
+            'address_line_1' => 'nullable|string|max:250',
+            'address_line_2' => 'nullable|string|max:250',
             'country_id' => 'required|numeric',
-            'city' => 'required|string|max:250',
-            'postcode' => 'required|string|max:50',
-            'map_latitude' => 'required|string|max:50',
-            'map_longitude' => 'required|string|max:50',
-            'tel' => 'required|string|max:50',
-            'email' => 'required|email|max:250',
-            'amenity_ids' => 'required',
+            'city' => 'nullable|string|max:250',
+            'postcode' => 'nullable|string|max:50',
+            'map_latitude' => 'nullable|string|max:50',
+            'map_longitude' => 'nullable|string|max:50',
+            'tel' => 'nullable|string|max:50',
+            'email' => 'nullable|email|max:250',
+            'amenity_ids' => 'nullable',
             'image' => [
                 'nullable',
                 File::image()
-                ->min(1)
-                ->max(20 * 1024)
-                ->dimensions(Rule::dimensions([200, 200])),
+                ->min(1) //KB
+                ->max(20 * 1024) //KB
+                ->dimensions(Rule::dimensions([1920, 1280])),
             ]
         ];
 

@@ -42,7 +42,7 @@ const manager = computed(() => {
         Details:
     </div> -->
     <div class="mb-3">
-        <InputLabel for="name" value="Name" />
+        <InputLabel for="title" value="Title" />
         <TextInput
             id="name"
             v-model="form.title"
