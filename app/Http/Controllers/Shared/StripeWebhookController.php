@@ -14,6 +14,8 @@ use Stripe\Webhook;
 
 class StripeWebhookController extends Controller
 {
+    private $event_for;
+
     public function __construct(StripeWebhookService $service)
     {
         $this->stripe = new StripeClient(config('services.stripe.secret_key'));
@@ -25,12 +27,18 @@ class StripeWebhookController extends Controller
         $payload = @file_get_contents('php://input');
         $sig_header = $_SERVER['HTTP_STRIPE_SIGNATURE'] ?? null;
         $event = null;
+        //connect query is coming from Stripe webhook url setup
+        //2 incoming webhooks hit same local route but have different secrets:
+        // https://app.fittr.tech/stripe/webhook            Local is for partner admins actions like subscribing to Standard or Ultimate tier
+        // https://app.fittr.tech/stripe/webhook?connect    Connected is for any events happen on service store site of any partner, like member purchasing a membership
+        $this->event_for = $request->has('connect') ? 'connected' : 'local'; 
+        $secret = $request->has('connect') ? config('services.stripe.endpoint_secret_connect') : config('services.stripe.endpoint_secret');
 
         try {
             $event = Webhook::constructEvent(
                 $payload,
                 $sig_header,
-                config('services.stripe.endpoint_secret')
+                $secret
             );
         } catch(SignatureVerificationException $e) {
             return new Response($e->getMessage(), 400);
@@ -60,7 +68,9 @@ class StripeWebhookController extends Controller
         // store/log the event
         $stripe_event = StripeEvent::create([
             'stripe_id' => $event_data->id,
+            'connected_account' => $event_data->account ?? null,
             'type' => $event_data->type,
+            'event_for' => $this->event_for,
             'object' => $event_data->object,
             'data' => $event_data->data->object,
             'api_version' => $event_data->api_version,
@@ -75,7 +85,7 @@ class StripeWebhookController extends Controller
     public function processEvent(StripeEvent $stripe_event)
     {
         $event_type = $stripe_event->type; // original type name, e.g.: 'checkout.session.completed' or 'payment_intent.succeeded'
-        $method_name = Str::camel(str_replace('.', '_', $event_type)); //Convert type into camel case, string helper works great converting snake to camel
+        $method_name = Str::camel(str_replace('.', '_', $event_type)); //Convert type into camel case, string helper works great converting snake to camel: 'checkout.session.completed' => checkoutSessionCompleted() or 'payment_intent.succeeded' => paymentIntentSucceeded()
 
         return method_exists($this->service, $method_name) ? 
             $this->service->{ $method_name }($stripe_event) :

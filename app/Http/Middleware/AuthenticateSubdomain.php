@@ -29,9 +29,7 @@ class AuthenticateSubdomain
     public function handle(Request $request, Closure $next): Response
     {
         $subdomains = $this->cache->subdomains();
-        $subdomain = $request->session()->has('business_seetings.subdomain') ? 
-                        session('business_seetings.subdomain') :
-                        ($subdomains->contains('val', $request->subdomain) ? $subdomains->firstWhere('val', $request->subdomain)->val : null);
+        $subdomain = $subdomains->firstWhere('val', $request->subdomain)->val ?? null;
 
         //we don't need to let non-existing subdomains to enter the app. We can just abort the request or redirect them to custom page or somewhere else.
         abort_if(empty($subdomain), 403, __('This service store does not exist.'));

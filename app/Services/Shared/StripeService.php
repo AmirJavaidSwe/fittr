@@ -19,10 +19,22 @@ class StripeService
         $this->response->code = $e->getCode();
     }
 
+    public function endpoint($endpoint)
+    {
+        if(!is_array($endpoint)){
+            return $this->stripe->{$endpoint};
+        }
+        //required to set correct services with chaining for structured endpoints, e.g. $this->stripe->checkout->sessions->...
+        foreach($endpoint as $path){
+            $this->stripe = $this->stripe->{$path};
+        }
+        return $this->stripe;
+    }
+
     public function call($endpoint, $action, $arguments) :object
     {
         try {
-            $response = $this->stripe->{$endpoint}->{$action}(...$arguments);
+            $response = $this->endpoint($endpoint)->{$action}(...$arguments);
         } catch(\Stripe\Exception\CardException $e) {
             $this->setError($e);
         } catch (\Stripe\Exception\RateLimitException $e) {

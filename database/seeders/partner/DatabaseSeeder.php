@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
             ClassesSeeder::class,
             LocationSeeder::class,
             StudioSeeder::class,
-            ClasspackSeeder::class,
+            PackSeeder::class,
         ]);
     }
 }

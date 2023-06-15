@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum ClasspackExpirationPeriod
+enum StripePeriod
 {
     case day;
     case week;
