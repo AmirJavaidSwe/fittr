@@ -135,7 +135,7 @@ import CardIcon from '@/Components/CardIcon.vue';
                     </template>
 
                     <template #default>
-                        Manage studio amenities
+                        Manage amenities
                     </template>
                 </CardIcon>
 

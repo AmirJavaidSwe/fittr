@@ -16,6 +16,10 @@ defineProps({
     submitted: {
         type: Function,
         required: true
+    },
+    locations: {
+        type: Array,
+        required: true
     }
 })
 
@@ -39,14 +43,14 @@ defineProps({
                 <InputLabel for="location" value="Location"/>
                 <SelectInput
                     id="location"
-                    v-model="form.location"
-                    :options="[]"
+                    v-model="form.location_id"
+                    :options="locations"
                     option_value="id"
-                    option_text="name"
+                    option_text="title"
                     class="mt-1 block w-full"
                 >
                 </SelectInput>
-                <InputError :message="form.errors.location" class="mt-2"/>
+                <InputError :message="form.errors.location_id" class="mt-2"/>
             </div>
 
             <!-- <div class="col-span-6 sm:col-span-4">

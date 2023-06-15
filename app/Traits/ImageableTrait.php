@@ -42,4 +42,21 @@ trait ImageableTrait
             throw new Exception($e->getMessage());
         }
     }
+
+    public function updateFiles($files, $uploaded_files, $model, $path = 'images', $disk = null)
+    {
+        try {
+
+            $ids = $model->images->pluck('id');
+            $updated_ids = collect($uploaded_files)->pluck('id');
+            $diff = $ids->diff($updated_ids);
+
+            $model->images()->whereIn('id', $diff)->delete();
+
+            $this->uploadFiles($files, $model, $path, $disk);
+
+        } catch(Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
 }

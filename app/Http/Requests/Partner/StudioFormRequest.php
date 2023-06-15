@@ -25,9 +25,17 @@ class StudioFormRequest extends FormRequest
     {
         $rules =  [
             'title' => 'required|string|max:250',
-            'ordering' => 'required|integer',
+            'location_id' => 'required|numeric',
+            // 'ordering' => 'required|integer',
         ];
 
         return $rules;
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'location_id' => 'location',
+        ];
     }
 }

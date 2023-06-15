@@ -83,6 +83,7 @@ const deleteItem = () => {
         <template #tableHead>
             <table-head title="Id"/>
             <table-head title="Title"/>
+            <table-head title="Location"/>
             <table-head title="Ordering"/>
             <table-head title="Created At"/>
             <table-head title="Updated At"/>
@@ -96,6 +97,7 @@ const deleteItem = () => {
                     <Link class="font-medium text-indigo-600 hover:text-indigo-500"
                           :href="route('partner.studios.show', studio)"> {{ studio.title }} </Link>
                 </table-data>
+                <table-data :title="studio.location?.title"/>
                 <table-data :title="studio.ordering"/>
                 <table-data :title="DateTime.fromISO(studio.created_at)"/>
                 <table-data :title="DateTime.fromISO(studio.updated_at).toRelative()"/>

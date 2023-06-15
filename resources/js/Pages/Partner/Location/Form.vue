@@ -186,11 +186,11 @@ const manager = computed(() => {
     </div>
     <div class="mb-3">
         <InputLabel for="image" value="Image" />
-        <Dropzone id="image" v-model="form.image" :accept="['.jpg', '.png', '.bmp']" max_width="200" max_height="200" />
+        <Dropzone id="image" v-model="form.image" :uploaded_files="form.uploaded_images" :accept="['.jpg', '.png', '.bmp']" max_width="200" max_height="200" />
         <InputError :message="form.errors.image" class="mt-2" />
     </div>
     <div class="mb-3">
-        <InputLabel for="amenities" value="Amenities" />
+        <InputLabel for="amenities" value="Amenities" class="mt-4" />
         <MultiselectInput :options="amenities" v-model="form.amenity_ids" mode="multiple" />
         <InputError :message="form.errors.amenity_ids" class="mt-2" />
     </div>

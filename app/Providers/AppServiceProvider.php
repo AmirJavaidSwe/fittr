@@ -28,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
         Relation::enforceMorphMap([
             'pack' => 'App\Models\Partner\Pack',
+            'location' => 'App\Models\Partner\Location',
         ]);
     }
 }

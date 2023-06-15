@@ -51,8 +51,9 @@ const createForm = useForm({
     map_longitude: '',
     tel: '',
     email: '',
-    image: null,
     amenity_ids: [],
+    image: null,
+    uploaded_images: [],
 });
 
 const runSearch = () => {
@@ -92,23 +93,44 @@ const deleteItem = () => {
 // create new location modal
 const modal = ref(false);
 const editMode = ref(false);
+const editId = ref(null);
 
 const saveForm = () => {
-    createForm.post(route('partner.locations.store'), {
-        preserveScroll: true,
-        onSuccess: () => {
-            modal.value = false;
-            createForm.reset().clearErrors();
-        }
-    });
+    if(editMode.value) {
+        createForm.transform((data) => ({
+            ...data,
+            _method: 'put',
+        })).post(route('partner.locations.update', { id: editId.value }), {
+            preserveScroll: true,
+            onSuccess: () => {
+                modal.value = false;
+                editId.value = null;
+                createForm.reset().clearErrors();
+            }
+        });
+    } else {
+        createForm.post(route('partner.locations.store'), {
+            preserveScroll: true,
+            onSuccess: () => {
+                modal.value = false;
+                createForm.reset().clearErrors();
+            }
+        });
+    }
 };
 
 const showCreateModal = () => {
-
+    createForm.reset().clearErrors();
+    editMode.value = false;
+    modal.value = true;
+    editId.value = null;
 }
 
 const showEditModal = (data) => {
-    console.log({data});
+    createForm.reset().clearErrors();
+
+    data = Object.assign({}, data);
+
     createForm.title = data.title;
     createForm.brief = data.brief;
     createForm.manager_id = data.manager?.id;
@@ -122,8 +144,10 @@ const showEditModal = (data) => {
     createForm.map_longitude = data.map_longitude;
     createForm.tel = data.tel;
     createForm.email = data.email;
-    createForm.image = data.image;
-    // createForm.amenity_ids = data.amenity_ids;
+    createForm.amenity_ids = data.amenities.map(item => item.id);
+    createForm.uploaded_images = [...data.images];
+
+    editId.value = data.id;
     editMode.value = true;
     modal.value = true;
 }
@@ -137,7 +161,7 @@ const showEditModal = (data) => {
         :disable-search="disableSearch">
 
         <template #button>
-            <button class="cursor-pointer inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto" @click="modal = true">
+            <button class="cursor-pointer inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto" @click="showCreateModal">
                 Create new
             </button>
         </template>
@@ -219,7 +243,7 @@ const showEditModal = (data) => {
     <!-- Create Location Modal -->
     <DialogModal :show="modal" @close="modal = false">
         <template #title>
-            Create Location
+            {{ editMode ? 'Edit' : 'Create' }} Location
         </template>
 
         <template #content>
@@ -227,7 +251,7 @@ const showEditModal = (data) => {
         </template>
         <template #footer>
             <SecondaryButton type="button" class="mr-2" @click="modal = false">Cancel</SecondaryButton>
-            <PrimaryButton type="button" @click="saveForm">Save</PrimaryButton>
+            <PrimaryButton type="button" @click="saveForm">{{ editMode ? 'Update' : 'Save' }}</PrimaryButton>
         </template>
     </DialogModal>
 </template>

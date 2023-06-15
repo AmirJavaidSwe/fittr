@@ -35,7 +35,7 @@ class PartnerLocationController extends Controller
         $this->order_dir = $request->query('order_dir', 'desc');
 
         return Inertia::render('Partner/Location/Index', [
-            'locations' => Location::with('manager', 'amenities', 'images')->orderBy($this->order_by, $this->order_dir)
+            'locations' => Location::with('studios', 'manager', 'amenities', 'images')->orderBy($this->order_by, $this->order_dir)
                 ->when($this->search, function ($query) {
                     $query->where(function($query) {
                         $query->orWhere('id', intval($this->search))
@@ -193,8 +193,7 @@ class PartnerLocationController extends Controller
      */
     public function edit(Location $location)
     {
-        return redirect()->route('partner.locations.index')->with(['location' => $location]);
-        /* return Inertia::render('Partner/Location/Edit', [
+        return Inertia::render('Partner/Location/Edit', [
             'page_title' => __('Edit Location'),
             'header' => array(
                 [
@@ -219,7 +218,7 @@ class PartnerLocationController extends Controller
                 ],
             ),
             'location' => $location->load('manager', 'country')
-        ]); */
+        ]);
     }
 
     /**
@@ -231,9 +230,40 @@ class PartnerLocationController extends Controller
      */
     public function update(LocationFormRequest $request, Location $location)
     {
-        $location->update($request->validated());
+        $validated = $request->validated();
+        DB::beginTransaction();
 
-        return $this->redirectBackSuccess(__('Location updated successfully'));
+        try {
+
+            $location->title = $validated['title'];
+            $location->page_title = $validated['title'];
+            $location->brief = $validated['brief'];
+            // $location->url = $validated['url'];
+            // $location->checkin_url = $validated['checkin_url'];
+            $location->manager_id = $validated['manager_id'];
+            $location->address_line_1 = $validated['address_line_1'];
+            $location->address_line_2 = $validated['address_line_2'];
+            $location->country_id = $validated['country_id'];
+            $location->city = $validated['city'];
+            $location->postcode = $validated['postcode'];
+            $location->map_latitude = $validated['map_latitude'];
+            $location->map_longitude = $validated['map_longitude'];
+            $location->tel = $validated['tel'];
+            $location->email = $validated['email'];
+            $location->save();
+
+            $location->amenities()->sync($validated['amenity_ids']);
+
+            $this->updateFiles($request->file('image'), $request->uploaded_files, $location, 'images/location', 'public');
+
+            DB::commit();
+
+            return $this->redirectBackSuccess(__('Location created successfully'), 'partner.locations.index');
+
+        } catch(Exception $e) {
+            DB::rollBack();
+            return $this->redirectBackError(__('Something went wrong!'), 'partner.locations.index');
+        }
     }
 
     /**

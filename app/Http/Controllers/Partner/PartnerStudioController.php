@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Partner;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Partner\StudioFormRequest;
+use App\Models\Partner\Location;
 use App\Models\Partner\Studio;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -23,7 +24,7 @@ class PartnerStudioController extends Controller
         $this->order_dir = $request->query('order_dir', 'desc');
 
         return Inertia::render('Partner/Studio/Index', [
-            'studios' => Studio::orderBy($this->order_by, $this->order_dir)
+            'studios' => Studio::with('location')->orderBy($this->order_by, $this->order_dir)
                 ->when($this->search, function ($query) {
                     $query->where(function($query) {
                         $query->orWhere('id', intval($this->search))
@@ -63,6 +64,7 @@ class PartnerStudioController extends Controller
     {
         return Inertia::render('Partner/Studio/Create', [
             'page_title' => __('Create Studio'),
+            'locations' => Location::select('id', 'title')->get(),
             'header' => array(
                 [
                     'title' => __('Settings'),
@@ -147,6 +149,7 @@ class PartnerStudioController extends Controller
     {
         return Inertia::render('Partner/Studio/Edit', [
             'page_title' => __('Edit Studio'),
+            'locations' => Location::select('id', 'title')->get(),
             'header' => array(
                 [
                     'title' => __('Settings'),

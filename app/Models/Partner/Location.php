@@ -6,6 +6,9 @@ use App\Models\Country;
 use App\Models\Image;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -19,23 +22,38 @@ class Location extends Model
     protected $connection = 'mysql_partner';
     protected $guarded = ['id'];
 
-    public function amenities() {
+    public function amenities()
+    {
         return $this->belongsToMany(Amenity::class, 'location_amenities', 'location_id', 'amenity_id');
     }
 
-    public function class_type_studios() {
+    public function studios(): HasMany
+    {
+        return $this->hasMany(Studio::class);
+    }
+
+    public function class_type_studios(): HasMany
+    {
         return $this->hasMany(ClassTypeStudio::class);
     }
 
-    public function manager() {
+    public function manager(): BelongsTo
+    {
         return $this->belongsTo(User::class, 'manager_id', 'id');
     }
 
-    public function country() {
+    public function country(): BelongsTo
+    {
         return $this->belongsTo(Country::class);
     }
 
-    public function images() {
+    // public function images()
+    // {
+    //     return $this->morphMany(Image::class, 'imageable');
+    // }
+
+    public function images(): MorphMany
+    {
         return $this->morphMany(Image::class, 'imageable');
     }
 }
