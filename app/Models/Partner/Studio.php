@@ -4,7 +4,9 @@ namespace App\Models\Partner;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Studio extends Model
 {
@@ -18,5 +20,10 @@ class Studio extends Model
     public function amenities(): HasMany
     {
         return $this->hasMany(Amenity::class, 'studio_id');
+    }
+
+    public function location(): BelongsTo
+    {
+        return $this->belongsTo(Location::class);
     }
 }

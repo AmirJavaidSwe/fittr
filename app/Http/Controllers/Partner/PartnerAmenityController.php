@@ -40,7 +40,7 @@ class PartnerAmenityController extends Controller
             'per_page' => intval($this->per_page),
             'order_by' => $this->order_by,
             'order_dir' => $this->order_dir,
-            'page_title' => __('Settings - Studio amenities'),
+            'page_title' => __('Settings - Amenities'),
             'header' => array(
                 [
                     'title' => __('Settings'),
@@ -51,7 +51,7 @@ class PartnerAmenityController extends Controller
                     'link' => null,
                 ],
                 [
-                    'title' => __('Studio amenities'),
+                    'title' => __('Amenities'),
                     'link' => null,
                 ],
             ),

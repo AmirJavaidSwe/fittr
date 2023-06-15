@@ -28,7 +28,6 @@ class AmenityRequest extends FormRequest
             'icon' => 'nullable|string|max:255',
             'contents' => 'required|string',
             'ordering' => 'required|integer',
-            'studio_id' => 'required|integer',
             'status' => 'boolean'
         ];
     }

@@ -70,17 +70,6 @@ defineProps({
             </div>
 
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="studio_id" value="studio id" />
-                <TextInput
-                    id="icon"
-                    v-model="form.studio_id"
-                    type="number"
-                    class="mt-1 block w-full"
-                />
-                <InputError :message="form.errors.studio_id" class="mt-2" />
-            </div>
-
-            <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="status" value="Status" />
                 <Checkbox
                     id="status"

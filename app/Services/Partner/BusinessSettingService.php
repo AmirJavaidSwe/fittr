@@ -91,6 +91,11 @@ class BusinessSettingService
             $previous_value = $business_setting->val ?? null;
             $business_setting ? $business_setting->update($values) : BusinessSetting::create($identifier + $values);
 
+            //clear subdomains in cache
+            if(SettingKey::from($key)->name == 'subdomain' && (empty($previous_value) || $previous_value != $value)){
+                $this->cache->put('cache_subdomains', null, 0);
+            }
+
             if(in_array($key, SettingKey::files()) && $previous_value){
                 Storage::disk(config('filesystems.default'))->delete($previous_value);
             }

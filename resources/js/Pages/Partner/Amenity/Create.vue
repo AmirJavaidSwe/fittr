@@ -20,7 +20,6 @@ let form = useForm({
     icon: '',
     contents: '',
     ordering: '',
-    studio_id: '',
     status: false
 });
 

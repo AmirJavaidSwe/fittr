@@ -169,6 +169,7 @@ const deleteItem = () => {
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'title'"
             />
+            <table-head title="Location"/>
             <table-head
                 title="Ordering"
                 @click="setOrdering('ordering')"
@@ -201,6 +202,7 @@ const deleteItem = () => {
                         {{ studio.title }}
                     </Link>
                 </table-data>
+                <table-data :title="studio.location?.title"/>
                 <table-data :title="studio.ordering" />
                 <table-data>
                     <DateValue :date="DateTime.fromISO(studio.created_at)" />
@@ -210,6 +212,10 @@ const deleteItem = () => {
                         :date="DateTime.fromISO(studio.updated_at).toRelative()"
                     />
                 </table-data>
+                <table-data :title="studio.location?.title"/>
+                <table-data :title="studio.ordering"/>
+                <table-data :title="DateTime.fromISO(studio.created_at)"/>
+                <table-data :title="DateTime.fromISO(studio.updated_at).toRelative()"/>
                 <table-data>
                     <Dropdown
                         align="right"

@@ -19,13 +19,13 @@ use App\Http\Controllers\Shared\UserProfileController;
 use App\Http\Controllers\Partner\BusinessSettingController;
 use App\Http\Controllers\Partner\PartnerAmenityController;
 use App\Http\Controllers\Partner\PartnerClassLessonController;
-use App\Http\Controllers\Partner\PartnerClassPackController;
 use App\Http\Controllers\Partner\PartnerClassTypeController;
 use App\Http\Controllers\Partner\PartnerDashboardController;
 use App\Http\Controllers\Partner\PartnerExportController;
 use App\Http\Controllers\Partner\PartnerInstructorController;
+use App\Http\Controllers\Partner\PartnerLocationController;
 use App\Http\Controllers\Partner\PartnerMemberController;
-use App\Http\Controllers\Partner\PartnerMembershipPlanController;
+use App\Http\Controllers\Partner\PartnerPackController;
 use App\Http\Controllers\Partner\PartnerStudioController;
 use App\Http\Controllers\Partner\PartnerSubscriptionController;
 use App\Http\Controllers\Partner\PartnerUserController;
@@ -34,9 +34,9 @@ use App\Http\Controllers\Partner\PartnerUserController;
 use App\Http\Controllers\Store\StorePublicController;
 use App\Http\Controllers\Store\StoreClassController;
 use App\Http\Controllers\Store\StoreInstructorController;
-use App\Http\Controllers\Store\StoreStudioController;
-use App\Http\Controllers\Store\StoreClassPackController;
-use App\Http\Controllers\Store\StoreMembershipController;
+use App\Http\Controllers\Store\StoreLocationController;
+use App\Http\Controllers\Store\StorePackController;
+use App\Http\Controllers\Store\StorePaymentController;
 
 Route::get('/auth/google', function () {
     return Socialite::driver('google')->redirect();
@@ -142,14 +142,17 @@ Route::domain('app.'.config('app.domain'))->group(function () {
             //partner.members.destroy /members/{member}
             Route::resource('amenity', PartnerAmenityController::class);
             Route::resource('classes', PartnerClassLessonController::class);
-            Route::resource('classpacks', PartnerClassPackController::class);
             Route::resource('classtypes', PartnerClassTypeController::class);
             Route::resource('instructors', PartnerInstructorController::class);
             Route::resource('members', PartnerMemberController::class);
-            Route::resource('plans', PartnerMembershipPlanController::class);
             Route::resource('roles', RoleController::class);
             Route::resource('studios', PartnerStudioController::class);
             Route::resource('users', PartnerUserController::class);
+            
+            Route::resource('packs', PartnerPackController::class);
+            Route::post('/packs/{pack}/duplicate', [PartnerPackController::class, 'duplicate'])->name('packs.duplicate');
+            Route::post('/packs/{pack}/price', [PartnerPackController::class, 'storePrice'])->name('packs.price.store');
+            Route::put('/packs/{pack}/price/{price}', [PartnerPackController::class, 'updatePrice'])->name('packs.price.update');
 
             Route::get('/exports', [PartnerExportController::class, 'index'])->name('exports.index');
             Route::get('/exports/{export}', [PartnerExportController::class, 'show'])->name('exports.show');
@@ -157,6 +160,8 @@ Route::domain('app.'.config('app.domain'))->group(function () {
             Route::get('exports/download/request/{export}', [PartnerExportController::class, 'requestToDownload'])->name('exports.request-to-download');
             Route::delete('/exports/{export}', [PartnerExportController::class, 'destroy'])->name('exports.destroy');
             Route::post('/exports', [PartnerExportController::class, 'store']);
+
+            Route::resource('locations', PartnerLocationController::class);
 
         });
 
@@ -171,9 +176,11 @@ Route::domain('{subdomain}.'.config('app.domain'))->middleware(['auth.subdomain'
     Route::get('/', [StorePublicController::class, 'index'])->name('home');
     Route::get('/classes', [StoreClassController::class, 'index'])->name('classes.index');
     Route::get('/instructors', [StoreInstructorController::class, 'index'])->name('instructors.index');
-    Route::get('/studios', [StoreStudioController::class, 'index'])->name('studios.index');
-    Route::get('/classpacks', [StoreClassPackController::class, 'index'])->name('classpacks.index');
-    Route::get('/memberships', [StoreMembershipController::class, 'index'])->name('memberships.index');
+    Route::get('/locations', [StoreLocationController::class, 'index'])->name('locations.index');
+    Route::get('/memberships', [StorePackController::class, 'index'])->name('memberships.index');
+
+    Route::post('/buy/{price}', [StorePaymentController::class, 'index'])->name('payments.index');
+    Route::get('/success', [StorePaymentController::class, 'success'])->name('payments.success');
 
     // Route::get('/', function ($subdomain) {
     //     //temp demo

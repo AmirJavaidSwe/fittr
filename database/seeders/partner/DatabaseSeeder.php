@@ -21,8 +21,9 @@ class DatabaseSeeder extends Seeder
             AmenitySeeder::class,
             ClasstypeSeeder::class,
             ClassesSeeder::class,
+            LocationSeeder::class,
             StudioSeeder::class,
-            ClasspackSeeder::class,
+            PackSeeder::class,
         ]);
     }
 }

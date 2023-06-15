@@ -25,7 +25,6 @@ let form = useForm({
     icon: props.amenity?.icon !== undefined ? props.amenity?.icon : '',
     contents: props.amenity?.contents !== undefined ? props.amenity?.contents : '',
     ordering: props.amenity?.ordering !== undefined ? props.amenity?.ordering : '',
-    studio_id: props.amenity?.studio_id,
     status: props.amenity?.status !== undefined ? props.amenity?.status : ''
 });
 </script>
