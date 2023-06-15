@@ -34,7 +34,7 @@ use App\Http\Controllers\Partner\PartnerUserController;
 use App\Http\Controllers\Store\StorePublicController;
 use App\Http\Controllers\Store\StoreClassController;
 use App\Http\Controllers\Store\StoreInstructorController;
-use App\Http\Controllers\Store\StoreStudioController;
+use App\Http\Controllers\Store\StoreLocationController;
 use App\Http\Controllers\Store\StorePackController;
 use App\Http\Controllers\Store\StorePaymentController;
 
@@ -176,7 +176,7 @@ Route::domain('{subdomain}.'.config('app.domain'))->middleware(['auth.subdomain'
     Route::get('/', [StorePublicController::class, 'index'])->name('home');
     Route::get('/classes', [StoreClassController::class, 'index'])->name('classes.index');
     Route::get('/instructors', [StoreInstructorController::class, 'index'])->name('instructors.index');
-    Route::get('/studios', [StoreStudioController::class, 'index'])->name('studios.index');
+    Route::get('/locations', [StoreLocationController::class, 'index'])->name('locations.index');
     Route::get('/memberships', [StorePackController::class, 'index'])->name('memberships.index');
 
     Route::post('/buy/{price}', [StorePaymentController::class, 'index'])->name('payments.index');

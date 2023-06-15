@@ -4,6 +4,7 @@ namespace App\Models\Partner;
 
 use App\Models\Country;
 use App\Models\Image;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -21,6 +22,16 @@ class Location extends Model
     protected $table = 'locations';
     protected $connection = 'mysql_partner';
     protected $guarded = ['id'];
+
+     /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'status' => 'boolean',
+        'deleted_at' => 'datetime',
+    ];
 
     public function amenities()
     {
@@ -47,13 +58,14 @@ class Location extends Model
         return $this->belongsTo(Country::class);
     }
 
-    // public function images()
-    // {
-    //     return $this->morphMany(Image::class, 'imageable');
-    // }
-
     public function images(): MorphMany
     {
         return $this->morphMany(Image::class, 'imageable');
+    }
+
+     //Local scopes
+    public function scopeActive(Builder $query): void
+    {
+        $query->where('status', true);
     }
 }

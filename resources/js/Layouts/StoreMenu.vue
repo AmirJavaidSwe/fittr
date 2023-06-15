@@ -32,9 +32,9 @@ router.on('navigate', (event) => {
       <font-awesome-icon :icon="faUserTie" />
       <div>Instructors</div>
     </NavLink>
-    <NavLink :href="route('ss.studios.index', {subdomain})" :active="active_route.name == 'ss.studios.index'" class="text-lg">
+    <NavLink :href="route('ss.locations.index', {subdomain})" :active="active_route.name == 'ss.locations.index'" class="text-lg">
       <font-awesome-icon :icon="faDoorOpen" />
-      <div>Studios</div>
+      <div>Locations</div>
     </NavLink>
     <NavLink :href="route('ss.memberships.index', {subdomain})" :active="active_route.name == 'ss.memberships.index'" class="text-lg">
       <font-awesome-icon :icon="faTicketSimple" />
