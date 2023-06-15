@@ -52,6 +52,7 @@ return [
     'stripe' => [
         'publishable_key' => env('STRIPE_PUBLISHABLE_KEY'),
         'secret_key' => env('STRIPE_SECRET_KEY'),
-        'endpoint_secret' => env('STRIPE_WEBHOOK_ENDPOINT_SECRET')
+        'endpoint_secret' => env('STRIPE_WEBHOOK_ENDPOINT_SECRET'),
+        'endpoint_secret_connect' => env('STRIPE_WEBHOOK_ENDPOINT_SECRET_CONNECT'),
     ],
 ];

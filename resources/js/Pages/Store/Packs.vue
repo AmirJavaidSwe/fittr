@@ -1,4 +1,6 @@
 <script setup>
+import { ref } from 'vue';
+import { router, useForm, usePage } from "@inertiajs/vue3";
 import Section from '@/Components/Section.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 const props = defineProps({
@@ -7,6 +9,20 @@ const props = defineProps({
         required: true,
     },
 });
+const subdomain = ref(usePage().props.business_seetings.subdomain);
+const isLocked = ref(false);
+const buy = (id) => {
+    isLocked.value = true;
+    router.post( route('ss.payments.index', {subdomain: subdomain.value, price: id}), {}, {
+        preserveScroll: true,
+        // onBefore: () => confirm('Are you sure?'),
+        onFinish: (visit) => {
+            setTimeout(() => {
+                isLocked.value = false;                
+            }, 3000);
+        },
+    });
+};
 </script>
 
 <template>
@@ -24,15 +40,13 @@ const props = defineProps({
                             <!-- <br> -->
                             <!-- Active: {{price.is_active ? 'Yes': 'No'}} -->
                             <PrimaryButton 
-                                v-if="price.type == 'one_time'"
                                 type="button"
-                                :disabled="!price.is_active"
-                                >Buy</PrimaryButton>
-                            <PrimaryButton 
-                                v-if="price.type == 'recurring'"
-                                type="button"
-                                :disabled="!price.is_active"
-                                >Subscribe</PrimaryButton>
+                                @click="buy(price.id)"
+                                :disabled="isLocked || !price.is_active"
+                                > 
+                                {{price.type == 'one_time' ? 'Buy' : ''}}
+                                {{price.type == 'recurring' ? 'Subscribe' : ''}}
+                            </PrimaryButton>
                         </div>
                     </div>
                     <div v-else class="py-2 border-y-2 text-center">Not available for purchase</div>

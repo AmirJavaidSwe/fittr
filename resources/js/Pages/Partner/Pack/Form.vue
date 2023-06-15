@@ -287,8 +287,15 @@ const switchTab = (val) => {
                         <h2 class="text-2xl">Pricing options ({{prices.length}})</h2>
                         <div v-if="prices.length" class="flex flex-wrap gap-4">
                             <div v-for="price in prices" class="shadow-md w-80">
-                                <div class="flex font-medium items-center justify-between space-between" :class="price.is_active ? 'bg-green-400' : 'bg-gray-400'">
-                                    <div class="p-2">{{price_types.find(element => element.value == price.type).label }}</div>
+                                <div 
+                                class="flex font-medium items-center justify-between space-between"                                 
+                                :class="{
+                                    'bg-opacity-10 bg-black': !price.is_active,
+                                    'bg-green-400': price.type == 'one_time',
+                                    'bg-blue-400': price.type == 'recurring',
+                                    }"
+                                >
+                                    <div class="p-2 font-bold">{{price_types.find(element => element.value == price.type).label }}</div>
                                     <Dropdown align="right" width="48" :content-classes="['bg-gray-100', 'p-1', 'space-y-4']">
                                         <template #trigger>
                                         <font-awesome-icon :icon="faGear" class="cursor-pointer p-2" />

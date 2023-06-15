@@ -42,6 +42,7 @@ class PackPrice extends Model
     // Relationships
     public function priceable(): MorphTo
     {
+        // will return either a App\Models\Partner\Pack or other morphable model as listed under App\Providers\AppServiceProvider
         return $this->morphTo();
     }
 

@@ -218,6 +218,7 @@ const editPrice = (action, id) => {
             <table-head title="Title"/>
             <table-head title="Prices"/>
             <table-head title="Type"/>
+            <table-head title="Status"/>
             <table-head title="Created At"/>
             <table-head title="Updated At"/>
             <table-head title="Action"/>
@@ -236,11 +237,12 @@ const editPrice = (action, id) => {
                 <table-data>
                     <div v-if="pack.prices">
                         <div v-for="price in pack.prices">
-                            {{price.price}} {{price.currency.toUpperCase()}} {{price_types.find(({value}) => value === price.type)?.label}}
+                            {{price.price}} {{price.currency.toUpperCase()}} {{price_types.find(({value}) => value === price.type)?.label}} {{price.is_active ? 'ON' : 'OFF'}}
                         </div>
                     </div>
                 </table-data>
                 <table-data :title="pack_types.find(({value}) => value === pack.type)?.label "/>
+                <table-data :title="pack.is_active ? 'ON' : 'OFF' "/>
                 <table-data :title="DateTime.fromISO(pack.created_at).setZone(business_seetings.timezone).toFormat(business_seetings.date_format.format_js)"/>
                 <table-data :title="DateTime.fromISO(pack.updated_at).toRelative()"/>
                 <table-data>

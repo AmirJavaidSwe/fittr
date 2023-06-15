@@ -35,6 +35,7 @@ use App\Http\Controllers\Store\StoreClassController;
 use App\Http\Controllers\Store\StoreInstructorController;
 use App\Http\Controllers\Store\StoreStudioController;
 use App\Http\Controllers\Store\StorePackController;
+use App\Http\Controllers\Store\StorePaymentController;
 
 Route::get('/auth/google', function () {
     return Socialite::driver('google')->redirect();
@@ -174,6 +175,9 @@ Route::domain('{subdomain}.'.config('app.domain'))->middleware(['auth.subdomain'
     Route::get('/instructors', [StoreInstructorController::class, 'index'])->name('instructors.index');
     Route::get('/studios', [StoreStudioController::class, 'index'])->name('studios.index');
     Route::get('/memberships', [StorePackController::class, 'index'])->name('memberships.index');
+
+    Route::post('/buy/{price}', [StorePaymentController::class, 'index'])->name('payments.index');
+    Route::get('/success', [StorePaymentController::class, 'success'])->name('payments.success');
 
     // Route::get('/', function ($subdomain) {
     //     //temp demo

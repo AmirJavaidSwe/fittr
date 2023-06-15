@@ -54,7 +54,6 @@ const updateItem = () => {
 };
 
 const storePrice = () => {
-    console.log(formPrice);
     formPrice.post(route('partner.packs.price.store', props.pack), {
         preserveScroll: true,
         onSuccess: () => formPrice.reset()
