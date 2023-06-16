@@ -74,9 +74,9 @@ const closeCreateModal = () => {
 };
 
 const storeItem = () => {
-    form.post(route("partner.classtypes.store"), {
+    form_class.post(route("partner.classtypes.store"), {
         preserveScroll: true,
-        onSuccess: () => form.reset(),
+        onSuccess: () => form_class.reset(),
     });
 };
 
