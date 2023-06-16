@@ -54,5 +54,29 @@
         "email": "dummy2@fittr.tech",
         "password": "dummy2",
         "stripe_account_id": "acct_1MlpPN2ZUYnPPk7a"
+    },
+    {
+        "source": "partner",
+        "name": "Demo Partner3",
+        "email": "dummy3@fittr.tech",
+        "password": "dummy3"
+    },
+    {
+        "source": "partner",
+        "name": "Demo Partner4",
+        "email": "dummy4@fittr.tech",
+        "password": "dummy4"
+    },
+    {
+        "source": "partner",
+        "name": "Demo Partner5",
+        "email": "dummy5@fittr.tech",
+        "password": "dummy5"
+    },
+    {
+        "source": "partner",
+        "name": "Demo Partner6",
+        "email": "dummy6@fittr.tech",
+        "password": "dummy6"
     }
 ]

@@ -54,6 +54,8 @@ class PartnerDatabaseSeeder extends Seeder
                 ]
             );
 
+            dump('creating business for partner_id: '.$partner->id);
+
             // default date and time settings for business
             $business->settings()->updateOrCreate(
                 ['key' => SettingKey::date_format->name],
@@ -63,6 +65,8 @@ class PartnerDatabaseSeeder extends Seeder
                     'val' => Format::where('type', 'date')->where('format_string', 'Y-m-d')->first()->id,
                 ]
             );
+            dump('setting up business settings: date_format');
+
             $business->settings()->updateOrCreate(
                 ['key' => SettingKey::time_format->name],
                 [
@@ -71,6 +75,7 @@ class PartnerDatabaseSeeder extends Seeder
                     'val' => Format::where('type', 'time')->where('format_string', 'H:i')->first()->id,
                 ]
             );
+            dump('setting up business settings: time_format');
 
             // set business_id on partner
             $partner->business()->associate($business);
@@ -97,7 +102,11 @@ class PartnerDatabaseSeeder extends Seeder
             // 'php artisan key:generate' may be ran only after all encrypted values were retrived.
             // 'The MAC is invalid' will be thrown on attempt to decrypt values with new key.
             // $db_master_partner_username added to each db for recovery only, should not be used for regular queries
+
+            dump('creating partner db with name: '.$db_name);
+            dump('--');
         }
+        dump('---FINISHED PARTNER DB CREATIONS---');
 
         //run fresh migrations on each of partner database, we have to switch connection (so that migrations table be used inside partner db)
         DB::purge('mysql'); //Disconnect from master database
@@ -132,6 +141,8 @@ class PartnerDatabaseSeeder extends Seeder
             //run migrations on currently connected partner database:
             Artisan::call('migrate', ['--path' => 'database/migrations/partner', '--force' => true]);
             // Artisan::call('db:seed Partner\DatabaseSeeder --database=mysql_partner --class=UserSeeder');
+
+            dump('running migrations on partner db: '.$db_name);
 
             //run seeds for the first partner only
             if($partner->id == $first_partner_id){
