@@ -12,10 +12,9 @@ const props = defineProps({
     max_height: [Number, String],
     multiple: { type: Boolean, default: false },
     uploaded_files: Array,
-    remove_upload_file: Function,
 });
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue', 'remove_uploaded_file']);
 
 const files = ref('');
 
@@ -34,6 +33,11 @@ const allowedTypes = computed(() => {
   }).join(', ');
 });
 
+const removeUploadedFile = (id) => {
+  emit('remove_uploaded_file', id);
+  // props.remove_uploaded_file(id);
+}
+
 </script>
 <template>
   <div class="m-3">
@@ -48,7 +52,7 @@ const allowedTypes = computed(() => {
         <a :href="image.url" target="_blank" title="Click to view">
           <img :src="image.url" :alt="image.original_filename" class="inline-block w-20 rounded-lg cursor-pointer border-gray-300 border">
         </a>
-        <div class="absolute top-[0px] right-[0px] px-2 cursor-pointer" @click="uploaded_files.splice(index, 1)">
+        <div class="absolute top-[0px] right-[0px] px-2 cursor-pointer" @click="removeUploadedFile(image.id)">
           <font-awesome-icon class="text-red-900" size="xs" :icon="faTrash" />
         </div>
       </div>

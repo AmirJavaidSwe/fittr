@@ -3,7 +3,8 @@
 namespace App\Models\Partner;
 
 use App\Models\Country;
-use App\Models\Image;
+use App\Models\Partner\Image;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

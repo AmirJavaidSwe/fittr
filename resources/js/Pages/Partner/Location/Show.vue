@@ -85,6 +85,14 @@ defineProps({
                 </template>
              </single-view-row>
 
+             <single-view-row :even="true" label="Studios">
+                <template #value>
+                    <div v-for="studio in location.studios" class="inline-block bg-gray-200 rounded-lg p-2 mr-2">
+                        {{ studio.title }}
+                    </div>
+                </template>
+             </single-view-row>
+
         </template>
     </single-view>
 </template>

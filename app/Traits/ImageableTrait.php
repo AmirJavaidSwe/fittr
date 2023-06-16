@@ -51,7 +51,10 @@ trait ImageableTrait
             $updated_ids = collect($uploaded_files)->pluck('id');
             $diff = $ids->diff($updated_ids);
 
-            $model->images()->whereIn('id', $diff)->delete();
+            if($diff->count()) {
+                $model->images()->whereIn('id', $diff)->delete();
+            }
+
 
             $this->uploadFiles($files, $model, $path, $disk);
 

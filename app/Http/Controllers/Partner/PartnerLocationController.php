@@ -7,7 +7,8 @@ use App\Http\Requests\Partner\LocationFormRequest;
 use App\Models\Country;
 use App\Models\Partner\Amenity;
 use App\Models\Partner\Location;
-use App\Models\Partner\User;
+use App\Models\Partner\Studio;
+use App\Models\User;
 use App\Traits\ImageableTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -44,9 +45,10 @@ class PartnerLocationController extends Controller
                 })
                 ->paginate($this->per_page)
                 ->withQueryString(),
-            'users' => User::select('id', 'name', 'email')->get(),
+            'users' => User::select('id', 'name', 'email')->partner()->where('business_id', auth()->user()->business_id)->get(),
             'countries' => Country::select('id', 'name')->whereStatus(1)->get(),
             'amenities' => Amenity::select('id', 'title')->get()->map(fn($item) => ['label' => $item->title, 'value' => $item->id]),
+            'studios' => Studio::select('id', 'title')->get()->map(fn($item) => ['label' => $item->title, 'value' => $item->id]),
             'search' => $this->search,
             'per_page' => intval($this->per_page),
             'order_by' => $this->order_by,
@@ -78,6 +80,9 @@ class PartnerLocationController extends Controller
     {
         return Inertia::render('Partner/Location/Create', [
             'page_title' => __('Create Location'),
+            'users' => User::select('id', 'name', 'email')->partner()->where('business_id', auth()->user()->business_id)->get(),
+            'countries' => Country::select('id', 'name')->whereStatus(1)->get(),
+            'amenities' => Amenity::select('id', 'title')->get()->map(fn($item) => ['label' => $item->title, 'value' => $item->id]),
             'header' => array(
                 [
                     'title' => __('Settings'),
@@ -112,38 +117,21 @@ class PartnerLocationController extends Controller
     public function store(LocationFormRequest $request)
     {
         $validated = $request->validated();
-        DB::beginTransaction();
+        $validated['page_title'] = $validated['title'];
+
+        $location = Location::create($validated);
+
+        if(@$validated['amenity_ids'] && count($validated['amenity_ids'])) {
+            $location->amenities()->sync($validated['amenity_ids'] ?? []);
+        }
 
         try {
 
-            $location = new Location;
-            $location->title = $validated['title'];
-            $location->page_title = $validated['title'];
-            $location->brief = $validated['brief'];
-            // $location->url = $validated['url'];
-            // $location->checkin_url = $validated['checkin_url'];
-            $location->manager_id = $validated['manager_id'];
-            $location->address_line_1 = $validated['address_line_1'];
-            $location->address_line_2 = $validated['address_line_2'];
-            $location->country_id = $validated['country_id'];
-            $location->city = $validated['city'];
-            $location->postcode = $validated['postcode'];
-            $location->map_latitude = $validated['map_latitude'];
-            $location->map_longitude = $validated['map_longitude'];
-            $location->tel = $validated['tel'];
-            $location->email = $validated['email'];
-            $location->save();
-
-            $location->amenities()->sync($validated['amenity_ids']);
-
-            $this->uploadFiles($request->file('image'), $location, 'images/location', 'public');
-
-            DB::commit();
+            $this->uploadFiles($request->file('image'), $location, 'images/location');
 
             return $this->redirectBackSuccess(__('Location created successfully'), 'partner.locations.index');
 
         } catch(Exception $e) {
-            DB::rollBack();
             return $this->redirectBackError(__('Something went wrong!'), 'partner.locations.index');
         }
     }
@@ -181,7 +169,7 @@ class PartnerLocationController extends Controller
                     'link' => null,
                 ],
             ),
-            'location' => $location->load(['manager', 'country', 'amenities', 'images']),
+            'location' => $location->load(['manager', 'country', 'amenities', 'images', 'studios']),
         ]);
     }
 
@@ -195,6 +183,10 @@ class PartnerLocationController extends Controller
     {
         return Inertia::render('Partner/Location/Edit', [
             'page_title' => __('Edit Location'),
+            'users' => User::select('id', 'name', 'email')->partner()->where('business_id', auth()->user()->business_id)->get(),
+            'countries' => Country::select('id', 'name')->whereStatus(1)->get(),
+            'amenities' => Amenity::select('id', 'title')->get()->map(fn($item) => ['label' => $item->title, 'value' => $item->id]),
+            'studios' => Studio::select('id', 'title')->get()->map(fn($item) => ['label' => $item->title, 'value' => $item->id]),
             'header' => array(
                 [
                     'title' => __('Settings'),
@@ -217,7 +209,7 @@ class PartnerLocationController extends Controller
                     'link' => null,
                 ],
             ),
-            'location' => $location->load('manager', 'country')
+            'location' => $location->load('manager', 'country', 'amenities', 'images', 'studios')
         ]);
     }
 
@@ -231,40 +223,32 @@ class PartnerLocationController extends Controller
     public function update(LocationFormRequest $request, Location $location)
     {
         $validated = $request->validated();
-        //Do we really need a transaction here? 
-        //Can simply ->update($request->validated()) and move file upload process to try/catch block?
-        DB::beginTransaction();
+
+        $location->update($validated);
+
+        $location->amenities()->sync($validated['amenity_ids'] ?? []);
+
+        $savedStudios = $location->studios->pluck('id');
+        $updatedStudios = collect($validated['studio_ids'] ?? []);
+        $delStudios = $savedStudios->diff($updatedStudios);
+
+        if($updatedStudios->count()) {
+            Studio::whereIn('id', $updatedStudios)->update(['location_id' => $location->id]);
+        }
+
+        if($delStudios->count()) {
+            Studio::whereIn('id', $delStudios)->update(['location_id' => null]);
+        }
 
         try {
 
-            $location->title = $validated['title'];
-            $location->page_title = $validated['title'];
-            $location->brief = $validated['brief'];
-            // $location->url = $validated['url'];
-            // $location->checkin_url = $validated['checkin_url'];
-            $location->manager_id = $validated['manager_id'];
-            $location->address_line_1 = $validated['address_line_1'];
-            $location->address_line_2 = $validated['address_line_2'];
-            $location->country_id = $validated['country_id'];
-            $location->city = $validated['city'];
-            $location->postcode = $validated['postcode'];
-            $location->map_latitude = $validated['map_latitude'];
-            $location->map_longitude = $validated['map_longitude'];
-            $location->tel = $validated['tel'];
-            $location->email = $validated['email'];
-            $location->save();
+            if($request->hasFile('image')) {
+                $this->updateFiles($request->file('image'), $request->uploaded_images, $location, 'images/location');
+            }
 
-            $location->amenities()->sync($validated['amenity_ids'] ?? []); //could be empty
-
-            //this will delete existing file, even when no file is present on update, need to tweak the logic a bit or something like if $request->filled('image)
-            $this->updateFiles($request->file('image'), $request->uploaded_files, $location, 'images/location'); //5th param defaults to filesystems.default - removed from here
-
-            DB::commit();
-
-            return $this->redirectBackSuccess(__('Location created successfully'), 'partner.locations.index');
+            return $this->redirectBackSuccess(__('Location updated successfully'), 'partner.locations.index');
 
         } catch(Exception $e) {
-            DB::rollBack();
             return $this->redirectBackError(__('Something went wrong!'), 'partner.locations.index');
         }
     }
@@ -280,5 +264,12 @@ class PartnerLocationController extends Controller
         $location->delete();
 
         return $this->redirectBackSuccess(__('Location deleted successfully'), 'partner.locations.index');
+    }
+
+    public function deleteImage(Request $request, Location $location)
+    {
+        $location->images()->where('id', $request->image_id)->delete();
+
+        return $this->redirectBackSuccess(__('Image deleted successfully'));
     }
 }

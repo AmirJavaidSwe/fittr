@@ -57,6 +57,10 @@ const close = () => {
                 <div class="mt-4 mb-3 flex-1" v-if="slots.content">
                     <slot name="content" />
                 </div>
+
+                <div class="flex mt-4 mb-3 flex-1 justify-end" v-if="slots.footer">
+                    <slot name="footer" />
+                </div>
             </nav>
         </transition>
     </teleport>

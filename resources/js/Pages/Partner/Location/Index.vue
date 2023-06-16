@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch } from 'vue';
-import { Link, useForm } from '@inertiajs/vue3';
+import { Link, router, useForm } from '@inertiajs/vue3';
 import { DateTime } from "luxon";
 import Search from "@/Components/DataTable/Search.vue";
 import Pagination from "@/Components/Pagination.vue";
@@ -14,6 +14,14 @@ import DialogModal from '@/Components/DialogModal.vue';
 import Form from './Form.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import axios from 'axios';
+import ButtonLink from '@/Components/ButtonLink.vue';
+import Dropdown from '@/Components/Dropdown.vue';
+import { faCog, faPlus } from '@fortawesome/free-solid-svg-icons';
+import DropdownLink from '@/Components/DropdownLink.vue';
+import EditIcon from '@/Icons/Edit.vue';
+import DeleteIcon from '@/Icons/Delete.vue';
+import DateValue from '@/Components/DataTable/DateValue.vue';
+import SideModal from '@/Components/SideModal.vue';
 
 const props = defineProps({
     disableSearch: {
@@ -27,7 +35,8 @@ const props = defineProps({
     order_dir: String,
     users: Array,
     amenities: Array,
-    countries: Array
+    countries: Array,
+    studios: Array,
 });
 
 const form = useForm({
@@ -54,6 +63,8 @@ const createForm = useForm({
     amenity_ids: [],
     image: null,
     uploaded_images: [],
+    status: true,
+    studio_ids: [],
 });
 
 const runSearch = () => {
@@ -109,7 +120,10 @@ const saveForm = () => {
             }
         });
     } else {
-        createForm.post(route('partner.locations.store'), {
+        createForm.transform((data) => ({
+            ...data,
+            studio_ids: null,
+        })).post(route('partner.locations.store'), {
             preserveScroll: true,
             onSuccess: () => {
                 modal.value = false;
@@ -146,24 +160,52 @@ const showEditModal = (data) => {
     createForm.email = data.email;
     createForm.amenity_ids = data.amenities.map(item => item.id);
     createForm.uploaded_images = [...data.images];
+    createForm.status = !!data.status;
+    createForm.studio_ids = data.studios.map(item => item.id);
 
     editId.value = data.id;
     editMode.value = true;
     modal.value = true;
 }
 
+const fileRemoveForm = useForm({
+    image_id: '',
+});
+
+const removeUploadedFile = (id) => {
+    // console.log({id})
+    fileRemoveForm.image_id = id;
+    fileRemoveForm.delete(route('partner.locations.delete-image', editId.value), {
+        onSuccess: () => {
+            fileRemoveForm.reset();
+            showEditModal(props.locations?.data.find(item => item.id == editId.value));
+        }
+    });
+}
+
 </script>
 <template>
     <data-table-layout
-        button-title="Create new"
-        :button-link="route('partner.locations.create')"
         :disable-button="true"
         :disable-search="disableSearch">
 
         <template #button>
-            <button class="cursor-pointer inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto" @click="showCreateModal">
-                Create new
-            </button>
+            <ButtonLink
+                styling="secondary"
+                size="default"
+                @click="showCreateModal"
+            >
+                Create location
+                <font-awesome-icon class="ml-2" :icon="faPlus" />
+            </ButtonLink>
+            <ButtonLink
+                styling="secondary"
+                size="default"
+                :href="route('partner.locations.create')"
+                type="primary"
+            >
+                Create location (direct)
+            </ButtonLink>
         </template>
 
         <template #search>
@@ -172,6 +214,7 @@ const showEditModal = (data) => {
                 :disable-search="disableSearch"
                 @reset="form.search = null"
                 @pp_changed="setPerPage"
+                :noFilter="true"
                 />
         </template>
 
@@ -185,32 +228,75 @@ const showEditModal = (data) => {
         </template>
 
         <template #tableData>
-            <tr v-for="location in locations.data" >
+            <tr v-for="(location, index) in locations.data" >
                 <table-data :title="location.id"/>
                 <table-data>
                     <Link class="font-medium text-indigo-600 hover:text-indigo-500"
                           :href="route('partner.locations.show', location)"> {{ location.title }} </Link>
                 </table-data>
                 <table-data :title="location.manager?.name"/>
-                <table-data :title="DateTime.fromISO(location.created_at)"/>
-                <table-data :title="DateTime.fromISO(location.updated_at).toRelative()"/>
                 <table-data>
-                    <button class="font-medium text-indigo-600 hover:text-indigo-500" @click="showEditModal(location)">
-                        Edit
-                    </button>
-                    <br>
-                    <button class="block text-red-500" @click="confirmDeletion(location.id)">
-                        Delete
-                    </button>
+                    <DateValue :date="DateTime.fromISO(location.created_at)" />
+                </table-data>
+                <table-data>
+                    <DateValue :date="DateTime.fromISO(location.updated_at).toRelative()" />
+                </table-data>
+                <table-data>
+                    <Dropdown
+                        align="right"
+                        width="48"
+                        :top="index > locations.data.length - 3"
+                        :content-classes="['bg-white']"
+                    >
+                        <template #trigger>
+                            <button class="text-dark text-lg">
+                                <font-awesome-icon :icon="faCog" />
+                            </button>
+                        </template>
+
+                        <template #content>
+                            <DropdownLink
+                                :href="route('partner.locations.edit', location)"
+                            >
+                                <EditIcon
+                                    class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
+                                />
+                                Edit
+                            </DropdownLink>
+                            <DropdownLink
+                                as="button"
+                                @click="showEditModal(location)"
+                            >
+                                <EditIcon
+                                    class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
+                                />
+                                <span> Edit (Modal) </span>
+                            </DropdownLink>
+                            <DropdownLink
+                                as="button"
+                                @click="confirmDeletion(location.id)"
+                            >
+                                <span class="text-danger-500 flex items-center">
+                                    <DeleteIcon
+                                        class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
+                                    />
+                                    <span> Delete </span>
+                                </span>
+                            </DropdownLink>
+                        </template>
+                    </Dropdown>
                 </table-data>
             </tr>
         </template>
 
         <template #pagination>
             <pagination
-                :links="locations.links"/>
-
-            <p class="p-2 text-xs">Viewing {{locations.from}} - {{locations.to}} of {{locations.total}} results</p>
+                :links="locations.links"
+                :to="locations.to"
+                :from="locations.from"
+                :total="locations.total"
+                @pp_changed="setPerPage"
+            />
         </template>
     </data-table-layout>
 
@@ -241,17 +327,34 @@ const showEditModal = (data) => {
     </ConfirmationModal>
 
     <!-- Create Location Modal -->
-    <DialogModal :show="modal" @close="modal = false">
+    <SideModal :show="modal" @close="modal = false">
         <template #title>
             {{ editMode ? 'Edit' : 'Create' }} Location
         </template>
 
         <template #content>
-            <Form :form="createForm" :users="users" :amenities="amenities" :countries="countries" />
+            <Form
+                :form="createForm"
+                :users="users"
+                :amenities="amenities"
+                :countries="countries"
+                :studios="studios"
+                :editMode="editMode"
+                @remove_uploaded_file="removeUploadedFile"
+            />
         </template>
         <template #footer>
-            <SecondaryButton type="button" class="mr-2" @click="modal = false">Cancel</SecondaryButton>
-            <PrimaryButton type="button" @click="saveForm">{{ editMode ? 'Update' : 'Save' }}</PrimaryButton>
+            <ButtonLink
+                :class="{ 'opacity-25': createForm.processing }"
+                :disabled="createForm.processing"
+                styling="secondary"
+                size="default"
+                type="submit"
+                @click="saveForm"
+            >
+                <span v-if="!editMode">Create</span>
+                <span v-else>Save changes</span>
+            </ButtonLink>
         </template>
-    </DialogModal>
+    </SideModal>
 </template>

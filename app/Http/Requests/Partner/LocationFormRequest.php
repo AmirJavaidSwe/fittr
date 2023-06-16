@@ -39,13 +39,15 @@ class LocationFormRequest extends FormRequest
             'tel' => 'nullable|string|max:50',
             'email' => 'nullable|email|max:250',
             'amenity_ids' => 'nullable',
+            'status' => 'nullable|boolean',
             'image' => [
                 'nullable',
                 File::image()
                 ->min(1) //KB
                 ->max(20 * 1024) //KB
                 ->dimensions(Rule::dimensions([1920, 1280])),
-            ]
+            ],
+            'studio_ids' => 'nullable',
         ];
 
         return $rules;
@@ -63,6 +65,7 @@ class LocationFormRequest extends FormRequest
             'map_longitude' => 'longitude',
             'tel' => 'phone',
             'amenity_ids' => 'amenities',
+            'studio_ids' => 'studios',
         ];
     }
 }

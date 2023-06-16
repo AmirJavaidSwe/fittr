@@ -148,7 +148,7 @@ Route::domain('app.'.config('app.domain'))->group(function () {
             Route::resource('roles', RoleController::class);
             Route::resource('studios', PartnerStudioController::class);
             Route::resource('users', PartnerUserController::class);
-            
+
             Route::resource('packs', PartnerPackController::class);
             Route::post('/packs/{pack}/duplicate', [PartnerPackController::class, 'duplicate'])->name('packs.duplicate');
             Route::post('/packs/{pack}/price', [PartnerPackController::class, 'storePrice'])->name('packs.price.store');
@@ -162,6 +162,7 @@ Route::domain('app.'.config('app.domain'))->group(function () {
             Route::post('/exports', [PartnerExportController::class, 'store']);
 
             Route::resource('locations', PartnerLocationController::class);
+            Route::delete('/locations/{location}/delete-image', [PartnerLocationController::class, 'deleteImage'])->name('locations.delete-image');
 
         });
 

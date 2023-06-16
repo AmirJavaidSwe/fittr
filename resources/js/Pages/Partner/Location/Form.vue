@@ -7,6 +7,9 @@ import { ref } from "vue";
 import Dropzone from "@/Components/Dropzone.vue";
 import MultiselectInput from "@/Components/MultiselectInput.vue";
 import { computed } from "@vue/reactivity";
+import Switcher from "@/Components/Switcher.vue";
+
+defineEmits(["remove_uploaded_file"]);
 
 const props = defineProps({
     form: {
@@ -15,21 +18,10 @@ const props = defineProps({
     },
     users: Array,
     amenities: Array,
-    countries: Array
+    countries: Array,
+    studios: Array,
+    editMode: Boolean,
 })
-
-const steps = ref([
-    {
-        name: 'Location',
-        active: true,
-        completed: false,
-    },
-    {
-        name: 'Administrative',
-        active: false,
-        completed: false,
-    },
-]);
 
 const manager = computed(() => {
     return props.users.find(item => item.id == props.form.manager_id);
@@ -38,10 +30,7 @@ const manager = computed(() => {
 </script>
 
 <template>
-    <!-- <div class="mb-5 font-bold">
-        Details:
-    </div> -->
-    <div class="mb-3">
+    <div class="my-3">
         <InputLabel for="title" value="Title" />
         <TextInput
             id="name"
@@ -51,7 +40,7 @@ const manager = computed(() => {
             />
         <InputError :message="form.errors.title" class="mt-2" />
     </div>
-    <div class="mb-3">
+    <div class="my-3">
         <InputLabel for="description" value="Description" />
         <TextInput
             id="description"
@@ -61,7 +50,7 @@ const manager = computed(() => {
             />
         <InputError :message="form.errors.brief" class="mt-2" />
     </div>
-    <div class="mb-3">
+    <div class="my-3">
         <InputLabel for="manager" value="General Manager" />
         <SelectInput
             id="manager"
@@ -74,7 +63,7 @@ const manager = computed(() => {
         </SelectInput>
         <InputError :message="form.errors.manager_id" class="mt-2" />
     </div>
-    <div class="mb-3">
+    <div class="my-3">
         <InputLabel for="manager_email" value="Email (General Manager)" />
         <TextInput
             id="manager_email"
@@ -83,13 +72,8 @@ const manager = computed(() => {
             class="mt-1 block w-full"
             disabled="true"
             />
-        <!-- <InputError :message="form.errors.manager_email" class="mt-2" /> -->
     </div>
-    <!-- <div class="my-4 border-t border-gray-300"></div>
-    <div class="mb-5 font-bold">
-        Address/Contact:
-    </div> -->
-    <div class="mb-3">
+    <div class="my-3">
         <InputLabel for="address_line_1" value="Address Line 1" />
         <TextInput
             id="address_line_1"
@@ -99,7 +83,7 @@ const manager = computed(() => {
             />
         <InputError :message="form.errors.address_line_1" class="mt-2" />
     </div>
-    <div class="mb-3">
+    <div class="my-3">
         <InputLabel for="address_line_2" value="Address Line 2" />
         <TextInput
             id="address_line_2"
@@ -109,7 +93,7 @@ const manager = computed(() => {
             />
         <InputError :message="form.errors.address_line_2" class="mt-2" />
     </div>
-    <div class="mb-3">
+    <div class="my-3">
         <InputLabel for="country_id" value="Country" />
         <SelectInput
             id="country_id"
@@ -122,7 +106,7 @@ const manager = computed(() => {
         </SelectInput>
         <InputError :message="form.errors.country_id" class="mt-2" />
     </div>
-    <div class="mb-3">
+    <div class="my-3">
         <InputLabel for="city" value="City/Town" />
         <TextInput
             id="city"
@@ -132,7 +116,7 @@ const manager = computed(() => {
             />
         <InputError :message="form.errors.city" class="mt-2" />
     </div>
-    <div class="mb-3">
+    <div class="my-3">
         <InputLabel for="postcode" value="Postcode" />
         <TextInput
             id="postcode"
@@ -142,7 +126,7 @@ const manager = computed(() => {
             />
         <InputError :message="form.errors.postcode" class="mt-2" />
     </div>
-    <div class="mb-3">
+    <div class="my-3">
         <div class="inline-block w-1/2 pr-2">
             <InputLabel for="map_latitude" value="Latitude" />
             <TextInput
@@ -164,7 +148,7 @@ const manager = computed(() => {
             <InputError :message="form.errors.map_longitude" class="mt-2" />
         </div>
     </div>
-    <div class="mb-3">
+    <div class="my-3">
         <InputLabel for="phone" value="Phone" />
         <TextInput
             id="phone"
@@ -174,7 +158,7 @@ const manager = computed(() => {
             />
         <InputError :message="form.errors.tel" class="mt-2" />
     </div>
-    <div class="mb-3">
+    <div class="my-3">
         <InputLabel for="email" value="Email" />
         <TextInput
             id="email"
@@ -184,15 +168,26 @@ const manager = computed(() => {
             />
         <InputError :message="form.errors.email" class="mt-2" />
     </div>
-    <div class="mb-3">
+    <div class="my-3">
         <InputLabel for="image" value="Image" />
-        <Dropzone id="image" v-model="form.image" :uploaded_files="form.uploaded_images" :accept="['.jpg', '.png', '.bmp']" max_width="200" max_height="200" />
+        <Dropzone id="image" v-model="form.image" :uploaded_files="form.uploaded_images ? form.uploaded_images : []" :accept="['.jpg', '.png', '.bmp']" max_width="200" max_height="200" @remove_uploaded_file="$emit('remove_uploaded_file', $event)" />
         <InputError :message="form.errors.image" class="mt-2" />
     </div>
-    <div class="mb-3">
-        <InputLabel for="amenities" value="Amenities" class="mt-4" />
+    <div class="my-3">
+        <InputLabel for="amenities" value="Amenities" />
         <MultiselectInput :options="amenities" v-model="form.amenity_ids" mode="multiple" />
         <InputError :message="form.errors.amenity_ids" class="mt-2" />
+    </div>
+    <div class="my-3" v-if="editMode">
+        <InputLabel for="studios" value="Studios" />
+        <MultiselectInput :options="studios" v-model="form.studio_ids" mode="multiple" />
+        <InputError :message="form.errors.studio_ids" class="mt-2" />
+    </div>
+    <div class="my-3">
+        <Switcher
+            v-model="form.status"
+            title="Status" />
+        <InputError :message="form.errors.status" class="mt-2" />
     </div>
 </template>
 <style src="@vueform/multiselect/themes/default.css"></style>

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Partner;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,7 +12,7 @@ class Image extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $connection = 'mysql';
+    protected $connection = 'mysql_partner';
     protected $table = 'images';
     protected $guarded = [
         'id',
