@@ -36,6 +36,12 @@ defineProps({
             />
 
             <single-view-row
+                :even="false"
+                label="Title"
+                :value="studio.location?.title"
+            />
+
+            <single-view-row
                 :even="true"
                 label="Ordering"
                 :value="studio.ordering"

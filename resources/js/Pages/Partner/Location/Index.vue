@@ -75,6 +75,15 @@ const runSearch = () => {
     });
 };
 
+const setOrdering = (col) => {
+    //reverse same col order
+    if (form.order_by == col) {
+        form.order_dir = form.order_dir == "asc" ? "desc" : "asc";
+    }
+    form.order_by = col;
+    runSearch();
+};
+
 const setPerPage = (n) => {
     form.per_page = n;
     runSearch();
@@ -219,12 +228,37 @@ const removeUploadedFile = (id) => {
         </template>
 
         <template #tableHead>
-            <table-head title="Id"/>
-            <table-head title="Title"/>
-            <table-head title="General Manager"/>
-            <table-head title="Created At"/>
-            <table-head title="Updated At"/>
-            <table-head title="Action"/>
+            <table-head
+                title="Id"
+                @click="setOrdering('id')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'id'"
+            />
+            <table-head
+                title="Title"
+                @click="setOrdering('title')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'title'"
+            />
+            <table-head
+                title="General Manager"
+                @click="setOrdering('manager_id')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'manager_id'"
+            />
+            <table-head
+                title="Created At"
+                @click="setOrdering('created_at')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'created_at'"
+            />
+            <table-head
+                title="Updated At"
+                @click="setOrdering('updated_at')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'updated_at'"
+            />
+            <table-head title="Action" />
         </template>
 
         <template #tableData>

@@ -6,6 +6,7 @@ import InputError from "@/Components/InputError.vue";
 import ActionMessage from "@/Components/ActionMessage.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import SelectInput from "@/Components/SelectInput.vue";
+import ButtonLink from "@/Components/ButtonLink.vue";
 
 defineProps({
     form: {

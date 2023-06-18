@@ -33,6 +33,7 @@ class PartnerStudioController extends Controller
                 })
                 ->paginate($this->per_page)
                 ->withQueryString(),
+            'locations' => Location::select('id', 'title')->get(),
             'search' => $this->search,
             'per_page' => intval($this->per_page),
             'order_by' => $this->order_by,
@@ -135,7 +136,7 @@ class PartnerStudioController extends Controller
                     'link' => null,
                 ],
             ),
-            'studio' => $studio,
+            'studio' => $studio->load('location'),
         ]);
     }
 

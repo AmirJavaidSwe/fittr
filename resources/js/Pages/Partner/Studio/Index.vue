@@ -24,6 +24,7 @@ const props = defineProps({
         default: false,
     },
     studios: Object,
+    locations: Array,
     search: String,
     per_page: Number,
     order_by: String,
@@ -65,7 +66,8 @@ watch(() => form.search, runSearch);
 // Create/Edit Studios Queries
 let form_class = useForm({
     title: null,
-    ordering: null,
+    title: null,
+    location_id: null,
 });
 
 const showCreateModal = ref(false);
@@ -83,7 +85,7 @@ const storeStudio = () => {
 let form_edit = useForm({
     id: "",
     title: null,
-    ordering: null,
+    location_id: null,
 });
 
 const showEditModal = ref(false);
@@ -92,10 +94,12 @@ const closeEditModal = () => {
 };
 
 const handleUpdateForm = (data) => {
+
+    console.log({data});
     showEditModal.value = true;
     form_edit.id = data.id;
     form_edit.title = data.title;
-    form_edit.ordering = data.ordering;
+    form_edit.location_id = data.location_id;
 };
 
 const updateStudios = () => {
@@ -212,10 +216,6 @@ const deleteItem = () => {
                         :date="DateTime.fromISO(studio.updated_at).toRelative()"
                     />
                 </table-data>
-                <table-data :title="studio.location?.title"/>
-                <table-data :title="studio.ordering"/>
-                <table-data :title="DateTime.fromISO(studio.created_at)"/>
-                <table-data :title="DateTime.fromISO(studio.updated_at).toRelative()"/>
                 <table-data>
                     <Dropdown
                         align="right"
@@ -280,7 +280,7 @@ const deleteItem = () => {
         <template #title> Create new studio </template>
 
         <template #content>
-            <Form :form="form_class" :submitted="storeStudio" modal />
+            <Form :form="form_class" :submitted="storeStudio" :locations="locations" modal />
         </template>
     </SideModal>
 
@@ -289,7 +289,7 @@ const deleteItem = () => {
         <template #title> Update studio </template>
 
         <template #content>
-            <Form :form="form_edit" :submitted="updateStudios" modal />
+            <Form :form="form_edit" :submitted="updateStudios" :locations="locations" modal />
         </template>
     </SideModal>
 

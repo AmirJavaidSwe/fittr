@@ -36,7 +36,8 @@ class PartnerLocationController extends Controller
         $this->order_dir = $request->query('order_dir', 'desc');
 
         return Inertia::render('Partner/Location/Index', [
-            'locations' => Location::with('studios', 'manager', 'amenities', 'images')->orderBy($this->order_by, $this->order_dir)
+            'locations' => Location::with('studios', 'manager', 'amenities', 'images')
+                ->orderBy($this->order_by, $this->order_dir) // Need to figure out users.name sub query/join orderby as it is a cross db relation and location's connection 'mysql_partner' is not able to access main database.
                 ->when($this->search, function ($query) {
                     $query->where(function($query) {
                         $query->orWhere('id', intval($this->search))
