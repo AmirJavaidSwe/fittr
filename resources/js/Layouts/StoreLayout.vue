@@ -84,7 +84,7 @@ const headerIsArray = computed(() => {
             <div class="md:flex md:flex-col md:h-screen">
                 <!-- Navbar (Logo, navigation, drop/mobile navigation) -->
                 <div class="md:flex md:flex-shrink-0">
-                    <div class="flex items-center justify-between md:flex-shrink-0 bg-green-100 w-full">
+                    <div class="flex items-center justify-between md:flex-shrink-0 bg-primary-500 w-full">
                         <!-- Logo -->
                         <Link :href="business_seetings.logo_url ?? '/'" class="">
                             <div v-if="business_seetings.logo" class="h-20 w-56">
