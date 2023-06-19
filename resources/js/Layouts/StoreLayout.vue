@@ -72,10 +72,8 @@ const headerIsArray = computed(() => {
 
 <template>
     <div>
-        <AppHead 
-            :title="$page.props.page_title"
-            :favicon_type="favicon_type"
-            :favicon_image_url="favicon_image_url">
+        <AppHead :title="$page.props.page_title">
+            <link v-if="favicon_image_url" rel="icon" :type="favicon_type" :href="favicon_image_url" />
         </AppHead>
 
         <Banner />

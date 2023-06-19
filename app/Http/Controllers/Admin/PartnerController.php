@@ -49,7 +49,7 @@ class PartnerController extends Controller
                         'name' => $user->name,
                         'email' => $user->email,
                         'business_id' => $user->business_id,
-                        'business_name' => $user->business->settings->firstWhere('key', 'business_name')?->val,
+                        'business_name' => $user->business?->settings->firstWhere('key', 'business_name')?->val,
                         'created_at' => $user->created_at->format('Y-m-d'),
                         'url_show' => URL::route('admin.partners.show', $user),
                         'url_edit' => URL::route('admin.partners.edit', $user),

@@ -25,6 +25,7 @@ use App\Http\Controllers\Partner\PartnerExportController;
 use App\Http\Controllers\Partner\PartnerInstructorController;
 use App\Http\Controllers\Partner\PartnerLocationController;
 use App\Http\Controllers\Partner\PartnerMemberController;
+use App\Http\Controllers\Partner\PartnerOnboardController;
 use App\Http\Controllers\Partner\PartnerPackController;
 use App\Http\Controllers\Partner\PartnerStudioController;
 use App\Http\Controllers\Partner\PartnerSubscriptionController;
@@ -44,6 +45,12 @@ Route::get('/auth/google', function () {
 Route::get('/auth/google-callback', [UserProfileController::class, 'googleAuth']);
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'webhook']);
 // https://app.fittr.tech/stripe/connect-redirect
+
+//Routes to complete partner onboarding. Accessible and auto-redirected to from 'ConnectPartnerDatabase' middleware when user has no business relation.
+Route::middleware(['auth', 'verified'])->name('partner.onboarding')->group(function () {
+    Route::get('/onboarding', [PartnerOnboardController::class, 'index']);
+    Route::post('/onboarding', [PartnerOnboardController::class, 'update']);
+});
 
 // this is for fittr admin users and partner users
 Route::domain('app.'.config('app.domain'))->group(function () {
@@ -99,10 +106,7 @@ Route::domain('app.'.config('app.domain'))->group(function () {
         });
 
         //PARTNER
-        // \App\Http\Middleware\ConnectPartnerDatabase::class runs on every request, see App\Http\Kernel $middlewareGroups
-        // ConnectPartnerDatabase must run before SubstituteBindings in order for implicit model bindings to work
-
-        Route::middleware(['auth.source:partner'])->name('partner.')->group(function () {
+        Route::middleware(['auth.source:partner', 'partner.connect'])->name('partner.')->group(function () {
             Route::get('/dashboard', [PartnerDashboardController::class, 'index'])->name('dashboard');
 
             Route::get('/subscriptions', [PartnerSubscriptionController::class, 'index'])->name('subscriptions.index');

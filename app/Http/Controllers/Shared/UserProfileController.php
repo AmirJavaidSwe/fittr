@@ -59,6 +59,7 @@ class UserProfileController extends JetstreamUserProfileController
                 'email_verified_at' => now(),
             ]);
         }
+        // note: redirection to dashboard route for partner will hit ConnectPartnerDatabase middleware, which may redirect user to onboarding flow when user has no business.
 
         Auth::login($user);
 

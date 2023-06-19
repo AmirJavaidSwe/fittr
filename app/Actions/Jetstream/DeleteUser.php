@@ -17,5 +17,9 @@ class DeleteUser implements DeletesUsers
         $user->deleteProfilePhoto();
         $user->tokens->each->delete();
         $user->delete();
+
+        //to do:
+        // add event here.
+        // listener should run the routine job, e.g. send goodbye email (to worthy), delete/backup database of business partner
     }
 }
