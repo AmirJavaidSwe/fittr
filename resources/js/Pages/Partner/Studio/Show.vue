@@ -1,5 +1,4 @@
 <script setup>
-import { Link } from "@inertiajs/vue3";
 import { DateTime } from "luxon";
 import SingleView from "@/Components/DataTable/SingleView.vue";
 import SingleViewRow from "@/Components/DataTable/SingleViewRow.vue";
@@ -27,17 +26,17 @@ defineProps({
             </div>
         </template>
         <template #item>
-            <single-view-row label="ID" :value="studio.id" />
+            <single-view-row :even="false" label="ID" :value="studio.id" />
 
             <single-view-row
-                :even="false"
+                :even="true"
                 label="Title"
                 :value="studio.title"
             />
 
             <single-view-row
                 :even="false"
-                label="Title"
+                label="Location"
                 :value="studio.location?.title"
             />
 
@@ -50,7 +49,7 @@ defineProps({
             <single-view-row
                 :even="false"
                 label="Created At"
-                :value="DateTime.fromISO(studio.created_at)"
+                :value="DateTime.fromISO(studio.created_at).toString()"
             />
 
             <single-view-row

@@ -8,12 +8,8 @@ import TableHead from "@/Components/DataTable/TableHead.vue";
 import TableData from "@/Components/DataTable/TableData.vue";
 import DataTableLayout from "@/Components/DataTable/Layout.vue";
 import ConfirmationModal from '@/Components/ConfirmationModal.vue';
-import SecondaryButton from '@/Components/SecondaryButton.vue';
-import DangerButton from '@/Components/DangerButton.vue';
 import DialogModal from '@/Components/DialogModal.vue';
 import Form from './Form.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import axios from 'axios';
 import ButtonLink from '@/Components/ButtonLink.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import { faCog, faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -28,6 +24,7 @@ const props = defineProps({
         type: Boolean,
         default: false
     },
+    business_seetings: Object,
     locations: Object,
     search: String,
     per_page: Number,
@@ -270,7 +267,7 @@ const removeUploadedFile = (id) => {
                 </table-data>
                 <table-data :title="location.manager?.name"/>
                 <table-data>
-                    <DateValue :date="DateTime.fromISO(location.created_at)" />
+                    <DateValue :date="DateTime.fromISO(location.created_at).setZone(business_seetings.timezone).toFormat(business_seetings.date_format.format_js)" />
                 </table-data>
                 <table-data>
                     <DateValue :date="DateTime.fromISO(location.updated_at).toRelative()" />
@@ -345,18 +342,12 @@ const removeUploadedFile = (id) => {
         </template>
 
         <template #footer>
-            <SecondaryButton @click="itemDeleting = null">
-                Cancel
-            </SecondaryButton>
-
-            <DangerButton
+            <ButtonLink styling="secondary" size="default" @click="itemDeleting = null">Cancel</ButtonLink>
+            <ButtonLink styling="danger" size="default" 
                 class="ml-3"
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
-                @click="deleteItem"
-            >
-                Delete
-            </DangerButton>
+                @click="deleteItem">Delete</ButtonLink>
         </template>
     </ConfirmationModal>
 

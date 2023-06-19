@@ -23,6 +23,7 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+    business_seetings: Object,
     studios: Object,
     locations: Array,
     search: String,
@@ -93,17 +94,15 @@ const closeEditModal = () => {
     showEditModal.value = false;
 };
 
-const handleUpdateForm = (data) => {
-
-    console.log({data});
+const handleUpdateForm = (studio) => {
     showEditModal.value = true;
-    form_edit.id = data.id;
-    form_edit.title = data.title;
-    form_edit.location_id = data.location_id;
+    form_edit.id = studio.id;
+    form_edit.title = studio.title;
+    form_edit.location_id = studio.location_id;
 };
 
 const updateStudios = () => {
-    form_edit.post(route("partner.studios.update", form_edit), {
+    form_edit.put(route("partner.studios.update", form_edit), {
         preserveScroll: true,
         onSuccess: () => [form_class.reset(), closeEditModal()],
     });
@@ -209,12 +208,10 @@ const deleteItem = () => {
                 <table-data :title="studio.location?.title"/>
                 <table-data :title="studio.ordering" />
                 <table-data>
-                    <DateValue :date="DateTime.fromISO(studio.created_at)" />
+                    <DateValue :date="DateTime.fromISO(studio.created_at).setZone(business_seetings.timezone).toFormat(business_seetings.date_format.format_js)" />
                 </table-data>
                 <table-data>
-                    <DateValue
-                        :date="DateTime.fromISO(studio.updated_at).toRelative()"
-                    />
+                    <DateValue :date="DateTime.fromISO(studio.updated_at).toRelative()"/>
                 </table-data>
                 <table-data>
                     <Dropdown
