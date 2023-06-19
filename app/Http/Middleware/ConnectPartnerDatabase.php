@@ -23,16 +23,12 @@ class ConnectPartnerDatabase
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next): Response | \Inertia\Response
     {
-        //TODO: check if partner database is ready and set up, run migrations if needed
-        //setup flow of database should be ran as sync job after registration, probably after email confirmed if not signup with google
-
-        //because this middleware runs on every request, $request->user() may not exist, simply allow request to pass deeper OR set connection otherwise
         $partner = $request->user();
-
-        if(empty($partner) || !$partner->is_partner){
-            return $next($request);
+        //this is brand new user and business does not exist yet nor database is created
+        if(empty($partner->business_id)){
+            return to_route('partner.onboarding');
         }
 
         //grab business from session. Session may not have $business, use $partner->business as default

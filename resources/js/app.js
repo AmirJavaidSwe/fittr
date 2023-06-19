@@ -23,14 +23,13 @@ createInertiaApp({
                     module.default.layout = StoreLayout;
                     break;
 
-                // admin and partners
-                case name != 'Welcome' && !name.startsWith('Auth/'):
-                    module.default.layout = AppLayout;
+                // below pages don't use layout
+                case ['Welcome', 'Onboarding'].includes(name) || name.startsWith('Auth/'):
                     break;
 
-                // below pages don't use layout
+                // admin and partners
                 default:
-                    console.log('default');
+                    module.default.layout = AppLayout;
                     break;
             }
         });

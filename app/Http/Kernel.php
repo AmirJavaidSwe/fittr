@@ -35,7 +35,6 @@ class Kernel extends HttpKernel
             \Illuminate\Session\Middleware\StartSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
-            \App\Http\Middleware\ConnectPartnerDatabase::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\HandleInertiaRequests::class,
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
@@ -83,9 +82,11 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\Authenticate::class,
         \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         \Illuminate\Session\Middleware\AuthenticateSession::class,
+        \App\Http\Middleware\EnsureEmailIsVerified::class,
         \App\Http\Middleware\AuthenticateSource::class,
         \App\Http\Middleware\AuthenticateSubdomain::class,
         \App\Http\Middleware\ConnectPartnerDatabase::class,
+        \Illuminate\Routing\Middleware\SubstituteBindings::class,// ConnectPartnerDatabase must run before SubstituteBindings in order for implicit model bindings to work
         \App\Http\Middleware\BusinessReady::class,
         \App\Http\Middleware\HandleInertiaRequests::class,
     ];
