@@ -17,7 +17,7 @@ router.on('navigate', (event) => {
 </script>
 
 <template>
-  <div v-if="user" class="hidden flex-shrink-0 p-4 w-56 bg-gray-100 overflow-y-auto md:block space-y-4">
+  <div v-if="user" class="hidden flex-shrink-0 p-4 w-56 bg-dark overflow-y-auto md:block space-y-4">
     <!-- <NavLink :href="route('member.dashboard')" :active="active_route.name == 'member.dashboard'"> -->
     <NavLink href="#" :active="active_route.name == 'member.dashboard'">
       <font-awesome-icon :icon="faHome" class="w-4" />
