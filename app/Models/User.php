@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
@@ -85,6 +86,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $appends = [
+        'initials',
         'profile_photo_url',
         'dashboard_route',
         'active_subscription',
@@ -128,6 +130,13 @@ class User extends Authenticatable implements MustVerifyEmail
     protected function getUserRolesAttribute()
     {
         return $this->roles()->pluck('title', 'slug')->toArray();
+    }
+
+    public function getInitialsAttribute()
+    {
+        return Str::of($this->name)->upper()->explode(' ')->reduce(function (?string $carry, string $item) {
+            return $carry .''. mb_substr($item, 0, 1);
+        });
     }
 
     //Local scopes
