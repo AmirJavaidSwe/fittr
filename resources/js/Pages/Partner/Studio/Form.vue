@@ -8,7 +8,7 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import SelectInput from "@/Components/SelectInput.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
 
-defineProps({
+const props = defineProps({
     form: {
         type: Object,
         required: true,
@@ -21,7 +21,16 @@ defineProps({
         type: Array,
         required: true
     }
-})
+});
+
+const emit = defineEmits(["createNewLocation"]);
+
+
+const locationChanged = () => {
+    if(props.form.location_id == 'create_new_location') {
+        emit('createNewLocation');
+    }
+}
 
 </script>
 
@@ -41,7 +50,7 @@ defineProps({
 
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="location" value="Location"/>
-                <SelectInput
+                <SelectInput @change="locationChanged"
                     id="location"
                     v-model="form.location_id"
                     :options="locations"

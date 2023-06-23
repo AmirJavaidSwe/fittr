@@ -47,11 +47,12 @@ const close = () => {
                 v-if="show"
                 class="fixed right-0 top-0 z-[1035] overflow-y-auto h-full w-full md:w-1/2 xl:w-1/3 overflow-hidden bg-white shadow-[0_4px_12px_0_rgba(0,0,0,0.07),_0_2px_4px_rgba(0,0,0,0.05)] p-5 flex flex-col"
             >
-                <div class="text-xl font-bold" v-if="slots.title">
-                    <button class="md:hidden mr-5" @click="close">
+                <div class="text-xl font-bold flex" v-if="slots.title">
+                    <!-- <button class="md:hidden mr-5" @click="close">
                         <font-awesome-icon :icon="faTimes" />
-                    </button>
+                    </button> -->
                     <slot name="title" />
+                    <slot name="close" />
                 </div>
 
                 <div class="mt-4 mb-3 flex-1" v-if="slots.content">

@@ -2,6 +2,7 @@
 import { ref, watch, computed } from "vue";
 import { Link, useForm, usePage, router } from "@inertiajs/vue3";
 import { DateTime } from "luxon";
+import uniqBy from 'lodash/uniqBy';
 import Form from "./Form.vue";
 import FormExport from "./FormExport.vue";
 import FormFilter from "./FormFilter.vue";
@@ -19,8 +20,12 @@ import DuplicateIcon from "@/Icons/Duplicate.vue";
 import DeleteIcon from "@/Icons/Delete.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
-
+import InstructorCreateForm from "@/Pages/Partner/Instructor/Form.vue";
+import ClassTypeCreateForm from "@/Pages/Partner/Classtype/Form.vue";
+import StudioCreateForm from "@/Pages/Partner/Studio/Form.vue";
+import LocatoonCreateForm from "@/Pages/Partner/Location/Form.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
+import CloseModal from "@/Components/CloseModal.vue";
 import { faCog, faPlus } from "@fortawesome/free-solid-svg-icons";
 import StatusLabel from "@/Components/StatusLabel.vue";
 import ColoredValue from "@/Components/DataTable/ColoredValue.vue";
@@ -44,6 +49,11 @@ const props = defineProps({
     studios: Object,
     instructors: Object,
     classtypes: Object,
+    locations: Array,
+    users: Array,
+    amenities: Array,
+    countries: Array,
+    roles: Object,
 });
 
 const form = useForm({
@@ -252,6 +262,118 @@ const checkExportStatus = () => {
 const showLink = (exporting) => {
     completed_at.value = exporting.completed_at;
 };
+const showInstructorCreateModal = ref(false)
+const closeInstructorCreateModal = () => {
+    showInstructorCreateModal.value = false
+}
+const createInstructorFrom = useForm({
+    name: "",
+    email: ""
+});
+
+const storeInstructor = () => {
+    createInstructorFrom.transform((data) => ({
+        ...data,
+        returnTo: 'partner.classes.index',
+    })).post(route("partner.instructors.store"), {
+        preserveScroll: true,
+        onSuccess: () => [createInstructorFrom.reset(), closeInstructorCreateModal()],
+    });
+};
+
+const instructorsList = computed(() => {
+    let newInstructorsList =  props.instructors
+    newInstructorsList['create_new_instructor'] = "Add New"
+    return newInstructorsList
+});
+const showClasTypeCreateModal = ref(false)
+const closeClassTypeCreateModal = () => {
+    showClasTypeCreateModal.value = false
+}
+const createClassTypeFrom = useForm({
+    title: null,
+    description: null,
+});
+
+const storeClassType = () => {
+    createClassTypeFrom.transform((data) => ({
+        ...data,
+        returnTo: 'partner.classes.index',
+    })).post(route("partner.classtypes.store"), {
+        preserveScroll: true,
+        onSuccess: () => [createClassTypeFrom.reset(), closeClassTypeCreateModal()],
+    });
+};
+
+const classTypeList = computed(() => {
+    let newClassTypeList =  props.classtypes
+    newClassTypeList['create_new_class_type'] = "Add New"
+    return newClassTypeList
+});
+const showStudioCreateModal = ref(false)
+const closeStudioCreateModal = () => {
+    showStudioCreateModal.value = false
+    createStudioFrom.reset();
+}
+const createStudioFrom = useForm({
+    title: null,
+    description: null,
+});
+
+const storeStudio = () => {
+    createStudioFrom.transform((data) => ({
+        ...data,
+        returnTo: 'partner.classes.index',
+    })).post(route("partner.studios.store"), {
+        preserveScroll: true,
+        onSuccess: () => [createStudioFrom.reset(), closeStudioCreateModal()],
+    });
+};
+
+const studioList = computed(() => {
+    let newStudioList =  props.studios
+    newStudioList['create_new_studio'] = "Add New"
+    return newStudioList
+});
+const showLocationCreateModal = ref(false)
+const closeLocationCreateModal = () => {
+    showLocationCreateModal.value = false
+    createLocationFrom.reset()
+}
+const createLocationFrom = useForm({
+    title: null,
+    location_id: null,
+});
+
+const storeLocation = () => {
+    createLocationFrom.transform((data) => ({
+        ...data,
+        returnTo: 'partner.classes.index',
+    })).post(route("partner.locations.store"), {
+        preserveScroll: true,
+        onSuccess: () => [createLocationFrom.reset(), closeLocationCreateModal()],
+    });
+};
+
+const locationList = computed(() => {
+    let newLocationList =  props.locations
+    newLocationList.push({
+        id: "create_new_location",
+        title: "Add New"
+    });
+    return uniqBy(newLocationList, 'id');
+
+});
+const usersList = computed(() => {
+    let newUsersList =  props.locations
+    newUsersList.push({
+        id: "create_new_user",
+        title: "Add New"
+    });
+    return uniqBy(newUsersList, 'id');
+
+});
+
 </script>
 <template>
     <data-table-layout :disableButton="true">
@@ -536,11 +658,14 @@ const showLink = (exporting) => {
                 :form="form_class"
                 :isNew="true"
                 :statuses="statuses"
-                :studios="studios"
-                :instructors="instructors"
-                :classtypes="classtypes"
+                :studios="studioList"
+                :instructors="instructorsList"
+                :classtypes="classTypeList"
                 :business_seetings="business_seetings"
                 :submitted="storeClass"
+                @create-new-instructor="showInstructorCreateModal = true"
+                @create-new-class-type="showClasTypeCreateModal = true"
+                @create-new-studio="showStudioCreateModal = true"
                 modal
             />
         </template>
@@ -563,7 +688,7 @@ const showLink = (exporting) => {
             />
         </template>
     </SideModal>
-
+    
     <!-- Delete Confirmation Modal -->
     <ConfirmationModal :show="itemDeleting" @close="itemDeleting = false">
         <template #title> Confirmation required </template>
@@ -582,9 +707,9 @@ const showLink = (exporting) => {
             </ButtonLink>
 
             <ButtonLink
-                size="default"
-                styling="danger"
-                class="ml-3"
+            size="default"
+            styling="danger"
+            class="ml-3"
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
                 @click="deleteItem"
@@ -593,4 +718,67 @@ const showLink = (exporting) => {
             </ButtonLink>
         </template>
     </ConfirmationModal>
+    <!-- Instructor Create Modal -->
+    <SideModal :show="showInstructorCreateModal" @close="closeInstructorCreateModal">
+        <template #title> Add Instructor </template>
+        <template #close>
+            <CloseModal @click="closeInstructorCreateModal" />
+        </template>
+    
+        <template #content>
+            <InstructorCreateForm :form="createInstructorFrom" :submitted="storeInstructor" modal />
+        </template>
+    </SideModal>
+    <!-- Class Type Create Modal -->
+    <SideModal :show="showClasTypeCreateModal" @close="closeClassTypeCreateModal">
+        <template #title> Create new classtype </template>
+        <template #close>
+            <CloseModal @click="closeClassTypeCreateModal" />
+        </template>
+    
+        <template #content>
+            <ClassTypeCreateForm :form="createClassTypeFrom" :submitted="storeClassType" modal />
+        </template>
+    </SideModal>
+    <!-- Studio Create Modal -->
+    <SideModal :show="showStudioCreateModal" @close="closeStudioCreateModal">
+        <template #title> Create new studio </template>
+        <template #close>
+            <CloseModal @click="closeStudioCreateModal" />
+        </template>
+    
+        <template #content>
+            <StudioCreateForm :form="createStudioFrom" :locations="locationList" @create-new-location='showLocationCreateModal = true' :submitted="storeStudio" modal />
+        </template>
+    </SideModal>
+    <!-- Location Create Modal -->
+    <SideModal :show="showLocationCreateModal" @close="closeLocationCreateModal">
+        <template #title> Create new location </template>
+        <template #close>
+            <CloseModal @click="closeLocationCreateModal" />
+        </template>
+    
+        <template #content>
+            <LocatoonCreateForm 
+                :form="createLocationFrom"
+                :users="users"
+                :amenities="amenities"
+                :countries="countries"
+                :studios="[]"
+                :editMode="false"
+            />
+        </template>
+        <template #footer>
+            <ButtonLink
+                :class="{ 'opacity-25': createLocationFrom.processing }"
+                :disabled="createLocationFrom.processing"
+                styling="secondary"
+                size="default"
+                type="submit"
+                @click="storeLocation"
+            >
+                <span>Create</span>
+            </ButtonLink>
+        </template>
+    </SideModal>
 </template>

@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from "vue";
+import { computed, watch } from "vue";
 import { DateTime } from "luxon";
 import Multiselect from "@vueform/multiselect";
 import Datepicker from "@vuepic/vue-datepicker";
@@ -17,6 +17,7 @@ import ColoredValue from "@/Components/DataTable/ColoredValue.vue";
 import MapMarker from "@/Icons/MapMarker.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
 
+const emit = defineEmits(["createNewInstructor", "createNewClassType", "createNewStudio"]);
 const props = defineProps({
     statuses: Object,
     instructors: Object,
@@ -48,11 +49,26 @@ const updateWeekDays = (index) => {
 };
 const formatDate = computed(() => {
     return (
-        props.business_seetings.date_format?.format_js +
+        props.business_seetings?.date_format?.format_js +
         " " +
-        props.business_seetings.time_format?.format_js
+        props.business_seetings?.time_format?.format_js
     );
 });
+const instructorChanged = () => {
+    if(props.form.instructor_id == 'create_new_instructor') {
+        emit('createNewInstructor')
+    }
+}
+const classTypeChanged = () => {
+    if(props.form.class_type_id == 'create_new_class_type') {
+        emit('createNewClassType')
+    }
+}
+const studioChanged = () => {
+    if(props.form.studio_id == 'create_new_studio') {
+        emit('createNewStudio')
+    }
+}
 </script>
 
 <template>
@@ -81,7 +97,7 @@ const formatDate = computed(() => {
                             :enable-time-picker="true"
                             :flow="['calendar', 'time']"
                             :format="formatDate"
-                            :timezone="business_seetings.timezone"
+                            :timezone="business_seetings?.timezone"
                             position="left"
                             placeholder="Start Date"
                             minutes-increment="1"
@@ -106,7 +122,7 @@ const formatDate = computed(() => {
                         :enable-time-picker="true"
                         :flow="['calendar', 'time']"
                         :format="formatDate"
-                        :timezone="business_seetings.timezone"
+                        :timezone="business_seetings?.timezone"
                         position="left"
                         placeholder="End Date"
                         minutes-increment="1"
@@ -153,17 +169,18 @@ const formatDate = computed(() => {
                     :close-on-select="true"
                     :show-labels="true"
                     placeholder="Select Instructor"
+                    @select="instructorChanged"
                 >
                     <template v-slot:singlelabel="{ value }">
                         <div class="multiselect-single-label flex items-center">
-                            <Avatar size="small" :title="value.label" />
+                            <Avatar size="small" :title="value.label" v-if="value.label != 'Add New'"/>
                             <span class="ml-2">{{ value.label }}</span>
                         </div>
                     </template>
 
                     <template v-slot:option="{ option }">
-                        <Avatar size="small" :title="option.label" />
-                        <span class="ml-2">{{ option.label }}</span>
+                        <Avatar size="small" :title="option.label" v-if="option.label != 'Add New'" />
+                        <span class="ml-5">{{ option.label }}</span>
                     </template>
                 </Multiselect>
                 <InputError :message="form.errors.instructor_id" class="mt-2" />
@@ -179,15 +196,16 @@ const formatDate = computed(() => {
                     :close-on-select="true"
                     :show-labels="true"
                     placeholder="Select Class Type"
+                    @select="classTypeChanged"
                 >
                     <template v-slot:singlelabel="{ value }">
                         <div class="multiselect-single-label flex items-center">
-                            <ColoredValue color="#ddd" :title="value.label" />
+                            <ColoredValue color="#ddd" :title="value.label" v-if="value.label != 'Add New'" />
                         </div>
                     </template>
 
                     <template v-slot:option="{ option }">
-                        <ColoredValue color="#ddd" :title="option.label" />
+                        <ColoredValue color="#ddd" :title="option.label" v-if="option.label != 'Add New'" />
                     </template>
                 </Multiselect>
                 <InputError :message="form.errors.class_type_id" class="mt-2" />
@@ -203,16 +221,17 @@ const formatDate = computed(() => {
                     :close-on-select="true"
                     :show-labels="true"
                     placeholder="Select Studio"
+                    @select="studioChanged"
                 >
                     <template v-slot:singlelabel="{ value }">
                         <div class="multiselect-single-label flex items-center">
-                            <MapMarker />
+                            <MapMarker v-if="value.label != 'Add New'" />
                             <span class="ml-2">{{ value.label }}</span>
                         </div>
                     </template>
 
                     <template v-slot:option="{ option }">
-                        <MapMarker />
+                        <MapMarker v-if="option.label != 'Add New'" />
                         <span class="ml-2">{{ option.label }}</span>
                     </template>
                 </Multiselect>
@@ -268,7 +287,7 @@ const formatDate = computed(() => {
                 </div>
                 <div class="items-center w-full flex flex-wrap gap-3">
                     <label
-                        v-for="(weekDay, index) in weekDays"
+                        v-for="(weekDay, index) in weekDays" :key="index"
                         :for="'weekday' + index"
                         class="bg-primary-500/10 flex font-medium gap-2 items-center p-2 rounded-xl text-dark text-sm lg:text-md cursor-pointer"
                     >

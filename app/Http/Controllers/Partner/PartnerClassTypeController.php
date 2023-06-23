@@ -7,13 +7,19 @@ use App\Http\Requests\Partner\ClasstypeFormRequest;
 use App\Models\Partner\ClassType;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class PartnerClassTypeController extends Controller
 {
+
+    public $search ;
+    public $per_page ;
+    public $order_by ;
+    public $order_dir ;
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request)
     {
@@ -27,8 +33,8 @@ class PartnerClassTypeController extends Controller
                 ->when($this->search, function ($query) {
                     $query->where(function($query) {
                         $query->orWhere('id', intval($this->search))
-                              ->orWhere('title', 'LIKE', '%'.$this->search.'%')
-                              ->orWhere('description', 'LIKE', '%'.$this->search.'%');
+                            ->orWhere('title', 'LIKE', '%'.$this->search.'%')
+                            ->orWhere('description', 'LIKE', '%'.$this->search.'%');
                     });
                 })
                 ->paginate($this->per_page)
@@ -58,7 +64,7 @@ class PartnerClassTypeController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -99,6 +105,10 @@ class PartnerClassTypeController extends Controller
     {
         ClassType::create($request->validated());
 
+        if(request()->has('returnTo')) {
+            return redirect()->route(request()->returnTo);
+        }
+
         return $this->redirectBackSuccess(__('Class Type created successfully'), 'partner.classtypes.index');
     }
 
@@ -106,7 +116,7 @@ class PartnerClassTypeController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\Partner\ClassType  $classtype
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(ClassType $classtype)
     {
@@ -142,7 +152,7 @@ class PartnerClassTypeController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Partner\ClassType  $classtype
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit(ClassType $classtype)
     {
@@ -179,7 +189,7 @@ class PartnerClassTypeController extends Controller
      *
      * @param  \App\Http\Requests\Partner\ClasstypeFormRequest  $request
      * @param  \App\Models\Partner\ClassType  $classtype
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(ClasstypeFormRequest $request, ClassType $classtype)
     {
@@ -192,7 +202,7 @@ class PartnerClassTypeController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Partner\ClassType  $classtype
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(ClassType $classtype)
     {

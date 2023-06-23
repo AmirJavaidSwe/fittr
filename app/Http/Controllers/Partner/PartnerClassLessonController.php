@@ -2,13 +2,18 @@
 
 namespace App\Http\Controllers\Partner;
 
+use App\Models\Role;
+use App\Models\User;
+// use App\Http\Requests\ImportFile;
 use Inertia\Inertia;
 use Inertia\Response;
-// use App\Http\Requests\ImportFile;
+use App\Models\Country;
 use App\Enums\ClassStatus;
 use Illuminate\Http\Request;
 use App\Models\Partner\Studio;
 use Illuminate\Support\Carbon;
+use App\Models\Partner\Amenity;
+use App\Models\Partner\Location;
 use App\Models\Partner\ClassType;
 use Illuminate\Http\JsonResponse;
 use App\Models\Partner\Instructor;
@@ -42,8 +47,6 @@ class PartnerClassLessonController extends Controller
         $this->order_by = $request->query('order_by', 'id');
         $this->order_dir = $request->query('order_dir', 'desc');
         $this->runFilter = $request->input('runFilter');
-
-        \DB::connection('mysql_partner')->enableQueryLog();
 
         $classes = ClassLesson::with('studio', 'classType', 'instructor')->orderBy($this->order_by, $this->order_dir)
         ->when($this->search, function ($query) {
@@ -121,16 +124,19 @@ class PartnerClassLessonController extends Controller
         ->paginate($this->per_page)
         ->withQueryString();
 
-        // dd(\DB::connection('mysql_partner')->getQueryLog());
-
         return Inertia::render('Partner/Class/Index', [
             'page_title' => __('Classes'),
             'header' => __('Classes'),
             'classes' => $classes,
             'statuses' => ClassStatus::labels(),
-            'instructors' => Instructor::orderBy('id', 'desc')->pluck('name', 'id'),
-            'classtypes' => ClassType::orderBy('id', 'desc')->pluck('title', 'id'),
-            'studios' => Studio::orderBy('id', 'desc')->pluck('title', 'id'),
+            'instructors' => Instructor::latest('id')->pluck('name', 'id'),
+            'classtypes' => ClassType::latest('id')->pluck('title', 'id'),
+            'studios' => Studio::latest('id')->pluck('title', 'id'),
+            'roles' => Role::where('source', auth()->user()->source)->where('business_id', auth()->user()->business_id)->get(),
+            'users' => User::select('id', 'name', 'email')->partner()->where('business_id', auth()->user()->business_id)->get(),
+            'locations' => Location::select('id', 'title')->get(),
+            'countries' => Country::select('id', 'name')->whereStatus(1)->get(),
+            'amenities' => Amenity::select('id', 'title')->get()->map(fn($item) => ['label' => $item->title, 'value' => $item->id]),
             'search' => $this->search,
             'per_page' => intval($this->per_page),
             'order_by' => $this->order_by,
@@ -162,9 +168,12 @@ class PartnerClassLessonController extends Controller
                 ],
             ),
             'statuses' => ClassStatus::labels(),
-            'instructors' => Instructor::orderBy('id', 'desc')->pluck('name', 'id'),
-            'classtypes' => ClassType::orderBy('id', 'desc')->pluck('title', 'id'),
-            'studios' => Studio::orderBy('id', 'desc')->pluck('title', 'id'),
+            'instructors' => Instructor::latest('id')->pluck('name', 'id'),
+            'classtypes' => ClassType::latest('id')->pluck('title', 'id'),
+            'locations' => Location::latest('id')->pluck('title', 'id'),
+            'roles' => Role::latest('id')->pluck('title', 'id')->where('source', auth()->user()->source)->where('business_id', auth()->user()->business_id)->pluck('title', 'id'),
+            'users' => User::select('id', 'name', 'email')->partner()->where('business_id', auth()->user()->business_id)->get(),
+            'studios' => Studio::latest('id')->pluck('title', 'id'),
         ]);
     }
 

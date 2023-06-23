@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Partner\LocationFormRequest;
 use App\Models\Country;
 use App\Models\Partner\Amenity;
+use Inertia\Response;
 use App\Models\Partner\Location;
 use App\Models\Partner\Studio;
 use App\Models\User;
@@ -26,7 +27,7 @@ class PartnerLocationController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request)
     {
@@ -41,7 +42,7 @@ class PartnerLocationController extends Controller
                 ->when($this->search, function ($query) {
                     $query->where(function($query) {
                         $query->orWhere('id', intval($this->search))
-                              ->orWhere('title', 'LIKE', '%'.$this->search.'%');
+                        ->orWhere('title', 'LIKE', '%'.$this->search.'%');
                     });
                 })
                 ->paginate($this->per_page)
@@ -75,7 +76,7 @@ class PartnerLocationController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -113,7 +114,7 @@ class PartnerLocationController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \App\Http\Requests\Partner\LocationFormRequest  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(LocationFormRequest $request)
     {
@@ -130,6 +131,10 @@ class PartnerLocationController extends Controller
 
             $this->uploadFiles($request->file('image'), $location, 'images/location');
 
+            if(request()->has('returnTo')) {
+                return redirect()->route(request()->returnTo);
+            }
+
             return $this->redirectBackSuccess(__('Location created successfully'), 'partner.locations.index');
 
         } catch(Exception $e) {
@@ -141,7 +146,7 @@ class PartnerLocationController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\Partner\Location  $location
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(Location $location)
     {
@@ -178,7 +183,7 @@ class PartnerLocationController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Partner\Location  $location
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit(Location $location)
     {

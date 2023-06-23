@@ -101,6 +101,10 @@ class PartnerStudioController extends Controller
     {
         Studio::create($request->validated());
 
+        if(request()->has('returnTo')) {
+            return redirect()->route(request()->returnTo);
+        }
+
         return $this->redirectBackSuccess(__('Studio created successfully'), 'partner.studios.index');
     }
 

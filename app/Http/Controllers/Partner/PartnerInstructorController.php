@@ -98,6 +98,10 @@ class PartnerInstructorController extends Controller
         );
         Instructor::create($fields); //TODO: Security issue
 
+        if(request()->has('returnTo')) {
+            return redirect()->route(request()->returnTo);
+        }
+
         return $this->redirectBackSuccess(__('Instructor created successfully'), 'partner.instructors.index');
     }
 
