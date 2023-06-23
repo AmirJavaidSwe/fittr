@@ -51,6 +51,7 @@ const inputPasswordType = computed(() =>
         </div>
 
         <form @submit.prevent="submit">
+            <div class="text-dark text-3xl">Login In</div>
             <div>
                 <InputLabel for="email" value="Email" />
                 <TextInput
@@ -79,7 +80,7 @@ const inputPasswordType = computed(() =>
                     <button
                         type="button"
                         @click="showPassword = !showPassword"
-                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 focus:outline-none"
+                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-dark-400 focus:outline-none"
                     >
                         <template v-if="showPassword">
                             <font-awesome-icon :icon="faEyeSlash" />
@@ -87,7 +88,7 @@ const inputPasswordType = computed(() =>
                         <template v-else>
                             <font-awesome-icon
                                 :icon="faEye"
-                                class="text-green-600"
+                                class="text-dark-600"
                             />
                         </template>
                     </button>
@@ -103,16 +104,8 @@ const inputPasswordType = computed(() =>
             </div>
 
             <div class="flex items-center justify-end mt-4">
-                <Link
-                    v-if="canResetPassword"
-                    :href="route('password.request')"
-                    class="underline text-sm text-gray-600 hover:text-gray-900"
-                >
-                    Forgot your password?
-                </Link>
-
                 <PrimaryButton
-                    class="ml-4"
+                    class="w-full text-center"
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
                 >
@@ -123,7 +116,7 @@ const inputPasswordType = computed(() =>
             <div class="flex flex-col gap-4 mt-8">
                 <div class="flex items-center">
                     <div class="flex-grow bg bg-gray-300 h-px"></div>
-                    <div class="flex-grow-0 mx-5 text">OR</div>
+                    <div class="flex-grow-0 mx-5 text">Or</div>
                     <div class="flex-grow bg bg-gray-300 h-px"></div>
                 </div>
                 <a
@@ -133,6 +126,26 @@ const inputPasswordType = computed(() =>
                     <GoogleIcon />
                     <div class="flex-grow -ml-6">Continue with Google</div>
                 </a>
+                <div class="mt-4 flex items-center justify-between">
+                    <div>
+                        No account?
+                        <Link
+                    :href="route('register')"
+                    class="text-sm text-gray-600 hover:text-gray-900"
+                >
+                Create one?
+                </Link>
+
+                    </div>
+                    <Link
+                    v-if="canResetPassword"
+                    :href="route('password.request')"
+                    class="text-sm text-gray-600 hover:text-gray-900"
+                >
+                    Forgot your password?
+                </Link>
+
+                </div>
             </div>
         </form>
     </AuthenticationCard>

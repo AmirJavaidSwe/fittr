@@ -207,6 +207,7 @@ const removeUploadedFile = (id) => {
             <ButtonLink
                 styling="secondary"
                 size="default"
+                class="hidden"
                 :href="route('partner.locations.create')"
                 type="primary"
             >

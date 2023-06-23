@@ -135,7 +135,7 @@ let back = function (e) {
                                 <!-- Menu toggle -->
                                 <button
                                     type="button"
-                                    class="text-white md:text-dark mr-4 hidden md:block"
+                                    class="mr-4 hidden md:block bg-mainBg text-gray-700 dark:text-gray-500 border inline-flex items-center transition text-green rounded-md border border-500 px-4 h-11 text-sm"
                                     @click="
                                         sidebarCollapsed = !sidebarCollapsed
                                     "
