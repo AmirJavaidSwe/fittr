@@ -190,6 +190,12 @@ const removeUploadedFile = (id) => {
 }
 
 </script>
+<style>
+table.min-w-full thead tr th:last-child .flex {
+    display: block;
+    text-align: right;
+}
+</style>
 <template>
     <data-table-layout
         :disable-button="true"
@@ -256,7 +262,7 @@ const removeUploadedFile = (id) => {
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'updated_at'"
             />
-            <table-head title="Action" />
+            <table-head title="Action"/>
         </template>
 
         <template #tableData>
@@ -273,7 +279,7 @@ const removeUploadedFile = (id) => {
                 <table-data>
                     <DateValue :date="DateTime.fromISO(location.updated_at).toRelative()" />
                 </table-data>
-                <table-data>
+                <table-data style="text-align: right; padding-right: 20px;">
                     <Dropdown
                         align="right"
                         width="48"

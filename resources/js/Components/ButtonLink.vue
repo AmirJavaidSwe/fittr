@@ -24,7 +24,7 @@ const classes = computed(() => {
     switch (props.styling) {
         case "primary":
             common +=
-                "  bg-primary-500 hover:bg-primary-100 focus:bg-primary-100 active:bg-primary-600 text-white hover:text-primary-500 focus:text-primary-500 active:text-white rounded-md border border-primary-500 hover:bg-primary-100 hover:shadow-md hover:shadow-primary-100 focus:shadow-md focus:shadow-primary-100 active:shadow-none";
+                "  bg-primary-500 w-full hover:bg-primary-100 focus:bg-primary-100 active:bg-primary-600 text-white hover:text-primary-500 focus:text-primary-500 active:text-white rounded-md border border-primary-500 hover:bg-primary-100 hover:shadow-md hover:shadow-primary-100 focus:shadow-md focus:shadow-primary-100 active:shadow-none";
             break;
 
         case "secondary":

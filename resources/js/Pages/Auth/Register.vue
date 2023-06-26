@@ -11,6 +11,7 @@ import TextInput from '@/Components/TextInput.vue';
 import GoogleIcon from '@/Icons/Google.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faEye,faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import Authpagesimages from "@/Components/Authpagesimages.vue";
 
 const form = useForm({
     name: '',
@@ -33,13 +34,13 @@ const inputConfirmPasswordType = computed(() => (showConfirmPassword.value ? "te
 
 <template>
     <Head title="Register" />
-
+    <div class="flex flex-col lg:flex-row rounded-xl mx-auto min-h-screen">
     <AuthenticationCard>
         <template #logo>
-            <AuthenticationCardLogo />
+            <AuthenticationCardLogo class="flex justify-center pt-8 sm:pt-0" />
         </template>
 
-        <form @submit.prevent="submit">
+        <form @submit.prevent="submit" class="w-3/5 mx-auto bg-white p-5 rounded-lg">
             <div>
                 <InputLabel for="name" value="Name" />
                 <TextInput id="name" v-model="form.name" type="text" class="mt-1 block w-full" required autofocus
@@ -61,10 +62,10 @@ const inputConfirmPasswordType = computed(() => (showConfirmPassword.value ? "te
                     <button type="button" @click="showPassword = !showPassword"
                         class="absolute inset-y-0 right-0 pr-3 flex items-center text-dark-400 focus:outline-none">
                         <template v-if="showPassword">
-                            <font-awesome-icon :icon="faEyeSlash" />
+                            <font-awesome-icon :icon="faEyeSlash" style="color: #b0b2b5"/>
                         </template>
                         <template v-else>
-                            <font-awesome-icon :icon="faEye" class="text-dark-600" />
+                            <font-awesome-icon :icon="faEye" class="text-dark-600" style="color:#4ca054;" />
                         </template>
                     </button>
                 </div>
@@ -79,10 +80,10 @@ const inputConfirmPasswordType = computed(() => (showConfirmPassword.value ? "te
                     <button type="button" @click="showConfirmPassword = !showConfirmPassword"
                         class="absolute inset-y-0 right-0 pr-3 flex items-center text-dark-400 focus:outline-none">
                         <template v-if="showConfirmPassword">
-                            <font-awesome-icon :icon="faEyeSlash" />
+                            <font-awesome-icon :icon="faEyeSlash"  style="color:#b0b2b5;" />
                         </template>
                         <template v-else>
-                            <font-awesome-icon :icon="faEye" class="text-dark-600" />
+                            <font-awesome-icon :icon="faEye" style="color:#4ca054;" class="text-dark-600" />
                         </template>
                     </button>
                 </div>
@@ -133,10 +134,16 @@ const inputConfirmPasswordType = computed(() => (showConfirmPassword.value ? "te
                 </a>
             </div>
             <div class="mt-4 flex">
-                Already have an account? <Link :href="route('login')" class="underline text-sm text-gray-600 hover:text-gray-900">
-                     Log in
+                Already have an account ? <Link :href="route('login')" class="underline text-sm text-gray-600 hover:text-gray-900">
+                      Log in
                     </Link>
             </div>
         </form>
     </AuthenticationCard>
+            <Authpagesimages>
+                    <template #imagetext>
+                        <p class="text-white">Lorem ipsum dolor sit amet consectetur. Adipiscing risus dignissim volutpat ut integer malesuada varius fringilla. Id lacus vel lectus viverra id feugiat. Et id sed vel tincidunt amet volutpat vulputate aliquet vitae. Faucibus adipiscing in dui arcu duis. Senectus semper donec dui sit eget ut facilisi ut.</p>
+                    </template>
+            </Authpagesimages>
+        </div>
 </template>

@@ -27,26 +27,26 @@ import CardIcon from '@/Components/CardIcon.vue';
         <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-6">
             <div class="space-y-4">
                 <div class="text-xl font-bold tracking-tight text-gray-900">
-                    Business Settings
+                    Online Store
                 </div>
 
                 <CardIcon :card-link="route('partner.settings.general-details')">
                     <template #icon>
-                        <font-awesome-icon :icon="faGears" />
+                        <font-awesome-icon :icon="faGears" class="text-primary-500" />
                     </template>
 
                     <template #title>
-                        General
+                        Service Store
                     </template>
 
                     <template #default>
-                        Business and operations settings
+                        Customise web store looks and features.
                     </template>
                 </CardIcon>
 
                 <CardIcon :card-link="route('root')">
                     <template #icon>
-                        <font-awesome-icon :icon="faMoneyBill1" />
+                        <font-awesome-icon :icon="faMoneyBill1" class="text-primary-500"/>
                     </template>
 
                     <template #title>
@@ -60,7 +60,7 @@ import CardIcon from '@/Components/CardIcon.vue';
 
                 <CardIcon :card-link="route('partner.settings.integrations')">
                     <template #icon>
-                        <font-awesome-icon :icon="faCodeCompare" />
+                        <font-awesome-icon :icon="faCodeCompare" class="text-primary-500"/>
                     </template>
 
                     <template #title>
@@ -74,12 +74,12 @@ import CardIcon from '@/Components/CardIcon.vue';
             </div>
             <div class="space-y-4">
                 <div class="text-xl font-bold tracking-tight text-gray-900">
-                    Locations & Studios
+                    Bookings & Payments
                 </div>
 
                 <CardIcon :card-link="route('partner.locations.index')">
                     <template #icon>
-                        <font-awesome-icon :icon="faDoorOpen" />
+                        <font-awesome-icon :icon="faDoorOpen" class="text-primary-500"/>
                     </template>
 
                     <template #title>
@@ -93,7 +93,7 @@ import CardIcon from '@/Components/CardIcon.vue';
 
                 <CardIcon :card-link="route('partner.studios.index')">
                     <template #icon>
-                        <font-awesome-icon :icon="faDoorOpen" />
+                        <font-awesome-icon :icon="faDoorOpen" class="text-primary-500"/>
                     </template>
 
                     <template #title>
@@ -110,7 +110,7 @@ import CardIcon from '@/Components/CardIcon.vue';
                     v-can="{ module: 'studio-class-type', roles: $page.props.user.user_roles, permission: 'viewAny', 'user': $page.props.user }"
                     >
                     <template #icon>
-                        <font-awesome-icon :icon="faGamepad" />
+                        <font-awesome-icon :icon="faGamepad" class="text-primary-500"/>
                     </template>
 
                     <template #title>
@@ -127,7 +127,7 @@ import CardIcon from '@/Components/CardIcon.vue';
                     v-can="{ module: 'studio-amenities', roles: $page.props.user.user_roles, permission: 'viewAny', 'user': $page.props.user }"
                     >
                     <template #icon>
-                        <font-awesome-icon :icon="faWandMagicSparkles" />
+                        <font-awesome-icon :icon="faWandMagicSparkles" class="text-primary-500"/>
                     </template>
 
                     <template #title>
@@ -142,12 +142,12 @@ import CardIcon from '@/Components/CardIcon.vue';
             </div>
             <div class="space-y-4">
                 <div class="text-xl font-bold tracking-tight text-gray-900">
-                    Memberships
+                    Team & Communication
                 </div>
 
                 <CardIcon :card-link="route('partner.packs.index')">
                     <template #icon>
-                        <font-awesome-icon :icon="faTicketSimple" />
+                        <font-awesome-icon :icon="faTicketSimple" class="text-primary-500"/>
                     </template>
 
                     <template #title>
@@ -167,7 +167,7 @@ import CardIcon from '@/Components/CardIcon.vue';
 
                 <CardIcon :card-link="route('partner.settings.service-store-general')">
                     <template #icon>
-                        <font-awesome-icon :icon="faStore" />
+                        <font-awesome-icon :icon="faStore" class="text-primary-500"/>
                     </template>
 
                     <template #title>
@@ -181,7 +181,7 @@ import CardIcon from '@/Components/CardIcon.vue';
 
                 <CardIcon card-link="#">
                     <template #icon>
-                        <font-awesome-icon :icon="faCode" />
+                        <font-awesome-icon :icon="faCode" class="text-primary-500" />
                     </template>
 
                     <template #title>
@@ -194,7 +194,7 @@ import CardIcon from '@/Components/CardIcon.vue';
                 </CardIcon>
                 <CardIcon :card-link="route('partner.settings.service-store-waivers')">
                     <template #icon>
-                        <font-awesome-icon :icon="faFileContract" />
+                        <font-awesome-icon :icon="faFileContract" class="text-primary-500"/>
                     </template>
 
                     <template #title>
@@ -213,7 +213,7 @@ import CardIcon from '@/Components/CardIcon.vue';
 
                 <CardIcon card-link="#">
                     <template #icon>
-                        <font-awesome-icon :icon="faTicket" />
+                        <font-awesome-icon :icon="faTicket" class="text-primary-500"/>
                     </template>
 
                     <template #title>
@@ -227,7 +227,7 @@ import CardIcon from '@/Components/CardIcon.vue';
 
                 <CardIcon :card-link="route('partner.settings.payments')">
                     <template #icon>
-                        <font-awesome-icon :icon="faCreditCard" />
+                        <font-awesome-icon :icon="faCreditCard" class="text-primary-500"/>
                     </template>
 
                     <template #title>
@@ -240,7 +240,7 @@ import CardIcon from '@/Components/CardIcon.vue';
                 </CardIcon>
                 <CardIcon card-link="#">
                     <template #icon>
-                        <font-awesome-icon :icon="faFileInvoice" />
+                        <font-awesome-icon :icon="faFileInvoice" class="text-primary-500" />
                     </template>
 
                     <template #title>
@@ -259,7 +259,7 @@ import CardIcon from '@/Components/CardIcon.vue';
 
                 <CardIcon :card-link="route('partner.users.index')">
                     <template #icon>
-                        <font-awesome-icon :icon="faPeopleGroup" />
+                        <font-awesome-icon :icon="faPeopleGroup" class="text-primary-500" />
                     </template>
 
                     <template #title>

@@ -11,6 +11,7 @@ import TextInput from "@/Components/TextInput.vue";
 import GoogleIcon from "@/Icons/Google.vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import Authpagesimages from "@/Components/Authpagesimages.vue";
 
 defineProps({
     canResetPassword: Boolean,
@@ -37,21 +38,27 @@ const inputPasswordType = computed(() =>
     showPassword.value ? "text" : "password"
 );
 </script>
-
+<style>
+   
+.login_or_register_right {
+    background: url("../../../public/images/Register-Background.png") no-repeat;
+    background-size:cover;
+}
+</style>
 <template>
     <Head title="Log in" />
-
+    <div class="flex flex-col lg:flex-row rounded-xl mx-auto min-h-screen">
     <AuthenticationCard>
         <template #logo>
-            <AuthenticationCardLogo />
+            <AuthenticationCardLogo class="flex justify-center pt-8 sm:pt-0" />
         </template>
 
         <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
             {{ status }}
         </div>
-
-        <form @submit.prevent="submit">
-            <div class="text-dark text-3xl">Login In</div>
+        
+        <form @submit.prevent="submit" class="w-3/5 mx-auto bg-white p-5 rounded-lg">
+            <div class="text-dark text-3xl pt-1 pb-6">Login In</div>
             <div>
                 <InputLabel for="email" value="Email" />
                 <TextInput
@@ -83,12 +90,12 @@ const inputPasswordType = computed(() =>
                         class="absolute inset-y-0 right-0 pr-3 flex items-center text-dark-400 focus:outline-none"
                     >
                         <template v-if="showPassword">
-                            <font-awesome-icon :icon="faEyeSlash" />
+                            <font-awesome-icon :icon="faEyeSlash" style="color: #b0b2b5"/>
                         </template>
                         <template v-else>
-                            <font-awesome-icon
+                            <font-awesome-icon style="color:#4ca054;"
                                 :icon="faEye"
-                                class="text-dark-600"
+                                class="blue-grey-50"
                             />
                         </template>
                     </button>
@@ -123,9 +130,10 @@ const inputPasswordType = computed(() =>
                     :href="route('auth.google')"
                     class="bg-white border flex font-medium p-4 rounded text-center w-full"
                 >
-                    <GoogleIcon />
-                    <div class="flex-grow -ml-6">Continue with Google</div>
+                    
+                    <div class="flex-grow -ml-6"><GoogleIcon class="inline-block"/> Continue with Google</div>
                 </a>
+                
                 <div class="mt-4 flex items-center justify-between">
                     <div>
                         No account?
@@ -142,11 +150,23 @@ const inputPasswordType = computed(() =>
                     :href="route('password.request')"
                     class="text-sm text-gray-600 hover:text-gray-900"
                 >
-                    Forgot your password?
+                    Reset password
                 </Link>
 
                 </div>
             </div>
         </form>
+       
     </AuthenticationCard>
+
+            <Authpagesimages>
+                <template #imagetext>
+                    <p class="text-white">Lorem ipsum dolor sit amet consectetur. Adipiscing risus dignissim volutpat ut integer malesuada varius fringilla. Id lacus vel lectus viverra id feugiat. Et id sed vel tincidunt amet volutpat vulputate aliquet vitae. Faucibus adipiscing in dui arcu duis. Senectus semper donec dui sit eget ut facilisi ut.</p>
+                </template>
+           </Authpagesimages>
+
+
+
+    </div>
+        
 </template>

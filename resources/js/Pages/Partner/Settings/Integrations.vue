@@ -44,9 +44,9 @@ const submitForm = () => {
         </div>
         <Section bg="bg-white space-y-4">
             <!-- Mailchimp -->
-            <CardIcon icon-class="self-start">
+            <CardIcon icon-class="self-start" :height="'h-20'">
                 <template #icon>
-                    <div class="w-24 pr-8">
+                    <div class="w-20">
                         <MailchimpIcon />
                     </div>
                 </template>
@@ -130,9 +130,9 @@ const submitForm = () => {
             </CardIcon>
 
             <!-- Sendgrid -->
-            <CardIcon icon-class="self-start">
+            <CardIcon icon-class="self-start" :height="'h-20'">
                 <template #icon>
-                    <div class="w-24">
+                    <div class="w-20">
                         <SendgridIcon />
                     </div>
                 </template>
@@ -225,9 +225,9 @@ const submitForm = () => {
             </CardIcon>
 
             <!-- Sendinblue -->
-            <CardIcon icon-class="self-start">
+            <CardIcon icon-class="self-start" :height="'h-20'">
                 <template #icon>
-                    <div class="w-24 p-1">
+                    <div class="w-20">
                         <SendinblueIcon />
                     </div>
                 </template>
