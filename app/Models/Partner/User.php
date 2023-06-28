@@ -95,9 +95,9 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getDashboardRouteAttribute(): string
     {
         return match($this->role) {
-            PartnerUserRole::MEMBER->value => 'member.dashboard',
-            PartnerUserRole::INSTRUCTOR->value => 'instructor.dashboard',
-            default => 'dashboard',
+            PartnerUserRole::MEMBER->value => 'ss.member.dashboard',
+            PartnerUserRole::INSTRUCTOR->value => 'ss.instructor.dashboard',
+            default => 'ss.home',
         };
     }
 

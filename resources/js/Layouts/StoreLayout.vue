@@ -3,6 +3,8 @@ import { ref, computed, defineAsyncComponent, watch } from 'vue';
 import { router, Link, usePage } from '@inertiajs/vue3';
 import AppHead from '@/Layouts/AppHead.vue';
 import StoreMenu from '@/Layouts/StoreMenu.vue';
+import MemberMenu from '@/Layouts/MemberMenu.vue';
+import InstructorMenu from '@/Layouts/InstructorMenu.vue';
 import LogoLetter from '@/Components/LogoLetter.vue';
 import Banner from '@/Components/Banner.vue';
 import FlashMessage from '@/Components/FlashMessage.vue';
@@ -48,16 +50,17 @@ const logout = () => {
     router.post(route('logout'));
 };
 
-const LoggedinMenu = defineAsyncComponent(() => {
-    // const user = usePage().props.user;
-    // if(!user) {
-    //     return import('./MemberMenu.vue');
-    // }
-
-    //TODO: return either member or instructor menu
-
-    // MemberMenu checks is user exist
-    return import('./MemberMenu.vue');
+const LoggedinMenu = computed(() => {
+    const user = usePage().props.user;
+    if(!user) {
+        return;
+    }
+    if(user.role == 'member') {
+        return MemberMenu;
+    }
+    if(user.role == 'instructor') {
+        return InstructorMenu;
+    }
 });
 
 const header = computed(() => {
@@ -151,15 +154,17 @@ const headerIsArray = computed(() => {
                                 </template>
                             </Dropdown>
                         </div>
-
-                        <ButtonLink :href="route('login')" styling="secondary" size="default" @click="showLogin" class="hidden md:inline-flex">Login</ButtonLink>
+                        <template v-else>
+                            <ButtonLink :href="route('login')" styling="secondary" size="default" @click="showLogin" class="hidden md:inline-flex">Login</ButtonLink>
+                            <ButtonLink :href="route('register')" styling="secondary" size="default" @click="showLogin" class="hidden md:inline-flex">Sign up</ButtonLink>
+                        </template>
                     </div>
                 </div>
             </div>
         </nav>
 
         <div class="bg-gray-50 md:flex md:flex-grow">
-            <LoggedinMenu />
+            <component :is="LoggedinMenu" />
             <!-- Page Content -->
             <main class="py-8 sm:px-6 lg:px-8 space-y-8">
                 <div>Window width: {{ windowWidth }} screen: {{ screen }}</div>

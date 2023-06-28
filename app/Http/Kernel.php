@@ -21,6 +21,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+        \App\Http\Middleware\InitSubdomain::class,
     ];
 
     /**
@@ -59,7 +60,9 @@ class Kernel extends HttpKernel
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'auth.session' => \Illuminate\Session\Middleware\AuthenticateSession::class,
         'auth.source' => \App\Http\Middleware\AuthenticateSource::class,
+        'auth.role' => \App\Http\Middleware\AuthenticateRole::class,
         'auth.subdomain' => \App\Http\Middleware\AuthenticateSubdomain::class,
+        'init.subdomain' => \App\Http\Middleware\InitSubdomain::class,
         'partner.connect' => \App\Http\Middleware\ConnectPartnerDatabase::class,
         'business.ready' => \App\Http\Middleware\BusinessReady::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,

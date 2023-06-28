@@ -17,7 +17,8 @@ class AuthenticateSource
     public function handle(Request $request, Closure $next, $source)
     {
         if ($request->user()->source !== $source) {
-            return redirect('/')->dangerBanner(__('Unauthorised access.'));
+            return redirect()->intended(route($request->user()->dashboard_route));
+            // return redirect('/')->dangerBanner(__('Unauthorised access.'));
         }
 
         return $next($request);

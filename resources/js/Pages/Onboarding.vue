@@ -82,7 +82,7 @@ const submitForm = () => {
     form.transform((data) => ({
         ...data,
         business_phone: business_phone.value
-    })).post(route("partner.onboarding"), {
+    })).post(route("partner.onboarding.update"), {
         preserveScroll: true,
     });
 };

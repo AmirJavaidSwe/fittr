@@ -30,14 +30,15 @@ const updateApiTokenForm = useForm({
     permissions: [],
 });
 
-const deleteApiTokenForm = useForm();
+const deleteApiTokenForm = useForm({});
 
 const displayingToken = ref(false);
 const managingPermissionsFor = ref(null);
 const apiTokenBeingDeleted = ref(null);
 
 const createApiToken = () => {
-    createApiTokenForm.post(route('api-tokens.store'), {
+    // createApiTokenForm.post(route('api-tokens.store'), {
+    createApiTokenForm.post('/user/api-tokens', {
         preserveScroll: true,
         onSuccess: () => {
             displayingToken.value = true;

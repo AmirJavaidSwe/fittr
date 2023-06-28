@@ -25,16 +25,23 @@ class UserProfileController extends JetstreamUserProfileController
     {
         $this->validateTwoFactorAuthenticationState($request);
 
-        return Jetstream::inertia()->render($request, 'Profile/Show', [
-            'confirmsTwoFactorAuthentication' => Features::optionEnabled(Features::twoFactorAuthentication(), 'confirm'),
-            'sessions' => $this->sessions($request)->all(),
-            'page_title' => __('Profile management'),
-            'header' => __('Profile management'),
-        ]);
+        return Jetstream::inertia()->render(
+            $request,
+            empty(config('subdomain')) ? 'Profile/Show' : 'Store/Profile',
+            [
+                'confirmsTwoFactorAuthentication' => Features::optionEnabled(Features::twoFactorAuthentication(), 'confirm'),
+                'sessions' => $this->sessions($request)->all(),
+                'page_title' => __('Profile management'),
+                'header' => __('Profile management'),
+            ]
+        );
     }
-
+    
     public function googleAuth()
     {
+
+        //TODO: add service store subdomains auth support
+
         try {
             $user = Socialite::driver('google')->user();
         } catch (\Exception $e) {

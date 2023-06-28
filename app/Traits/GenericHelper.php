@@ -20,4 +20,12 @@ trait GenericHelper
             redirect()->back()->with('flash_type', 'success')->with('flash_message', __($msg ?? 'Success'))->with('flash_timestamp', time()) :
             redirect()->route($route)->with('flash_type', 'success')->with('flash_message', __($msg ?? 'Success'))->with('flash_timestamp', time());
     }
+
+    public static function isMainDomain(): bool
+    {
+        $host = request()->host();
+        $sub = strtok($host, '.');
+
+        return strtolower($sub) === 'app';
+    }
 }

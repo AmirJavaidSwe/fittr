@@ -36,7 +36,8 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware('web')
                 ->group([
                     base_path('routes/web.php'),
-                    base_path('routes/jetstream.php')
+                    base_path('routes/jetstream.php'),
+                    base_path('routes/fortify.php')
                 ]);
         });
     }

@@ -15,6 +15,7 @@ use Laravel\Jetstream\Http\Controllers\Inertia\TermsOfServiceController;
 use App\Http\Controllers\Shared\UserProfileController;
 use Laravel\Jetstream\Http\Controllers\TeamInvitationController;
 use Laravel\Jetstream\Jetstream;
+use App\Traits\GenericHelper;
 
 Route::group(['middleware' => config('jetstream.middleware', ['web'])], function () {
     if (Jetstream::hasTermsAndPrivacyPolicyFeature()) {
@@ -30,7 +31,11 @@ Route::group(['middleware' => config('jetstream.middleware', ['web'])], function
             ? config('jetstream.auth_session')
             : null;
 
-    Route::group(['middleware' => array_values(array_filter([$authMiddleware, $authSessionMiddleware]))], function () {
+    $authSubdomainMiddleware = GenericHelper::isMainDomain()
+            ? null
+            : 'auth.subdomain';
+
+    Route::group(['middleware' => array_values(array_filter([$authMiddleware, $authSessionMiddleware, $authSubdomainMiddleware]))], function () {
         // User & Profile...
         Route::get('/user/profile', [UserProfileController::class, 'show'])->name('profile.show');
         Route::delete('/user/other-browser-sessions', [OtherBrowserSessionsController::class, 'destroy'])->name('other-browser-sessions.destroy');
@@ -42,7 +47,7 @@ Route::group(['middleware' => config('jetstream.middleware', ['web'])], function
 
         Route::group(['middleware' => 'verified'], function () {
             // API...
-            if (Jetstream::hasApiFeatures()) {
+            if (Jetstream::hasApiFeatures() && GenericHelper::isMainDomain()) {
                 Route::get('/user/api-tokens', [ApiTokenController::class, 'index'])->name('api-tokens.index');
                 Route::post('/user/api-tokens', [ApiTokenController::class, 'store'])->name('api-tokens.store');
                 Route::put('/user/api-tokens/{token}', [ApiTokenController::class, 'update'])->name('api-tokens.update');

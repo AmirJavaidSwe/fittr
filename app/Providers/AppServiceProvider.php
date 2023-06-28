@@ -28,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
         Relation::enforceMorphMap([
             'user' => 'App\Models\User',
+            'member' => 'App\Models\Partner\User',
             'pack' => 'App\Models\Partner\Pack',
             'location' => 'App\Models\Partner\Location',
         ]);
