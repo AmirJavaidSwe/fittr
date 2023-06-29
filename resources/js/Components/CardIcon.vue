@@ -5,14 +5,14 @@ const props = defineProps({
     iconClass: String,
     height: {
         type:String,
-        default:"h-11" 
+        default:"h-16" 
     }
 });
 </script>
 
 <template>
     <div
-        class="bg-white bg-white-50 flex hover:bg-white-100 items-center p-3 gap-4 relative transition"
+        class="bg-white bg-white-50 flex hover:bg-white-100 items-center p-3 gap-4 relative transition rounded"
     >
         <Link
             v-if="cardLink"
@@ -24,12 +24,12 @@ const props = defineProps({
         </div>
         <div class="flex-1 min-w-0">
             <p
-                class="text-sm lg:text-md 2xl:text-lg font-bold text-gray-900 truncate dark:text-dark"
+                class="text-xl font-bold text-gray-800 truncate dark:text-dark"
             >
                 <slot name="title"></slot>
             </p>
             <p
-                class="text-sm lg:text-md 2xl:text-lg text-gray-500 truncate dark:text-gray-400"
+                class="text-sm lg:text-md 2xl:text-lg text-slate-500 truncate"
             >
                 <slot></slot>
             </p>

@@ -24,7 +24,7 @@ defineProps({
                     <LogoLetter fill="#000000" class="w-48 h-48" />
                 </div>
             
-            <form action="#" class="w-3/5 mx-auto">
+            <form action="#" class="w-64 xs:w-full block mx-auto max-[500px]:w-full">
                 <div class="h-px mt-4">
                     <div class="flex rounded-md shadow-sm" role="group">
                         <Link :href="route('login')" class="justify-center w-2/4 inline-flex items-center disabled:opacity-25 transition font-semibold bg-secondary-500 hover:bg-secondary-100 focus:bg-secondary-100 active:bg-secondary-600 text-dark active:text-white rounded-md border border-secondary-500 hover:bg-secondary-100 hover:text-secondary-500 hover:shadow-md hover:shadow-secondary-200 focus:shadow-md focus:text-secondary-500 focus:shadow-secondary-100 active:shadow-none px-4 h-11 text-sm">Log in</Link>

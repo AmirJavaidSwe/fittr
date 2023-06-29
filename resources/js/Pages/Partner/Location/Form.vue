@@ -8,6 +8,8 @@ import Dropzone from "@/Components/Dropzone.vue";
 import MultiselectInput from "@/Components/MultiselectInput.vue";
 import { computed } from "@vue/reactivity";
 import Switcher from "@/Components/Switcher.vue";
+import UploadFileIcon from "@/icons/UploadFileIcon.vue";
+import UploadingIcon from "@/icons/UploadingIcon.vue";
 
 defineEmits(["remove_uploaded_file"]);
 
@@ -168,11 +170,42 @@ const manager = computed(() => {
             />
         <InputError :message="form.errors.email" class="mt-2" />
     </div>
-    <div class="my-3">
-        <InputLabel for="image" value="Image" />
-        <Dropzone id="image" v-model="form.image" :uploaded_files="form.uploaded_images ? form.uploaded_images : []" :accept="['.jpg', '.png', '.bmp']" max_width="200" max_height="200" @remove_uploaded_file="$emit('remove_uploaded_file', $event)" />
-        <InputError :message="form.errors.image" class="mt-2" />
-    </div>
+            <!-- <div class="my-3">
+                <InputLabel for="image" value="Image" />
+                <Dropzone id="image" v-model="form.image" :uploaded_files="form.uploaded_images ? form.uploaded_images : []" :accept="['.jpg', '.png', '.bmp']" max_width="200" max_height="200" @remove_uploaded_file="$emit('remove_uploaded_file', $event)" />
+                <InputError :message="form.errors.image" class="mt-2" />
+            </div> -->
+                
+        <div class="flex items-center justify-center w-full">
+            <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-34 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-lightblue border-blue-500">
+                <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                    
+                    <p class="text-sm text-gray-500 dark:text-gray-400 flex items-center">
+                        <span class="pr-2">
+                            <UploadingIcon />
+                        </span><span class="font-bold text-darkblue"> 
+                            Drop your JPG, PNG or BMP File here.</span></p>
+                    <p class="text-xs text-darkblue"><strong>SVG, PNG, JPG or GIF (MAX. 800x400px)</strong></p>
+                </div>
+                <input id="dropzone-file" type="file" class="hidden" />
+            </label>
+        </div> 
+
+        <div class="flex mt-5">
+           <span class="headerIcon">
+                <UploadFileIcon />
+           </span>
+            <span class="ml-2 w-11/12">
+                <h4><strong>Customers_Q2_2024.csv(1.6MB)</strong></h4>
+                <div class="flex justify-between mb-1 items-center">
+                    <div class="bg-primary-500 h-2.5 rounded-full w-11/12"></div>
+                    <span class="text-sm font-medium text-blue-700 dark:text-white pl-2">100%</span>
+                </div>
+                
+
+            </span>
+        </div>
+
     <div class="my-3">
         <InputLabel for="amenities" value="Amenities" />
         <MultiselectInput :options="amenities" v-model="form.amenity_ids" mode="multiple" />

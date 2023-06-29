@@ -426,7 +426,7 @@ const showLink = (exporting) => {
                         DateTime.fromISO(class_lesson.updated_at).toRelative()
                     "
                 />
-                <table-data>
+                <table-data class="justify-end flex">
                     <Dropdown
                         align="right"
                         width="48"

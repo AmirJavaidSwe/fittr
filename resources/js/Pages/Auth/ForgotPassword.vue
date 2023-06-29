@@ -30,7 +30,7 @@ const submit = () => {
         <template #logo>
             <AuthenticationCardLogo class="flex justify-center pt-8 sm:pt-0" />
         </template>
-        <div class="w-3/5 mx-auto bg-white p-5 rounded-lg">
+        <div class="w-96 mx-auto bg-white p-5 rounded-lg max-[500px]:w-full">
         <div class="mb-4 text-sm text-gray-600">
             <h3 class="mt-3 mb-3 text-2xl"><strong>Confirm your e-mail address</strong></h3>
                 

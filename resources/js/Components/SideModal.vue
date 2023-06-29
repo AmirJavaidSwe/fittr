@@ -48,10 +48,11 @@ const close = () => {
                 class="fixed right-0 top-0 z-[1035] overflow-y-auto h-full w-full md:w-1/2 xl:w-1/3 overflow-hidden bg-white shadow-[0_4px_12px_0_rgba(0,0,0,0.07),_0_2px_4px_rgba(0,0,0,0.05)] p-5 flex flex-col"
             >
                 <div class="text-xl font-bold" v-if="slots.title">
-                    <button class="md:hidden mr-5" @click="close">
+                    <slot name="title" />
+                    <button class="mr-5 float-right" @click="close">
                         <font-awesome-icon :icon="faTimes" />
                     </button>
-                    <slot name="title" />
+                    
                 </div>
 
                 <div class="mt-4 mb-3 flex-1" v-if="slots.content">

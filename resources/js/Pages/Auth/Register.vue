@@ -40,7 +40,7 @@ const inputConfirmPasswordType = computed(() => (showConfirmPassword.value ? "te
             <AuthenticationCardLogo class="flex justify-center pt-8 sm:pt-0" />
         </template>
 
-        <form @submit.prevent="submit" class="w-3/5 mx-auto bg-white p-5 rounded-lg">
+        <form @submit.prevent="submit" class="w-96 mx-auto bg-white p-5 rounded-lg max-[500px]:w-full">
             <div>
                 <InputLabel for="name" value="Name" />
                 <TextInput id="name" v-model="form.name" type="text" class="mt-1 block w-full" required autofocus

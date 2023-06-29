@@ -68,6 +68,10 @@ module.exports = {
                 grey: "#939393", //darker grey
                 blue: "#1269FB",
                 mainBg: "#E8EAE9", //soft grey
+                lightblue: "#EAF1F8",
+                darkblue: "#4299E1",
+                
+
             },
             fontFamily: {
                 sans: ["Urbanist", ...defaultTheme.fontFamily.sans],
@@ -111,6 +115,7 @@ module.exports = {
                 "56vw": "2.91vw",
                 "60vw": "3.125vw",
             },
+         
         },
     },
 

@@ -57,7 +57,7 @@ const submitForm = () => {
                     Run email campaigns for your customers. Everytime new user
                     signs up, we will send a contact information to your
                     Mailchimp account.
-                    <div class="mt-4">
+                    <div class="mt-4 m-[8px]">
                         <label class="flex items-center">
                             <Checkbox
                                 v-model:checked="
@@ -143,7 +143,7 @@ const submitForm = () => {
                     Run email campaigns for your customers. Everytime new user
                     signs up, we will send a contact information to your
                     Sendgrid account.
-                    <div class="mt-4">
+                    <div class="mt-4 m-[8px]">
                         <label class="flex items-center">
                             <Checkbox
                                 v-model:checked="
@@ -238,7 +238,7 @@ const submitForm = () => {
                     Run email campaigns for your customers. Everytime new user
                     signs up, we will send a contact information to your
                     Sendinblue account.
-                    <div class="mt-4">
+                    <div class="m-[8px]">
                         <label class="flex items-center">
                             <Checkbox
                                 v-model:checked="

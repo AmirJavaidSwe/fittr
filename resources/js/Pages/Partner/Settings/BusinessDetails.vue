@@ -168,7 +168,7 @@ const timezoneOptions = computed(() => {
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="business_phone" value="Phone Number" />
                 <div class="flex gap-2 items-center">
-                    <div class="input-field mt-1 px-2" v-text="dial_code"></div>
+                    <div class="input-field mt-1 px-2 basis-12" v-text="dial_code"></div>
                     <TextInput
                         id="business_phone"
                         v-model="business_phone"

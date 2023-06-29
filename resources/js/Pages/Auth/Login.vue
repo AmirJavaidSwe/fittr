@@ -40,13 +40,10 @@ const inputPasswordType = computed(() =>
 </script>
 <style>
    
-.login_or_register_right {
-    background: url("../../../public/images/Register-Background.png") no-repeat;
-    background-size:cover;
-}
+
 </style>
 <template>
-    <Head title="Log in" />
+    <Head title="Log in"  sm:text-center/>
     <div class="flex flex-col lg:flex-row rounded-xl mx-auto min-h-screen">
     <AuthenticationCard>
         <template #logo>
@@ -57,7 +54,7 @@ const inputPasswordType = computed(() =>
             {{ status }}
         </div>
         
-        <form @submit.prevent="submit" class="w-3/5 mx-auto bg-white p-5 rounded-lg">
+        <form @submit.prevent="submit" class="w-96 mx-auto bg-white p-5 rounded-lg mb-5 max-[500px]:w-full">
             <div class="text-dark text-3xl pt-1 pb-6">Login In</div>
             <div>
                 <InputLabel for="email" value="Email" />
