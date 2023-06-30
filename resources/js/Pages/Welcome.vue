@@ -4,7 +4,7 @@ import { Head, Link } from '@inertiajs/vue3';
 import LogoLetter from '@/Components/LogoLetter.vue';
 import GoogleIcon from '@/Icons/Google.vue';
 import Banner from '@/Components/Banner.vue';
-import Authpagesimages from "@/Components/Authpagesimages.vue";
+import AuthBackground from "@/Components/AuthBackground.vue";
 
 defineProps({
     canLogin: Boolean,
@@ -44,11 +44,11 @@ defineProps({
             </form>
           </div>
           
-           <Authpagesimages>
+           <AuthBackground>
                 <template #imagetext>
                     <p class="text-primary-500">Lorem ipsum dolor sit amet consectetur. Adipiscing risus dignissim volutpat ut integer malesuada varius fringilla. Id lacus vel lectus viverra id feugiat. Et id sed vel tincidunt amet volutpat vulputate aliquet vitae. Faucibus adipiscing in dui arcu duis. Senectus semper donec dui sit eget ut facilisi ut.</p>
                 </template>
-           </Authpagesimages>
+           </AuthBackground>
           
         </div>
       </div>

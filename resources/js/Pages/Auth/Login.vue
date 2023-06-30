@@ -11,7 +11,7 @@ import TextInput from "@/Components/TextInput.vue";
 import GoogleIcon from "@/Icons/Google.vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import Authpagesimages from "@/Components/Authpagesimages.vue";
+import AuthBackground from "@/Components/AuthBackground.vue";
 
 defineProps({
     canResetPassword: Boolean,
@@ -55,7 +55,7 @@ const inputPasswordType = computed(() =>
         </div>
         
         <form @submit.prevent="submit" class="w-96 mx-auto bg-white p-5 rounded-lg mb-5 max-[500px]:w-full">
-            <div class="text-dark text-3xl pt-1 pb-6">Login In</div>
+            <!-- <div class="text-dark text-3xl pt-1 pb-6">Login In</div> -->
             <div>
                 <InputLabel for="email" value="Email" />
                 <TextInput
@@ -147,7 +147,7 @@ const inputPasswordType = computed(() =>
                     :href="route('password.request')"
                     class="text-sm text-gray-600 hover:text-gray-900"
                 >
-                    Reset password
+                    Forgot password?
                 </Link>
 
                 </div>
@@ -156,11 +156,11 @@ const inputPasswordType = computed(() =>
        
     </AuthenticationCard>
 
-            <Authpagesimages>
+            <AuthBackground>
                 <template #imagetext>
                     <p class="text-white">Lorem ipsum dolor sit amet consectetur. Adipiscing risus dignissim volutpat ut integer malesuada varius fringilla. Id lacus vel lectus viverra id feugiat. Et id sed vel tincidunt amet volutpat vulputate aliquet vitae. Faucibus adipiscing in dui arcu duis. Senectus semper donec dui sit eget ut facilisi ut.</p>
                 </template>
-           </Authpagesimages>
+           </AuthBackground>
 
 
 

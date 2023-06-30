@@ -1,28 +1,41 @@
 <script setup>
-import { Head, Link, useForm } from '@inertiajs/vue3';
-import AuthenticationCard from "@/Components/AuthenticationCard.vue";
-import AuthenticationCardLogo from "@/Components/AuthenticationCardLogo.vue";
-import InputError from "@/Components/InputError.vue";
-import InputLabel from "@/Components/InputLabel.vue";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
-import TextInput from "@/Components/TextInput.vue";
-import AuthBackground from "@/Components/AuthBackground.vue";
+import { ref, computed } from 'vue';
+import { Head, useForm } from '@inertiajs/vue3';
+import AuthenticationCard from '@/Components/AuthenticationCard.vue';
+import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
+import InputError from '@/Components/InputError.vue';
+import InputLabel from '@/Components/InputLabel.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import TextInput from '@/Components/TextInput.vue';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faEye,faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
-defineProps({
-    status: String,
+const props = defineProps({
+    email: String,
+    token: String,
 });
 
 const form = useForm({
-    email: "",
+    token: props.token,
+    email: props.email,
+    password: '',
+    password_confirmation: '',
 });
 
 const submit = () => {
-    form.post(route("password.email"));
+    form.post(route('password.update'), {
+        onFinish: () => form.reset('password', 'password_confirmation'),
+    });
 };
+
+const showPassword = ref(false);
+const showConfirmPassword = ref(false);
+const inputPasswordType = computed(() => (showPassword.value ? "text" : "password"));
+const inputConfirmPasswordType = computed(() => (showConfirmPassword.value ? "text" : "password"));
 </script>
 
 <template>
-    <Head title="Forgot Password" />
+    <Head title="Reset Password" />
 
     <div class="flex flex-col lg:flex-row rounded-xl mx-auto min-h-screen">
         <AuthenticationCard class="pt-8">
@@ -31,7 +44,8 @@ const submit = () => {
             </template>
             <div class="w-96 mx-auto bg-white p-5 rounded-lg max-[500px]:w-full">
                 <div class="mb-4 text-sm text-gray-600">
-                    <!-- <h3 class="mt-3 mb-3 text-2xl"><strong>Forgot Password?</strong></h3> -->
+                    <h3 class="mt-3 mb-3 text-2xl"><strong>Forgot Password?</strong></h3>
+
                     <p>
                         Forgot your password? No problem. Just let us know your email
                         address and we will email you a password reset link that will allow

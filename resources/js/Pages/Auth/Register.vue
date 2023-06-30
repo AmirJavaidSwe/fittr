@@ -11,7 +11,7 @@ import TextInput from '@/Components/TextInput.vue';
 import GoogleIcon from '@/Icons/Google.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faEye,faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-import Authpagesimages from "@/Components/Authpagesimages.vue";
+import AuthBackground from "@/Components/AuthBackground.vue";
 
 const form = useForm({
     name: '',
@@ -140,10 +140,10 @@ const inputConfirmPasswordType = computed(() => (showConfirmPassword.value ? "te
             </div>
         </form>
     </AuthenticationCard>
-            <Authpagesimages>
+            <AuthBackground>
                     <template #imagetext>
                         <p class="text-white">Lorem ipsum dolor sit amet consectetur. Adipiscing risus dignissim volutpat ut integer malesuada varius fringilla. Id lacus vel lectus viverra id feugiat. Et id sed vel tincidunt amet volutpat vulputate aliquet vitae. Faucibus adipiscing in dui arcu duis. Senectus semper donec dui sit eget ut facilisi ut.</p>
                     </template>
-            </Authpagesimages>
+            </AuthBackground>
         </div>
 </template>
