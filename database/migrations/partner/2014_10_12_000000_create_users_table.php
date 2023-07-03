@@ -18,7 +18,7 @@ return new class extends Migration
             $table->id();
             $table->enum('role', PartnerUserRole::roles())->default(PartnerUserRole::get('member'));
             $table->string('name');
-            $table->string('email')->unique();
+            $table->string('email');
             $table->string('password');
             $table->rememberToken();
             $table->foreignId('current_team_id')->nullable();

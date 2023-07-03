@@ -84,19 +84,19 @@ class User extends Authenticatable implements MustVerifyEmail
     // Accessors
     public function getIsMemberAttribute(): bool
     {
-        return $this->role == PartnerUserRole::MEMBER->value;
+        return $this->role == PartnerUserRole::get('member');
     }
 
     public function getIsInstructorAttribute(): bool
     {
-        return $this->role == PartnerUserRole::INSTRUCTOR->value;
+        return $this->role == PartnerUserRole::get('instructor');
     }
 
     public function getDashboardRouteAttribute(): string
     {
         return match($this->role) {
-            PartnerUserRole::MEMBER->value => 'ss.member.dashboard',
-            PartnerUserRole::INSTRUCTOR->value => 'ss.instructor.dashboard',
+            PartnerUserRole::get('member') => 'ss.member.dashboard',
+            PartnerUserRole::get('instructor') => 'ss.instructor.dashboard',
             default => 'ss.home',
         };
     }

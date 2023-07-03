@@ -41,12 +41,10 @@ use App\Http\Controllers\Store\StorePaymentController;
 use App\Http\Controllers\Store\MemberDashboardController;
 use App\Http\Controllers\Store\InstructorDashboardController;
 
-Route::get('/auth/google', function () {
-    return Socialite::driver('google')->redirect();
-})->name('auth.google');
+
+Route::get('/auth/google', [UserProfileController::class, 'googleRedirect'])->name('auth.google');
 Route::get('/auth/google-callback', [UserProfileController::class, 'googleAuth']);
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'webhook']);
-// https://app.fittr.tech/stripe/connect-redirect
 
 //Routes to complete partner onboarding. Accessible and auto-redirected to from 'ConnectPartnerDatabase' middleware when user has no business relation.
 Route::middleware(['auth', 'verified'])->name('partner.onboarding.')->group(function () {
@@ -184,6 +182,9 @@ Route::domain('{subdomain}.'.config('app.domain'))->middleware(['auth.subdomain'
 
     Route::post('/buy/{price}', [StorePaymentController::class, 'index'])->name('payments.index');
     Route::get('/success', [StorePaymentController::class, 'success'])->name('payments.success');
+
+    //google auth
+    Route::post('/auth/google-callback', [UserProfileController::class, 'processSubdomainRequest']);
   
     Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
 
