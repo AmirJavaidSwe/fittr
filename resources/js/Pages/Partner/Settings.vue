@@ -47,7 +47,7 @@ import ManageAminitiesIcon from "@/icons/ManageAminitiesIcon.vue";
         <div class="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-3 gap-6 2xl:grid-cols-4 md:grid-cols-2">
             <div class="space-y-4">
                 <div class="text-xl font-bold tracking-tight text-gray-900">
-                    Online Store
+                    Business Settings
                 </div>
 
                 <CardIcon :card-link="route('partner.settings.general-details')">
@@ -95,7 +95,7 @@ import ManageAminitiesIcon from "@/icons/ManageAminitiesIcon.vue";
             </div>
             <div class="space-y-4">
                 <div class="text-xl font-bold tracking-tight text-gray-900">
-                    Bookings & Payments
+                    Locations & Studios
                 </div>
 
                 <CardIcon :card-link="route('partner.locations.index')">
@@ -163,7 +163,7 @@ import ManageAminitiesIcon from "@/icons/ManageAminitiesIcon.vue";
             </div>
             <div class="space-y-4">
                 <div class="text-xl font-bold tracking-tight text-gray-900">
-                    Team & Communication
+                    Memberships
                 </div>
 
                 <CardIcon :card-link="route('partner.packs.index')">
