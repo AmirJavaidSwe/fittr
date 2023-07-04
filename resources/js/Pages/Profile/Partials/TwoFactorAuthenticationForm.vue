@@ -73,7 +73,6 @@ const showRecoveryCodes = () => {
 
 const confirmTwoFactorAuthentication = () => {
     confirmationForm.post('/user/confirmed-two-factor-authentication', {
-        errorBag: "confirmTwoFactorAuthentication",
         preserveScroll: true,
         preserveState: true,
         onSuccess: () => {

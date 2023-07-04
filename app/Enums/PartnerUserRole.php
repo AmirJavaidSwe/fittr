@@ -14,4 +14,9 @@ enum PartnerUserRole: string
             self::INSTRUCTOR->name => self::INSTRUCTOR->value,
         );
     }
+
+    public static function get(string $case): string
+    {
+        return self::from($case)->value;
+    }
 }

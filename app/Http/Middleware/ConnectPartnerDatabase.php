@@ -28,7 +28,7 @@ class ConnectPartnerDatabase
         $partner = $request->user();
         //this is brand new user and business does not exist yet nor database is created
         if(empty($partner->business_id)){
-            return to_route('partner.onboarding');
+            return to_route('partner.onboarding.index');
         }
 
         //grab business from session. Session may not have $business, use $partner->business as default

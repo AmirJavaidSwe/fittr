@@ -42,5 +42,6 @@ router.on('navigate', (event) => {
     </Link>
 
     <ButtonLink :href="route('login')" styling="secondary" size="default" class="inline-flex md:hidden my-4">Login</ButtonLink>
+    <ButtonLink :href="route('register')" styling="secondary" size="default" class="inline-flex md:hidden my-4">Sign up</ButtonLink>
   </div>
 </template>

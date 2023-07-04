@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Partner;
 
-use Inertia\Inertia;
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\Shared\UserProfileController;
 use App\Enums\AppUserSource;
 use App\Models\Partner\User;
-use Illuminate\Http\Request;
 use App\Models\Partner\Location;
 use App\Models\Partner\ClassLesson;
-use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Inertia\Inertia;
 
 class PartnerDashboardController extends Controller
 {
@@ -35,5 +36,19 @@ class PartnerDashboardController extends Controller
             'totalMembers' => $totalMembers,
             'totalLocations' => $totalLocations,
         ]);
+    }
+
+    public function loginAs(Request $request)
+    {
+        $user = User::findOrFail($request->id);
+        $controller = app()->make(UserProfileController::class);
+        $bs = $this->business_seetings();
+        $subdomain = $bs['subdomain'] ?? null;
+        if(empty($subdomain)){
+            return $this->redirectBackError(__('Service store domain is not set'));
+        }
+        $url = $controller->redirectToSubdomain($user, $subdomain);
+
+        return Inertia::location($url);
     }
 }

@@ -22,7 +22,11 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
-                return redirect()->intended(route($request->user()->dashboard_route));
+                $url = empty(config('subdomain')) ? 
+                    route($request->user()?->dashboard_route) :
+                    route($request->user()?->dashboard_route, ['subdomain' => config('subdomain.name')]);
+
+                return redirect()->intended($url);
             }
         }
 

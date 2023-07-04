@@ -33,7 +33,8 @@ return [
     |
     */
 
-    'guard' => ['web'],
+    //NOTE: Jetstream is using 'sanctum' guard, that in turn checks 2 existing guards. 'store' guard defined in 'auth.php' used by statefull authentication by Fortify
+    'guard' => ['web', 'store'],
 
     /*
     |--------------------------------------------------------------------------

@@ -17,6 +17,7 @@ return [
     */
 
     'guard' => 'web',
+    'guard_subdomain' => 'store', // defined under auth.php which is also an implementation of StatefulGuard, used for subdomain based logins.
 
     /*
     |--------------------------------------------------------------------------
@@ -30,6 +31,7 @@ return [
     */
 
     'passwords' => 'users',
+    'passwords_subdomain' => 'members',
 
     /*
     |--------------------------------------------------------------------------

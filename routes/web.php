@@ -38,18 +38,18 @@ use App\Http\Controllers\Store\StoreInstructorController;
 use App\Http\Controllers\Store\StoreLocationController;
 use App\Http\Controllers\Store\StorePackController;
 use App\Http\Controllers\Store\StorePaymentController;
+use App\Http\Controllers\Store\MemberDashboardController;
+use App\Http\Controllers\Store\InstructorDashboardController;
 
-Route::get('/auth/google', function () {
-    return Socialite::driver('google')->redirect();
-})->name('auth.google');
+
+Route::get('/auth/google', [UserProfileController::class, 'googleRedirect'])->name('auth.google');
 Route::get('/auth/google-callback', [UserProfileController::class, 'googleAuth']);
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'webhook']);
-// https://app.fittr.tech/stripe/connect-redirect
 
 //Routes to complete partner onboarding. Accessible and auto-redirected to from 'ConnectPartnerDatabase' middleware when user has no business relation.
-Route::middleware(['auth', 'verified'])->name('partner.onboarding')->group(function () {
-    Route::get('/onboarding', [PartnerOnboardController::class, 'index']);
-    Route::post('/onboarding', [PartnerOnboardController::class, 'update']);
+Route::middleware(['auth', 'verified'])->name('partner.onboarding.')->group(function () {
+    Route::get('/onboarding', [PartnerOnboardController::class, 'index'])->name('index');
+    Route::post('/onboarding', [PartnerOnboardController::class, 'update'])->name('update');
 });
 
 // this is for fittr admin users and partner users
@@ -61,11 +61,7 @@ Route::domain('app.'.config('app.domain'))->group(function () {
         ]);
     })->name('root');
 
-    Route::middleware([
-        'auth:sanctum',
-        config('jetstream.auth_session'),
-        'verified',
-    ])->group(function () {
+    Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
 
         //ADMIN
         Route::middleware(['auth.source:admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -75,7 +71,8 @@ Route::domain('app.'.config('app.domain'))->group(function () {
                 Route::get('/partners', 'index')->name('index');
                 Route::get('/partners/{id}', 'show')->name('show');
                 Route::get('/partners/{id}/edit', 'edit')->name('edit');
-                Route::get('/partners/{id}/login_as', 'loginAs')->name('login-as');
+                Route::post('/partners/login-as', 'loginAsPartner')->name('login-as');
+                // Route::post('/partners/login-back', 'loginBack')->name('login-back');
                 Route::put('/partners/{id}', 'update')->name('update');
                 Route::delete('/partners/{id}', 'destroy')->name('destroy');
                 Route::post('/partners', 'store')->name('store');
@@ -108,6 +105,7 @@ Route::domain('app.'.config('app.domain'))->group(function () {
         //PARTNER
         Route::middleware(['auth.source:partner', 'partner.connect'])->name('partner.')->group(function () {
             Route::get('/dashboard', [PartnerDashboardController::class, 'index'])->name('dashboard');
+            Route::post('/login-as', [PartnerDashboardController::class, 'loginAs'])->name('login-as');
 
             Route::get('/subscriptions', [PartnerSubscriptionController::class, 'index'])->name('subscriptions.index');
             Route::put('/subscriptions/{subscription}/cancel', [PartnerSubscriptionController::class, 'cancel'])->name('subscriptions.cancel');
@@ -187,32 +185,19 @@ Route::domain('{subdomain}.'.config('app.domain'))->middleware(['auth.subdomain'
     Route::post('/buy/{price}', [StorePaymentController::class, 'index'])->name('payments.index');
     Route::get('/success', [StorePaymentController::class, 'success'])->name('payments.success');
 
-    // Route::get('/', function ($subdomain) {
-    //     //temp demo
-    //     // dump(Config::get('database.connections.mysql_partner'));
-    //     dump('Partner classes dump:');
-    //     $partner_classes = \App\Models\Partner\ClassLesson::all();
-    //     dump($partner_classes);
-    //     return "THIS IS CLIENT PARTNER PUBLIC FACING SERVICE STORE PAGE. Subdomain name is $subdomain";
-    // });
-
-    Route::middleware([
-        'auth:sanctum',
-        config('jetstream.auth_session'),
-        'verified',
-    ])->group(function () {
+    //google auth
+    Route::post('/auth/google-callback', [UserProfileController::class, 'processSubdomainRequest']);
+  
+    Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
 
         //MEMBER
         Route::middleware(['auth.role:member'])->name('member.')->group(function () {
-            // Route::get('/dashboard', [MemberDashboardController::class, 'index'])->name('dashboard');
-            // Route::get('/memberships', [MembershipController::class, 'index'])->name('memberships');
+            Route::get('/dashboard', [MemberDashboardController::class, 'index'])->name('dashboard');
         });
 
         //INSTRUCTOR
         Route::middleware(['auth.role:instructor'])->prefix('instructor')->name('instructor.')->group(function () {
-            Route::get('/dashboard', function () {
-                return 'Hello World';
-            })->name('dashboard');
+            Route::get('/dashboard', [InstructorDashboardController::class, 'index'])->name('dashboard');
         });
     });
 });

@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
-use URL;
 use App\Models\User;
-use Inertia\Inertia;
 use App\Enums\AppUserSource;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Inertia\Inertia;
 
 class PartnerController extends Controller
 {
@@ -51,9 +49,6 @@ class PartnerController extends Controller
                         'business_id' => $user->business_id,
                         'business_name' => $user->business?->settings->firstWhere('key', 'business_name')?->val,
                         'created_at' => $user->created_at->format('Y-m-d'),
-                        'url_show' => URL::route('admin.partners.show', $user),
-                        'url_edit' => URL::route('admin.partners.edit', $user),
-                        'url_login_as' => URL::route('admin.partners.login-as', $user),
                     ],
                 ),
             'search' => $this->search,
@@ -120,33 +115,29 @@ class PartnerController extends Controller
         ]);
     }
 
-    public function loginAs(Request $request, $id)
+    // public function loginAs(Request $request,  \Illuminate\Contracts\Auth\StatefulGuard $guard)
+    public function loginAsPartner(Request $request)
     {
         if (Gate::denies('loginAs-' . AppUserSource::admin->name . '-partner-management-loginAs')) {
             abort(403);
         }
-        $user = User::partner()->findOrFail($id);
+        // note auth() \Illuminate\Auth\AuthManager has 2 guards:
+        //  sanctum \Illuminate\Auth\RequestGuard. This is default guard: Auth::getDefaultDriver() 
+        //  web \Illuminate\Auth\SessionGuard
+        // Both guards have resolved user instance. RequestGuard does not have any login() methods, and will return resolved $this->user.
+        // When we auth new user via SessionGuard, RequestGuard will still have previous user instance and this will prevent the login on redirect,
+        // however we can call any method on AuthManager default driver instance. RequestGuard use GuardHelpers trait and there we can call setUser($user) method:
+        
+        session()->put('auth_fittr_user', $request->user()->id);
+        $user = auth()->guard('web')->loginUsingId($request->id);
+        auth()->guard()->setUser($user);
+        $url = route($user?->dashboard_route);
 
-        if (Auth::guard('web')->id() != $id) {
-            if (!session()->has('orig_user')) {
-                session()->put('orig_user', Auth::guard('web')->id());
-            }
-
-            Auth::guard('web')->loginUsingId($id);
-
-            session()->put('user_switch_url', url()->previous());
-        }
-
-        return redirect()->route('partner.classes.index');
+        return Inertia::location($url);
     }
 
-    public function switchBack(Request $request)
-    {
-        if (session()->has('orig_user')) {
-            Auth::guard('web')->loginUsingId(session()->get('orig_user'));
-            session()->forget('orig_user');
-        }
-
-        return redirect(session()->get('user_switch_url', '/'));
-    }
+    // public function loginBack(Request $request)
+    // {
+        // we can add a method here to log fittr admin back from partner. May not need this.
+    // }
 }
