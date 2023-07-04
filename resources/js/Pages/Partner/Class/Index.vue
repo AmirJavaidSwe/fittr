@@ -3,6 +3,7 @@ import { ref, watch, computed } from "vue";
 import { Link, useForm, usePage, router } from "@inertiajs/vue3";
 import { DateTime } from "luxon";
 import uniqBy from 'lodash/uniqBy';
+import cloneDeep from 'lodash/cloneDeep';
 import Form from "./Form.vue";
 import FormExport from "./FormExport.vue";
 import FormFilter from "./FormFilter.vue";
@@ -286,10 +287,11 @@ const storeInstructor = () => {
 };
 
 const instructorsList = computed(() => {
-    let newInstructorsList =  props.instructors
-    newInstructorsList['create_new_instructor'] = "Add New"
-    return newInstructorsList
+  let newInstructorsList = { ...props.instructors }; // Create a shallow copy of the object
+  newInstructorsList.create_new_instructor = "Add New"; // Add a new property
+  return newInstructorsList;
 });
+
 const showClassTypeCreateModal = ref(false)
 const closeClassTypeCreateModal = () => {
     createClassTypeFrom.reset();
@@ -311,9 +313,9 @@ const storeClassType = () => {
 };
 
 const classTypeList = computed(() => {
-    let newClassTypeList =  props.classtypes
-    newClassTypeList['create_new_class_type'] = "Add New"
-    return newClassTypeList
+    let newClassTypeList = { ...props.classtypes }; // Create a shallow copy of the object
+    newClassTypeList.create_new_class_type = "Add New"; // Add a new property
+    return newClassTypeList;
 });
 const showStudioCreateModal = ref(false)
 const closeStudioCreateModal = () => {
@@ -336,9 +338,9 @@ const storeStudio = () => {
 };
 
 const studioList = computed(() => {
-    let newStudioList =  props.studios
-    newStudioList['create_new_studio'] = "Add New"
-    return newStudioList
+    let newStudioList = { ...props.studios }; // Create a shallow copy of the object
+    newStudioList.create_new_studio = "Add New"; // Add a new property
+    return newStudioList;
 });
 const showLocationCreateModal = ref(false)
 const closeLocationCreateModal = () => {

@@ -47,18 +47,6 @@ const logout = () => {
                 </div>
 
                 <form @submit.prevent="submit">
-                    <!-- <div>
-                <InputLabel for="email" value="Email" />
-                <TextInput
-                    id="email"
-                    v-model="form.email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    required
-                    autofocus
-                />
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div> -->
 
                     <div class="items-center justify-end mt-4">
 

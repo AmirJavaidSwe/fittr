@@ -60,7 +60,7 @@ const submitForm = () => {
                                 type="button">
                                 <CheckIcon /> &nbsp; <span class="text-[#36B07E]">Connected</span>
                             </ButtonLink>
-                            <Dropdown @click.prevent class="ms-4" align="right" width="48" :content-classes="['bg-white']">
+                            <Dropdown v-if="has_account" @click.prevent class="ms-4" align="right" width="48" :content-classes="['bg-white']">
                                 <template #trigger>
                                     <button class="text-dark text-lg">
                                         <font-awesome-icon :icon="faCog" />
