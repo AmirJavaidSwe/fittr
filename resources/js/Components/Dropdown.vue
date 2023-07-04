@@ -2,6 +2,11 @@
 import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 
 const props = defineProps({
+    rowIndex: {
+        type: Number,
+        default: 0,
+        required: false,
+    },
     align: {
         type: String,
         default: "right",
@@ -21,7 +26,10 @@ let open = ref(false);
 
 const emit = defineEmits(["toggled"]);
 watch(open, (new_val) => {
-    emit("toggled", new_val);
+    emit("toggled", {
+        open: new_val,
+        rowIndex: props.rowIndex
+    });
 });
 
 const closeOnEscape = (e) => {

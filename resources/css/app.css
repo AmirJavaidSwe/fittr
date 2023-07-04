@@ -61,8 +61,4 @@ select {
 }
 .settingicons_bg{
     background-color: rgb(214 223 217 / var(--tw-bg-opacity));
-
-}
-.multiselect-search{
-    @apply w-full absolute inset-0 outline-none focus:ring-0 appearance-none box-border  text-base font-sans bg-white pl-3.5 rtl:pl-0 rtl:pr-3.5  border-gray-300 focus:border-[1.5px] focus:border-primary-500 focus:outline-none focus:shadow-none focus:ring-0 !important;
 }

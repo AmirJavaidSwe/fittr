@@ -186,11 +186,11 @@ const deleteItem = () => {
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'updated_at'"
             />
-            <table-head title="Action" :justifyContent="'justify-end'" />
+            <table-head title="Action" class="flex justify-end" />
         </template>
 
         <template #tableData>
-            <tr v-for="(classtype, index) in classtypes.data">
+            <tr v-for="(classtype, index) in classtypes.data" :key="index">
                 <table-data :title="classtype.id" />
                 <table-data>
                     <Link
@@ -211,7 +211,7 @@ const deleteItem = () => {
                         "
                     />
                 </table-data>
-                <table-data class="flex">
+                <table-data class="text-right">
                     <Dropdown
                         align="right"
                         width="48"

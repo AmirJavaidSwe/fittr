@@ -349,6 +349,7 @@ class BusinessSettingController extends Controller
     // Bookings & Payments column / Payments => List of available payment gateways
     public function payments(Request $request)
     {
+        $business = $this->business();
         return Inertia::render('Partner/Settings/Payments', [
             'page_title' => __('Settings - Bookings & Payments - Payments'),
             'header' => array(
@@ -365,6 +366,8 @@ class BusinessSettingController extends Controller
                     'link' => null,
                 ],
             ),
+            'has_account' => $business->has_stripe_account,
+            'stripe_account' => $this->stripe_connect_service->retrieveAccount($business->stripe_account_id)->data,
         ]);
     }
 

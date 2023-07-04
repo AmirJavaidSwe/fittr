@@ -24,22 +24,22 @@ const classes = computed(() => {
     switch (props.styling) {
         case "primary":
             common +=
-                "  bg-primary-500 w-full hover:bg-primary-100 focus:bg-primary-100 active:bg-primary-600 text-white hover:text-primary-500 focus:text-primary-500 active:text-white rounded-md border border-primary-500 hover:bg-primary-100 hover:shadow-md hover:shadow-primary-100 focus:shadow-md focus:shadow-primary-100 active:shadow-none";
+                "  bg-primary-500 hover:bg-primary-100 focus:bg-primary-100 active:bg-primary-600 text-white hover:text-primary-500 focus:text-primary-500 active:text-white rounded-md border border-primary-500 hover:bg-primary-100";
             break;
 
         case "secondary":
             common +=
-                " bg-secondary-500 hover:bg-secondary-100 focus:bg-secondary-100 active:bg-secondary-600 text-dark active:text-white rounded-md border border-secondary-500 hover:bg-secondary-100 hover:text-secondary-500 hover:shadow-md hover:shadow-secondary-200 focus:shadow-md focus:text-secondary-500 focus:shadow-secondary-100 active:shadow-none";
+                " bg-secondary-500 hover:bg-secondary-100 focus:bg-secondary-100 active:bg-secondary-600 text-dark active:text-white rounded-md border border-secondary-500 hover:bg-secondary-100 hover:text-secondary-500 focus:text-secondary-500";
             break;
 
         case "danger":
             common +=
-                " bg-danger-500 hover:bg-danger-100 focus:bg-danger-100 active:bg-danger-600 text-white active:text-white rounded-md border border-danger-500 hover:text-danger-500 hover:bg-danger-100 hover:shadow-md hover:shadow-danger-200 focus:shadow-md focus:shadow-danger-100 focus:text-danger-500 active:shadow-none";
+                " bg-danger-500 hover:bg-danger-100 focus:bg-danger-100 active:bg-danger-600 text-white active:text-white rounded-md border border-danger-500 hover:text-danger-500 hover:bg-danger-100 focus:text-danger-500";
             break;
 
         case "default":
             common +=
-                " bg-white rounded-md border border-grey hover:border-secondary-500 hover:bg-secondary-100 hover:shadow-md hover:shadow-secondary-300 hover:text-secondary-500 focus:bg-secondary-100 focus:shadow-md focus:shadow-secondary-300 focus:text-secondary-500 active:bg-white active:text-secondary-500 active:border-secondary-500 active:shadow-none";
+                " bg-white rounded-md border border-grey hover:border-secondary-500 hover:bg-secondary-100 hover:text-secondary-500 focus:bg-secondary-100 focus:text-secondary-500 active:bg-white active:text-secondary-500 active:border-secondary-500";
             break;
 
         case "blank":

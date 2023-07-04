@@ -25,7 +25,7 @@ const props = defineProps({
         </div>
         <div class="flex-1 min-w-0">
             <p
-                class="text-md lg:text-md 2xl:text-lg font-bold text-gray-900 truncate dark:text-white"
+                class="text-md lg:text-md 2xl:text-lg font-bold text-gray-900 truncate dark:text-dark"
             >
                 <slot name="title"></slot>
             </p>

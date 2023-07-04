@@ -116,7 +116,7 @@ watch(() => form.search, runSearch);
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'created_at'"
             />
-            <table-head title="" />
+            <table-head title="Actions" class="flex justify-end" />
         </template>
 
         <template #tableData>
@@ -149,7 +149,7 @@ watch(() => form.search, runSearch);
                         />
                     </div>
                 </table-data>
-                <table-data>
+                <table-data class="text-right">
                     <Dropdown
                         align="right"
                         width="48"

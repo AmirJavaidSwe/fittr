@@ -476,10 +476,16 @@ const storeAmenity = () => {
     });
 };
 
-
+const ddToggled = ref(false)
+const dropdownToggled = ($event) => {
+    ddToggled.value = false
+    if($event.open === true && $event.rowIndex === 0) {
+        ddToggled.value = true
+    }
+}
 </script>
 <template>
-    <data-table-layout :disableButton="true">
+    <data-table-layout :disableButton="true" :dd-toggled="ddToggled">
         <template #button>
             <ButtonLink styling="default" size="default" @click="null">
                 <ImportIcon class="w-4 h-4 2xl:w-6 2xl:h-6 mr-0 md:mr-2" />
@@ -657,6 +663,8 @@ const storeAmenity = () => {
                         width="48"
                         :top="index > classes.data.length - 3"
                         :content-classes="['bg-white']"
+                        :row-index="index"
+                        @toggled="dropdownToggled"
                     >
                         <template #trigger>
                             <button class="text-dark text-lg">

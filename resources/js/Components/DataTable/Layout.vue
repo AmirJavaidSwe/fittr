@@ -25,9 +25,9 @@
     </div>
 
     <div class="mt-0 lg:mt-8 flex flex-col">
-        <div class="overflow-x-auto overflow-y-hidden">
+        <div :class="[!ddToggled && 'overflow-x-auto overflow-y-hidden']">
             <div class="inline-block min-w-full py-2 align-middle">
-                <div class="overflow-hidden md:rounded-lg">
+                <div class="md:rounded-lg" :class="[!ddToggled && 'overflow-hidden']">
                     <table class="min-w-full border-spacing-0 border-separate">
                         <thead>
                             <tr>
@@ -74,5 +74,12 @@ defineProps({
         type: String,
         required: false,
     },
+    
+    ddToggled: {
+        default: false,
+        type: Boolean,
+        required: false,
+    },
+    
 });
 </script>

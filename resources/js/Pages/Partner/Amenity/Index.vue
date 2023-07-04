@@ -204,7 +204,7 @@ const deleteItem = () => {
         </template>
 
         <template #tableData>
-            <tr v-for="(amenity, index) in amenities.data">
+            <tr v-for="(amenity, index) in amenities.data" :key="index">
                 <table-data :title="amenity.id" />
                 <table-data>
                     <img
@@ -238,7 +238,7 @@ const deleteItem = () => {
                         "
                     />
                 </table-data>
-                <table-data>
+                <table-data class="text-right">
                     <Dropdown
                         align="right"
                         width="48"

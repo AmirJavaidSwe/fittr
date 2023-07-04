@@ -165,7 +165,7 @@ const create = () => {
 
             <ButtonLink
                 size="default"
-                styling="primary"
+                styling="secondary"
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
             >

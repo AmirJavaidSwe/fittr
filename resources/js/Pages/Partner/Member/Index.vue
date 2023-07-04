@@ -188,11 +188,11 @@ const deleteItem = () => {
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'updated_at'"
             />
-            <table-head title="Action" />
+            <table-head title="Action"  class="flex justify-end" />
         </template>
 
         <template #tableData>
-            <tr v-for="(member, index) in members.data">
+            <tr v-for="(member, index) in members.data" :key="index">
                 <table-data :title="member.id" />
                 <table-data>
                     <Link
@@ -211,7 +211,7 @@ const deleteItem = () => {
                         :date="DateTime.fromISO(member.updated_at).toRelative()"
                     />
                 </table-data>
-                <table-data>
+                <table-data class="text-right">
                     <Dropdown
                         align="right"
                         width="48"
