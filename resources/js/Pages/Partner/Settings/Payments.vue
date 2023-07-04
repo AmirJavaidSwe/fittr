@@ -1,6 +1,8 @@
 <script setup>
 import StipesIcon from "@/Icons/StipesIcon.vue";
-import VisaCardimage from "./VisaCardImage.vue";
+import CheckIcon from "@/Icons/CheckIcon.vue";
+import DoubleArrow from "@/Icons/DoubleArrow.vue";
+import VisaNew from "@/Icons/VisaNew.vue";
 import { useForm } from "@inertiajs/vue3";
 import Section from "@/Components/Section.vue";
 import CardIcon from "@/Components/CardIcon.vue";
@@ -11,42 +13,31 @@ import AmexIcon from "@/Icons/Amex.vue";
 import DiscoverIcon from "@/Icons/Discover.vue";
 import DinersclubIcon from "@/Icons/Dinersclub.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
-
+import Dropdown from "@/Components/Dropdown.vue";
+import DropdownLink from "@/Components/DropdownLink.vue";
+import { faCog } from "@fortawesome/free-solid-svg-icons";
 const props = defineProps({
     has_account: Boolean,
     stripe_account: Object,
 });
-
 const form = useForm({});
 const submitForm = () => {
     form.post(route("partner.settings.payments.stripe"));
 };
 </script>
-
 <template>
     <Section bg="bg-white space-y-4">
-        <CardIcon :card-link="route('partner.settings.payments.stripe')">asdasdasda</CardIcon>
-        <!-- <CardIcon :card-link="route('partner.settings.payments.stripe')"></CardIcon> -->
-        <!-- <template #icon>
-                <div class="w-24">
-                    <StripeIcon />
-                </div>
-            </template> -->
-
-        <!-- <template #title class="pb-5 pt-2">
-                
-            </template> -->
-
         <div>
-
             <div
                 class="bg-white rounded bg-white bg-white-50 hover:bg-white-100 items-center p-3 pt-5 gap-4 relative transition rounded">
                 <h3 class="text-2xl"><strong>Stripe Connect</strong></h3>
-                <p class="text-base">Connect your Stripe merchant account to let Appointment thing charge your customers as
-                    appointments are scheduled.</p>
-                <div class="accepted mb-5 mt-5">
+                <p class="text-base">
+                    Connect your Stripe merchant account to let Appointment thing charge your customers as appointments are
+                    scheduled.
+                </p>
+                <div class="accepted mb-5 mt-5" v-if="has_account">
                     <p class="mb-2 text-base">Accepted international cards</p>
-                    <VisaCardimage />
+                    <VisaNew />
                 </div>
                 <div class="bg-gray-100 p-5 rounded mt-10">
                     <StipesIcon />
@@ -58,46 +49,36 @@ const submitForm = () => {
                         <p class="text-gray-400 mt-2">
                             <span class="mr-2 border-l-4 border-[#315D3F] rounded-md border-t-[4px]">
                             </span> Allows your to accept Stripe Payments for appointments.
-                        <form @submit.prevent="submitForm" class="inline-flex float-right">
-                            <ButtonLink styling="primary" size="default" v-if="has_account"
-                                :class="['float-right', 'opacity-25' && form.processing]" :disabled="form.processing"
-                                type="submit">
-                                <svg class="mr-1" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M17.2793 10.45L20.9993 6.72998L17.2793 3.01001" stroke="#292D32"
-                                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M3 6.72998H21" stroke="#292D32" stroke-width="1.5" stroke-linecap="round"
-                                        stroke-linejoin="round" />
-                                    <path d="M6.71997 13.55L3 17.2701L6.71997 20.9901" stroke="#292D32" stroke-width="1.5"
-                                        stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M21 17.27H3" stroke="#292D32" stroke-width="1.5" stroke-linecap="round"
-                                        stroke-linejoin="round" />
-                                </svg> &nbsp;
-                                Connect
-                            </ButtonLink>
+                        <form @submit.prevent="submitForm" class="inline-flex float-right items-center">
                             <ButtonLink styling="secondary" size="default" v-if="!has_account"
                                 :class="['float-right', 'opacity-25' && form.processing]" :disabled="form.processing"
                                 type="submit">
-                                <svg class="mr-1" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M17.2793 10.45L20.9993 6.72998L17.2793 3.01001" stroke="#292D32"
-                                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M3 6.72998H21" stroke="#292D32" stroke-width="1.5" stroke-linecap="round"
-                                        stroke-linejoin="round" />
-                                    <path d="M6.71997 13.55L3 17.2701L6.71997 20.9901" stroke="#292D32" stroke-width="1.5"
-                                        stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M21 17.27H3" stroke="#292D32" stroke-width="1.5" stroke-linecap="round"
-                                        stroke-linejoin="round" />
-                                </svg> &nbsp;
-                                Update Details
+                                <DoubleArrow /> &nbsp; Connect
                             </ButtonLink>
+                            <ButtonLink size="default" v-if="has_account"
+                                :class="['float-right', 'opacity-25' && form.processing]" :disabled="form.processing"
+                                type="button">
+                                <CheckIcon /> &nbsp; <span class="text-[#36B07E]">Connected</span>
+                            </ButtonLink>
+                            <Dropdown @click.prevent class="ms-4" align="right" width="48" :content-classes="['bg-white']">
+                                <template #trigger>
+                                    <button class="text-dark text-lg">
+                                        <font-awesome-icon :icon="faCog" />
+                                    </button>
+                                </template>
+                                <template #content>
+                                    <DropdownLink as="button" @click="submitForm">
+                                        <span class="text-primary-500 flex items-center">
+                                            <DoubleArrow /> &nbsp; <span>Update Details</span>
+                                        </span>
+                                    </DropdownLink>
+                                </template>
+                            </Dropdown>
                         </form>
                         </p>
                     </div>
                 </div>
-
-
-                <div class="mt-2 bg-white rounded pt-5 flex gap-4 md:flex-col lg:flex-row sm:flex-col">
+                <div class="mt-2 bg-white rounded pt-5 flex gap-4 md:flex-col lg:flex-row sm:flex-col" v-if="has_account">
                     <div class="bg-gray-100 p-5 rounded">
                         <h2 class="flex justify-between items-center text-slate-400"><strong>PAYMENTS</strong>
                             <StipesIcon />
@@ -236,21 +217,8 @@ const submitForm = () => {
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
-
         </div>
-
-
-
-
-
-
-
-
-
-
-
     </Section>
 </template>

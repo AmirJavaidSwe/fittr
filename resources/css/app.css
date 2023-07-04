@@ -29,7 +29,7 @@ select {
     @apply rounded border-gray-300 text-primary-500 hover:border-primary-500 hover:outline-none hover:shadow-none hover:ring-offset-0 hover:ring-8 hover:ring-primary-100;
 }
 .input-radio {
-    @apply w-4 h-4 text-primary-500 bg-white border-gray-300 focus:ring-offset-0 focus:ring-8 focus:ring-primary-100;
+    @apply w-4 h-4 text-primary-500 bg-white border-gray-300 hover:ring-offset-0 hover:ring-8 hover:ring-primary-100;
 }
 
 .switcher-button {

@@ -51,13 +51,13 @@ import ManageAminitiesIcon from "@/icons/ManageAminitiesIcon.vue";
                 </div>
 
                 <CardIcon :card-link="route('partner.settings.general-details')">
-                    <template #icon class="bg-primary-1700">
-                        <!-- // <font-awesome-icon :icon="faGears" class="text-primary-500 h-6 w-6" /> -->
-                        <ServicesStoreIcon />
+                    <template #icon>
+                        <font-awesome-icon :icon="faGears" class="text-primary-500 h-8 w-8" />
+                        <!-- <ServicesStoreIcon /> -->
                     </template>
 
                     <template #title>
-                        Service Store
+                        General
                     </template>
 
                     <template #default>
@@ -234,7 +234,7 @@ import ManageAminitiesIcon from "@/icons/ManageAminitiesIcon.vue";
 
                 <CardIcon card-link="#">
                     <template #icon>
-                            <BookingIcon />
+                        <font-awesome-icon :icon="faTicket" class="text-primary-500 h-8 w-8" />
                     </template>
 
                     <template #title>

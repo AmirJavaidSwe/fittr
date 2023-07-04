@@ -39,7 +39,7 @@ const close = () => {
             </div>
         </div>
         <div class="px-6 py-4">
-            <div class="mt-4">
+            <div class="mt-2">
                 <slot name="content" />
             </div>
         </div>

@@ -156,17 +156,22 @@ const confirmSubscribe = () => {
                 </template>
 
                 <template #footer>
-                    <SecondaryButton @click="closeModal">
-                        Cancel
-                    </SecondaryButton>
-                    <PrimaryButton
+                    <ButtonLink
+                        styling="default"
+                        size="default"
+                        @click="closeModal"
+                    >
+                    Cancel
+                    </ButtonLink>
+                    <ButtonLink
                         class="ml-3"
-                        :class="{ 'opacity-25': form.processing }"
+                        styling="secondary"
+                        size="default"
                         :disabled="form.processing"
                         @click="confirmSubscribe"
                     >
                         Confirm
-                    </PrimaryButton>
+                    </ButtonLink>
                 </template>
             </DialogModal>
         </div>

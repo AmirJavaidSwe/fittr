@@ -6,6 +6,7 @@ import InputError from "@/Components/InputError.vue";
 import ActionMessage from "@/Components/ActionMessage.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
 import Checkbox from "@/Components/Checkbox.vue";
+import Switcher from "@/Components/Switcher.vue";
 
 defineProps({
     form: {
@@ -69,8 +70,18 @@ defineProps({
                 <InputError :message="form.errors.ordering" class="mt-2" />
             </div>
 
-            <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="status" value="Status" />
+            <!-- Off-peak -->
+            <div>
+                <Switcher
+                    v-model="form.status"
+                    title="Status"
+                    description=""
+                />
+                <InputError :message="form.errors.status" class="mt-2" />
+            </div>
+
+            <!-- <div class="flex justify-between">
+                <InputLabel for="icon" value="Icon" />
                 <Checkbox
                     id="status"
                     v-model="form.status"
@@ -78,7 +89,7 @@ defineProps({
                     class="mt-1 w-4"
                 />
                 <InputError :message="form.errors.status" class="mt-2" />
-            </div>
+            </div> -->
         </template>
 
         <template #actions>
