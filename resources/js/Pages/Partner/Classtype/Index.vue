@@ -211,7 +211,7 @@ const deleteItem = () => {
                         "
                     />
                 </table-data>
-                <table-data class="justify-end flex">
+                <table-data class="flex">
                     <Dropdown
                         align="right"
                         width="48"

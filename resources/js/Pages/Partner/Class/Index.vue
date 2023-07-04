@@ -355,7 +355,7 @@ const showLink = (exporting) => {
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'updated_at'"
             />
-            <table-head title="Action" />
+            <table-head title="Action" class="flex justify-end" />
         </template>
 
         <template #tableData>
@@ -426,7 +426,7 @@ const showLink = (exporting) => {
                         DateTime.fromISO(class_lesson.updated_at).toRelative()
                     "
                 />
-                <table-data class="justify-end flex">
+                <table-data class="text-right">
                     <Dropdown
                         align="right"
                         width="48"

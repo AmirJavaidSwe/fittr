@@ -44,7 +44,7 @@ import ManageAminitiesIcon from "@/icons/ManageAminitiesIcon.vue";
 
 <template>
     <Section bg="bg-white">
-        <div class="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-3 gap-6 2xl:grid-cols-4 md:grid-cols-2">
             <div class="space-y-4">
                 <div class="text-xl font-bold tracking-tight text-gray-900">
                     Online Store
@@ -188,7 +188,7 @@ import ManageAminitiesIcon from "@/icons/ManageAminitiesIcon.vue";
 
                 <CardIcon :card-link="route('partner.settings.service-store-general')">
                     <template #icon>
-                        <font-awesome-icon :icon="faStore" class="text-primary-500 h-6 w-6"/>
+                        <ServicesStoreIcon />
                     </template>
 
                     <template #title>
