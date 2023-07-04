@@ -71,7 +71,8 @@ Route::domain('app.'.config('app.domain'))->group(function () {
                 Route::get('/partners', 'index')->name('index');
                 Route::get('/partners/{id}', 'show')->name('show');
                 Route::get('/partners/{id}/edit', 'edit')->name('edit');
-                Route::get('/partners/{id}/login_as', 'loginAs')->name('login-as');
+                Route::post('/partners/login-as', 'loginAsPartner')->name('login-as');
+                // Route::post('/partners/login-back', 'loginBack')->name('login-back');
                 Route::put('/partners/{id}', 'update')->name('update');
                 Route::delete('/partners/{id}', 'destroy')->name('destroy');
                 Route::post('/partners', 'store')->name('store');
@@ -104,6 +105,7 @@ Route::domain('app.'.config('app.domain'))->group(function () {
         //PARTNER
         Route::middleware(['auth.source:partner', 'partner.connect'])->name('partner.')->group(function () {
             Route::get('/dashboard', [PartnerDashboardController::class, 'index'])->name('dashboard');
+            Route::post('/login-as', [PartnerDashboardController::class, 'loginAs'])->name('login-as');
 
             Route::get('/subscriptions', [PartnerSubscriptionController::class, 'index'])->name('subscriptions.index');
             Route::put('/subscriptions/{subscription}/cancel', [PartnerSubscriptionController::class, 'cancel'])->name('subscriptions.cancel');

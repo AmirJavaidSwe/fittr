@@ -2,22 +2,21 @@
 
 namespace App\Http\Controllers\Shared;
 
-use App\Models\Partner\User as PartnerUser;
-use App\Models\User;
 use App\Enums\AppUserSource;
 use App\Enums\PartnerUserRole;
-use Illuminate\Http\Request;
+use App\Models\Partner\User as PartnerUser;
+use App\Models\User;
+use App\Traits\GenericHelper;
 use Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController as JetstreamUserProfileController;
 use Laravel\Jetstream\Jetstream;
 use Laravel\Fortify\Features;
 use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Str;
-use App\Traits\GenericHelper;
 
 class UserProfileController extends JetstreamUserProfileController
 {
@@ -103,6 +102,7 @@ class UserProfileController extends JetstreamUserProfileController
     }
 
     // called on google callback, when main app has session item auth_subdomain - service store subdomains only
+    // called by parner admin from main app, when partner wants to login as member or instructor
     public function redirectToSubdomain($user, $subdomain)
     {
         //make post request from main app to subdomain
@@ -128,7 +128,8 @@ class UserProfileController extends JetstreamUserProfileController
         // if response is a success, redirect away to subdomain
         // $json['redirect'] has signed link for subdomain user to login. The link leads to service store home page,
         // StorePublicController@index will examine the presence of encrypted uid query, making sure link has valid signature
-        return redirect()->away($json['redirect']);
+
+        return request()->header('X-Inertia') ? $json['redirect'] : redirect()->away($json['redirect']);
     }
 
     // POST /auth/google-callback

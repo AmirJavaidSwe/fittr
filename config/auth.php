@@ -44,6 +44,11 @@ return [
             'driver' => 'session',
             'provider' => 'members',
         ],
+        // see SanctumServiceProvider
+        // 'sanctum' => [
+        //     'driver' => 'sanctum',
+        //     'provider' => null,
+        // ],
     ],
 
     /*

@@ -12,7 +12,7 @@ import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import EditIcon from "@/Icons/Edit.vue";
 import {
-    faUser,
+    faUserLock,
     faPlus,
     faCog,
     faEye,
@@ -120,7 +120,9 @@ watch(() => form.search, runSearch);
                 <table-data>
                     <div class="flex items-center">
                         <Link
-                            :href="user.url_login_as"
+                            :href="route('admin.partners.login-as')"
+                            :data="{ id: user.id }"
+                            method="post" as="button" type="button"
                             v-can="{
                                 module: 'partner-management',
                                 roles: $page.props.user.user_roles,
@@ -128,8 +130,9 @@ watch(() => form.search, runSearch);
                                 user: $page.props.user,
                             }"
                             class="mr-2"
+                            title="Login as"
                         >
-                            <font-awesome-icon class="mr-2" :icon="faUser" />
+                            <font-awesome-icon class="mr-2" :icon="faUserLock" />
                         </Link>
                         <Dropdown
                             align="right"
@@ -145,7 +148,7 @@ watch(() => form.search, runSearch);
 
                             <template #content>
                                 <DropdownLink
-                                    :href="user.url_edit"
+                                    :href="route('admin.partners.edit', { id: user.id })"
                                     v-can="{
                                         module: 'partner-management',
                                         roles: $page.props.user.user_roles,
@@ -159,7 +162,7 @@ watch(() => form.search, runSearch);
                                     Edit
                                 </DropdownLink>
                                 <DropdownLink
-                                    :href="user.url_show"
+                                    :href="route('admin.partners.show', { id: user.id })"
                                     v-can="{
                                         module: 'partner-management',
                                         roles: $page.props.user.user_roles,

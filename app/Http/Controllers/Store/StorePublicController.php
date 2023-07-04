@@ -41,6 +41,12 @@ class StorePublicController extends Controller
             return to_route('ss.home', ['subdomain' => $request->subdomain]);
         }
 
+        if(Auth::check() && Auth::user()->id != $uid){
+            Auth::logout(); 
+            session()->invalidate();
+            session()->regenerateToken();
+        }
+
         $user = Auth::loginUsingId($uid);
         $url = route($user?->dashboard_route ?? 'ss.home', ['subdomain' => $request->subdomain]);
 

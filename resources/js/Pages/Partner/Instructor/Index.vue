@@ -15,7 +15,7 @@ import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import EditIcon from "@/Icons/Edit.vue";
 import DeleteIcon from "@/Icons/Delete.vue";
-import { faCog, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faUserLock, faCog, faPlus } from "@fortawesome/free-solid-svg-icons";
 import DateValue from "@/Components/DataTable/DateValue.vue";
 
 const props = defineProps({
@@ -215,54 +215,65 @@ const deleteItem = () => {
                     />
                 </table-data>
                 <table-data>
-                    <Dropdown
-                        align="right"
-                        width="48"
-                        :top="index > instructors.data.length - 3"
-                        :content-classes="['bg-white']"
-                    >
-                        <template #trigger>
-                            <button class="text-dark text-lg">
-                                <font-awesome-icon :icon="faCog" />
-                            </button>
-                        </template>
+                    <div class="flex items-center">
+                        <Link
+                                :href="route('partner.login-as')"
+                                :data="{ id: instructor.id }"
+                                method="post" as="button" type="button"
+                                class="mr-2"
+                                title="Login as"
+                            >
+                            <font-awesome-icon class="mr-2" :icon="faUserLock" />
+                        </Link>
+                        <Dropdown
+                            align="right"
+                            width="48"
+                            :top="index > instructors.data.length - 3"
+                            :content-classes="['bg-white']"
+                        >
+                            <template #trigger>
+                                <button class="text-dark text-lg">
+                                    <font-awesome-icon :icon="faCog" />
+                                </button>
+                            </template>
 
-                        <template #content>
-                            <DropdownLink
-                                :href="
-                                    route(
-                                        'partner.instructors.edit',
-                                        instructor
-                                    )
-                                "
-                            >
-                                <EditIcon
-                                    class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
-                                />
-                                Edit
-                            </DropdownLink>
-                            <DropdownLink
-                                as="button"
-                                @click="handleUpdateForm(instructor)"
-                            >
-                                <EditIcon
-                                    class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
-                                />
-                                <span> Edit (Modal) </span>
-                            </DropdownLink>
-                            <DropdownLink
-                                as="button"
-                                @click="confirmDeletion(instructor.id)"
-                            >
-                                <span class="text-danger-500 flex items-center">
-                                    <DeleteIcon
+                            <template #content>
+                                <DropdownLink
+                                    :href="
+                                        route(
+                                            'partner.instructors.edit',
+                                            instructor
+                                        )
+                                    "
+                                >
+                                    <EditIcon
                                         class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
                                     />
-                                    <span> Delete </span>
-                                </span>
-                            </DropdownLink>
-                        </template>
-                    </Dropdown>
+                                    Edit
+                                </DropdownLink>
+                                <DropdownLink
+                                    as="button"
+                                    @click="handleUpdateForm(instructor)"
+                                >
+                                    <EditIcon
+                                        class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
+                                    />
+                                    <span> Edit (Modal) </span>
+                                </DropdownLink>
+                                <DropdownLink
+                                    as="button"
+                                    @click="confirmDeletion(instructor.id)"
+                                >
+                                    <span class="text-danger-500 flex items-center">
+                                        <DeleteIcon
+                                            class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
+                                        />
+                                        <span> Delete </span>
+                                    </span>
+                                </DropdownLink>
+                            </template>
+                        </Dropdown>
+                    </div>
                 </table-data>
             </tr>
         </template>
