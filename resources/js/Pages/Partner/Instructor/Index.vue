@@ -139,14 +139,14 @@ const deleteItem = () => {
                 Create a new instructor
                 <font-awesome-icon class="ml-2" :icon="faPlus" />
             </ButtonLink>
-            <ButtonLink
+            <!-- <ButtonLink
                 styling="secondary"
                 size="default"
                 :href="route('partner.instructors.create')"
                 type="primary"
             >
                 Create a new instructor (direct)
-            </ButtonLink>
+            </ButtonLink> -->
         </template>
 
         <template #search>
@@ -281,7 +281,7 @@ const deleteItem = () => {
     </data-table-layout>
 
     <!-- Create new instructor Modal -->
-    <DialogModal :show="showCreateModal" @close="closeCreateModal">
+    <SideModal :show="showCreateModal" @close="closeCreateModal">
         <template #title> Create new instructor </template>
         <template #close>
             <button @click="closeCreateModal" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="defaultModal">
@@ -293,7 +293,7 @@ const deleteItem = () => {
         <template #content>
             <Form :form="form_class" :submitted="storeInstructor" modal />
         </template>
-    </DialogModal>
+    </SideModal>
 
     <!-- Update instructor Modal -->
     <SideModal :show="showEditModal" @close="closeEditModal">

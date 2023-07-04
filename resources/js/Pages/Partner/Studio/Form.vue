@@ -1,4 +1,5 @@
 <script setup>
+import { computed, watch } from "vue";
 import FormSection from "@/Components/FormSection.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
@@ -7,6 +8,8 @@ import ActionMessage from "@/Components/ActionMessage.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import SelectInput from "@/Components/SelectInput.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
+import Multiselect from "@vueform/multiselect";
+import "@vueform/multiselect/themes/tailwind.css";
 
 const props = defineProps({
     form: {
@@ -32,6 +35,17 @@ const locationChanged = () => {
     }
 }
 
+const locationsList = computed(() => {
+    let locations = [];
+    for (let i = 0; i < props.locations.length; i++) {
+        locations.push({
+            value: props.locations[i].id,
+            label: props.locations[i].title,
+        });
+    }
+    return locations;
+})
+
 </script>
 
 <template>
@@ -50,15 +64,16 @@ const locationChanged = () => {
 
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="location" value="Location"/>
-                <SelectInput @change="locationChanged"
+                <Multiselect mode="single"
                     id="location"
                     v-model="form.location_id"
-                    :options="locations"
-                    option_value="id"
-                    option_text="title"
-                    class="mt-1 block w-full"
-                >
-                </SelectInput>
+                    :options="locationsList"
+                    :searchable="true"
+                    :close-on-select="true"
+                    :show-labels="true"
+                    placeholder="Select Location"
+                    @select="locationChanged"
+                />
                 <InputError :message="form.errors.location_id" class="mt-2"/>
             </div>
 

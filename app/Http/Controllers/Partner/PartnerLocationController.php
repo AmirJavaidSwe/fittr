@@ -137,7 +137,10 @@ class PartnerLocationController extends Controller
 
             return $this->redirectBackSuccess(__('Location created successfully'), 'partner.locations.index');
 
-        } catch(Exception $e) {
+        } catch(\Exception $e) {
+            if(request()->has('returnTo')) {
+                return $this->redirectBackError(__('Something went wrong!'), request()->returnTo);
+            }
             return $this->redirectBackError(__('Something went wrong!'), 'partner.locations.index');
         }
     }

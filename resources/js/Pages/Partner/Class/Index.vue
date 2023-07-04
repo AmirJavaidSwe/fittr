@@ -24,6 +24,9 @@ import InstructorCreateForm from "@/Pages/Partner/Instructor/Form.vue";
 import ClassTypeCreateForm from "@/Pages/Partner/Classtype/Form.vue";
 import StudioCreateForm from "@/Pages/Partner/Studio/Form.vue";
 import LocatoonCreateForm from "@/Pages/Partner/Location/Form.vue";
+import GMCreateForm from "@/Pages/Partner/Users/Form.vue";
+import RoleCreateForm from "@/Pages/Roles/Form.vue";
+import AmenityCreateForm from "@/Pages/Partner/Amenity/Form.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
 import CloseModal from "@/Components/CloseModal.vue";
 import { faCog, faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -53,7 +56,8 @@ const props = defineProps({
     users: Array,
     amenities: Array,
     countries: Array,
-    roles: Object,
+    roles: Array,
+    systemModules: Array,
 });
 
 const form = useForm({
@@ -286,9 +290,10 @@ const instructorsList = computed(() => {
     newInstructorsList['create_new_instructor'] = "Add New"
     return newInstructorsList
 });
-const showClasTypeCreateModal = ref(false)
+const showClassTypeCreateModal = ref(false)
 const closeClassTypeCreateModal = () => {
-    showClasTypeCreateModal.value = false
+    createClassTypeFrom.reset();
+    showClassTypeCreateModal.value = false
 }
 const createClassTypeFrom = useForm({
     title: null,
@@ -317,7 +322,7 @@ const closeStudioCreateModal = () => {
 }
 const createStudioFrom = useForm({
     title: null,
-    description: null,
+    location_id: null,
 });
 
 const storeStudio = () => {
@@ -326,7 +331,7 @@ const storeStudio = () => {
         returnTo: 'partner.classes.index',
     })).post(route("partner.studios.store"), {
         preserveScroll: true,
-        onSuccess: () => [createStudioFrom.reset(), closeStudioCreateModal()],
+        onSuccess: () => [createStudioFrom.reset(), closeStudioCreateModal(), form_class.studio_id = null],
     });
 };
 
@@ -342,7 +347,19 @@ const closeLocationCreateModal = () => {
 }
 const createLocationFrom = useForm({
     title: null,
-    location_id: null,
+    brief: null,
+    manager_id: null,
+    address_line_1: null,
+    address_line_2: null,
+    country_id:null,
+    city:null,
+    postcode:null,
+    map_latitude:null,
+    map_longitude:null,
+    tel:null,
+    email:null,
+    image:null,
+    amenity_ids:[],
 });
 
 const storeLocation = () => {
@@ -351,7 +368,7 @@ const storeLocation = () => {
         returnTo: 'partner.classes.index',
     })).post(route("partner.locations.store"), {
         preserveScroll: true,
-        onSuccess: () => [createLocationFrom.reset(), closeLocationCreateModal()],
+        onSuccess: () => [createLocationFrom.reset(), closeLocationCreateModal(), createStudioFrom.location_id = null],
     });
 };
 
@@ -365,14 +382,100 @@ const locationList = computed(() => {
 
 });
 const usersList = computed(() => {
-    let newUsersList =  props.locations
+    let newUsersList =  props.users
     newUsersList.push({
         id: "create_new_user",
-        title: "Add New"
+        name: "Add New",
+        email: null
     });
+    console.log(uniqBy(newUsersList, 'id'))
     return uniqBy(newUsersList, 'id');
 
 });
+const rolesList = computed(() => {
+    let newRolesList =  props.roles
+    newRolesList.push({
+        id: "create_new_role",
+        title: "Add New"
+    });
+    return uniqBy(newRolesList, 'id');
+
+});
+
+const showGMCreateModal = ref(false)
+const closeGMCreateModal = () => {
+    createGMFrom.reset()
+    showGMCreateModal.value = false
+}
+const createGMFrom = useForm({
+    name: "",
+    email: "",
+    password: "",
+    is_super: true,
+    roles: []
+});
+
+const storeGM = () => {
+    createGMFrom.transform((data) => ({
+        ...data,
+        roles: data.is_super ? [] : data.roles,
+        is_super: data.is_super,
+        is_new: 1,
+        returnTo: 'partner.classes.index',
+    })).post(route("partner.users.store"), {
+        preserveScroll: true,
+        onSuccess: () => [createGMFrom.reset(), closeGMCreateModal(), createLocationFrom.manager_id = null],
+    });
+};
+const showRoleCreateModal = ref(false)
+const closeRoleCreateModal = () => {
+    createRoleFrom.reset()
+    showRoleCreateModal.value = false
+}
+const createRoleFrom = useForm({
+});
+
+const storeRole = ($event) => {
+    let title = null
+    let permissions = []
+    if($event.title) {
+        title = $event.title
+    }
+    if($event.permissions) {
+        permissions = $event.permissions
+    }
+    createRoleFrom.transform((data) => ({
+        title: title,
+        permissions: permissions,
+        returnTo: 'partner.classes.index',
+    })).post(route(`${usePage().props.user.source}.roles.store`), {
+        preserveScroll: true,
+        onSuccess: () => [createRoleFrom.reset(), closeRoleCreateModal(), createGMFrom.roles = []],
+    });
+};
+const showAmenityCreateModal = ref(false)
+const closeAmenityCreateModal = () => {
+    createAmenityFrom.reset()
+    showAmenityCreateModal.value = false
+}
+const createAmenityFrom = useForm({
+    title: '',
+    icon: '',
+    contents: '',
+    ordering: '',
+    status: false
+});
+
+const storeAmenity = () => {
+    createAmenityFrom.transform((data) => ({
+        ...data,
+        returnTo: 'partner.classes.index',
+    })).post(route(`partner.amenity.store`), {
+        preserveScroll: true,
+        onSuccess: () => [createAmenityFrom.reset(), closeAmenityCreateModal(), createLocationFrom.amenity_ids = []],
+    });
+};
+
 
 </script>
 <template>
@@ -398,13 +501,13 @@ const usersList = computed(() => {
                 Create new
                 <font-awesome-icon class="ml-2" :icon="faPlus" />
             </ButtonLink>
-            <ButtonLink
+            <!-- <ButtonLink
                 styling="secondary"
                 size="default"
                 :href="route('partner.classes.create')"
             >
                 Create new (direct)
-            </ButtonLink>
+            </ButtonLink> -->
         </template>
 
         <template #search>
@@ -664,7 +767,7 @@ const usersList = computed(() => {
                 :business_seetings="business_seetings"
                 :submitted="storeClass"
                 @create-new-instructor="showInstructorCreateModal = true"
-                @create-new-class-type="showClasTypeCreateModal = true"
+                @create-new-class-type="showClassTypeCreateModal = true"
                 @create-new-studio="showStudioCreateModal = true"
                 modal
             />
@@ -730,7 +833,7 @@ const usersList = computed(() => {
         </template>
     </SideModal>
     <!-- Class Type Create Modal -->
-    <SideModal :show="showClasTypeCreateModal" @close="closeClassTypeCreateModal">
+    <SideModal :show="showClassTypeCreateModal" @close="closeClassTypeCreateModal">
         <template #title> Create new classtype </template>
         <template #close>
             <CloseModal @click="closeClassTypeCreateModal" />
@@ -761,11 +864,13 @@ const usersList = computed(() => {
         <template #content>
             <LocatoonCreateForm 
                 :form="createLocationFrom"
-                :users="users"
+                :users="usersList"
                 :amenities="amenities"
                 :countries="countries"
                 :studios="[]"
                 :editMode="false"
+                @create_new_gm="showGMCreateModal=true"
+                @create_new_amenity="showAmenityCreateModal=true"
             />
         </template>
         <template #footer>
@@ -779,6 +884,40 @@ const usersList = computed(() => {
             >
                 <span>Create</span>
             </ButtonLink>
+        </template>
+    </SideModal>
+
+    <!-- GM Create Modal -->
+    <SideModal :show="showGMCreateModal" @close="closeGMCreateModal">
+        <template #title> Create new General Manager </template>
+        <template #close>
+            <CloseModal @click="closeGMCreateModal" />
+        </template>
+    
+        <template #content>
+            <GMCreateForm :form="createGMFrom" :roles="rolesList" @create-new-role='showRoleCreateModal = true' :submitted="storeGM" modal />
+        </template>
+    </SideModal>
+    <!-- Role Create Modal -->
+    <SideModal :show="showRoleCreateModal" @close="closeRoleCreateModal">
+        <template #title> Create new Role </template>
+        <template #close>
+            <CloseModal @click="closeRoleCreateModal" />
+        </template>
+    
+        <template #content>
+            <RoleCreateForm :form="createRoleFrom" :system-modules="systemModules" @submitted="storeRole" modal />
+        </template>
+    </SideModal>
+    <!-- Amenity Create Modal -->
+    <SideModal :show="showAmenityCreateModal" @close="closeAmenityCreateModal">
+        <template #title> Create new Amenity </template>
+        <template #close>
+            <CloseModal @click="closeAmenityCreateModal" />
+        </template>
+    
+        <template #content>
+            <AmenityCreateForm :form="createAmenityFrom" @submitted="storeAmenity" modal />
         </template>
     </SideModal>
 </template>

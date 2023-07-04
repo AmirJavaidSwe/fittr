@@ -140,14 +140,14 @@ const deleteItem = () => {
                 Create a new studio
                 <font-awesome-icon class="ml-2" :icon="faPlus" />
             </ButtonLink>
-            <ButtonLink
+            <!-- <ButtonLink
                 styling="secondary"
                 size="default"
                 :href="route('partner.studios.create')"
                 type="primary"
             >
                 Create a new studio (direct)
-            </ButtonLink>
+            </ButtonLink> -->
         </template>
 
         <template #search>

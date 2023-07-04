@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Partner;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Partner\PartnerUserRequest;
 use App\Models\Role;
 use App\Models\User;
 use Inertia\Inertia;
+use App\Models\SystemModule;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Partner\PartnerUserRequest;
 
 class PartnerUserController extends Controller
 {
@@ -44,6 +45,9 @@ class PartnerUserController extends Controller
                     'link' => null,
                 ],
             ),
+            'roles' => Role::where('source', auth()->user()->source)
+                ->where('business_id', auth()->user()->business_id)->get(),
+            'systemModules' => SystemModule::with('permissions')->where('is_for', auth()->user()->source)->get(),
             'users' => User::select('id', 'name', 'email', 'is_super', 'profile_photo_path', 'created_at')
                 ->where('source', auth()->user()->source)
                 ->where('business_id', auth()->user()->business_id)->orderBy($this->order_by, $this->order_dir)
@@ -118,6 +122,10 @@ class PartnerUserController extends Controller
         ]);
         $user = User::create($fields);
         $user->roles()->sync($request->roles);
+
+        if(request()->has('returnTo')) {
+            return redirect()->route(request()->returnTo);
+        }
 
         return $this->redirectBackSuccess(__('User created'), 'partner.users.index');
     }

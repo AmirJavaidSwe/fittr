@@ -204,14 +204,14 @@ const removeUploadedFile = (id) => {
                 Create location
                 <font-awesome-icon class="ml-2" :icon="faPlus" />
             </ButtonLink>
-            <ButtonLink
+            <!-- <ButtonLink
                 styling="secondary"
                 size="default"
                 :href="route('partner.locations.create')"
                 type="primary"
             >
                 Create location (direct)
-            </ButtonLink>
+            </ButtonLink> -->
         </template>
 
         <template #search>

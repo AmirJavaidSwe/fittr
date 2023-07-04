@@ -5,7 +5,6 @@ import Multiselect from "@vueform/multiselect";
 import Datepicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import "@vueform/multiselect/themes/tailwind.css";
-
 import FormSection from "@/Components/FormSection.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
@@ -200,12 +199,12 @@ const studioChanged = () => {
                 >
                     <template v-slot:singlelabel="{ value }">
                         <div class="multiselect-single-label flex items-center">
-                            <ColoredValue color="#ddd" :title="value.label" v-if="value.label != 'Add New'" />
+                            <span class="ml-2">{{ value.label }}</span>
                         </div>
                     </template>
-
+                    
                     <template v-slot:option="{ option }">
-                        <ColoredValue color="#ddd" :title="option.label" v-if="option.label != 'Add New'" />
+                        <span class="ml-5">{{ option.label }}</span>
                     </template>
                 </Multiselect>
                 <InputError :message="form.errors.class_type_id" class="mt-2" />

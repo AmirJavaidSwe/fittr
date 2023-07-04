@@ -40,7 +40,10 @@ const toggleAllPermission = () => {
         allowAllPermissions.value,
         props.modules
     );
-    if (data.permissions) {
+    if (data.allowAllPermissions == false) {
+        permissions.value = [];
+    }
+    else if (data.permissions) {
         permissions.value = data.permissions;
     }
     allowAllPermissions.value = data.allowAllPermissions;

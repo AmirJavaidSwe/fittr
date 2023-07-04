@@ -150,6 +150,10 @@ class RoleController extends Controller
 
         $role->permissions()->sync($request->permissions);
 
+        if(request()->has('returnTo')) {
+            return redirect()->route(request()->returnTo);
+        }
+
         return $this->redirectBackSuccess(__('Role created'), $user->source.'.roles.index');
     }
 

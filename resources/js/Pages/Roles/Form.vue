@@ -14,18 +14,22 @@ import ActionMessage from "@/Components/ActionMessage.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
 
 const props = defineProps({
-    modules: Object,
+    form: {
+        type: Object,
+        required: true,
+    },
+    systemModules: {
+        type: Array,
+        required: true
+    }
 });
 
 const permissions = ref([]);
+const title = ref(null);
 const roleHelpers = RoleHelpers();
 const allowAllPermissions = ref(false);
 
-const allPermissionIds = ref(roleHelpers.collectAllPermissions(props.modules));
-
-const form = useForm({
-    title: null,
-});
+const allPermissionIds = ref(roleHelpers.collectAllPermissions(props.systemModules));
 
 const togglePermission = (permissionId) => {
     const data = roleHelpers.togglePermission(
@@ -40,7 +44,7 @@ const togglePermission = (permissionId) => {
 const toggleAllPermission = () => {
     const data = roleHelpers.toggleAllPermission(
         allowAllPermissions.value,
-        props.modules
+        props.systemModules
     );
     if (data.allowAllPermissions == false) {
         permissions.value = [];
@@ -50,24 +54,21 @@ const toggleAllPermission = () => {
     }
     allowAllPermissions.value = data.allowAllPermissions;
 };
-
+const emit = defineEmits(['submitted'])
 const create = () => {
-    form.transform((data) => ({
-        ...data,
-        permissions: permissions.value,
-    })).post(route(`${usePage().props.user.source}.roles.store`), {
-        preserveScroll: true,
-        onSuccess: () => form.reset(),
-    });
+    emit('submitted', {
+        title: title.value,
+        permissions: permissions.value
+    })
 };
 </script>
 
 <template>
     <FormSection @submitted="create">
-        <template #title> Role Information </template>
+        <template #title></template>
 
         <template #description>
-            <div>Create new role.</div>
+            <div></div>
         </template>
 
         <template #form>
@@ -76,7 +77,7 @@ const create = () => {
                 <InputLabel for="title" value="Title" />
                 <TextInput
                     id="title"
-                    v-model="form.title"
+                    v-model="title"
                     type="text"
                     class="mt-1 block w-full"
                 />
@@ -104,40 +105,37 @@ const create = () => {
 
                 <SectionBorder />
 
-                <dl
-                    class="max-w-md text-gray-900 divide-y divide-gray-200 dark:text-gray-900 dark:divide-gray-700"
-                >
+                
                     <template
-                        v-for="system_module in props.modules"
+                        v-for="system_module in props.systemModules"
                         :key="system_module.id"
                     >
-                        <div class="flex flex-col pb-5 mb-5">
-                            <dt
-                                class="mt-2 mb-1 text-gray-500 md:text-lg dark:text-gray-400"
-                            >
+                        <div class="grid pb-5 mb-5">
+                            <strong>
+
                                 {{ system_module.title }}
-                            </dt>
+                            </strong>
                             <div
-                                class="flex flex-row items-center justify-start"
+                                class="grid grid-cols-6 gap-6 items-center justify-start mt-4"
                             >
                                 <template
                                     v-for="permission in system_module.permissions"
                                     :key="permission.id"
                                 >
+                                <div class="flex flex-col justify-start ">
+
                                     <Checkbox
-                                        :id="
+                                    :id="
                                             system_module.slug +
                                             '-' +
                                             permission.slug
                                         "
                                         :value="permission.id"
-                                        :checked="
-                                            permissions.includes(permission.id)
-                                        "
+                                        :checked="permissions.includes(permission.id)"
                                         @change="
                                             togglePermission(permission.id)
                                         "
-                                        class="ml-2 mr-2"
+                                        class=""
                                     >
                                     </Checkbox>
                                     <InputLabel
@@ -145,15 +143,15 @@ const create = () => {
                                             system_module.slug +
                                             '-' +
                                             permission.slug
-                                        "
+                                            "
                                         :value="permission.title"
                                         class="mr-3 w-full"
-                                    />
-                                </template>
+                                        />
+                                    </div>
+                                    </template>
                             </div>
                         </div>
                     </template>
-                </dl>
                 <InputError :message="form.errors.permissions" class="mt-2" />
             </Section>
         </template>
@@ -165,7 +163,7 @@ const create = () => {
 
             <ButtonLink
                 size="default"
-                styling="primary"
+                styling="secondary"
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
             >

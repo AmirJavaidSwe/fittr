@@ -19,6 +19,7 @@ use Illuminate\Http\JsonResponse;
 use App\Models\Partner\Instructor;
 use Illuminate\Support\Facades\DB;
 use App\Models\Partner\ClassLesson;
+use App\Models\SystemModule;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\Partner\ClassFormRequest;
@@ -132,11 +133,12 @@ class PartnerClassLessonController extends Controller
             'instructors' => Instructor::latest('id')->pluck('name', 'id'),
             'classtypes' => ClassType::latest('id')->pluck('title', 'id'),
             'studios' => Studio::latest('id')->pluck('title', 'id'),
-            'roles' => Role::where('source', auth()->user()->source)->where('business_id', auth()->user()->business_id)->get(),
+            'roles' => Role::select('id', 'title')->where('source', auth()->user()->source)->where('business_id', auth()->user()->business_id)->get(),
             'users' => User::select('id', 'name', 'email')->partner()->where('business_id', auth()->user()->business_id)->get(),
             'locations' => Location::select('id', 'title')->get(),
             'countries' => Country::select('id', 'name')->whereStatus(1)->get(),
             'amenities' => Amenity::select('id', 'title')->get()->map(fn($item) => ['label' => $item->title, 'value' => $item->id]),
+            'systemModules' => SystemModule::with('permissions')->where('is_for', auth()->user()->source)->get(),
             'search' => $this->search,
             'per_page' => intval($this->per_page),
             'order_by' => $this->order_by,

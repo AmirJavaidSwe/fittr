@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 import { Link, useForm, usePage } from "@inertiajs/vue3";
 // import Section from '@/Components/Section.vue';
 import SectionTitle from "@/Components/SectionTitle.vue";
@@ -20,6 +20,10 @@ import Avatar from "@/Components/Avatar.vue";
 import Search from "@/Components/DataTable/Search.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
+import Form from './Form.vue';
+import SideModal from "@/Components/SideModal.vue";
+import uniqBy from 'lodash/uniqBy';
+import RoleCreateForm from "@/Pages/Roles/Form.vue";
 import {
     faPencil,
     faChevronRight,
@@ -34,6 +38,8 @@ const props = defineProps({
     per_page: Number,
     order_by: String,
     order_dir: String,
+    roles: Array,
+    systemModules: Array,
     business_seetings: Object,
 });
 const form = useForm({
@@ -79,6 +85,68 @@ const runSearch = () => {
 
 // form.search getter only;
 watch(() => form.search, runSearch);
+
+const showUserCreateModal = ref(false)
+const closeUserCreateModal = () => {
+    createUserFrom.reset()
+    showUserCreateModal.value = false
+}
+const createUserFrom = useForm({
+    name: "",
+    email: "",
+    password: "",
+    is_super: true,
+    roles: []
+});
+
+const rolesList = computed(() => {
+    let newRolesList =  props.roles
+    newRolesList.push({
+        id: "create_new_role",
+        title: "Add New"
+    });
+    return uniqBy(newRolesList, 'id');
+
+});
+
+const storeUser = () => {
+    createUserFrom.transform((data) => ({
+        ...data,
+        roles: data.is_super ? [] : data.roles,
+        is_super: data.is_super,
+        is_new: 1,
+    })).post(route("partner.users.store"), {
+        preserveScroll: true,
+        onSuccess: () => [createUserFrom.reset(), closeUserCreateModal()],
+    });
+};
+
+const showRoleCreateModal = ref(false)
+const closeRoleCreateModal = () => {
+    createRoleFrom.reset()
+    showRoleCreateModal.value = false
+}
+const createRoleFrom = useForm({
+});
+
+const storeRole = ($event) => {
+    let title = null
+    let permissions = []
+    if($event.title) {
+        title = $event.title
+    }
+    if($event.permissions) {
+        permissions = $event.permissions
+    }
+    createRoleFrom.transform((data) => ({
+        title: title,
+        permissions: permissions,
+        returnTo: 'partner.users.index',
+    })).post(route(`${usePage().props.user.source}.roles.store`), {
+        preserveScroll: true,
+        onSuccess: () => [createRoleFrom.reset(), closeRoleCreateModal(), createUserFrom.roles = []],
+    });
+};
 </script>
 <template>
     <data-table-layout :disableButton="true">
@@ -92,8 +160,17 @@ watch(() => form.search, runSearch);
                 roles: $page.props.user.user_roles,
                 permission: 'create',
                 user: $page.props.user,
+            }" styling="secondary" size="default" @click="showUserCreateModal = true">
+                Create new
+                <font-awesome-icon class="ml-2" :icon="faPlus" />
+            </ButtonLink>
+            <!-- <ButtonLink v-can="{
+                module: 'users',
+                roles: $page.props.user.user_roles,
+                permission: 'create',
+                user: $page.props.user,
             }" :href="route(`partner.users.create`)" type="primary" styling="secondary" size="default">Add new
-                <font-awesome-icon class="ml-2" :icon="faPlus" /></ButtonLink>
+                <font-awesome-icon class="ml-2" :icon="faPlus" /></ButtonLink> -->
         </template>
 
         <template #tableHead>
@@ -139,12 +216,8 @@ watch(() => form.search, runSearch);
                     <DateValue :date="DateTime.fromISO(user.created_at)" />
                 </table-data>
                 <table-data>
-                    <Dropdown
-                        align="right"
-                        width="48"
-                        :top="index > props.users.data.length - 3"
-                        :content-classes="['bg-white']"
-                    >
+                    <Dropdown align="right" width="48" :top="index > props.users.data.length - 3"
+                        :content-classes="['bg-white']">
                         <template #trigger>
                             <button class="text-dark text-lg">
                                 <font-awesome-icon :icon="faCog" />
@@ -152,33 +225,23 @@ watch(() => form.search, runSearch);
                         </template>
 
                         <template #content>
-                            <DropdownLink
-                                :href="route('partner.users.edit', user.id)"
-                                v-can="{
-                                    module: 'users',
-                                    roles: $page.props.user.user_roles,
-                                    permission: 'update',
-                                    user: $page.props.user,
-                                }"
-                            >
-                                <EditIcon
-                                    class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
-                                />
+                            <DropdownLink :href="route('partner.users.edit', user.id)" v-can="{
+                                module: 'users',
+                                roles: $page.props.user.user_roles,
+                                permission: 'update',
+                                user: $page.props.user,
+                            }">
+                                <EditIcon class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2" />
                                 Edit
                             </DropdownLink>
                             <DropdownLink v-if="$page.props.user.id != user.id" v-can="{
-                                    module: 'users',
-                                    roles: $page.props.user.user_roles,
-                                    permission: 'destroy',
-                                    user: $page.props.user,
-                                }"
-                                as="button"
-                                @click="confirmDeletion(user.id)"
-                            >
+                                module: 'users',
+                                roles: $page.props.user.user_roles,
+                                permission: 'destroy',
+                                user: $page.props.user,
+                            }" as="button" @click="confirmDeletion(user.id)">
                                 <span class="text-danger-500 flex items-center">
-                                    <DeleteIcon
-                                        class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
-                                    />
+                                    <DeleteIcon class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2" />
                                     <span> Delete </span>
                                 </span>
                             </DropdownLink>
@@ -211,4 +274,29 @@ watch(() => form.search, runSearch);
             </ButtonLink>
         </template>
     </ConfirmationModal>
+
+    <!-- GM Create Modal -->
+    <SideModal :show="showUserCreateModal" @close="closeUserCreateModal">
+        <template #title> Create new General Manager </template>
+        <template #close>
+            <CloseModal @click="closeUserCreateModal" />
+        </template>
+
+        <template #content>
+            <Form :form="createUserFrom" :roles="rolesList" @create-new-role='showRoleCreateModal = true' :submitted="storeUser"
+                modal />
+        </template>
+    </SideModal>
+
+    <!-- Role Create Modal -->
+    <SideModal :show="showRoleCreateModal" @close="closeRoleCreateModal">
+        <template #title> Create new Role </template>
+        <template #close>
+            <CloseModal @click="closeRoleCreateModal" />
+        </template>
+    
+        <template #content>
+            <RoleCreateForm :form="createRoleFrom" :system-modules="systemModules" @submitted="storeRole" modal />
+        </template>
+    </SideModal>
 </template>

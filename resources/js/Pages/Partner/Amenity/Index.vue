@@ -81,7 +81,7 @@ const closeCreateModal = () => {
 const storeAmenity = () => {
     form_class.post(route("partner.amenity.store"), {
         preserveScroll: true,
-        onSuccess: () => form.reset(),
+        onSuccess: () => [form_class.reset(), showCreateModal.value = false]
     });
 };
 
@@ -106,6 +106,7 @@ const handleUpdateForm = (data) => {
 const updateAmenities = () => {
     form_edit.put(route("partner.amenity.update", form_edit), {
         preserveScroll: true,
+        onSuccess: () => [form_edit.reset(), showEditModal.value = false]
     });
 };
 
@@ -141,14 +142,14 @@ const deleteItem = () => {
                 Create a new amenity
                 <font-awesome-icon class="ml-2" :icon="faPlus" />
             </ButtonLink>
-            <ButtonLink
+            <!-- <ButtonLink
                 styling="secondary"
                 size="default"
                 :href="route('partner.amenity.create')"
                 type="primary"
             >
                 Create a new amenity (direct)
-            </ButtonLink>
+            </ButtonLink> -->
         </template>
 
         <template #search>

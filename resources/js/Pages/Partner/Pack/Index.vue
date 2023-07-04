@@ -198,9 +198,9 @@ const editPrice = (action, id) => {
                 <SecondaryButton @click="showCreateModal = true">
                     Create new (modal)
                 </SecondaryButton>
-                <ButtonLink :href="route('partner.packs.create')" type="primary">
+                <!-- <ButtonLink :href="route('partner.packs.create')" type="primary">
                     Create new (direct)
-                </ButtonLink>
+                </ButtonLink> -->
             </div>
         </template>
 

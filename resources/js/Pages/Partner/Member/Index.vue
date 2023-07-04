@@ -138,14 +138,14 @@ const deleteItem = () => {
                 Create a new member
                 <font-awesome-icon class="ml-2" :icon="faPlus" />
             </ButtonLink>
-            <ButtonLink
+            <!-- <ButtonLink
                 styling="secondary"
                 size="default"
                 :href="route('partner.members.create')"
                 type="primary"
             >
                 Create a new member (direct)
-            </ButtonLink>
+            </ButtonLink> -->
         </template>
 
         <template #search>
