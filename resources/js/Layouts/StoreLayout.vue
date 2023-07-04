@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, defineAsyncComponent } from 'vue';
+import { ref, computed, defineAsyncComponent, watch } from 'vue';
 import { router, Link, usePage } from '@inertiajs/vue3';
 import AppHead from '@/Layouts/AppHead.vue';
 import StoreMenu from '@/Layouts/StoreMenu.vue';
@@ -11,6 +11,11 @@ import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import ButtonMobile from '@/Components/ButtonMobile.vue';
+import ButtonLink from "@/Components/ButtonLink.vue";
+
+import { useWindowSize } from '@/Composables/window_size.js';
+const { windowWidth, screen } = useWindowSize();
 
 const props = defineProps({
     business_seetings: {
@@ -19,14 +24,28 @@ const props = defineProps({
     },
 });
 
-const showingNavigationDropdown = ref(false);
+const mobileMenuOn = ref(false);
+const toggleMobile = () => {
+    mobileMenuOn.value = !mobileMenuOn.value;
+};
+watch(windowWidth, (newW) => {
+    if(mobileMenuOn.value === true && newW >= 768){
+        mobileMenuOn.value = false;
+    }
+});
 
+const menuClasses = computed(() => {
+    return mobileMenuOn.value
+    ? 'order-last w-full bg-gray-200'
+    : 'hidden md:flex';
+});
+
+const showLogin = () => {
+    //add modal
+    console.log('showLogin');
+};
 const logout = () => {
     router.post(route('logout'));
-};
-
-const toggleMenu = (v) => {
-    showingNavigationDropdown.value = v;
 };
 
 const LoggedinMenu = defineAsyncComponent(() => {
@@ -71,7 +90,7 @@ const headerIsArray = computed(() => {
 </script>
 
 <template>
-    <div>
+    <div class="flex flex-col min-h-screen">
         <AppHead :title="$page.props.page_title">
             <link v-if="favicon_image_url" rel="icon" :type="favicon_type" :href="favicon_image_url" />
         </AppHead>
@@ -79,75 +98,35 @@ const headerIsArray = computed(() => {
         <Banner />
         <FlashMessage :flash="$page.props.flash" :errors="$page.props.errors" />
 
-        <div class="min-h-screen bg-gray-50">
-            <!-- Desktop, flex -->
-            <div class="md:flex md:flex-col md:h-screen">
-                <!-- Navbar (Logo, navigation, drop/mobile navigation) -->
-                <div class="md:flex md:flex-shrink-0">
-                    <div class="flex items-center justify-between md:flex-shrink-0 bg-primary-500 w-full">
-                        <!-- Logo -->
-                        <Link :href="business_seetings.logo_url ?? '/'" class="">
-                            <div v-if="business_seetings.logo" class="h-20 w-56">
-                                <img :src="logo_image_url" :alt="business_seetings.business_name" class="h-full">
-                            </div>
-                            <div v-else class="px-6 py-4 font-bold">
-                                {{business_seetings.business_name ?? 'LOGO'}}
-                            </div>
-                        </Link>
-                        <StoreMenu class="hidden md:flex gap-2" />
-                        <!-- Mobile toggle, visible md and smaller -->
-                        <Dropdown align="right" width="48" :content-classes="['bg-gray-100', 'p-1']" @toggled="toggleMenu">
-                            <template #trigger>
-                                <button class="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition">
-                                    <svg
-                                        class="h-6 w-6"
-                                        stroke="currentColor"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            :class="{'hidden': showingNavigationDropdown, 'inline-flex': ! showingNavigationDropdown }"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="M4 6h16M4 12h16M4 18h16"
-                                        />
-                                        <path
-                                            :class="{'hidden': ! showingNavigationDropdown, 'inline-flex': showingNavigationDropdown }"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="M6 18L18 6M6 6l12 12"
-                                        />
-                                    </svg>
-                            </button>
-                            </template>
-                            <template #content>
-                                <StoreMenu class="bg-white space-y-4" />
-                            </template>
-                        </Dropdown>
+        <!-- Navbar -->
+        <nav class="bg-primary-500">
+            <div class="mx-auto max-w-7xl md:px-6 lg:px-8">
+                <div class="flex items-center justify-between flex-wrap">
+                    <!-- Logo -->
+                    <Link :href="business_seetings.logo_url ?? '/'" class="max-w-[140px]">
+                        <div v-if="business_seetings.logo" class="h-14">
+                            <img :src="logo_image_url" :alt="business_seetings.business_name" class="h-full p-1">
+                        </div>
+                        <div v-else class="px-6 py-4 font-bold">
+                            {{business_seetings.business_name ?? 'LOGO'}}
+                        </div>
+                    </Link>
+
+                    <!-- Menu -->
+                    <StoreMenu class="font-medium md:font-normal text-xl text-center md:text-base gap-8 text-dark md:text-white/[.87]" :class="menuClasses" />
+
+                    <div class="flex gap-2 items-center">
+                        <!-- Mobile menu toggle -->
+                        <ButtonMobile @clicked="toggleMobile" :open="mobileMenuOn" class="p-2 text-white transition block md:hidden" />
+
                         <!-- Settings Dropdown -->
-                        <div v-if="$page.props.user" class="relative flex-shrink-0">
+                        <div v-if="$page.props.user" class="relative ">
                             <Dropdown align="right" width="48" :content-classes="['bg-white']">
                                 <template #trigger>
-                                    <button v-if="$page.props.jetstream.managesProfilePhotos" class="flex text-sm border-2 border-gray-100 rounded-full focus:outline-none focus:border-gray-300 transition">
-                                        <img class="h-8 w-8 rounded-full object-cover" :src="$page.props.user.profile_photo_url" :alt="$page.props.user.name">
+                                    <button type="button" class="w-10 h-10 text-md bg-blue p-1 text-white rounded-full flex items-center justify-center text-center uppercase font-semibold">
+                                        {{ $page.props.user.initials }}
+                                        <!-- <img class="h-8 w-8 rounded-full object-cover" :src="$page.props.user.profile_photo_url" :alt="$page.props.user.name"> -->
                                     </button>
-
-                                    <span v-else class="inline-flex rounded-md">
-                                        <button type="button" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition">
-                                            {{ $page.props.user.name }}
-
-                                            <svg
-                                                class="ml-2 -mr-0.5 h-4 w-4"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                viewBox="0 0 20 20"
-                                                fill="currentColor"
-                                            >
-                                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                            </svg>
-                                        </button>
-                                    </span>
                                 </template>
 
                                 <template #content>
@@ -172,22 +151,22 @@ const headerIsArray = computed(() => {
                                 </template>
                             </Dropdown>
                         </div>
+
+                        <ButtonLink :href="route('login')" styling="secondary" size="default" @click="showLogin" class="hidden md:inline-flex">Login</ButtonLink>
                     </div>
                 </div>
-                <!-- Body -->
-                <div class="md:flex md:flex-grow md:overflow-hidden">
-                    <!-- Menu -->
-                    <LoggedinMenu />
-                    <!-- Page Content -->
-                    <div class="md:flex-1 overflow-y-auto">
-                        <main class="py-8 sm:px-6 lg:px-8 space-y-8">
-                            <slot />
-                        </main>
-                    </div>
-                </div>
-                <!-- footer -->
-                <footer class="bg-gray-100 p-2 text-center text-gray-400 text-xs">MADE WITH <font-awesome-icon :icon="faHeart" class="mx-2" /> IN LONDON</footer>
             </div>
+        </nav>
+
+        <div class="bg-gray-50 md:flex md:flex-grow">
+            <LoggedinMenu />
+            <!-- Page Content -->
+            <main class="py-8 sm:px-6 lg:px-8 space-y-8">
+                <div>Window width: {{ windowWidth }} screen: {{ screen }}</div>
+                <slot />
+            </main>
         </div>
+        <!-- footer -->
+        <footer class="bg-primary-600 p-2 text-center text-primary-100 text-xs">MADE WITH <font-awesome-icon :icon="faHeart" class="mx-2" /> IN LONDON</footer>
     </div>
 </template>

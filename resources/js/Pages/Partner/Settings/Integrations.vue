@@ -44,9 +44,9 @@ const submitForm = () => {
         </div>
         <Section bg="bg-white space-y-4">
             <!-- Mailchimp -->
-            <CardIcon icon-class="self-start">
+            <CardIcon icon-class="self-start" :height="'h-20'">
                 <template #icon>
-                    <div class="w-24 pr-8">
+                    <div class="w-20">
                         <MailchimpIcon />
                     </div>
                 </template>
@@ -57,7 +57,7 @@ const submitForm = () => {
                     Run email campaigns for your customers. Everytime new user
                     signs up, we will send a contact information to your
                     Mailchimp account.
-                    <div class="mt-4">
+                    <div class="mt-4 m-[8px]">
                         <label class="flex items-center">
                             <Checkbox
                                 v-model:checked="
@@ -130,9 +130,9 @@ const submitForm = () => {
             </CardIcon>
 
             <!-- Sendgrid -->
-            <CardIcon icon-class="self-start">
+            <CardIcon icon-class="self-start" :height="'h-20'">
                 <template #icon>
-                    <div class="w-24">
+                    <div class="w-20">
                         <SendgridIcon />
                     </div>
                 </template>
@@ -143,7 +143,7 @@ const submitForm = () => {
                     Run email campaigns for your customers. Everytime new user
                     signs up, we will send a contact information to your
                     Sendgrid account.
-                    <div class="mt-4">
+                    <div class="mt-4 m-[8px]">
                         <label class="flex items-center">
                             <Checkbox
                                 v-model:checked="
@@ -225,9 +225,9 @@ const submitForm = () => {
             </CardIcon>
 
             <!-- Sendinblue -->
-            <CardIcon icon-class="self-start">
+            <CardIcon icon-class="self-start" :height="'h-20'">
                 <template #icon>
-                    <div class="w-24 p-1">
+                    <div class="w-20">
                         <SendinblueIcon />
                     </div>
                 </template>
@@ -238,7 +238,7 @@ const submitForm = () => {
                     Run email campaigns for your customers. Everytime new user
                     signs up, we will send a contact information to your
                     Sendinblue account.
-                    <div class="mt-4">
+                    <div class="m-[8px]">
                         <label class="flex items-center">
                             <Checkbox
                                 v-model:checked="

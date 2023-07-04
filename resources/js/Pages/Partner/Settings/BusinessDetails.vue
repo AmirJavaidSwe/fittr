@@ -143,7 +143,7 @@ const timezoneOptions = computed(() => {
                     :searchable="true"
                     @select="countryChanged"
                     @clear="clearSelectedCountry"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full border"
                 />
                 <InputError :message="form.errors.country_id" class="mt-2" />
             </div>
@@ -168,7 +168,7 @@ const timezoneOptions = computed(() => {
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="business_phone" value="Phone Number" />
                 <div class="flex gap-2 items-center">
-                    <div class="input-field mt-1 px-2" v-text="dial_code"></div>
+                    <div class="input-field mt-1 px-2 w-14 h-9" v-text="dial_code"></div>
                     <TextInput
                         id="business_phone"
                         v-model="business_phone"
@@ -190,7 +190,7 @@ const timezoneOptions = computed(() => {
                 <InputLabel for="timezone" value="Timezone" />
                 <div class="mt-1">
                     Note: Change of timezone will affect your store schedules
-                    and all resources using dates.
+                    and all resources using dates.    
                 </div>
                 <Multiselect
                     id="timezone"

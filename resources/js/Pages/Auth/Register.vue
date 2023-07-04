@@ -11,6 +11,7 @@ import TextInput from '@/Components/TextInput.vue';
 import GoogleIcon from '@/Icons/Google.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faEye,faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import AuthBackground from "@/Components/AuthBackground.vue";
 
 const form = useForm({
     name: '',
@@ -33,13 +34,13 @@ const inputConfirmPasswordType = computed(() => (showConfirmPassword.value ? "te
 
 <template>
     <Head title="Register" />
-
+    <div class="flex flex-col lg:flex-row rounded-xl mx-auto min-h-screen">
     <AuthenticationCard>
         <template #logo>
-            <AuthenticationCardLogo />
+            <AuthenticationCardLogo class="flex justify-center pt-8 sm:pt-0" />
         </template>
 
-        <form @submit.prevent="submit">
+        <form @submit.prevent="submit" class="w-96 mx-auto bg-white p-5 rounded-lg max-[500px]:w-full">
             <div>
                 <InputLabel for="name" value="Name" />
                 <TextInput id="name" v-model="form.name" type="text" class="mt-1 block w-full" required autofocus
@@ -59,12 +60,12 @@ const inputConfirmPasswordType = computed(() => (showConfirmPassword.value ? "te
                     <TextInput id="password" v-model="form.password" :type="inputPasswordType" class="mt-1 block w-full" required
                         autocomplete="new-password" />
                     <button type="button" @click="showPassword = !showPassword"
-                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 focus:outline-none">
+                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-dark-400 focus:outline-none">
                         <template v-if="showPassword">
-                            <font-awesome-icon :icon="faEyeSlash" />
+                            <font-awesome-icon :icon="faEyeSlash" style="color: #b0b2b5"/>
                         </template>
                         <template v-else>
-                            <font-awesome-icon :icon="faEye" class="text-green-600" />
+                            <font-awesome-icon :icon="faEye" class="text-dark-600" style="color:#4ca054;" />
                         </template>
                     </button>
                 </div>
@@ -77,12 +78,12 @@ const inputConfirmPasswordType = computed(() => (showConfirmPassword.value ? "te
                     <TextInput id="password_confirmation" v-model="form.password_confirmation" :type="inputConfirmPasswordType"
                         class="mt-1 block w-full" required autocomplete="new-password" />
                     <button type="button" @click="showConfirmPassword = !showConfirmPassword"
-                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 focus:outline-none">
+                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-dark-400 focus:outline-none">
                         <template v-if="showConfirmPassword">
-                            <font-awesome-icon :icon="faEyeSlash" />
+                            <font-awesome-icon :icon="faEyeSlash"  style="color:#b0b2b5;" />
                         </template>
                         <template v-else>
-                            <font-awesome-icon :icon="faEye" class="text-green-600" />
+                            <font-awesome-icon :icon="faEye" style="color:#4ca054;" class="text-dark-600" />
                         </template>
                     </button>
                 </div>
@@ -105,12 +106,19 @@ const inputConfirmPasswordType = computed(() => (showConfirmPassword.value ? "te
                 </InputLabel>
             </div>
 
-            <div class="flex items-center justify-end mt-4">
-                <Link :href="route('login')" class="underline text-sm text-gray-600 hover:text-gray-900">
-                Already registered?
-                </Link>
+            <div class="block mt-4">
+                <label class="flex items-center">
+                    <Checkbox v-model:checked="form.remember" name="remember" />
+                    <span class="ml-2 text-sm text-gray-600">By clicking "Create account" or "Countinue with Google", you agree to the  <a target="_blank" :href="test"
+                        class="underline text-sm text-gray-600 hover:text-gray-900">Fittr TOS</a> and 
+                        <a target="_blank" :href="test"
+                        class="underline text-sm text-gray-600 hover:text-gray-900">Privacy Policy</a>.</span>
+                </label>
+            </div>
 
-                <PrimaryButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+            <div class="flex items-center justify-end mt-4">
+
+                <PrimaryButton class="w-full" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                     Register
                 </PrimaryButton>
             </div>
@@ -125,6 +133,17 @@ const inputConfirmPasswordType = computed(() => (showConfirmPassword.value ? "te
                     <div class="flex-grow -ml-6">Continue with Google</div>
                 </a>
             </div>
+            <div class="mt-4 flex">
+                Already have an account ? <Link :href="route('login')" class="underline text-sm text-gray-600 hover:text-gray-900">
+                      Log in
+                    </Link>
+            </div>
         </form>
     </AuthenticationCard>
+            <AuthBackground>
+                    <template #imagetext>
+                        <p class="text-white">Lorem ipsum dolor sit amet consectetur. Adipiscing risus dignissim volutpat ut integer malesuada varius fringilla. Id lacus vel lectus viverra id feugiat. Et id sed vel tincidunt amet volutpat vulputate aliquet vitae. Faucibus adipiscing in dui arcu duis. Senectus semper donec dui sit eget ut facilisi ut.</p>
+                    </template>
+            </AuthBackground>
+        </div>
 </template>

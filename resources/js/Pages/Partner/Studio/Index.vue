@@ -191,7 +191,7 @@ const deleteItem = () => {
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'updated_at'"
             />
-            <table-head title="Action" />
+            <table-head title="Action" :justifyContent="'justify-end'" />
         </template>
 
         <template #tableData>
@@ -213,7 +213,7 @@ const deleteItem = () => {
                 <table-data>
                     <DateValue :date="DateTime.fromISO(studio.updated_at).toRelative()"/>
                 </table-data>
-                <table-data>
+                <table-data class="justify-end flex">
                     <Dropdown
                         align="right"
                         width="48"

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
@@ -75,6 +76,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $appends = [
+        'initials',
         'profile_photo_url',
         'dashboard_route',
     ];
@@ -97,6 +99,13 @@ class User extends Authenticatable implements MustVerifyEmail
             PartnerUserRole::INSTRUCTOR->value => 'instructor.dashboard',
             default => 'dashboard',
         };
+    }
+
+    public function getInitialsAttribute()
+    {
+        return Str::of($this->name)->upper()->explode(' ')->reduce(function (?string $carry, string $item) {
+            return $carry .''. mb_substr($item, 0, 1);
+        });
     }
 
     //Local scopes

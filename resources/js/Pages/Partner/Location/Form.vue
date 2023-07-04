@@ -10,6 +10,8 @@ import Switcher from "@/Components/Switcher.vue";
 import Multiselect from "@vueform/multiselect";
 import Avatar from "@/Components/Avatar.vue";
 import "@vueform/multiselect/themes/tailwind.css";
+import UploadFileIcon from "@/icons/UploadFileIcon.vue";
+import UploadingIcon from "@/icons/UploadingIcon.vue";
 
 const emit = defineEmits(["remove_uploaded_file", "create_new_gm", 'create_new_amenity']);
 

@@ -580,7 +580,7 @@ const storeAmenity = () => {
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'updated_at'"
             />
-            <table-head title="Action" />
+            <table-head title="Action" class="flex justify-end" />
         </template>
 
         <template #tableData>
@@ -651,7 +651,7 @@ const storeAmenity = () => {
                         DateTime.fromISO(class_lesson.updated_at).toRelative()
                     "
                 />
-                <table-data>
+                <table-data class="text-right">
                     <Dropdown
                         align="right"
                         width="48"

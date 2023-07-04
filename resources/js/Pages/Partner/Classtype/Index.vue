@@ -186,7 +186,7 @@ const deleteItem = () => {
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'updated_at'"
             />
-            <table-head title="Action" />
+            <table-head title="Action" :justifyContent="'justify-end'" />
         </template>
 
         <template #tableData>
@@ -211,7 +211,7 @@ const deleteItem = () => {
                         "
                     />
                 </table-data>
-                <table-data>
+                <table-data class="flex">
                     <Dropdown
                         align="right"
                         width="48"

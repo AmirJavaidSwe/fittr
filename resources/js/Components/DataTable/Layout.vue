@@ -1,3 +1,4 @@
+
 <template>
     <div class="flex flex-col lg:flex-row items-end lg:items-center">
         <slot name="search"></slot>

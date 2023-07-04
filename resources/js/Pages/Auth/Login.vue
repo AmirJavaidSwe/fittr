@@ -11,6 +11,7 @@ import TextInput from "@/Components/TextInput.vue";
 import GoogleIcon from "@/Icons/Google.vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import AuthBackground from "@/Components/AuthBackground.vue";
 
 defineProps({
     canResetPassword: Boolean,
@@ -37,20 +38,24 @@ const inputPasswordType = computed(() =>
     showPassword.value ? "text" : "password"
 );
 </script>
+<style>
+   
 
+</style>
 <template>
-    <Head title="Log in" />
-
+    <Head title="Log in"  sm:text-center/>
+    <div class="flex flex-col lg:flex-row rounded-xl mx-auto min-h-screen">
     <AuthenticationCard>
         <template #logo>
-            <AuthenticationCardLogo />
+            <AuthenticationCardLogo class="flex justify-center pt-8 sm:pt-0" />
         </template>
 
         <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
             {{ status }}
         </div>
-
-        <form @submit.prevent="submit">
+        
+        <form @submit.prevent="submit" class="w-96 mx-auto bg-white p-5 rounded-lg mb-5 max-[500px]:w-full">
+            <!-- <div class="text-dark text-3xl pt-1 pb-6">Login In</div> -->
             <div>
                 <InputLabel for="email" value="Email" />
                 <TextInput
@@ -79,15 +84,15 @@ const inputPasswordType = computed(() =>
                     <button
                         type="button"
                         @click="showPassword = !showPassword"
-                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 focus:outline-none"
+                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-dark-400 focus:outline-none"
                     >
                         <template v-if="showPassword">
-                            <font-awesome-icon :icon="faEyeSlash" />
+                            <font-awesome-icon :icon="faEyeSlash" style="color: #b0b2b5"/>
                         </template>
                         <template v-else>
-                            <font-awesome-icon
+                            <font-awesome-icon style="color:#4ca054;"
                                 :icon="faEye"
-                                class="text-green-600"
+                                class="blue-grey-50"
                             />
                         </template>
                     </button>
@@ -103,16 +108,8 @@ const inputPasswordType = computed(() =>
             </div>
 
             <div class="flex items-center justify-end mt-4">
-                <Link
-                    v-if="canResetPassword"
-                    :href="route('password.request')"
-                    class="underline text-sm text-gray-600 hover:text-gray-900"
-                >
-                    Forgot your password?
-                </Link>
-
                 <PrimaryButton
-                    class="ml-4"
+                    class="w-full text-center"
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
                 >
@@ -123,17 +120,50 @@ const inputPasswordType = computed(() =>
             <div class="flex flex-col gap-4 mt-8">
                 <div class="flex items-center">
                     <div class="flex-grow bg bg-gray-300 h-px"></div>
-                    <div class="flex-grow-0 mx-5 text">OR</div>
+                    <div class="flex-grow-0 mx-5 text">Or</div>
                     <div class="flex-grow bg bg-gray-300 h-px"></div>
                 </div>
                 <a
                     :href="route('auth.google')"
                     class="bg-white border flex font-medium p-4 rounded text-center w-full"
                 >
-                    <GoogleIcon />
-                    <div class="flex-grow -ml-6">Continue with Google</div>
+                    
+                    <div class="flex-grow -ml-6"><GoogleIcon class="inline-block"/> Continue with Google</div>
                 </a>
+                
+                <div class="mt-4 flex items-center justify-between">
+                    <div>
+                        No account?
+                        <Link
+                    :href="route('register')"
+                    class="text-sm text-gray-600 hover:text-gray-900"
+                >
+                Create one?
+                </Link>
+
+                    </div>
+                    <Link
+                    v-if="canResetPassword"
+                    :href="route('password.request')"
+                    class="text-sm text-gray-600 hover:text-gray-900"
+                >
+                    Forgot password?
+                </Link>
+
+                </div>
             </div>
         </form>
+       
     </AuthenticationCard>
+
+            <AuthBackground>
+                <template #imagetext>
+                    <p class="text-white">Lorem ipsum dolor sit amet consectetur. Adipiscing risus dignissim volutpat ut integer malesuada varius fringilla. Id lacus vel lectus viverra id feugiat. Et id sed vel tincidunt amet volutpat vulputate aliquet vitae. Faucibus adipiscing in dui arcu duis. Senectus semper donec dui sit eget ut facilisi ut.</p>
+                </template>
+           </AuthBackground>
+
+
+
+    </div>
+        
 </template>

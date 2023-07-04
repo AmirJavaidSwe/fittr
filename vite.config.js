@@ -19,6 +19,9 @@ export default defineConfig({
                 transformAssetUrls: {
                     base: null,
                     includeAbsolute: false,
+                },
+                compilerOptions: {
+                    isCustomElement: (tag) => ['Head'].includes(tag),
                 }
             },
         }),
