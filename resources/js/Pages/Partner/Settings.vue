@@ -20,7 +20,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import Section from '@/Components/Section.vue';
 import CardIcon from '@/Components/CardIcon.vue';
-import ServicesStoreIcon from "@/icons/Store.vue";
+import ServicesStoreIcon from "@/Icons/Store.vue";
 // import BookingIcon from "@/Icons/Booking.vue";
 import TeamIcon from "@/Icons/Team.vue";
 import WidgetIcon from "@/Icons/Widget.vue";
