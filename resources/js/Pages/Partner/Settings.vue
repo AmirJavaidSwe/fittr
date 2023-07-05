@@ -1,45 +1,41 @@
 <script setup>
 import { computed } from 'vue';
 import {
-    faMoneyBill1,
+    // faMoneyBill1,
     faGears,
-    faCodeCompare,
-    faStore,
-    faCode,
-    faFileContract,
+    // faCodeCompare,
+    // faStore,
+    // faCode,
+    // faFileContract,
     faTicket,
-    faTicketSimple,
-    faCreditCard,
-    faFileInvoice,
-    faShieldHalved,
-    faPeopleGroup,
-    faEnvelopesBulk,
-    faDoorOpen,
-    faGamepad,
-    faWandMagicSparkles,
+    // faTicketSimple,
+    // faCreditCard,
+    // faFileInvoice,
+    // faShieldHalved,
+    // faPeopleGroup,
+    // faEnvelopesBulk,
+    // faDoorOpen,
+    // faGamepad,
+    // faWandMagicSparkles,
 } from '@fortawesome/free-solid-svg-icons';
 import Section from '@/Components/Section.vue';
 import CardIcon from '@/Components/CardIcon.vue';
-import ServicesStoreIcon from "@/icons/ServicesStoreIcon.vue";
-import BookingIcon from "@/icons/BookingIcon.vue";
-import TeamIcon from "@/icons/TeamIcon.vue";
-import WidgetIcon from "@/icons/WidgetIcon.vue";
-import PaymentIcon from "@/icons/PaymentIcon.vue";
-import RolesIcon from "@/icons/RolesIcon.vue";
-import WaviersIcon from "@/icons/WaviersIcon.vue";
-import InvoicesIcon from "@/icons/InvoicesIcon.vue";
-import NotificationsIcon from "@/icons/NotificationsIcon.vue";
-import LocationssIcon from "@/icons/LocationssIcon.vue";
-//import GeneralsIcon from "@/icons/LocationssIcon.vue";
-import PackIcon from "@/icons/PackIcon.vue";
-import StudiosIcon from "@/icons/StudiosIcon.vue";
-import TaxesandChargesIcon from "@/icons/TaxesandChargesIcon.vue";
-import ClassTypesIcon from "@/icons/ClassTypesIcon.vue";
-import IntegerationIcon from "@/icons/IntegerationIcon.vue";
-import ManageAminitiesIcon from "@/icons/ManageAminitiesIcon.vue";
-
-
-
+import ServicesStoreIcon from "@/icons/Store.vue";
+// import BookingIcon from "@/Icons/Booking.vue";
+import TeamIcon from "@/Icons/Team.vue";
+import WidgetIcon from "@/Icons/Widget.vue";
+import PaymentIcon from "@/Icons/Payment.vue";
+import RolesIcon from "@/Icons/Shield.vue";
+import WaviersIcon from "@/Icons/Waviers.vue";
+import InvoicesIcon from "@/Icons/Invoices.vue";
+import NotificationsIcon from "@/Icons/Bell.vue";
+import LocationIcon from "@/Icons/Location.vue";
+import PackIcon from "@/Icons/Pack.vue";
+import StudiosIcon from "@/Icons/Studio.vue";
+import TaxesandChargesIcon from "@/Icons/Tax.vue";
+import ClassTypesIcon from "@/Icons/ClassType.vue";
+import IntegerationIcon from "@/Icons/Integeration.vue";
+import AmenityIcon from "@/Icons/Amenity.vue";
 </script>
 
 <template>
@@ -53,7 +49,6 @@ import ManageAminitiesIcon from "@/icons/ManageAminitiesIcon.vue";
                 <CardIcon :card-link="route('partner.settings.general-details')">
                     <template #icon>
                         <font-awesome-icon :icon="faGears" class="text-primary-500 h-8 w-8" />
-                        <!-- <ServicesStoreIcon /> -->
                     </template>
 
                     <template #title>
@@ -100,7 +95,7 @@ import ManageAminitiesIcon from "@/icons/ManageAminitiesIcon.vue";
 
                 <CardIcon :card-link="route('partner.locations.index')">
                     <template #icon>
-                        <LocationssIcon />
+                        <LocationIcon />
                     </template>
 
                     <template #title>
@@ -148,7 +143,7 @@ import ManageAminitiesIcon from "@/icons/ManageAminitiesIcon.vue";
                     v-can="{ module: 'studio-amenities', roles: $page.props.user.user_roles, permission: 'viewAny', 'user': $page.props.user }"
                     >
                     <template #icon>
-                        <ManageAminitiesIcon />
+                        <AmenityIcon />
                     </template>
 
                     <template #title>
@@ -234,6 +229,7 @@ import ManageAminitiesIcon from "@/icons/ManageAminitiesIcon.vue";
 
                 <CardIcon card-link="#">
                     <template #icon>
+                        <!-- <BookingIcon /> -->
                         <font-awesome-icon :icon="faTicket" class="text-primary-500 h-8 w-8" />
                     </template>
 
