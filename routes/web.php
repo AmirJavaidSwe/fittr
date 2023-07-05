@@ -42,7 +42,7 @@ use App\Http\Controllers\Store\MemberDashboardController;
 use App\Http\Controllers\Store\InstructorDashboardController;
 
 
-Route::get('/auth/google', [UserProfileController::class, 'googleRedirect'])->name('auth.google');
+Route::get('/auth/google', [UserProfileController::class, 'googleRedirect'])->middleware(['guest:'.config('fortify.guard')])->name('auth.google');
 Route::get('/auth/google-callback', [UserProfileController::class, 'googleAuth']);
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'webhook']);
 
@@ -59,7 +59,9 @@ Route::domain('app.'.config('app.domain'))->group(function () {
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
         ]);
-    })->name('root');
+    })
+    ->middleware(['guest:'.config('fortify.guard')])
+    ->name('root');
 
     Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
 

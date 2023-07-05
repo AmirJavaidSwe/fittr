@@ -7,9 +7,7 @@ import TextInput from "@/Components/TextInput.vue";
 import Checkbox from "@/Components/Checkbox.vue";
 import InputError from "@/Components/InputError.vue";
 import ActionMessage from "@/Components/ActionMessage.vue";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
-import SecondaryButton from "@/Components/SecondaryButton.vue";
-import DangerButton from "@/Components/DangerButton.vue";
+import ButtonLink from '@/Components/ButtonLink.vue';
 import ConfirmationModal from "@/Components/ConfirmationModal.vue";
 
 const props = defineProps({
@@ -56,13 +54,16 @@ const deletePackage = () => {
         <template #title> Package Information </template>
 
         <template #description>
-            <div>Update package configuration.</div>
-            <button
-                class="cursor-pointer mt-6 text-sm text-red-500"
+            <div class="mb-4">Update package configuration.</div>
+            <ButtonLink
+                styling="danger"
+                size="small"
                 @click="confirmDeletion"
+                :class="{ 'opacity-25': form.processing }"
+                :disabled="form.processing"
             >
                 Delete
-            </button>
+            </ButtonLink>
         </template>
 
         <template #form>
@@ -240,12 +241,14 @@ const deletePackage = () => {
                 Saved.
             </ActionMessage>
 
-            <PrimaryButton
+            <ButtonLink
+                styling="primary"
+                size="default"
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
             >
                 Save
-            </PrimaryButton>
+            </ButtonLink>
         </template>
     </FormSection>
     <!-- Delete Confirmation Modal -->
@@ -260,18 +263,23 @@ const deletePackage = () => {
         </template>
 
         <template #footer>
-            <SecondaryButton @click="packageBeingDeleted = null">
+            <ButtonLink 
+                styling="default"
+                size="default"
+                @click="packageBeingDeleted = null">
                 Cancel
-            </SecondaryButton>
+            </ButtonLink>
 
-            <DangerButton
+            <ButtonLink
+                styling="danger"
+                size="default"
                 class="ml-3"
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
                 @click="deletePackage"
             >
-                Delete
-            </DangerButton>
+                Confirm
+            </ButtonLink>
         </template>
     </ConfirmationModal>
 </template>

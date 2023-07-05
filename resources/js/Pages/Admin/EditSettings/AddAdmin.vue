@@ -2,6 +2,13 @@
 import { ref, computed, onMounted } from "vue";
 import { useForm } from "@inertiajs/vue3";
 import Multiselect from "@vueform/multiselect";
+import TextInput from "@/Components/TextInput.vue";
+import InputLabel from "@/Components/InputLabel.vue";
+import InputError from "@/Components/InputError.vue";
+import Checkbox from "@/Components/Checkbox.vue";
+import ButtonLink from '@/Components/ButtonLink.vue';
+import FormSection from "@/Components/FormSection.vue";
+import ActionMessage from "@/Components/ActionMessage.vue";
 import _ from "lodash";
 
 const roles = ref([]);
@@ -97,14 +104,16 @@ onMounted(() => {});
         </template>
         <template #actions>
             <ActionMessage :on="form.recentlySuccessful" class="mr-3">
-                Add.
+                Created
             </ActionMessage>
-            <PrimaryButton
+            <ButtonLink
+                styling="primary"
+                size="small"
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
             >
                 Add
-            </PrimaryButton>
+            </ButtonLink>
         </template>
     </FormSection>
 </template>

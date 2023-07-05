@@ -5,8 +5,7 @@ import ActionMessage from '@/Components/ActionMessage.vue';
 import ActionSection from '@/Components/ActionSection.vue';
 import DialogModal from '@/Components/DialogModal.vue';
 import InputError from '@/Components/InputError.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import SecondaryButton from '@/Components/SecondaryButton.vue';
+import ButtonLink from '@/Components/ButtonLink.vue';
 import TextInput from '@/Components/TextInput.vue';
 
 defineProps({
@@ -113,9 +112,9 @@ const closeModal = () => {
             </div>
 
             <div class="flex items-center mt-5">
-                <PrimaryButton @click="confirmLogout">
+                <ButtonLink styling="secondary" size="default" @click="confirmLogout">
                     Log Out Other Browser Sessions
-                </PrimaryButton>
+                </ButtonLink>
 
                 <ActionMessage :on="form.recentlySuccessful" class="ml-3">
                     Done.
@@ -146,18 +145,23 @@ const closeModal = () => {
                 </template>
 
                 <template #footer>
-                    <SecondaryButton @click="closeModal">
+                    <ButtonLink
+                        styling="default"
+                        size="default"
+                        @click="closeModal">
                         Cancel
-                    </SecondaryButton>
+                    </ButtonLink>
 
-                    <PrimaryButton
+                    <ButtonLink
+                        styling="secondary"
+                        size="default"
                         class="ml-3"
                         :class="{ 'opacity-25': form.processing }"
                         :disabled="form.processing"
                         @click="logoutOtherBrowserSessions"
                     >
                         Log Out Other Browser Sessions
-                    </PrimaryButton>
+                    </ButtonLink>
                 </template>
             </DialogModal>
         </template>

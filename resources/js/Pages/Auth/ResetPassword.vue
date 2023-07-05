@@ -5,8 +5,8 @@ import AuthenticationCard from '@/Components/AuthenticationCard.vue';
 import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import ButtonLink from '@/Components/ButtonLink.vue';
 import AuthBackground from "@/Components/AuthBackground.vue";
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faEye,faEyeSlash } from '@fortawesome/free-solid-svg-icons';
@@ -46,11 +46,6 @@ const inputConfirmPasswordType = computed(() => (showConfirmPassword.value ? "te
             <div class="w-96 mx-auto bg-white p-5 rounded-lg max-[500px]:w-full">
                 <div class="mb-4 text-sm text-gray-600">
                     <h3 class="mt-3 mb-3 text-2xl"><strong>Reset Password</strong></h3>
-                    <!-- <p>
-                        Forgot your password? No problem. Just let us know your email
-                        address and we will email you a password reset link that will allow
-                        you to choose a new one.
-                    </p> -->
                 </div>
 
                 <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
@@ -65,7 +60,7 @@ const inputConfirmPasswordType = computed(() => (showConfirmPassword.value ? "te
             </div>
 
             <div class="mt-4">
-                <InputLabel for="password" value="Password" class="mb-1" />
+                <InputLabel for="password" value="New Password" class="mb-1" />
                 <div class="relative border-none p-0">
                     <TextInput id="password" v-model="form.password" :type="inputPasswordType"
                         class="mt-1 block w-full" required autocomplete="new-password" />
@@ -100,23 +95,18 @@ const inputConfirmPasswordType = computed(() => (showConfirmPassword.value ? "te
             </div>
 
             <div class="flex items-center justify-end mt-4">
-                <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                <ButtonLink 
+                    styling="secondary"
+                    size="default"
+                    :class="{ 'opacity-25': form.processing }"
+                    :disabled="form.processing"
+                    >
                     Reset Password
-                </PrimaryButton>
+                </ButtonLink>
             </div>
         </form>
             </div>
         </AuthenticationCard>
-        <AuthBackground>
-            <template #imagetext>
-                <p class="text-white">
-                    Lorem ipsum dolor sit amet consectetur. Adipiscing risus dignissim
-                    volutpat ut integer malesuada varius fringilla. Id lacus vel lectus
-                    viverra id feugiat. Et id sed vel tincidunt amet volutpat vulputate
-                    aliquet vitae. Faucibus adipiscing in dui arcu duis. Senectus semper
-                    donec dui sit eget ut facilisi ut.
-                </p>
-            </template>
-        </AuthBackground>
+        <AuthBackground />
     </div>
 </template>

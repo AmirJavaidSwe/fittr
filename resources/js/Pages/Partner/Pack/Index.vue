@@ -10,8 +10,6 @@ import TableData from "@/Components/DataTable/TableData.vue";
 import DataTableLayout from "@/Components/DataTable/Layout.vue";
 import DialogModal from '@/Components/DialogModal.vue';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue';
-import SecondaryButton from '@/Components/SecondaryButton.vue';
-import DangerButton from '@/Components/DangerButton.vue';
 import ButtonLink from '@/Components/ButtonLink.vue';
 
 const props = defineProps({
@@ -195,9 +193,13 @@ const editPrice = (action, id) => {
        >
         <template #button>
             <div class="flex gap-2">
-                <SecondaryButton @click="showCreateModal = true">
-                    Create new (modal)
-                </SecondaryButton>
+                <ButtonLink
+                    styling="primary"
+                    size="default"
+                    @click="showCreateModal = true"
+                    >
+                    Create new
+                </ButtonLink>
                 <!-- <ButtonLink :href="route('partner.packs.create')" type="primary">
                     Create new (direct)
                 </ButtonLink> -->
@@ -228,11 +230,9 @@ const editPrice = (action, id) => {
             <tr v-for="pack in packs.data" >
                 <table-data :title="pack.id"/>
                 <table-data>
-                    <Link class="font-medium text-indigo-600 hover:text-indigo-500"
-                          :href="route('partner.packs.show', pack)"
-                          >
-                           {{ pack.title.length > 50 ? pack.title.substring(0, 50) + '...' : pack.title }} 
-                    </Link>
+                    <ButtonLink :href="route('partner.packs.show', pack)">
+                        {{ pack.title.length > 50 ? pack.title.substring(0, 50) + '...' : pack.title }} 
+                    </ButtonLink>
                 </table-data>
                 <table-data>
                     <div v-if="pack.prices">
@@ -247,17 +247,18 @@ const editPrice = (action, id) => {
                 <table-data :title="DateTime.fromISO(pack.updated_at).toRelative()"/>
                 <table-data>
                     <div class="flex gap-4">
-                        <Link class="font-medium text-indigo-600 hover:text-indigo-500"
-                            :href="route('partner.packs.edit', pack)">
+                        <ButtonLink :href="route('partner.packs.edit', pack)">
                             Edit
-                        </Link>
-                        <a @click.stop="showEditModal(pack)" class="cursor-pointer">Edit2</a>
-                        <button class="block text-green-500" @click="confirmDuplication(pack.id)">
+                        </ButtonLink>
+                        <ButtonLink @click="showEditModal(pack)">
+                            Edit2
+                        </ButtonLink>
+                        <ButtonLink @click="confirmDuplication(pack.id)">
                             Duplicate
-                        </button>
-                        <button class="block text-red-500" @click="confirmDeletion(pack.id)">
+                        </ButtonLink>
+                        <ButtonLink styling="danger" size="small" @click="confirmDeletion(pack.id)">
                             Delete
-                        </button>
+                        </ButtonLink>
                     </div>
                 </table-data>
             </tr>
@@ -271,7 +272,7 @@ const editPrice = (action, id) => {
     </data-table-layout>
 
     <!-- Create new Modal -->
-    <DialogModal :show="showCreateModal" @close="closeCreateModal">
+    <DialogModal :show="showCreateModal" @close="closeCreateModal" maxWidth="5xl">
         <template #title>
             Create new Class pack
         </template>
@@ -289,7 +290,7 @@ const editPrice = (action, id) => {
     </DialogModal>
 
     <!-- Edit Modal -->
-    <DialogModal :show="editModalOpened" @close="closeEditModal">
+    <DialogModal :show="editModalOpened" @close="closeEditModal" maxWidth="5xl">
         <template #title>
             Edit Membership pack
         </template>
@@ -321,18 +322,23 @@ const editPrice = (action, id) => {
         </template>
 
         <template #footer>
-            <SecondaryButton @click="itemDeleting = false">
+            <ButtonLink
+                styling="default"
+                size="default"
+                @click="itemDeleting = false">
                 Cancel
-            </SecondaryButton>
+            </ButtonLink>
 
-            <DangerButton
+            <ButtonLink
+                styling="danger"
+                size="default"
                 class="ml-3"
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
                 @click="deleteItem"
             >
                 Delete
-            </DangerButton>
+            </ButtonLink>
         </template>
     </ConfirmationModal>
 
@@ -349,18 +355,23 @@ const editPrice = (action, id) => {
         </template>
 
         <template #footer>
-            <SecondaryButton @click="itemDuplicating = false">
+            <ButtonLink
+                styling="default"
+                size="default"
+                @click="itemDuplicating = false">
                 Cancel
-            </SecondaryButton>
+            </ButtonLink>
 
-            <DangerButton
+            <ButtonLink
+                styling="danger"
+                size="default"
                 class="ml-3"
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
                 @click="duplicateItem"
             >
                 Create duplicate
-            </DangerButton>
+            </ButtonLink>
         </template>
     </ConfirmationModal>
 </template>

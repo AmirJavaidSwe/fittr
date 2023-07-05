@@ -1,7 +1,6 @@
 <script setup>
 import Section from "@/Components/Section.vue";
 import CardBasic from "@/Components/CardBasic.vue";
-import WarningButton from "@/Components/WarningButton.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
 </script>
 

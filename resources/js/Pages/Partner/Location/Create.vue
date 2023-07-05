@@ -4,7 +4,6 @@ import FormSection from "@/Components/FormSection.vue";
 import Form from "./Form.vue";
 import {useForm} from "@inertiajs/vue3";
 import ButtonLink from "@/Components/ButtonLink.vue";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
 
 defineProps({
     users: Array,

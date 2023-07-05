@@ -5,7 +5,6 @@ import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
 import InputError from "@/Components/InputError.vue";
 import ActionMessage from "@/Components/ActionMessage.vue";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
 import SelectInput from "@/Components/SelectInput.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
 import Multiselect from "@vueform/multiselect";
@@ -27,8 +26,6 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["createNewLocation"]);
-
-
 const locationChanged = () => {
     if(props.form.location_id == 'create_new_location') {
         emit('createNewLocation');
@@ -77,16 +74,6 @@ const locationsList = computed(() => {
                 <InputError :message="form.errors.location_id" class="mt-2"/>
             </div>
 
-            <!-- <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="ordering" value="Ordering"/>
-                <TextInput
-                    id="ordering"
-                    v-model="form.ordering"
-                    type="number"
-                    class="mt-1 block w-full"
-                    />
-                <InputError :message="form.errors.ordering" class="mt-2"/>
-            </div> -->
         </template>
 
         <template #actions>

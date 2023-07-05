@@ -3,8 +3,6 @@ import { computed, ref } from 'vue';
 import { Link, useForm, usePage } from '@inertiajs/vue3';
 import { DateTime } from "luxon";
 import ButtonLink from '@/Components/ButtonLink.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import SecondaryButton from '@/Components/SecondaryButton.vue';
 import Radio from '@/Components/Radio.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import InputError from '@/Components/InputError.vue';
@@ -117,16 +115,18 @@ const confirmSubscribe = () => {
             <ButtonLink 
                 v-if="pack.subscribed"
                 :href="route('partner.subscriptions.index')"
-                type="secondary"
+                styling="secondary"
                 >
                 Manage
             </ButtonLink>
-            <PrimaryButton 
+            <ButtonLink 
+                styling="primary"
+                size="default"
                 v-if="!pack.subscribed"
                 @click="confirmSubscription"
                 >
                 Subscribe
-            </PrimaryButton>
+            </ButtonLink>
 
             <DialogModal :show="confirmingSubscription" @close="closeModal">
                 <template #title>
@@ -161,7 +161,7 @@ const confirmSubscribe = () => {
                         size="default"
                         @click="closeModal"
                     >
-                    Cancel
+                        Cancel
                     </ButtonLink>
                     <ButtonLink
                         class="ml-3"

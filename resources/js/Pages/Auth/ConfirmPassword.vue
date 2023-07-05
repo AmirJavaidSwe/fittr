@@ -5,7 +5,7 @@ import AuthenticationCard from '@/Components/AuthenticationCard.vue';
 import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
+import ButtonLink from '@/Components/ButtonLink.vue';
 import TextInput from '@/Components/TextInput.vue';
 import AuthBackground from "@/Components/AuthBackground.vue";
 
@@ -47,20 +47,17 @@ const submit = () => {
                     </div>
 
                     <div class="flex justify-end mt-4">
-                        <PrimaryButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                        <ButtonLink 
+                            styling="primary"
+                            size="default"
+                            :class="{ 'opacity-25': form.processing }"
+                            :disabled="form.processing">
                             Confirm
-                        </PrimaryButton>
+                        </ButtonLink>
                     </div>
                 </form>
             </div>
         </AuthenticationCard>
-        <AuthBackground>
-            <template #imagetext>
-                <p class="text-white">Lorem ipsum dolor sit amet consectetur. Adipiscing risus dignissim volutpat ut integer
-                    malesuada varius fringilla. Id lacus vel lectus viverra id feugiat. Et id sed vel tincidunt amet
-                    volutpat vulputate aliquet vitae. Faucibus adipiscing in dui arcu duis. Senectus semper donec dui sit
-                    eget ut facilisi ut.</p>
-            </template>
-        </AuthBackground>
+        <AuthBackground />
     </div>
 </template>

@@ -3,8 +3,7 @@ import { ref } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 import { DateTime } from "luxon";
 import DialogModal from '@/Components/DialogModal.vue';
-import DangerButton from '@/Components/DangerButton.vue';
-import SecondaryButton from '@/Components/SecondaryButton.vue'; 
+import ButtonLink from '@/Components/ButtonLink.vue';
 
 const props = defineProps({
     subscription: Object,
@@ -62,9 +61,13 @@ const cancelSubscription = () => {
         </div>
     </div>
     <div class="p-4 bg-gray-300 flex items-center justify-end">
-        <DangerButton @click="confirmCancellation">
+        <ButtonLink 
+            styling="danger"
+            size="small"
+            @click="confirmCancellation"
+            >
             Cancel subscription
-        </DangerButton>
+        </ButtonLink>
     </div>
 
     <DialogModal :show="confirmingCancellation" @close="closeModal">
@@ -73,21 +76,26 @@ const cancelSubscription = () => {
         </template>
 
         <template #content>
-            Are you sure you want to cancel your subscription?
+            Are you sure you want to terminate your subscription?
         </template>
 
         <template #footer>
-            <SecondaryButton @click="closeModal">
-                No
-            </SecondaryButton>
-            <DangerButton
+            <ButtonLink 
+                styling="default"
+                size="small"
+                @click="closeModal">
+                Keep
+            </ButtonLink>
+            <ButtonLink
+                styling="danger"
+                size="small"
                 class="ml-3"
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
                 @click="cancelSubscription"
             >
                 Confirm
-            </DangerButton>
+            </ButtonLink>
         </template>
     </DialogModal>
 </div>

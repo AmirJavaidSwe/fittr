@@ -4,16 +4,14 @@ import { useForm } from '@inertiajs/vue3';
 import ActionMessage from '@/Components/ActionMessage.vue';
 import ActionSection from '@/Components/ActionSection.vue';
 import Checkbox from '@/Components/Checkbox.vue';
-import ConfirmationModal from '@/Components/ConfirmationModal.vue';
-import DangerButton from '@/Components/DangerButton.vue';
-import DialogModal from '@/Components/DialogModal.vue';
 import FormSection from '@/Components/FormSection.vue';
+import SectionBorder from '@/Components/SectionBorder.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import SecondaryButton from '@/Components/SecondaryButton.vue';
-import SectionBorder from '@/Components/SectionBorder.vue';
 import TextInput from '@/Components/TextInput.vue';
+import DialogModal from '@/Components/DialogModal.vue';
+import ConfirmationModal from '@/Components/ConfirmationModal.vue';
+import ButtonLink from '@/Components/ButtonLink.vue';
 
 const props = defineProps({
     tokens: Array,
@@ -119,9 +117,14 @@ const deleteApiToken = () => {
                     Created.
                 </ActionMessage>
 
-                <PrimaryButton :class="{ 'opacity-25': createApiTokenForm.processing }" :disabled="createApiTokenForm.processing">
+                <ButtonLink 
+                    styling="primary"
+                    size="default"
+                    :class="{ 'opacity-25': createApiTokenForm.processing }"
+                    :disabled="createApiTokenForm.processing"
+                    >
                     Create
-                </PrimaryButton>
+                </ButtonLink>
             </template>
         </FormSection>
 
@@ -188,9 +191,12 @@ const deleteApiToken = () => {
             </template>
 
             <template #footer>
-                <SecondaryButton @click="displayingToken = false">
+                <ButtonLink 
+                    styling="secondary"
+                    size="default"
+                    @click="displayingToken = false">
                     Close
-                </SecondaryButton>
+                </ButtonLink>
             </template>
         </DialogModal>
 
@@ -212,18 +218,24 @@ const deleteApiToken = () => {
             </template>
 
             <template #footer>
-                <SecondaryButton @click="managingPermissionsFor = null">
+                <ButtonLink 
+                    styling="secondary"
+                    size="default"
+                    @click="managingPermissionsFor = null"
+                    >
                     Cancel
-                </SecondaryButton>
+                </ButtonLink>
 
-                <PrimaryButton
+                <ButtonLink 
+                    styling="primary"
+                    size="default"
                     class="ml-3"
                     :class="{ 'opacity-25': updateApiTokenForm.processing }"
                     :disabled="updateApiTokenForm.processing"
                     @click="updateApiToken"
                 >
                     Save
-                </PrimaryButton>
+                </ButtonLink>
             </template>
         </DialogModal>
 
@@ -238,18 +250,24 @@ const deleteApiToken = () => {
             </template>
 
             <template #footer>
-                <SecondaryButton @click="apiTokenBeingDeleted = null">
+                <ButtonLink 
+                    styling="secondary"
+                    size="default"
+                    @click="apiTokenBeingDeleted = null"
+                    >
                     Cancel
-                </SecondaryButton>
+                </ButtonLink>
 
-                <DangerButton
+                <ButtonLink 
+                    styling="danger"
+                    size="default"
                     class="ml-3"
                     :class="{ 'opacity-25': deleteApiTokenForm.processing }"
                     :disabled="deleteApiTokenForm.processing"
                     @click="deleteApiToken"
                 >
                     Delete
-                </DangerButton>
+                </ButtonLink>
             </template>
         </ConfirmationModal>
     </div>

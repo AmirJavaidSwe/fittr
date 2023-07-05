@@ -3,7 +3,6 @@ import { Link } from "@inertiajs/vue3";
 import { DateTime } from "luxon";
 import SingleView from "@/Components/DataTable/SingleView.vue";
 import SingleViewRow from "@/Components/DataTable/SingleViewRow.vue";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
 
 defineProps({

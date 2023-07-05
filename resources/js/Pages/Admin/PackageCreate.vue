@@ -7,8 +7,7 @@ import TextInput from "@/Components/TextInput.vue";
 import Checkbox from "@/Components/Checkbox.vue";
 import InputError from "@/Components/InputError.vue";
 import ActionMessage from "@/Components/ActionMessage.vue";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
-import SecondaryButton from "@/Components/SecondaryButton.vue";
+import ButtonLink from '@/Components/ButtonLink.vue';
 
 const form = useForm({
     status: false,
@@ -198,12 +197,14 @@ const create = () => {
                 Saved.
             </ActionMessage>
 
-            <PrimaryButton
+            <ButtonLink
+                styling="primary"
+                size="default"
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
             >
                 Save
-            </PrimaryButton>
+            </ButtonLink>
         </template>
     </FormSection>
 </template>

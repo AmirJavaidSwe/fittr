@@ -11,7 +11,6 @@ import Checkbox from "@/Components/Checkbox.vue";
 import InputError from "@/Components/InputError.vue";
 import ActionMessage from "@/Components/ActionMessage.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
-import SecondaryButton from "@/Components/SecondaryButton.vue";
 
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import {

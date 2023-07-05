@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { router, useForm, usePage } from "@inertiajs/vue3";
 import Section from '@/Components/Section.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
+import ButtonLink from '@/Components/ButtonLink.vue';
 const props = defineProps({
     packs: {
         type: Object,
@@ -18,7 +18,7 @@ const buy = (id) => {
         // onBefore: () => confirm('Are you sure?'),
         onFinish: (visit) => {
             setTimeout(() => {
-                isLocked.value = false;                
+                isLocked.value = false;
             }, 3000);
         },
     });
@@ -39,14 +39,16 @@ const buy = (id) => {
                             <div><span>{{price.currency}}</span> <span class="font-bold text-3xl">{{price.price}}</span></div>
                             <!-- <br> -->
                             <!-- Active: {{price.is_active ? 'Yes': 'No'}} -->
-                            <PrimaryButton 
+                            <ButtonLink 
                                 type="button"
+                                styling="primary"
+                                size="small"
                                 @click="buy(price.id)"
                                 :disabled="isLocked || !price.is_active"
                                 > 
                                 {{price.type == 'one_time' ? 'Buy' : ''}}
                                 {{price.type == 'recurring' ? 'Subscribe' : ''}}
-                            </PrimaryButton>
+                            </ButtonLink>
                         </div>
                     </div>
                     <div v-else class="py-2 border-y-2 text-center">Not available for purchase</div>

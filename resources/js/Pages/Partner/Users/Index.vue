@@ -8,8 +8,6 @@ import Pagination from "@/Components/Pagination.vue";
 import DataTableLayout from "@/Components/DataTable/Layout.vue";
 import TableHead from "@/Components/DataTable/TableHead.vue";
 import TableData from "@/Components/DataTable/TableData.vue";
-import SecondaryButton from "@/Components/SecondaryButton.vue";
-import DangerButton from "@/Components/DangerButton.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
 import ConfirmationModal from "@/Components/ConfirmationModal.vue";
 import { DateTime } from "luxon";
@@ -22,6 +20,7 @@ import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import Form from './Form.vue';
 import SideModal from "@/Components/SideModal.vue";
+import CloseModal from "@/Components/CloseModal.vue";
 import uniqBy from 'lodash/uniqBy';
 import RoleCreateForm from "@/Pages/Roles/Form.vue";
 import {
@@ -213,7 +212,7 @@ const storeRole = ($event) => {
                     <Avatar :title="user.name" size="small" />
                 </table-data>
                 <table-data>
-                    <DateValue :date="DateTime.fromISO(user.created_at)" />
+                    <DateValue :date="DateTime.fromISO(user.created_at).toLocaleString()" />
                 </table-data>
                 <table-data>
                     <Dropdown align="right" width="48" :top="index > props.users.data.length - 3"

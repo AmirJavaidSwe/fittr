@@ -1,11 +1,11 @@
 <script setup>
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import { Head, useForm } from '@inertiajs/vue3';
 import AuthenticationCard from "@/Components/AuthenticationCard.vue";
 import AuthenticationCardLogo from "@/Components/AuthenticationCardLogo.vue";
 import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
+import ButtonLink from '@/Components/ButtonLink.vue';
 import AuthBackground from "@/Components/AuthBackground.vue";
 
 defineProps({
@@ -52,32 +52,22 @@ const submit = () => {
                         <InputError class="mt-2" :message="form.errors.email" />
                     </div>
                     <div class="mt-4 flex items-center justify-between">
-                        <div>
-                            Back to?
-                            <Link :href="route('login')" class="text-sm text-gray-600 hover:text-gray-900">
-                            Login
-                            </Link>
-
-                        </div>
-                        <PrimaryButton class="text-center" :class="{ 'opacity-25': form.processing }"
-                            :disabled="form.processing">
+                        <ButtonLink :href="route('login')">
+                            Log in
+                        </ButtonLink>
+                        <ButtonLink 
+                            styling="secondary"
+                            size="default"
+                            :class="{ 'opacity-25': form.processing }"
+                            :disabled="form.processing"
+                            >
                             Email Password Reset Link
-                        </PrimaryButton>
+                        </ButtonLink>
 
                     </div>
                 </form>
             </div>
         </AuthenticationCard>
-        <AuthBackground>
-            <template #imagetext>
-                <p class="text-white">
-                    Lorem ipsum dolor sit amet consectetur. Adipiscing risus dignissim
-                    volutpat ut integer malesuada varius fringilla. Id lacus vel lectus
-                    viverra id feugiat. Et id sed vel tincidunt amet volutpat vulputate
-                    aliquet vitae. Faucibus adipiscing in dui arcu duis. Senectus semper
-                    donec dui sit eget ut facilisi ut.
-                </p>
-            </template>
-        </AuthBackground>
+        <AuthBackground />
     </div>
 </template>

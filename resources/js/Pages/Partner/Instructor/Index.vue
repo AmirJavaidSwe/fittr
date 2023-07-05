@@ -156,9 +156,9 @@ const deleteItem = () => {
                 :currentSort="form.order_by === 'name'" />
             <table-head title="Email" @click="setOrdering('email')" :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'email'" />
-            <table-head title="Created At" @click="setOrdering('created_at')" :arrowSide="form.order_dir"
+            <table-head title="Created" @click="setOrdering('created_at')" :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'created_at'" />
-            <table-head title="Updated At" @click="setOrdering('updated_at')" :arrowSide="form.order_dir"
+            <table-head title="Updated" @click="setOrdering('updated_at')" :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'updated_at'" />
             <table-head title="Action" class="flex justify-end" />
         </template>
@@ -174,7 +174,7 @@ const deleteItem = () => {
                 </table-data>
                 <table-data :title="instructor.email" />
                 <table-data>
-                    <DateValue :date="DateTime.fromISO(instructor.created_at)" />
+                    <DateValue :date="DateTime.fromISO(instructor.created_at).toLocaleString()" />
                 </table-data>
                 <table-data>
                     <DateValue :date="DateTime.fromISO(instructor.updated_at).toRelative()

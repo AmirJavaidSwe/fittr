@@ -6,8 +6,8 @@ import AuthenticationCardLogo from "@/Components/AuthenticationCardLogo.vue";
 import Checkbox from "@/Components/Checkbox.vue";
 import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
+import ButtonLink from '@/Components/ButtonLink.vue';
 import GoogleIcon from "@/Icons/Google.vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
@@ -45,125 +45,99 @@ const inputPasswordType = computed(() =>
 <template>
     <Head title="Log in"  sm:text-center/>
     <div class="flex flex-col lg:flex-row rounded-xl mx-auto min-h-screen">
-    <AuthenticationCard>
-        <template #logo>
-            <AuthenticationCardLogo class="flex justify-center pt-8 sm:pt-0" />
-        </template>
+        <AuthenticationCard>
+            <template #logo>
+                <AuthenticationCardLogo class="flex justify-center pt-8 sm:pt-0" />
+            </template>
 
-        <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
-            {{ status }}
-        </div>
-        
-        <form @submit.prevent="submit" class="w-96 mx-auto bg-white p-5 rounded-lg mb-5 max-[500px]:w-full">
-            <!-- <div class="text-dark text-3xl pt-1 pb-6">Login In</div> -->
-            <div>
-                <InputLabel for="email" value="Email" />
-                <TextInput
-                    id="email"
-                    v-model="form.email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    required
-                    autofocus
-                    autocomplete="username"
-                />
-                <InputError class="mt-2" :message="form.errors.email" />
+            <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
+                {{ status }}
             </div>
 
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" class="mb-1" />
-                <div class="relative">
+            <form @submit.prevent="submit" class="w-96 mx-auto bg-white p-5 rounded-lg mb-5 max-[500px]:w-full">
+                <div>
+                    <InputLabel for="email" value="Email" />
                     <TextInput
-                        :type="inputPasswordType"
-                        id="password"
-                        v-model="form.password"
+                        id="email"
+                        v-model="form.email"
+                        type="email"
                         class="mt-1 block w-full"
                         required
-                        autocomplete="current-password"
+                        autofocus
+                        autocomplete="username"
                     />
-                    <button
-                        type="button"
-                        @click="showPassword = !showPassword"
-                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-dark-400 focus:outline-none"
-                    >
-                        <template v-if="showPassword">
-                            <font-awesome-icon :icon="faEyeSlash" style="color: #b0b2b5"/>
-                        </template>
-                        <template v-else>
-                            <font-awesome-icon style="color:#4ca054;"
-                                :icon="faEye"
-                                class="blue-grey-50"
-                            />
-                        </template>
-                    </button>
+                    <InputError class="mt-2" :message="form.errors.email" />
                 </div>
-                <InputError class="mt-2" :message="form.errors.password" />
-            </div>
 
-            <div class="block mt-4">
-                <label class="flex items-center">
-                    <Checkbox v-model:checked="form.remember" name="remember" />
-                    <span class="ml-2 text-sm text-gray-600">Remember me</span>
-                </label>
-            </div>
+                <div class="mt-4">
+                    <InputLabel for="password" value="Password" class="mb-1" />
+                    <div class="relative">
+                        <TextInput
+                            :type="inputPasswordType"
+                            id="password"
+                            v-model="form.password"
+                            class="mt-1 block w-full"
+                            required
+                            autocomplete="current-password"
+                        />
+                        <button
+                            type="button"
+                            @click="showPassword = !showPassword"
+                            class="absolute inset-y-0 right-0 pr-3 flex items-center text-dark-400 focus:outline-none"
+                        >
+                            <template v-if="showPassword">
+                                <font-awesome-icon :icon="faEyeSlash" style="color: #b0b2b5"/>
+                            </template>
+                            <template v-else>
+                                <font-awesome-icon style="color:#4ca054;"
+                                    :icon="faEye"
+                                    class="blue-grey-50"
+                                />
+                            </template>
+                        </button>
+                    </div>
+                    <InputError class="mt-2" :message="form.errors.password" />
+                </div>
 
-            <div class="flex items-center justify-end mt-4">
-                <PrimaryButton
-                    class="w-full text-center"
+                <div class="block mt-4">
+                    <label class="flex items-center">
+                        <Checkbox v-model:checked="form.remember" name="remember" />
+                        <span class="ml-2 text-sm text-gray-600">Remember me</span>
+                    </label>
+                </div>
+
+                <ButtonLink
+                    styling="secondary"
+                    size="default"
+                    class="mt-4 w-full justify-center"
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
                 >
                     Log in
-                </PrimaryButton>
-            </div>
+                </ButtonLink>
 
-            <div class="flex flex-col gap-4 mt-8">
-                <div class="flex items-center">
-                    <div class="flex-grow bg bg-gray-300 h-px"></div>
-                    <div class="flex-grow-0 mx-5 text">Or</div>
-                    <div class="flex-grow bg bg-gray-300 h-px"></div>
-                </div>
-                <a
-                    :href="route('auth.google')"
-                    class="bg-white border flex font-medium p-4 rounded text-center w-full"
-                >
-                    
-                    <div class="flex-grow -ml-6"><GoogleIcon class="inline-block"/> Continue with Google</div>
-                </a>
-                
-                <div class="mt-4 flex items-center justify-between">
-                    <div>
-                        No account?
-                        <Link
-                    :href="route('register')"
-                    class="text-sm text-gray-600 hover:text-gray-900"
-                >
-                Create one?
-                </Link>
-
+                <div class="flex flex-col gap-4 mt-8">
+                    <div class="flex items-center">
+                        <div class="flex-grow bg bg-gray-300 h-px"></div>
+                        <div class="flex-grow-0 mx-5 text">Or</div>
+                        <div class="flex-grow bg bg-gray-300 h-px"></div>
                     </div>
-                    <Link
-                    v-if="canResetPassword"
-                    :href="route('password.request')"
-                    class="text-sm text-gray-600 hover:text-gray-900"
-                >
-                    Forgot password?
-                </Link>
-
+                    <a :href="route('auth.google')" class="bg-white border flex font-medium p-4 rounded text-center w-full">
+                        <div class="flex-grow -ml-6"><GoogleIcon class="inline-block"/> Continue with Google</div>
+                    </a>
+                    
+                    <div class="mt-4 flex items-center justify-between">
+                        <ButtonLink :href="route('register')">
+                            Create account
+                        </ButtonLink>
+                        <ButtonLink v-if="canResetPassword" :href="route('password.request')">
+                            Forgot password?
+                        </ButtonLink>
+                    </div>
                 </div>
-            </div>
-        </form>
-       
-    </AuthenticationCard>
+            </form>
+        </AuthenticationCard>
 
-            <AuthBackground>
-                <template #imagetext>
-                    <p class="text-white">Lorem ipsum dolor sit amet consectetur. Adipiscing risus dignissim volutpat ut integer malesuada varius fringilla. Id lacus vel lectus viverra id feugiat. Et id sed vel tincidunt amet volutpat vulputate aliquet vitae. Faucibus adipiscing in dui arcu duis. Senectus semper donec dui sit eget ut facilisi ut.</p>
-                </template>
-           </AuthBackground>
-
-
-
+        <AuthBackground />
     </div>
-        
 </template>

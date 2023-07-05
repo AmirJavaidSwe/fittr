@@ -1,6 +1,5 @@
 <script setup>
 import { Link, useForm } from "@inertiajs/vue3";
-import SectionTitle from '@/Components/SectionTitle.vue';
 import { DateTime } from "luxon";
 import { faPencil, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import ButtonLink from '@/Components/ButtonLink.vue';
@@ -10,15 +9,7 @@ const props = defineProps({
 
 </script>
 <template>
-    <SectionTitle>
-        <template #title>
-            Admins
-        </template>
-    </SectionTitle>
-    <div class="flex items-center justify-between mb-6">
-        <ButtonLink :href="'/admin/settings/add-admin'" type="primary">Add new</ButtonLink>
-    </div>
-    <div class="relative overflow-x-auto shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+    <div class="relative overflow-x-auto shadow ring-1 ring-black ring-opacity-5 md:rounded-lg my-4">
         <table class="table-auto text-left border-collapse w-full">
             <thead class="uppercase bg-gray-100 text-sm whitespace-nowrap">
                 <tr>

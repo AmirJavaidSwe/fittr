@@ -6,7 +6,7 @@ import TextInput from "@/Components/TextInput.vue";
 import TextArea from '@/Components/TextArea.vue';
 import InputError from "@/Components/InputError.vue";
 import ActionMessage from "@/Components/ActionMessage.vue";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
+import ButtonLink from '@/Components/ButtonLink.vue';
 import Switcher from "@/Components/Switcher.vue";
 import Multiselect from '@vueform/multiselect';
 import Datepicker from '@vuepic/vue-datepicker';
@@ -284,7 +284,18 @@ const switchTab = (val) => {
                         <h2 class="text-xl">Please create a pack first in order to add pricing options</h2>
                     </template>
                     <template v-else>
-                        <h2 class="text-2xl">Pricing options ({{prices.length}})</h2>
+                        <div class="flex flex-wrap items-center justify-between">
+                            <h2 class="text-2xl">Pricing options ({{prices.length}})</h2>
+                            <ButtonLink 
+                                styling="primary"
+                                size="small"
+                                type="button"
+                                @click="showPriceForm = true"
+                                >
+                                Add new option
+                            </ButtonLink>
+
+                        </div>
                         <div v-if="prices.length" class="flex flex-wrap gap-4">
                             <div v-for="price in prices" class="shadow-md w-80">
                                 <div 
@@ -314,9 +325,6 @@ const switchTab = (val) => {
                                 </div>
                             </div>
                         </div>
-                        <button type="button" class="block text-green-500" @click="showPriceForm = !showPriceForm">
-                            Add new option
-                        </button>
 
                         <!-- NEW PRICE OPTION -->
                         <div v-if="showPriceForm" class="border border-dashed border-green-500 p-2 space-y-4">
@@ -492,12 +500,16 @@ const switchTab = (val) => {
                                 <InputError :message="formPrice.errors.is_active" class="mt-2"/>
                             </div>
 
-                            <PrimaryButton 
+                            <ButtonLink
+                                styling="primary"
+                                size="default"
                                 @click="savePrice"
                                 type="button"
                                 :class="{ 'opacity-25': formPrice.processing }"
                                 :disabled="formPrice.processing"
-                                >Create new option</PrimaryButton>
+                                >
+                                Create new option
+                            </ButtonLink>
                         </div>
                     </template>
                 </Tab>
@@ -509,10 +521,13 @@ const switchTab = (val) => {
                 Saved.
             </ActionMessage>
 
-            <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+            <ButtonLink
+                styling="secondary"
+                size="default"
+                :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                 <span v-if="isNew">Create</span>
                 <span v-else>Save changes</span>
-            </PrimaryButton>
+            </ButtonLink>
         </template>
     </FormSection>
 </template>
