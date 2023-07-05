@@ -2,7 +2,7 @@
 const props = defineProps({
     img: {
         type: String,
-        default: '/images/auth-background.png',
+        default: '/images/auth-background.webp',
     },
 });
 </script>
