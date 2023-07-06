@@ -32,7 +32,7 @@ router.on('navigate', (event) => {
       <font-awesome-icon :icon="faFileInvoiceDollar" class="w-4" />
       <div>Orders history</div>
     </NavLink>
-    <NavLink href="#">
+    <NavLink :href="route('ss.member.bookings.index', {subdomain: usePage().props?.business_seetings?.subdomain})">
       <font-awesome-icon :icon="faGears" class="w-4" />
       <div>My bookings</div>
     </NavLink>
