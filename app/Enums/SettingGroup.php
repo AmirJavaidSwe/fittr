@@ -8,6 +8,7 @@ enum SettingGroup
     case general_address;
     case general_formats;
     case integrations;
+    case fap;
     case service_store_general;
     case service_store_header;
     case service_store_seo;

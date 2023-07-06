@@ -8,6 +8,7 @@ use App\Enums\FormatType;
 use App\Enums\SettingKey;
 use App\Enums\SettingGroup;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Partner\SettingsFapRequest;
 use App\Http\Requests\Partner\SettingsGeneralDetailsRequest;
 use App\Http\Requests\Partner\SettingsGeneralAddressRequest;
 use App\Http\Requests\Partner\SettingsGeneralFormatsRequest;
@@ -433,5 +434,41 @@ class BusinessSettingController extends Controller
         }
 
         return $this->stripe_connect_service->generateAndShowLink($result->data->id);
+    }
+
+    // Memberships column / Fair Access Policy
+    public function fap(Request $request)
+    {
+        // Method to retrive array of group keys:
+        // $keys = SettingKey::keys(SettingGroup::fap->name);
+
+        // Method to get casted values from array of keys:
+        // $form_data = $this->service->getByKeys($keys);
+
+        return Inertia::render('Partner/Settings/Fap', [
+            'page_title' => __('Business Settings - Fair Access Policy'),
+            'header' => array(
+                [
+                    'title' => __('Settings'),
+                    'link' => route('partner.settings.index'),
+                ],
+                [
+                    'title' => '/',
+                    'link' => null,
+                ],
+                [
+                    'title' => __('Fair Access Policy'),
+                    'link' => null,
+                ],
+            ),
+            'form_data' => $this->service->getByGroup(SettingGroup::fap),
+        ]);
+    }
+
+    public function fapUpdate(SettingsFapRequest $request)
+    {
+        $this->service->update($request);
+
+        return $this->redirectBackSuccess(__('Settings saved'));
     }
 }
