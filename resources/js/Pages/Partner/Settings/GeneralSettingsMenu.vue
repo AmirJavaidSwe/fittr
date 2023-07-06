@@ -3,7 +3,7 @@ import { Link } from "@inertiajs/vue3";
 </script>
 
 <template>
-    <div v-if="false">
+    <div>
         <ul class="tabs-wrapper hidden">
             <li>
                 <Link
