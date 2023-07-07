@@ -17,6 +17,12 @@ class StoreBookingController extends Controller
     protected $order_by;
     protected $order_dir;
 
+    // TODO
+    // public function __construct(BookingService $service)
+    // {
+    //     $this->service = $service;
+    // }
+
     public function index(Request $request)
     {
         $this->search = $request->query('search', null);
@@ -44,7 +50,6 @@ class StoreBookingController extends Controller
 
     public function store(Request $request)
     {
-
         $class = ClassLesson::with(['bookings' => function ($query) {
             $query->where('user_id', auth()->user()?->id)->active();
         }])->find($request->class_id);
@@ -53,9 +58,14 @@ class StoreBookingController extends Controller
             return $this->redirectBackError('The class cannot be booked again.');
         }
 
-        if($class->start_date && now()->gte($class->start_date)) {
-            return $this->redirectBackError('The class cannot be booked after it has been started.');
+        //allow late booking, up to the end of class (TBD)
+        if (now()->greaterThan($class->end_date)) {
+            return $this->redirectBackError(__('This class can no longer be booked.'));
         }
+
+        // TODO
+        // $decision = $this->service->getReservationDecision($request);
+        // going forward we will add another step for member selecting the seat or space and any other extras before we save the model
 
         $booking = Booking::create([
             'class_id' => $request->class_id,
@@ -81,11 +91,14 @@ class StoreBookingController extends Controller
             return $this->redirectBackError('The booking cannot be cancelled after the class has been started.');
         }
 
-        if($booking->status == BookingStatus::CANCELLED->value) {
+        if($booking->status == BookingStatus::get('cancelled')) {
             return $this->redirectBackError('The booking cannot be cancelled again.');
         }
 
-        $booking->update(['status' => BookingStatus::CANCELLED->value]);
+        $booking->update([
+            'status' => BookingStatus::get('cancelled'),
+            'cancelled_at' => now(),
+        ]);
 
         return $this->redirectBackSuccess('The booking has been cancelled.');
     }

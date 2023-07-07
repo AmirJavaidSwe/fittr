@@ -3,7 +3,6 @@
 namespace App\Models\Partner;
 
 use App\Enums\BookingStatus;
-use App\Enums\PartnerUserRole;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -31,19 +30,26 @@ class Booking extends Model
     }
 
     // Local Scopes
-
     public function scopeActive($query)
     {
-        $query->where('status', BookingStatus::ACTIVE->value);
+        $query->where('status', BookingStatus::get('active'));
     }
 
-    // Mutators
+    public function scopeInactive($query)
+    {
+        $query->where('status', BookingStatus::get('inactive'));
+    }
+
+    public function scopeCancelled($query)
+    {
+        $query->where('status', BookingStatus::get('cancelled'));
+    }
+
+    // Accessors & Mutators
     protected function statusText(): Attribute
     {
         return Attribute::make(
-            get: function (mixed $value, array $attributes) {
-                return Str::ucfirst(strtolower(BookingStatus::from($attributes['status'])->name));
-            },
+            get: fn (mixed $value, array $attributes) => Str::ucfirst(__($attributes['status'])),
         );
     }
 }

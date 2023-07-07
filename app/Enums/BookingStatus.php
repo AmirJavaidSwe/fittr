@@ -4,14 +4,20 @@ namespace App\Enums;
 
 use Illuminate\Support\Str;
 
-enum BookingStatus: int
+enum BookingStatus: string
 {
-    case ACTIVE = 1;
-    case CANCELLED = 2;
+    case ACTIVE = 'active';
+    case INACTIVE = 'inactive';
+    case CANCELLED = 'cancelled';
 
     public static function all(): array
     {
-        return array_column(self::cases(), 'name', 'value');
+        return array_column(self::cases(), 'value', 'name');
+    }
+
+    public static function get(string $case): string
+    {
+        return self::from($case)->value;
     }
 
     public static function labels(): array

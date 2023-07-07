@@ -15,7 +15,6 @@ import { onBeforeMount, ref, watch } from 'vue';
 import SideModal from '@/Components/SideModal.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faClock, faUser, faUserAlt } from '@fortawesome/free-solid-svg-icons';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
 import AvatarValue from '@/Components/DataTable/AvatarValue.vue';
 
 
