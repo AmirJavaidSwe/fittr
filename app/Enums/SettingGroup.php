@@ -4,6 +4,7 @@ namespace App\Enums;
 
 enum SettingGroup
 {
+    case bookings;
     case general_details;
     case general_address;
     case general_formats;

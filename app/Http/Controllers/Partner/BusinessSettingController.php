@@ -8,6 +8,7 @@ use App\Enums\FormatType;
 use App\Enums\SettingKey;
 use App\Enums\SettingGroup;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Partner\SettingsBookingRequest;
 use App\Http\Requests\Partner\SettingsFapRequest;
 use App\Http\Requests\Partner\SettingsGeneralDetailsRequest;
 use App\Http\Requests\Partner\SettingsGeneralAddressRequest;
@@ -466,6 +467,36 @@ class BusinessSettingController extends Controller
     }
 
     public function fapUpdate(SettingsFapRequest $request)
+    {
+        $this->service->update($request);
+
+        return $this->redirectBackSuccess(__('Settings saved'));
+    }
+
+    // Bookings & Payments column / Bookings & Timetable
+    public function bookings(Request $request)
+    {
+        return Inertia::render('Partner/Settings/Bookings', [
+            'page_title' => __('Business Settings - Bookings & Timetable'),
+            'header' => array(
+                [
+                    'title' => __('Settings'),
+                    'link' => route('partner.settings.index'),
+                ],
+                [
+                    'title' => '/',
+                    'link' => null,
+                ],
+                [
+                    'title' => __('Bookings & Timetable'),
+                    'link' => null,
+                ],
+            ),
+            'form_data' => $this->service->getByGroup(SettingGroup::bookings),
+        ]);
+    }
+
+    public function bookingsUpdate(SettingsBookingRequest $request)
     {
         $this->service->update($request);
 

@@ -75,6 +75,13 @@ enum SettingKey: string
     case waiver_text = 'waiver_text';
     case enforce_waiver = 'enforce_waiver';
 
+    //Bookings & Payments
+    // GROUP_BOOKING
+    case days_max_booking = 'days_max_booking';
+    case days_max_timetable = 'days_max_timetable';
+
+    public const GROUP_BOOKING = SettingGroup::bookings->name;
+
     public const GROUP_GENERAL_DETAILS = SettingGroup::general_details->name;
     public const GROUP_GENERAL_ADDRESS = SettingGroup::general_address->name;
     public const GROUP_GENERAL_FORMATS = SettingGroup::general_formats->name;
@@ -105,6 +112,11 @@ enum SettingKey: string
     public function rules(): array
     {
         return match($this) {
+            //Bookings & Payments
+            // GROUP_BOOKING
+            static::days_max_booking =>  ['nullable', 'integer', 'min:1', 'max:365'],
+            static::days_max_timetable =>  ['nullable', 'integer', 'min:1', 'max:365'],
+
             //Business Settings
             // Business Details
             static::business_name => ['required','string'],
@@ -180,6 +192,9 @@ enum SettingKey: string
     public function group(): string
     {
         return match($this) {
+            static::days_max_booking,
+            static::days_max_timetable => self::GROUP_BOOKING,
+
             static::business_name,
             static::business_email,
             static::country_id,
@@ -242,6 +257,10 @@ enum SettingKey: string
     public static function keys($group): array
     {
         return match($group) {
+            self::GROUP_BOOKING => array_column([
+                static::days_max_booking,
+                static::days_max_timetable,
+            ], 'name'),
             self::GROUP_GENERAL_DETAILS => array_column([
                 static::business_name,
                 static::business_email,
@@ -350,7 +369,9 @@ enum SettingKey: string
             static::business_phone,
             static::date_format,
             static::time_format,
-            static::fap_max => CastType::integer->name,
+            static::fap_max,
+            static::days_max_booking,
+            static::days_max_timetable => CastType::integer->name,
 
             static::show_timezone,
             static::show_address,

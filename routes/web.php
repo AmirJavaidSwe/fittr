@@ -126,6 +126,8 @@ Route::domain('app.'.config('app.domain'))->group(function () {
             Route::put('/settings/integrations', [BusinessSettingController::class, 'integrationsUpdate']);
             Route::get('/settings/fap', [BusinessSettingController::class, 'fap'])->name('settings.fap');
             Route::put('/settings/fap', [BusinessSettingController::class, 'fapUpdate']);
+            Route::get('/settings/bookings', [BusinessSettingController::class, 'bookings'])->name('settings.bookings');
+            Route::put('/settings/bookings', [BusinessSettingController::class, 'bookingsUpdate']);
 
             Route::get('/settings/service-store-general', [BusinessSettingController::class, 'serviceStoreGeneral'])->name('settings.service-store-general');
             Route::put('/settings/service-store-general', [BusinessSettingController::class, 'serviceStoreGeneralUpdate']);
