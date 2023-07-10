@@ -46,7 +46,7 @@ const enabled = ref(props.modelValue);
             <span
                 aria-hidden="true"
                 :class="[
-                    modelValue ? 'translate-x-5' : '-translate-x-1',
+                    modelValue ? 'translate-x-5 bg-primary-500' : '-translate-x-1 bg-gray-50 border-2 switcher-nob',
                     'switcher-nob',
                 ]"
             />
