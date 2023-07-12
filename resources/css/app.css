@@ -14,7 +14,7 @@ html {
 .input-field,
 .multiselect,
 select {
-    @apply rounded-md lg:h-10 py-1 flex items-center min-h-full lg:text-base border border-gray-300 focus:border-[1.5px] focus:border-primary-500 focus:outline-none focus:shadow-none focus:ring-0;
+    @apply rounded-md lg:h-10 py-1 flex items-center lg:text-base border border-gray-300 focus:border-[1.5px] focus:border-primary-500 focus:outline-none focus:shadow-none focus:ring-0;
 }
 .dp__theme_light input {
     @apply lg:text-base border border-gray-300 focus:border-primary-500 rounded-md focus:ring-0 !important;
@@ -35,7 +35,11 @@ select {
 .switcher-button {
     @apply relative bg-primary-500/25 inline-flex h-4 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out;
 }
-.switcher-nob {
+
+.-translate-x-1.switcher-nob {
+    @apply pointer-events-none inline-block h-6 w-6 relative -top-1.5 transform rounded-full bg-primary-100 transition duration-200 ease-in-out focus:ring-offset-0 focus:ring-4 focus:ring-primary-100;
+}
+.translate-x-5.switcher-nob {
     @apply pointer-events-none inline-block h-6 w-6 relative -top-1.5 transform rounded-full bg-primary-500 transition duration-200 ease-in-out focus:ring-offset-0 focus:ring-4 focus:ring-primary-100;
 }
 .multiselect-caret{
@@ -45,20 +49,50 @@ select {
 .tabs-wrapper {
     @apply inline-flex items-center bg-white rounded-xl font-medium text-base mb-3;
 }
-.tabs-wrapper li a {
+.tabs-wrapper li a, .vertical-tabs li a {
     @apply py-3 px-4 block rounded-xl !no-underline flex items-center;
 }
 .tabs-wrapper li a svg {
     @apply mr-2;
 }
-.tabs-wrapper li a.active {
+.tabs-wrapper li a.active, .vertical-tabs li a.active {
     @apply bg-primary-500 text-white;
 }
-
+.startradiusnone{
+    @apply rounded-s-none !important;
+}
 /* App Layout */
 .headerIcon {
     @apply bg-primary-100 rounded-md flex items-center justify-center text-lg text-primary-500 mr-1 w-8 h-8 lg:w-11 lg:h-11 lg:text-xl;
 }
 .settingicons_bg{
     background-color: rgb(214 223 217 / var(--tw-bg-opacity));
+}
+
+div.vue-tel-input {
+    @apply shadow-none outline-none ring-0 rounded-md lg:h-10 py-1 flex items-center lg:text-base border border-gray-300 focus-within:border-[1.5px] focus-within:border-primary-500 !important;
+}
+
+.vti__dropdown {
+    background-color:transparent !important
+}
+.vti__input {
+    border-left: 1px solid !important;
+    margin-left: 3px !important;
+}
+
+.main-sidebar a:hover svg path, .main-sidebar a:hover svg rect {
+    @apply stroke-slate-50;
+}
+.main-sidebar .active svg rect,
+.main-sidebar .active svg path
+{
+    @apply stroke-cyan-500;
+    
+}
+.main-sidebar .active svg rect,
+.main-sidebar .active svg path
+{
+    @apply fill-lime-100;
+    
 }

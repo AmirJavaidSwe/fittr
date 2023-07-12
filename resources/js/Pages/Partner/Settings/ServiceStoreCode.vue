@@ -3,7 +3,7 @@ import { computed, ref, onMounted } from "vue";
 import { useForm } from "@inertiajs/vue3";
 import ServiceStoreMenu from "@/Pages/Partner/Settings/ServiceStoreMenu.vue";
 
-import SectionTitle from "@/Components/SectionTitle.vue";
+import SectionTitleGeneral from "@/Components/SectionTitleGeneral.vue";
 import FormSection from "@/Components/FormSection.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
@@ -37,19 +37,16 @@ const submitForm = () => {
 
         <template #form>
             <div class="col-span-full">
-                <SectionTitle>
-                    <template #title> Custom code </template>
-                </SectionTitle>
-                <div class="text-sm text-gray-600">
+                <SectionTitleGeneral>
+                    <template #title> <h2 class="text-3xl"><strong>Custom code</strong></h2> </template>
+                </SectionTitleGeneral>
+                <div class="text-lg text-gray-400">
                     <p>Add analytics, event tracking code and more.</p>
                 </div>
             </div>
             <!-- Google Analytics -->
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="meta_title" value="Google Analytics" />
-                <div class="text-sm text-gray-600">
-                    Google Universal Analytics Tracking ID.
-                </div>
                 <TextInput
                     id="logo_url"
                     v-model="form.google_analytics"
@@ -57,6 +54,9 @@ const submitForm = () => {
                     class="mt-1 block w-full"
                     placeholder="e.g UA-XXXXXXX"
                 />
+                <div class="text-sm text-gray-600 mt-2">
+                    Google Universal Analytics Tracking ID.
+                </div>
                 <InputError
                     :message="form.errors.google_analytics"
                     class="mt-2"
@@ -66,11 +66,6 @@ const submitForm = () => {
             <!-- Google Tag Manager -->
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="meta_title" value="Google Tag Manager" />
-                <div class="text-sm text-gray-600">
-                    With Google Tag Manager you can add and manage various types
-                    of tags (Google Analytics, Google Ads Conversion, Facebook
-                    Pixel and many more) with single integration.
-                </div>
                 <TextInput
                     id="logo_url"
                     v-model="form.google_gtag"
@@ -78,16 +73,18 @@ const submitForm = () => {
                     class="mt-1 block w-full"
                     placeholder="e.g GTM-1AXXXXX"
                 />
+                <div class="text-sm text-gray-600 mt-2">
+                    With Google Tag Manager you can add and manage various types
+                    of tags (Google Analytics, Google Ads Conversion, Facebook
+                    Pixel and many more) with single integration.
+                </div>
                 <InputError :message="form.errors.google_gtag" class="mt-2" />
             </div>
 
             <!-- Google AdSense - ads -->
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="meta_title" value="Google AdSense" />
-                <div class="text-sm text-gray-600">
-                    Add your publisher ID if you plan showing ads on your
-                    website.
-                </div>
+                
                 <TextInput
                     id="logo_url"
                     v-model="form.google_adsense"
@@ -95,6 +92,10 @@ const submitForm = () => {
                     class="mt-1 block w-full"
                     placeholder="e.g ca-pub-1234XXXXXXXXXXXX"
                 />
+                <div class="text-sm text-gray-600 mb-3 mt-2">
+                    Add your publisher ID if you plan showing ads on your
+                    website.
+                </div>
                 <InputError
                     :message="form.errors.google_adsense"
                     class="mt-2"
@@ -102,7 +103,7 @@ const submitForm = () => {
             </div>
 
             <!-- Facebook Pixel -->
-            <div class="col-span-6 sm:col-span-4">
+            <div class="col-span-6 sm:col-span-4 mt-8">
                 <InputLabel for="meta_title" value="Facebook (Meta) Pixel" />
                 <div class="text-sm text-gray-600">Pixel ID.</div>
                 <TextInput

@@ -16,6 +16,7 @@ import { faCog, faPlus } from '@fortawesome/free-solid-svg-icons';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import EditIcon from '@/Icons/Edit.vue';
 import DeleteIcon from '@/Icons/Delete.vue';
+import ActionsIcon from '@/Icons/ActionsIcon.vue';
 import DateValue from '@/Components/DataTable/DateValue.vue';
 import SideModal from '@/Components/SideModal.vue';
 
@@ -283,7 +284,7 @@ const removeUploadedFile = (id) => {
                     >
                         <template #trigger>
                             <button class="text-dark text-lg">
-                                <font-awesome-icon :icon="faCog" />
+                               <ActionsIcon />
                             </button>
                         </template>
 

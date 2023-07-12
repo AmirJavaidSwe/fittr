@@ -65,12 +65,10 @@ module.exports = {
                     900: "#480202",
                 },
                 dark: "#292D32",
-                grey: "#939393", //darker grey
+                grey: "#939393", // darker grey
+                mainBg: "#E8EAE9", // soft grey                
                 blue: "#1269FB",
-                mainBg: "#E8EAE9", //soft grey
-                lightblue: "#EAF1F8",
-                darkblue: "#4299E1",
-                
+                fileInputBg: "#EAF1F8",
 
             },
             fontFamily: {

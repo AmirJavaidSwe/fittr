@@ -29,7 +29,7 @@ const submitForm = () => {
     <Section bg="bg-white space-y-4">
         <div>
             <div
-                class="bg-white rounded bg-white bg-white-50 hover:bg-white-100 items-center p-3 pt-5 gap-4 relative transition rounded">
+                class="bg-white rounded bg-white bg-white-50 hover:bg-white-100 items-center p-8 pt-5 gap-4 relative transition rounded">
                 <h3 class="text-2xl"><strong>Stripe Connect</strong></h3>
                 <p class="text-base">
                     Connect your Stripe merchant account to let Appointment thing charge your customers as appointments are
@@ -43,13 +43,10 @@ const submitForm = () => {
                     <StipesIcon />
                     <div class="block h-px mt-4 mb-4 bg-gray-200 border-0 dark:bg-gray-700"></div>
                     <div class="flex flex-col">
-                        <h3 class="text-lg">
-                            <strong>Connect your Stripe Account.</strong>
-                        </h3>
+                        
                         <p class="text-gray-400 mt-2">
-                            <span class="mr-2 border-l-4 border-[#315D3F] rounded-md border-t-[4px]">
-                            </span> Allows your to accept Stripe Payments for appointments.
-                        <form @submit.prevent="submitForm" class="inline-flex float-right items-center">
+                            
+                        <form @submit.prevent="submitForm" class="inline-flex float-left items-center">
                             <ButtonLink styling="secondary" size="default" v-if="!has_account"
                                 :class="['float-right', 'opacity-25' && form.processing]" :disabled="form.processing"
                                 type="submit">
@@ -78,7 +75,7 @@ const submitForm = () => {
                         </p>
                     </div>
                 </div>
-                <div class="mt-2 bg-white rounded pt-5 flex gap-4 md:flex-col lg:flex-row sm:flex-col" v-if="has_account">
+                <div class="mt-2 bg-white rounded pt-5 flex gap-4 flex-col md:flex-col lg:flex-row sm:flex-col" v-if="has_account">
                     <div class="bg-gray-100 p-5 rounded">
                         <h2 class="flex justify-between items-center text-slate-400"><strong>PAYMENTS</strong>
                             <StipesIcon />

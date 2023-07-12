@@ -123,6 +123,32 @@ const submitForm = () => {
 </script>
 
 <template>
+
+<ServiceStoreMenu class="md:hidden" />
+    <FormSectionVertical @submitted="submitForm">
+        <template #tabsList>
+            <ServiceStoreVerticalTabs />
+        </template>
+        <template #heading>
+            <h3 class="text-2xl pt-3 pb-3 font-bold">Header and Footer</h3>
+        </template>
+        <template #form>
+
+        </template>
+        <template #actions>
+            <div class="flex mt-5">
+                <ActionMessage :on="form.recentlySuccessful" class="font-semibold mr-3 mt-3">
+                    Saved.
+                </ActionMessage>
+                <ButtonLink styling="secondary" size="default" :class="{ 'opacity-25': form.processing }"
+                    :disabled="form.processing">
+                    Save
+                </ButtonLink>
+            </div>
+        </template>
+    </FormSectionVertical>
+
+
     <FormSection @submitted="submitForm">
         <template #description>
             <ServiceStoreMenu />
@@ -138,7 +164,7 @@ const submitForm = () => {
                             <font-awesome-icon :icon="faArrowsDownToLine" />
                             Footer Settings
                         </div>
-                    </template>
+                    </template> 
                 </SectionTitle>
             </div>
             <!-- Logo -->

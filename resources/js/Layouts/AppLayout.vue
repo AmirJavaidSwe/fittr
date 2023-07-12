@@ -83,7 +83,7 @@ let back = function (e) {
                 <div class="flex h-full relative">
                     <!-- Sidebar -->
                     <div
-                        class="transition-all duration-500 fixed md:relative z-[99] top-0 left-0 h-full hidden md:block"
+                        class="transition-all main-sidebar duration-500 fixed md:relative z-[99] top-0 left-0 h-full hidden md:block"
                         :class="{
                             'md:w-0': sidebarCollapsed,
                             'md:w-56 xl:w-[220px] 2xl:w-[260px]':

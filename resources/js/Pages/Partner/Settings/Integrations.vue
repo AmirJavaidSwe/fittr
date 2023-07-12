@@ -2,7 +2,7 @@
 import { router, useForm } from "@inertiajs/vue3";
 import Section from "@/Components/Section.vue";
 import CardIcon from "@/Components/CardIcon.vue";
-import MailchimpIcon from "@/Icons/Mailchimp.vue";
+//import MailchimpIcon from "@/Icons/Mailchimp.vue";
 import SendgridIcon from "@/Icons/Sendgrid.vue";
 import SendinblueIcon from "@/Icons/Sendinblue.vue";
 
@@ -12,6 +12,9 @@ import InputError from "@/Components/InputError.vue";
 import Checkbox from "@/Components/Checkbox.vue";
 import ActionMessage from "@/Components/ActionMessage.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
+import MailchimpIcon from "@/Icons/MailchimpIcon.vue";
+import SendinblueNew from "@/Icons/SendinblueNew.vue";
+import SendinGridNew from "@/Icons/SendinGridNew.vue";
 
 const props = defineProps({
     form_data: Object,
@@ -259,6 +262,7 @@ const submitForm = () => {
                             class="mt-2"
                         />
                     </div>
+                    
                     <div
                         v-if="form.integration_sendinblue_status"
                         class="mt-4 space-y-4"
@@ -321,4 +325,224 @@ const submitForm = () => {
             </ButtonLink>
         </div>
     </form>
+
+            <div class="bg-white bg-white-50 p-3 pt-3 gap-4 relative transition rounded mt-4">
+                <div class="text-2xl font-bold tracking-tight text-gray-900 pt-2 pb-4">
+                    Marketing
+                </div>
+                <div class="bg-mainBg p-5 rounded mt-3 mb-3">
+                    <div class="flex flex-wrap justify-between items-center border-b-2 border-slate-300  pb-4">
+                        <div>
+                            <MailchimpIcon />
+                        </div>
+                            <div>
+                                <label class="flex items-center">
+                                <Checkbox
+                                    v-model:checked="
+                                        form.integration_sendinblue_status
+                                    "
+                                    :value="
+                                        form.integration_sendinblue_status
+                                            ? '1'
+                                            : '0'
+                                    "
+                                />
+                                <span class="ml-2 text-sm text-gray-700"
+                                    ><strong>Enable</strong></span
+                                >
+                            </label>
+                            <InputError
+                                :message="form.errors.integration_sendinblue_status"
+                                class="mt-2"
+                            />
+                        </div>
+                    </div>
+                    <div class="w-full pt-5">
+                        <h3 class="text-2xl pb-4"><strong>Mailchimp</strong></h3>
+                        <p><span class="mr-2 border-l-4 border-[#315D3F] rounded-md border-t-[4px]"></span>Run email campaigns for your customers. Everytime new user signs up, we will send a contact information to your Mailchimp account.</p>
+                    </div>
+                    <div class="grid gap-4 grid-cols-2 mt-5">
+                        <div class="grow-none">
+                            <InputLabel
+                                for="integration_sendinblue_api_key"
+                                value="API Key"
+                                
+                            />
+                            <TextInput
+                                id="integration_mailchimp_api_key"
+                                v-model="form.integration_sendinblue_api_key"
+                                type="text"
+                                class="mt-1 block w-full h-14"
+                            />
+                            <div class="text-sm text-gray-600 pt-2">
+                                Create your API key from Extras->API keys
+                            </div>
+                        </div>
+                        <div class="grow">
+                            <InputLabel
+                                for="integration_sendinblue_list_id"
+                                value="List ID"
+                            />
+                            <TextInput
+                                id="integration_mailchimp_list_id"
+                                v-model="form.integration_sendinblue_list_id"
+                                type="text"
+                                class="mt-1 block w-full h-14"
+                            />
+                            <div class="text-sm text-gray-600 pt-2">
+                                YEAR-Copy your Audience ID from Settings->Audience names and defaults-DAY with leading zeros
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--sendgrid-->
+                <div class="bg-mainBg p-5 rounded mt-3 mb-3">
+                    <div class="flex flex-wrap justify-between items-center border-b-2 border-slate-300  pb-4">
+                        <div>
+                            <SendinGridNew  />
+                        </div>
+                            <div>
+                                <label class="flex items-center">
+                                <Checkbox
+                                    v-model:checked="
+                                        form.integration_sendinblue_status
+                                    "
+                                    :value="
+                                        form.integration_sendinblue_status
+                                            ? '1'
+                                            : '0'
+                                    "
+                                />
+                                <span class="ml-2 text-sm text-gray-700"
+                                    ><strong>Enable</strong></span
+                                >
+                            </label>
+                            <InputError
+                                :message="form.errors.integration_sendinblue_status"
+                                class="mt-2"
+                            />
+                        </div>
+                    </div>
+                    <div class="w-full pt-5">
+                        <h3 class="text-2xl pb-4"><strong>Sendgrid</strong></h3>
+                        <p><span class="mr-2 border-l-4 border-[#315D3F] rounded-md border-t-[4px]"></span>Run email campaigns for your customers. Everytime new user signs up, we will send a contact information to your Sendgrid account.</p>
+                    </div>
+                    <div class="grid gap-4 grid-cols-2 mt-5">
+                        <div class="grow-none">
+                            <InputLabel
+                                for="integration_sendinblue_api_key"
+                                value="API Key"
+                                
+                            />
+                            <TextInput
+                                id="integration_mailchimp_api_key"
+                                v-model="form.integration_sendinblue_api_key"
+                                type="text"
+                                class="mt-1 block w-full h-14"
+                            />
+                            <div class="text-sm text-gray-600 pt-2">
+                                <ul>
+                                    <li>Create new restricted API key under Settings->API keys.</li>
+                                    <li>On Access Details list, expand Marketing and set access permission to Full access.</li>
+                                    <li>Save the API key and store it in safe place.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="grow">
+                            <InputLabel
+                                for="integration_sendinblue_list_id"
+                                value="List ID"
+                            />
+                            <TextInput
+                                id="integration_mailchimp_list_id"
+                                v-model="form.integration_sendinblue_list_id"
+                                type="text"
+                                class="mt-1 block w-full h-14"
+                            />
+                            <div class="text-sm text-gray-600 pt-2">
+                                <ul class="flex flex-wrap">
+                                    <li>Create new list from Marketing->Contacts and copy list ID.</li>
+                                    <li>List ID has a total of 36 characters (a.k.a UUID),
+                                        <span class="text-blue"><strong> e.g 12345678-abcd-abcd-abcd-1234567890ab.</strong></span></li>
+                                    <li class="break-all">Copy your list ID from browser, e.g.:
+                                        <span class="text-blue"><strong>https://mc.sendgrid.com/contacts/lists/12345678-abcd-abcd-abcd-1234567890ab</strong>
+                                        </span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--sendinblue-->
+                <div class="bg-mainBg p-5 rounded mt-3 mb-3">
+                    <div class="flex flex-wrap justify-between items-center border-b-2 border-slate-300  pb-4">
+                        <div>
+                            <SendinblueNew />
+                        </div>
+                            <div>
+                                <label class="flex items-center">
+                                <Checkbox
+                                    v-model:checked="
+                                        form.integration_sendinblue_status
+                                    "
+                                    :value="
+                                        form.integration_sendinblue_status
+                                            ? '1'
+                                            : '0'
+                                    "
+                                />
+                                <span class="ml-2 text-sm text-gray-700"
+                                    ><strong>Enable</strong></span
+                                >
+                            </label>
+                            <InputError
+                                :message="form.errors.integration_sendinblue_status"
+                                class="mt-2"
+                            />
+                        </div>
+                    </div>
+                    <div class="w-full pt-5">
+                        <h3 class="text-2xl pb-4"><strong>Sendinblue</strong></h3>
+                        <p><span class="mr-2 border-l-4 border-[#315D3F] rounded-md border-t-[4px]"></span>Run email campaigns for your customers. Everytime new user signs up, we will send a contact information to your Sendinblue account.</p>
+                    </div>
+                    <div class="grid gap-4 grid-cols-2 mt-5">
+                        <div class="grow-none">
+                            <InputLabel
+                                for="integration_sendinblue_api_key"
+                                value="API Key"
+                                
+                            />
+                            <TextInput
+                                id="integration_mailchimp_api_key"
+                                v-model="form.integration_sendinblue_api_key"
+                                type="text"
+                                class="mt-1 block w-full h-14"
+                            />
+                            <div class="text-sm text-gray-600 pt-2">
+                                Create your API key from Extras->API keys
+                            </div>
+                        </div>
+                        <div class="grow">
+                            <InputLabel
+                                for="integration_sendinblue_list_id"
+                                value="List ID"
+                            />
+                            <TextInput
+                                id="integration_mailchimp_list_id"
+                                v-model="form.integration_sendinblue_list_id"
+                                type="text"
+                                class="mt-1 block w-full h-14"
+                            />
+                            <div class="text-sm text-gray-600 pt-2">
+                                YEAR-Copy your Audience ID from Settings->Audience names and defaults-DAY with leading zeros
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--sendinblue-->
+            </div>
+
+
+
+
+
 </template>

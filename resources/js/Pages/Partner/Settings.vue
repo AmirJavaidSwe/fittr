@@ -31,151 +31,19 @@ import InvoicesIcon from "@/Icons/Invoices.vue";
 import NotificationsIcon from "@/Icons/Bell.vue";
 import LocationIcon from "@/Icons/Location.vue";
 import PackIcon from "@/Icons/Pack.vue";
-import StudiosIcon from "@/Icons/Studio.vue";
+//import StudiosIcon from "@/Icons/Studio.vue";
 import TaxesandChargesIcon from "@/Icons/Tax.vue";
 import ClassTypesIcon from "@/Icons/ClassType.vue";
 import IntegerationIcon from "@/Icons/Integeration.vue";
 import AmenityIcon from "@/Icons/Amenity.vue";
+import BookingIcon from "@/Icons/BookingIcon.vue";
+import StudiosIcon from "@/Icons/StudiosIcon.vue";
+import GeneralIcon from "@/Icons/GeneralIcon.vue";
 </script>
 
 <template>
     <Section bg="bg-white">
         <div class="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-3 gap-6 2xl:grid-cols-4 md:grid-cols-2">
-            <div class="space-y-4">
-                <div class="text-xl font-bold tracking-tight text-gray-900">
-                    Business Settings
-                </div>
-
-                <CardIcon :card-link="route('partner.settings.general-details')">
-                    <template #icon>
-                        <font-awesome-icon :icon="faGears" class="text-primary-500 h-8 w-8" />
-                    </template>
-
-                    <template #title>
-                        General
-                    </template>
-
-                    <template #default>
-                        Customise web store looks and features.
-                    </template>
-                </CardIcon>
-
-                <CardIcon :card-link="route('root')">
-                    <template #icon>
-                        <TaxesandChargesIcon />
-                    </template>
-
-                    <template #title>
-                        Taxes & Charges
-                    </template>
-
-                    <template #default>
-                        Add taxes for your services
-                    </template>
-                </CardIcon>
-
-                <CardIcon :card-link="route('partner.settings.integrations')">
-                    <template #icon>
-                        <IntegerationIcon />
-                    </template>
-
-                    <template #title>
-                        Integrations
-                    </template>
-
-                    <template #default>
-                        Connect external apps to your business
-                    </template>
-                </CardIcon>
-            </div>
-            <div class="space-y-4">
-                <div class="text-xl font-bold tracking-tight text-gray-900">
-                    Locations & Studios
-                </div>
-
-                <CardIcon :card-link="route('partner.locations.index')">
-                    <template #icon>
-                        <LocationIcon />
-                    </template>
-
-                    <template #title>
-                        Locations
-                    </template>
-
-                    <template #default>
-                        Manage locations
-                    </template>
-                </CardIcon>
-
-                <CardIcon :card-link="route('partner.studios.index')">
-                    <template #icon>
-                        <StudiosIcon />
-                    </template>
-
-                    <template #title>
-                        Studios
-                    </template>
-
-                    <template #default>
-                        Manage studios
-                    </template>
-                </CardIcon>
-
-                <CardIcon
-                    :card-link="route('partner.classtypes.index')"
-                    v-can="{ module: 'studio-class-type', roles: $page.props.user.user_roles, permission: 'viewAny', 'user': $page.props.user }"
-                    >
-                    <template #icon>
-                        <ClassTypesIcon />
-                    </template>
-
-                    <template #title>
-                        Class Types
-                    </template>
-
-                    <template #default>
-                        Manage studio class types
-                    </template>
-                </CardIcon>
-
-                <CardIcon
-                    :card-link="route('partner.amenity.index')"
-                    v-can="{ module: 'studio-amenities', roles: $page.props.user.user_roles, permission: 'viewAny', 'user': $page.props.user }"
-                    >
-                    <template #icon>
-                        <AmenityIcon />
-                    </template>
-
-                    <template #title>
-                        Amenities
-                    </template>
-
-                    <template #default>
-                        Manage amenities
-                    </template>
-                </CardIcon>
-
-            </div>
-            <div class="space-y-4">
-                <div class="text-xl font-bold tracking-tight text-gray-900">
-                    Memberships
-                </div>
-
-                <CardIcon :card-link="route('partner.packs.index')">
-                    <template #icon>
-                        <PackIcon />
-                    </template>
-
-                    <template #title>
-                        Pack
-                    </template>
-
-                    <template #default>
-                        Manage class packs and memberships
-                    </template>
-                </CardIcon>
-
-            </div>
             <div class="space-y-4">
                 <div class="text-xl font-bold tracking-tight text-gray-900">
                     Online Store
@@ -230,7 +98,7 @@ import AmenityIcon from "@/Icons/Amenity.vue";
                 <CardIcon card-link="#">
                     <template #icon>
                         <!-- <BookingIcon /> -->
-                        <font-awesome-icon :icon="faTicket" class="text-primary-500 h-8 w-8" />
+                        <BookingIcon />
                     </template>
 
                     <template #title>
@@ -316,6 +184,143 @@ import AmenityIcon from "@/Icons/Amenity.vue";
                     </template>
                 </CardIcon>
             </div>
+            <div class="space-y-4">
+                <div class="text-xl font-bold tracking-tight text-gray-900">
+                    Locations & Studios
+                </div>
+
+                <CardIcon :card-link="route('partner.locations.index')">
+                    <template #icon>
+                        <LocationIcon />
+                    </template>
+
+                    <template #title>
+                        Locations
+                    </template>
+
+                    <template #default>
+                        Manage locations
+                    </template>
+                </CardIcon>
+
+                <CardIcon :card-link="route('partner.studios.index')">
+                    <template #icon>
+                        <StudiosIcon />
+                    </template>
+
+                    <template #title>
+                        Studios
+                    </template>
+
+                    <template #default>
+                        Manage studios
+                    </template>
+                </CardIcon>
+
+                <CardIcon
+                    :card-link="route('partner.classtypes.index')"
+                    v-can="{ module: 'studio-class-type', roles: $page.props.user.user_roles, permission: 'viewAny', 'user': $page.props.user }"
+                    >
+                    <template #icon>
+                        <ClassTypesIcon />
+                    </template>
+
+                    <template #title>
+                        Class Types
+                    </template>
+
+                    <template #default>
+                        Manage studio class types
+                    </template>
+                </CardIcon>
+
+                <CardIcon
+                    :card-link="route('partner.amenity.index')"
+                    v-can="{ module: 'studio-amenities', roles: $page.props.user.user_roles, permission: 'viewAny', 'user': $page.props.user }"
+                    >
+                    <template #icon>
+                        <AmenityIcon />
+                    </template>
+
+                    <template #title>
+                        Amenities
+                    </template>
+
+                    <template #default>
+                        Manage amenities
+                    </template>
+                </CardIcon>
+
+            </div>
+            <div class="space-y-4">
+                <div class="text-xl font-bold tracking-tight text-gray-900">
+                    Business Settings
+                </div>
+
+                <CardIcon :card-link="route('partner.settings.general-details')">
+                    <template #icon>
+                        <GeneralIcon />
+                    </template>
+
+                    <template #title>
+                        General
+                    </template>
+
+                    <template #default>
+                        Business and operations settings
+                    </template>
+                </CardIcon>
+
+                <CardIcon :card-link="route('root')">
+                    <template #icon>
+                        <TaxesandChargesIcon />
+                    </template>
+
+                    <template #title>
+                        Taxes & Charges
+                    </template>
+
+                    <template #default>
+                        Add taxes for your services
+                    </template>
+                </CardIcon>
+
+                <CardIcon :card-link="route('partner.settings.integrations')">
+                    <template #icon>
+                        <IntegerationIcon />
+                    </template>
+
+                    <template #title>
+                        Integrations
+                    </template>
+
+                    <template #default>
+                        Connect external apps to your business
+                    </template>
+                </CardIcon>
+            </div>
+            
+            <div class="space-y-4">
+                <div class="text-xl font-bold tracking-tight text-gray-900">
+                    Memberships
+                </div>
+
+                <CardIcon :card-link="route('partner.packs.index')">
+                    <template #icon>
+                        <PackIcon />
+                    </template>
+
+                    <template #title>
+                        Pack
+                    </template>
+
+                    <template #default>
+                        Manage class packs and memberships
+                    </template>
+                </CardIcon>
+
+            </div>
+            
         </div>
     </Section>
 </template>

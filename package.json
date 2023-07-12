@@ -26,6 +26,7 @@
         "@vueform/multiselect": "^2.6.2",
         "@vuepic/vue-datepicker": "^3.6.5",
         "luxon": "^3.3.0",
+        "vue-tel-input": "^8.1.1",
         "vue3-dropzone": "^2.0.1"
     }
 }
