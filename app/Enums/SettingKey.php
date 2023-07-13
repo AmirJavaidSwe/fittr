@@ -38,6 +38,10 @@ enum SettingKey: string
     case integration_sendinblue_status = 'integration_sendinblue_status';
     case integration_sendinblue_api_key = 'integration_sendinblue_api_key';
     case integration_sendinblue_list_id = 'integration_sendinblue_list_id';
+
+    // GROUP_FAP
+    case fap_status = 'fap_status';
+    case fap_max = 'fap_max';
     
     //Online Store
     // GROUP_SERVICE_STORE_GENERAL
@@ -71,11 +75,20 @@ enum SettingKey: string
     case waiver_text = 'waiver_text';
     case enforce_waiver = 'enforce_waiver';
 
+    //Bookings & Payments
+    // GROUP_BOOKING
+    case days_max_booking = 'days_max_booking';
+    case days_max_timetable = 'days_max_timetable';
+
+    public const GROUP_BOOKING = SettingGroup::bookings->name;
+
     public const GROUP_GENERAL_DETAILS = SettingGroup::general_details->name;
     public const GROUP_GENERAL_ADDRESS = SettingGroup::general_address->name;
     public const GROUP_GENERAL_FORMATS = SettingGroup::general_formats->name;
 
     public const GROUP_INTEGRATIONS = SettingGroup::integrations->name;
+
+    public const GROUP_FAP = SettingGroup::fap->name;
 
     public const GROUP_SERVICE_STORE_GENERAL = SettingGroup::service_store_general->name;
     public const GROUP_SERVICE_STORE_HEADER = SettingGroup::service_store_header->name;
@@ -99,6 +112,11 @@ enum SettingKey: string
     public function rules(): array
     {
         return match($this) {
+            //Bookings & Payments
+            // GROUP_BOOKING
+            static::days_max_booking =>  ['nullable', 'integer', 'min:1', 'max:365'],
+            static::days_max_timetable =>  ['nullable', 'integer', 'min:1', 'max:365'],
+
             //Business Settings
             // Business Details
             static::business_name => ['required','string'],
@@ -130,6 +148,10 @@ enum SettingKey: string
             static::integration_sendinblue_status => ['boolean'],
             static::integration_sendinblue_api_key => ['nullable', 'string', 'max:255'],
             static::integration_sendinblue_list_id => ['nullable', 'string', 'max:255'],
+
+            // FAP
+            static::fap_status => ['boolean'],
+            static::fap_max =>  ['required', 'integer', 'min:1', 'max:10'],
 
             //Online Store
             // General
@@ -166,9 +188,13 @@ enum SettingKey: string
         };
     }
 
+    // get the group from key
     public function group(): string
     {
         return match($this) {
+            static::days_max_booking,
+            static::days_max_timetable => self::GROUP_BOOKING,
+
             static::business_name,
             static::business_email,
             static::country_id,
@@ -196,6 +222,9 @@ enum SettingKey: string
             static::integration_sendinblue_api_key,
             static::integration_sendinblue_list_id => self::GROUP_INTEGRATIONS,
 
+            static::fap_status,
+            static::fap_max => self::GROUP_FAP,
+
             static::subdomain,
             static::custom_domain => self::GROUP_SERVICE_STORE_GENERAL,
 
@@ -221,6 +250,83 @@ enum SettingKey: string
             static::waiver_text,
             static::enforce_waiver => self::GROUP_SERVICE_STORE_WAIVERS,
 
+        };
+    }
+
+    // get array of keys by group name
+    public static function keys($group): array
+    {
+        return match($group) {
+            self::GROUP_BOOKING => array_column([
+                static::days_max_booking,
+                static::days_max_timetable,
+            ], 'name'),
+            self::GROUP_GENERAL_DETAILS => array_column([
+                static::business_name,
+                static::business_email,
+                static::country_id,
+                static::business_phone,
+                static::show_timezone,
+                static::timezone,
+            ], 'name'),
+            self::GROUP_GENERAL_ADDRESS => array_column([
+                static::address_line1,
+                static::address_line2,
+                static::city,
+                static::state,
+                static::legal_country_id,
+                static::zip_code,
+            ], 'name'),
+            self::GROUP_GENERAL_FORMATS => array_column([
+                static::date_format,
+                static::time_format,
+            ], 'name'),
+            self::GROUP_INTEGRATIONS => array_column([
+                static::integration_mailchimp_status,
+                static::integration_mailchimp_api_key,
+                static::integration_mailchimp_list_id,
+                static::integration_sendgrid_status,
+                static::integration_sendgrid_api_key,
+                static::integration_sendgrid_list_id,
+                static::integration_sendinblue_status,
+                static::integration_sendinblue_api_key,
+                static::integration_sendinblue_list_id,
+            ], 'name'),
+            self::GROUP_FAP => array_column([
+                static::fap_status,
+                static::fap_max
+            ], 'name'),
+            self::GROUP_SERVICE_STORE_GENERAL => array_column([
+                static::subdomain,
+                static::custom_domain,
+            ], 'name'),
+            self::GROUP_SERVICE_STORE_HEADER => array_column([
+                static::logo,
+                static::logo_url,
+                static::favicon,
+                static::show_address,
+                static::show_phone,
+                static::show_email,
+                static::link_facebook,
+                static::link_instagram,
+                static::link_twitter,
+                static::link_youtube,
+            ], 'name'),
+            self::GROUP_SERVICE_STORE_SEO => array_column([
+                static::meta_title,
+                static::meta_description,
+            ], 'name'),
+            self::GROUP_SERVICE_STORE_CODE => array_column([
+                static::google_analytics,
+                static::google_gtag,
+                static::google_adsense,
+                static::fb_pixel,
+            ], 'name'),
+            self::GROUP_SERVICE_STORE_WAIVERS => array_column([
+                static::waiver_text,
+                static::enforce_waiver,
+            ], 'name'),
+            default => [],
         };
     }
 
@@ -262,7 +368,10 @@ enum SettingKey: string
             static::legal_country_id,
             static::business_phone,
             static::date_format,
-            static::time_format => CastType::integer->name,
+            static::time_format,
+            static::fap_max,
+            static::days_max_booking,
+            static::days_max_timetable => CastType::integer->name,
 
             static::show_timezone,
             static::show_address,
@@ -271,7 +380,8 @@ enum SettingKey: string
             static::integration_mailchimp_status,
             static::integration_sendgrid_status,
             static::integration_sendinblue_status,
-            static::enforce_waiver => CastType::boolean->name,
+            static::enforce_waiver,
+            static::fap_status => CastType::boolean->name,
         };
     }
 

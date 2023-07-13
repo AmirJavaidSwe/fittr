@@ -40,7 +40,7 @@ use App\Http\Controllers\Store\StorePackController;
 use App\Http\Controllers\Store\StorePaymentController;
 use App\Http\Controllers\Store\MemberDashboardController;
 use App\Http\Controllers\Store\InstructorDashboardController;
-
+use App\Http\Controllers\Store\StoreBookingController;
 
 Route::get('/auth/google', [UserProfileController::class, 'googleRedirect'])->middleware(['guest:'.config('fortify.guard')])->name('auth.google');
 Route::get('/auth/google-callback', [UserProfileController::class, 'googleAuth']);
@@ -124,6 +124,10 @@ Route::domain('app.'.config('app.domain'))->group(function () {
             Route::put('/settings/general-formats', [BusinessSettingController::class, 'generalFormatsUpdate']);
             Route::get('/settings/integrations', [BusinessSettingController::class, 'integrations'])->name('settings.integrations');
             Route::put('/settings/integrations', [BusinessSettingController::class, 'integrationsUpdate']);
+            Route::get('/settings/fap', [BusinessSettingController::class, 'fap'])->name('settings.fap');
+            Route::put('/settings/fap', [BusinessSettingController::class, 'fapUpdate']);
+            Route::get('/settings/bookings', [BusinessSettingController::class, 'bookings'])->name('settings.bookings');
+            Route::put('/settings/bookings', [BusinessSettingController::class, 'bookingsUpdate']);
 
             Route::get('/settings/service-store-general', [BusinessSettingController::class, 'serviceStoreGeneral'])->name('settings.service-store-general');
             Route::put('/settings/service-store-general', [BusinessSettingController::class, 'serviceStoreGeneralUpdate']);
@@ -179,7 +183,9 @@ Route::domain('app.'.config('app.domain'))->group(function () {
 Route::domain('{subdomain}.'.config('app.domain'))->middleware(['auth.subdomain'])->name('ss.')->group(function () {
 
     Route::get('/', [StorePublicController::class, 'index'])->name('home');
+
     Route::get('/classes', [StoreClassController::class, 'index'])->name('classes.index');
+
     Route::get('/instructors', [StoreInstructorController::class, 'index'])->name('instructors.index');
     Route::get('/locations', [StoreLocationController::class, 'index'])->name('locations.index');
     Route::get('/memberships', [StorePackController::class, 'index'])->name('memberships.index');
@@ -189,12 +195,16 @@ Route::domain('{subdomain}.'.config('app.domain'))->middleware(['auth.subdomain'
 
     //google auth
     Route::post('/auth/google-callback', [UserProfileController::class, 'processSubdomainRequest']);
-  
+
     Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
 
         //MEMBER
         Route::middleware(['auth.role:member'])->name('member.')->group(function () {
             Route::get('/dashboard', [MemberDashboardController::class, 'index'])->name('dashboard');
+
+            Route::get('/bookings', [StoreBookingController::class, 'index'])->name('bookings.index');
+            Route::post('/bookings', [StoreBookingController::class, 'store'])->name('bookings.store');
+            Route::post('/bookings/cancel', [StoreBookingController::class, 'cancel'])->name('bookings.cancel');
         });
 
         //INSTRUCTOR

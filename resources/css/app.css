@@ -38,12 +38,8 @@ select {
 .switcher-button {
     @apply relative bg-primary-500/25 inline-flex h-4 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out;
 }
-
-.-translate-x-1.switcher-nob {
-    @apply pointer-events-none inline-block h-6 w-6 relative -top-1.5 transform rounded-full bg-primary-100 transition duration-200 ease-in-out focus:ring-offset-0 focus:ring-4 focus:ring-primary-100;
-}
-.translate-x-5.switcher-nob {
-    @apply pointer-events-none inline-block h-6 w-6 relative -top-1.5 transform rounded-full bg-primary-500 transition duration-200 ease-in-out focus:ring-offset-0 focus:ring-4 focus:ring-primary-100;
+.switcher-nob {
+    @apply pointer-events-none inline-block h-6 w-6 relative -top-1.5 transform rounded-full transition duration-200 ease-in-out focus:ring-offset-0 focus:ring-4 focus:ring-primary-100;
 }
 .multiselect-caret{
     @apply bg-multiselect-caret bg-center bg-no-repeat w-2.5 h-4 py-px box-content mr-3.5 relative z-10 opacity-100 flex-shrink-0 flex-grow-0 transition-transform transform pointer-events-none rtl:mr-0 rtl:ml-3.5 !important;
@@ -68,6 +64,7 @@ select {
 .headerIcon {
     @apply bg-primary-100 rounded-md flex items-center justify-center text-lg text-primary-500 mr-1 w-8 h-8 lg:w-11 lg:h-11 lg:text-xl;
 }
+
 .settingicons_bg{
     background-color: rgb(214 223 217 / var(--tw-bg-opacity));
 }
@@ -91,5 +88,27 @@ div.vue-tel-input {
 .main-sidebar .active svg path
 {
     @apply stroke-black;
-    
+}
+
+/* Store Front Classes */
+
+.classes-timetable {
+    @apply flex flex-row overflow-x-scroll w-full mb-4 md:bg-white rounded-lg;
+}
+
+.classes-timetable::-webkit-scrollbar {
+    width: auto;
+    height: 14px;
+}
+
+.classes-timetable::-webkit-scrollbar-track {
+  background: #fff;
+  border-radius: 20px;
+}
+
+.classes-timetable::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.6);
+  height: 5px;
+  border-radius: 10px;
+  border: 3px solid #fff;
 }

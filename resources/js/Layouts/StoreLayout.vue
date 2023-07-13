@@ -84,7 +84,7 @@ const favicon_image_url = computed(() => {
             favicon_type.value="image/svg+xml";
             break;
     }
-    return usePage().props.asset_url + props.business_seetings.favicon;    
+    return usePage().props.asset_url + props.business_seetings.favicon;
 });
 
 const headerIsArray = computed(() => {
@@ -163,7 +163,7 @@ const headerIsArray = computed(() => {
             </div>
         </nav>
 
-        <div class="bg-gray-50 md:flex md:flex-grow">
+        <div class="bg-gray-50 md:flex md:flex-grow bg-mainBg">
             <component :is="LoggedinMenu" />
             <!-- Page Content -->
             <main class="py-8 sm:px-6 lg:px-8 space-y-8">

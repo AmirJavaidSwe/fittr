@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\Events\BookingConfirmation;
 use App\Events\BusinessSettingUpdated;
 use App\Events\SubscriptionCancelled;
 use App\Events\SubscriptionChanged;
 use App\Events\SubscriptionStarted;
+use App\Listeners\BookingConfirmationListener;
 use App\Listeners\BusinessSettingUpdatedListener;
 use App\Listeners\SubscriptionCancelledListener;
 use App\Listeners\SubscriptionChangedListener;
@@ -37,6 +39,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         BusinessSettingUpdated::class => [
             BusinessSettingUpdatedListener::class,
+        ],
+        BookingConfirmation::class => [
+            BookingConfirmationListener::class,
         ],
     ];
 
