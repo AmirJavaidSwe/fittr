@@ -17,6 +17,7 @@ import {
     // faDoorOpen,
     // faGamepad,
     // faWandMagicSparkles,
+    faLocationPinLock,
 } from '@fortawesome/free-solid-svg-icons';
 import Section from '@/Components/Section.vue';
 import CardIcon from '@/Components/CardIcon.vue';
@@ -316,6 +317,20 @@ import GeneralIcon from "@/Icons/GeneralIcon.vue";
 
                     <template #default>
                         Manage class packs and memberships
+                    </template>
+                </CardIcon>
+
+                <CardIcon :card-link="route('partner.settings.fap')">
+                    <template #icon>
+                        <font-awesome-icon :icon="faLocationPinLock" class="text-primary-500 h-8 w-8" />
+                    </template>
+
+                    <template #title>
+                        Fair Access Policy
+                    </template>
+
+                    <template #default>
+                        Unlimited packs FAP
                     </template>
                 </CardIcon>
 
