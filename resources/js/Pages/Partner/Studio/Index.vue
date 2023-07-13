@@ -17,6 +17,7 @@ import DeleteIcon from "@/Icons/Delete.vue";
 import { faCog, faPlus } from "@fortawesome/free-solid-svg-icons";
 import ButtonLink from "@/Components/ButtonLink.vue";
 import DateValue from "@/Components/DataTable/DateValue.vue";
+import ActionsIcon from '@/Icons/ActionsIcon.vue';
 
 const props = defineProps({
     disableSearch: {
@@ -222,7 +223,7 @@ const deleteItem = () => {
                     >
                         <template #trigger>
                             <button class="text-dark text-lg">
-                                <font-awesome-icon :icon="faCog" />
+                                <ActionsIcon />
                             </button>
                         </template>
 

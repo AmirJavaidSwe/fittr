@@ -369,6 +369,7 @@ const removeUploadedFile = (id) => {
                 :studios="studios"
                 :editMode="editMode"
                 @remove_uploaded_file="removeUploadedFile"
+                modal
             />
         </template>
         <template #footer>

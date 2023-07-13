@@ -60,7 +60,7 @@ const countriesOptions = computed(() => {
 </script>
 
 <template>
-    <GeneralSettingsMenu class="md:hidden" />
+    <GeneralSettingsMenu class="lg:hidden" />
     <FormSectionVertical @submitted="submitForm">
         <template #tabsList>
             <GeneralSettingsVerticalTabs />

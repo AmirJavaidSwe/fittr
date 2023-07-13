@@ -35,6 +35,11 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+    isDuplicate: {
+        type: Boolean,
+        default: false,
+        required: false,
+    },
 });
 
 const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -247,7 +252,7 @@ const studioChanged = () => {
             </div>
 
             <!-- repeat -->
-            <div v-if="isNew">
+            <div v-if="isNew || isDuplicate">
                 <Switcher
                     v-model="form.does_repeat"
                     title="Repeat"
@@ -317,6 +322,7 @@ const studioChanged = () => {
                 type="submit"
             >
                 <span v-if="isNew">Create</span>
+                <span v-else-if="isDuplicate">Duplicate</span>
                 <span v-else>Save changes</span>
             </ButtonLink>
         </template>

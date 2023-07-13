@@ -6,8 +6,8 @@ import AsideTabs from "@/Components/AsideTabs.vue";
 <template>
     <AsideTabs>
         <template #tabsList>
-            <li>
-                <Link
+            <li class="py-1">
+                <Link class="p-2 block hover:underline transition hover:bg-mainBg hover:text-dark"
                     :href="route('partner.settings.general-details')"
                     :class="
                         $page.component.endsWith('BusinessDetails') ? 'active' : ''
@@ -16,8 +16,8 @@ import AsideTabs from "@/Components/AsideTabs.vue";
                 >
                 <!-- <a class="p-2 block hover:underline transition active" href="#">Business Details</a> -->
             </li>
-            <li>
-                <Link
+            <li class="py-1">
+                <Link class="p-2 block hover:underline transition hover:bg-mainBg hover:text-dark"
                 :href="route('partner.settings.general-address')"
                 :class="
                     $page.component.endsWith('LegalAddress') ? 'active' : ''
@@ -25,8 +25,8 @@ import AsideTabs from "@/Components/AsideTabs.vue";
                 >Legal Address</Link
             >
             </li>
-            <li>
-                <Link
+            <li class="py-1">
+                <Link class="p-2 block hover:underline transition hover:bg-mainBg hover:text-dark"
                 :href="route('partner.settings.general-formats')"
                 :class="$page.component.endsWith('Formats') ? 'active' : ''"
                 >Formats</Link

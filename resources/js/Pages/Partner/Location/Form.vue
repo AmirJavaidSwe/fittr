@@ -25,6 +25,7 @@ const props = defineProps({
   countries: Array,
   studios: Array,
   editMode: Boolean,
+  modal: Boolean
 });
 const manager = computed(() => {
   return props.users.find((item) => item.id == props.form.manager_id);
@@ -238,10 +239,12 @@ const usersList = computed(() => {
     <Dropzone
       id="image"
       v-model="form.image"
+      :modal="props.modal"
       :uploaded_files="form.uploaded_images ? form.uploaded_images : []"
-      :accept="['.jpg', '.png', '.bmp']"
+      :accept="['.jpg', '.png', '.bmp', '.svg']"
       max_width="200"
       max_height="200"
+      :buttonText="'Select new image'"
       @remove_uploaded_file="$emit('remove_uploaded_file', $event)"
     />
     <InputError :message="form.errors.image" class="mt-2" />

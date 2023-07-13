@@ -4,7 +4,7 @@
         class="text-center whitespace-nowrap px-3 lg:px-3 2xl:px-5 py-3.5 lg:py-3 2xl:py-5 text-left text-md 2xl:text-xl font-semibold text-gray-900 cursor-pointer"
         @click="click"
     >
-        <div class="flex items-center" :class="justifyContent">
+        <div class="flex items-center justify-between" :class="justifyContent">
             {{ title }}
             <template v-if="currentSort">
                 <div v-if="arrowSide === 'desc'" class="ml-2 text-sm">

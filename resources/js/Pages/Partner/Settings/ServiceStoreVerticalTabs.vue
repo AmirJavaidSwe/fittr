@@ -6,27 +6,27 @@ import AsideTabs from "@/Components/AsideTabs.vue";
 <template>
     <AsideTabs>
         <template #tabsList>
-            <li>
-                <Link class="p-2 block hover:underline transition" :href="route('partner.settings.service-store-general')"
+            <li class="py-1">
+                <Link class="p-2 block hover:underline transition hover:bg-mainBg hover:text-dark" :href="route('partner.settings.service-store-general')"
                     :class="$page.component.endsWith('ServiceStoreGeneral')
                             ? 'active'
                             : ''
                         ">General</Link>
             </li>
-            <li>
-                <Link class="p-2 block hover:underline transition" :href="route('partner.settings.service-store-header')"
+            <li class="py-1">
+                <Link class="p-2 block hover:underline transition hover:bg-mainBg hover:text-dark" :href="route('partner.settings.service-store-header')"
                     :class="$page.component.endsWith('ServiceStoreHeader')
                             ? 'active'
                             : ''
                         ">Header & Footer</Link>
             </li>
-            <li>
-                <Link class="p-2 block hover:underline transition" :href="route('partner.settings.service-store-seo')"
+            <li class="py-1">
+                <Link class="p-2 block hover:underline transition hover:bg-mainBg hover:text-dark" :href="route('partner.settings.service-store-seo')"
                     :class="$page.component.endsWith('ServiceStoreSeo') ? 'active' : ''
                         ">SEO</Link>
             </li>
-            <li>
-                <Link class="p-2 block hover:underline transition" :href="route('partner.settings.service-store-code')"
+            <li class="py-1">
+                <Link class="p-2 block hover:underline transition hover:bg-mainBg hover:text-dark" :href="route('partner.settings.service-store-code')"
                     :class="$page.component.endsWith('ServiceStoreCode') ? 'active' : ''
                         ">Custom code</Link>
             </li>

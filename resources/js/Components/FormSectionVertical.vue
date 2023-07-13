@@ -11,10 +11,10 @@ const hasActions = computed(() => !!useSlots().actions);
 </script>
 
 <template>
-    <div class="bg-white shadow rounded mt-5">
-        <div class="md:grid md:grid-rows-1 md:grid-flow-col">
+    <div class="bg-white shadow rounded mt-5 w-ful">
+        <div class="flex">
             <slot name="tabsList" />
-            <div class="col-span-11 border-l-2 border-gray-200 p-5">
+            <div class="flex-initial w-full lg:w-9/12 border-l-2 border-gray-200 p-5">
                 <slot name="heading" />
                 <form @submit.prevent="$emit('submitted')" class="h-full w-full">
                     <slot name="form" />

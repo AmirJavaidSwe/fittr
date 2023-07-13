@@ -11,6 +11,7 @@ import ButtonLink from "@/Components/ButtonLink.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import EditIcon from "@/Icons/Edit.vue";
+import ActionsIcon from '@/Icons/ActionsIcon.vue';
 import {
     faUserLock,
     faPlus,
@@ -142,7 +143,7 @@ watch(() => form.search, runSearch);
                         >
                             <template #trigger>
                                 <button class="text-dark text-lg">
-                                    <font-awesome-icon :icon="faCog" />
+                                    <ActionsIcon />
                                 </button>
                             </template>
 

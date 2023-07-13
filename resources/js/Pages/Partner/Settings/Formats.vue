@@ -2,8 +2,6 @@
 import { computed } from "vue";
 import { useForm } from "@inertiajs/vue3";
 import GeneralSettingsMenu from "@/Pages/Partner/Settings/GeneralSettingsMenu.vue";
-
-import FormSection from "@/Components/FormSection.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import SelectInput from "@/Components/SelectInput.vue";
 import InputError from "@/Components/InputError.vue";
@@ -43,7 +41,7 @@ const submitForm = () => {
 
 <template>
 
-<GeneralSettingsMenu class="md:hidden" />
+    <GeneralSettingsMenu class="lg:hidden" />
     <FormSectionVertical @submitted="submitForm">
         <template #tabsList>
             <GeneralSettingsVerticalTabs />
