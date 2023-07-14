@@ -14,7 +14,7 @@ html {
 .input-field,
 .multiselect,
 select {
-    @apply rounded-md lg:h-10 py-1 flex items-center min-h-full lg:text-base border border-gray-400 focus:border-[1.5px] focus:border-primary-500 focus:outline-none focus:shadow-none focus:ring-0;
+    @apply rounded-md lg:h-10 py-1 flex items-center lg:text-base border border-gray-400 focus:border-[1.5px] focus:border-primary-500 focus:outline-none focus:shadow-none focus:ring-0;
 }
 .multiselect{
     @apply border-gray-400 !important;
