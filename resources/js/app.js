@@ -9,7 +9,6 @@ import AppLayout from './Layouts/AppLayout.vue';
 import StoreLayout from './Layouts/StoreLayout.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import directive from './directive';
-import VueTelInput from 'vue-tel-input';
 
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
@@ -49,7 +48,6 @@ createInertiaApp({
         app.use(plugin);
         app.use(ZiggyVue, Ziggy);
         app.component('font-awesome-icon', FontAwesomeIcon);
-        app.use(VueTelInput);
         app.use(directive); // Register the custom directive here
 
         return app.mount(el);

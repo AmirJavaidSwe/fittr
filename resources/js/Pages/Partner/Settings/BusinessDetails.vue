@@ -17,6 +17,7 @@ import Multiselect from "@vueform/multiselect";
 import "@vueform/multiselect/themes/tailwind.css";
 import CalendarIcon from "@/Icons/CalendarIcon.vue";
 import TimeIcon from "@/Icons/TimeIcon.vue";
+import { VueTelInput } from 'vue-tel-input';
 import 'vue-tel-input/vue-tel-input.css';
 
 const props = defineProps({
