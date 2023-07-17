@@ -66,8 +66,6 @@ export function useSwal({ flash, errors: propsErrors, options }) {
     watch(errors, (newValue, oldValue) => {
         if (Object.keys(errors.value).length == 0) return;
 
-        console.log(errors.value);
-
         let errorText = "<ul class='text-sm text-red-500'>";
         for(let [key, error] of Object.entries(errors.value)) {
             errorText += `<li>${error}</li>`;

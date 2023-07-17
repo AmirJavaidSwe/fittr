@@ -65,19 +65,6 @@ class StoreBookingController extends Controller
         ->utc();
         $maxBookingStart = $maxBookingStart->utc();
 
-        // dd(
-        //     $maxBookingStart->toDateTimeString(),
-        //     $class->start_date->toDateTimeString(),
-        //     $maxBookingEnd->toDateTimeString(),
-        //     $class->end_date->toDateTimeString(),
-        //     !$maxBookingStart->lte($class->start_date),
-        //     !$maxBookingEnd->gte($class->end_date),
-        //     !(
-        //         $maxBookingStart->lte($class->start_date)
-        //         && $maxBookingEnd->gte($class->end_date)
-        //     )
-        // );
-
         if(!$class) {
             return $this->redirectBackError(__('The class does not exist.'));
         }
