@@ -196,7 +196,7 @@ const deleteItem = () => {
         </template>
 
         <template #tableData>
-            <tr v-for="(studio, index) in studios.data">
+            <tr v-for="(studio, index) in studios.data" :key="index">
                 <table-data :title="studio.id" />
                 <table-data>
                     <Link

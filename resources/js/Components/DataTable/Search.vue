@@ -47,7 +47,7 @@ const props = defineProps({
                 id="search"
                 :value="modelValue"
                 @input="onInput"
-                class="block w-full rounded-md pl-10 pr-5 input-field"
+                class="block w-full rounded-md pl-10 pr-5 input-field min-h-full"
                 placeholder="Search"
             />
 

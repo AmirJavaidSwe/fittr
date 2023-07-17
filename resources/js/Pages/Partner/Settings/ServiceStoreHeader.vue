@@ -32,7 +32,7 @@ const props = defineProps({
 const form = useForm({
     _method: "PUT", //use spoofing for multipart/form-data support
     logo: null, //file
-    logo_url: props.form_data.logo_url.replace("https://", ""),
+    logo_url: props?.form_data?.logo_url?.replace("https://", ""),
     favicon: null, //file
     show_address: props.form_data.show_address,
     show_phone: props.form_data.show_phone,

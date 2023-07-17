@@ -32,6 +32,10 @@ use Storage;
 
 class BusinessSettingController extends Controller
 {
+
+    public $service;
+    public $stripe_connect_service;
+    
     public function __construct(BusinessSettingService $service, StripeConnectService $stripe_connect_service)
     {
         $this->service = $service;

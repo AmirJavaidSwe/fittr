@@ -272,7 +272,7 @@ import GeneralIcon from "@/Icons/GeneralIcon.vue";
                     </template>
                 </CardIcon>
 
-                <CardIcon :card-link="route('root')">
+                <CardIcon :card-link="route('partner.taxes.index')">
                     <template #icon>
                         <TaxesandChargesIcon />
                     </template>

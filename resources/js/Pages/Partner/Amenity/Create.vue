@@ -17,9 +17,6 @@ const storeAmenity = () => {
 
 let form = useForm({
     title: '',
-    icon: '',
-    contents: '',
-    ordering: '',
     status: false
 });
 

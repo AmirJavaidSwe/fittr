@@ -502,9 +502,6 @@ const closeAmenityCreateModal = () => {
 }
 const createAmenityFrom = useForm({
     title: '',
-    icon: '',
-    contents: '',
-    ordering: '',
     status: false
 });
 

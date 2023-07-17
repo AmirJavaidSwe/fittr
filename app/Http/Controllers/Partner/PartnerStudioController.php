@@ -11,6 +11,12 @@ use Inertia\Inertia;
 
 class PartnerStudioController extends Controller
 {
+
+    public $search;
+    public $per_page;
+    public $order_by;
+    public $order_dir;
+    
     /**
      * Display a listing of the resource.
      *

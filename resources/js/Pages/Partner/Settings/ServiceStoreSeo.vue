@@ -64,10 +64,10 @@ const submitForm = () => {
                     class="pt-2 pb-2 border-b-2 border-slate-300 text-xl 2xl:text-3xl font-bold tracking-tight text-gray-900">
                     Google search results preview </div>
                 <div>
-                    <div class="flex items-center gap-2 mb-2">
-                        <span class="w-7 h-7 mr-2">
+                    <div class="flex gap-2 mb-5">
+                        <span class="w-7 h-7 mr-5">
                             <div
-                                class="bg-secondary-500 p-1 text-white rounded-full flex items-center justify-center text-center uppercase font-semibold w-8 h-8 2xl:w-12 2xl:h-12 text-md lg:text-md 2xl:text-lg">
+                                class="bg-secondary-500 p-1 text-white rounded-full flex items-center justify-center text-center uppercase font-semibold w-11 h-11">
                                 DP</div>
                         </span>
                         <div>

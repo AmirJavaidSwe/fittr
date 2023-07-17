@@ -34,6 +34,7 @@ const props = defineProps({
     users: Array,
     amenities: Array,
     countries: Array,
+    ignored_countries: Array,
     studios: Array,
 });
 
@@ -366,6 +367,7 @@ const removeUploadedFile = (id) => {
                 :users="users"
                 :amenities="amenities"
                 :countries="countries"
+                :ignored_countries="ignored_countries"
                 :studios="studios"
                 :editMode="editMode"
                 @remove_uploaded_file="removeUploadedFile"

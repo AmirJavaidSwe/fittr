@@ -25,8 +25,9 @@
         "@inertiajs/vue3": "^1.0.8",
         "@vueform/multiselect": "^2.6.2",
         "@vuepic/vue-datepicker": "^3.6.5",
+        "intl-tel-input": "^18.1.8",
+        "libphonenumber-js": "^1.10.37",
         "luxon": "^3.3.0",
-        "vue-tel-input": "^8.1.1",
         "vue3-dropzone": "^2.0.1"
     }
 }

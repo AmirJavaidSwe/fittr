@@ -69,16 +69,12 @@ select {
     background-color: rgb(214 223 217 / var(--tw-bg-opacity));
 }
 
-div.vue-tel-input {
-    @apply shadow-none outline-none ring-0 rounded-md lg:h-10 py-1 flex items-center lg:text-base border border-gray-300 focus-within:border-[1.5px] focus-within:border-primary-500 !important;
+div.iti__selected-flag {
+    @apply pl-3 pr-5 border-e-2 border-e-gray-400 !important;
 }
 
-.vti__dropdown {
-    background-color:transparent !important
-}
-.vti__input {
-    border-left: 1px solid !important;
-    margin-left: 3px !important;
+div.iti .input-field {
+    @apply pl-20 !important
 }
 
 .main-sidebar a:hover svg path, .main-sidebar a:hover svg rect {
