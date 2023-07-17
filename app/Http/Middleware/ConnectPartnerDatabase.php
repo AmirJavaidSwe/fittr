@@ -49,6 +49,7 @@ class ConnectPartnerDatabase
                 SettingGroup::service_store_header,
                 SettingGroup::service_store_seo,
                 SettingGroup::service_store_code,
+                SettingGroup::bookings,
             );
             $settings = $this->business_settings_service->getByGroups(array_column($groups, 'name'));
             $request->session()->put('business_seetings', $settings);

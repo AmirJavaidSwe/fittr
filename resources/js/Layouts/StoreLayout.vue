@@ -17,6 +17,7 @@ import ButtonMobile from '@/Components/ButtonMobile.vue';
 import ButtonLink from "@/Components/ButtonLink.vue";
 
 import { useWindowSize } from '@/Composables/window_size.js';
+import { useSwal } from '@/Composables/swal';
 const { windowWidth, screen } = useWindowSize();
 
 const props = defineProps({
@@ -90,6 +91,12 @@ const favicon_image_url = computed(() => {
 const headerIsArray = computed(() => {
   return Array.isArray(header.value);
 })
+
+const flash = computed(() => usePage().props.flash);
+const errors = computed(() => usePage().props.errors);
+
+const { toast } = useSwal({flash, errors});
+
 </script>
 
 <template>
@@ -99,7 +106,7 @@ const headerIsArray = computed(() => {
         </AppHead>
 
         <Banner />
-        <FlashMessage :flash="$page.props.flash" :errors="$page.props.errors" />
+        <!-- <FlashMessage :flash="$page.props.flash" :errors="$page.props.errors" /> -->
 
         <!-- Navbar -->
         <nav class="bg-primary-500">
@@ -166,7 +173,7 @@ const headerIsArray = computed(() => {
         <div class="bg-gray-50 md:flex md:flex-grow bg-mainBg">
             <component :is="LoggedinMenu" />
             <!-- Page Content -->
-            <main class="py-8 sm:px-6 lg:px-8 space-y-8">
+            <main class="flex flex-col flex-grow py-8 sm:px-6 lg:px-8 space-y-8">
                 <div>Window width: {{ windowWidth }} screen: {{ screen }}</div>
                 <slot />
             </main>
