@@ -14,7 +14,7 @@ class StorePackController extends Controller
         return Inertia::render('Store/Packs', [
             'page_title' => __('Memberships'),
             'header' => __('Memberships'),
-            'packs' => Pack::with(['prices'])->get(),
+            'packs' => Pack::active()->with(['prices'])->get(),
         ]);
     }
 }

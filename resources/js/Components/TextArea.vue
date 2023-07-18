@@ -4,11 +4,11 @@ import { onMounted, ref } from 'vue';
 defineProps({
     modelValue: String,
     rows: {
-        type: Number,
+        type: [String, Number],
         default: 3,
     },
     cols: {
-        type: Number,
+        type: [String, Number],
         default: 20,
     }
 });
@@ -31,7 +31,7 @@ defineExpose({ focus: () => input.value.focus() });
         ref="input"
         :rows="rows"
         :cols="cols"
-        class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mb-5"
+        class="rounded-md py-1 lg:text-base border border-gray-300 focus:border-[1.5px] focus:border-primary-500 focus:outline-none focus:shadow-none focus:ring-0"
         :value="modelValue"
         @input="$emit('update:modelValue', $event.target.value)"
         ></textarea>

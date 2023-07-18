@@ -445,6 +445,8 @@ class BusinessSettingController extends Controller
     // Memberships column / Fair Access Policy
     public function fap(Request $request)
     {
+        $fap_packs = $this->service->getFapPacks();
+
         // Method to retrive array of group keys:
         // $keys = SettingKey::keys(SettingGroup::fap->name);
 
@@ -464,10 +466,11 @@ class BusinessSettingController extends Controller
                 ],
                 [
                     'title' => __('Fair Access Policy'),
-                    'link' => null,
+                    'link' => route('partner.settings.fap'),
                 ],
             ),
             'form_data' => $this->service->getByGroup(SettingGroup::fap),
+            'fap_packs' => $fap_packs,
         ]);
     }
 

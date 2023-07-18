@@ -5,6 +5,7 @@ namespace App\Models\Partner;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Support\Str;
 
 class PackPrice extends Model
 {
@@ -24,6 +25,10 @@ class PackPrice extends Model
         'is_active' => 'boolean',
         'is_expiring' => 'boolean',
         'is_ongoing' => 'boolean',
+        'is_unlimited' => 'boolean',
+        'is_fap' => 'boolean',
+        'is_renewable' => 'boolean',
+        'is_intro' => 'boolean',
         'sessions' => 'integer',
         'expiration' => 'integer',
         'unit_amount' => 'integer',
@@ -37,7 +42,11 @@ class PackPrice extends Model
      *
      * @var array
      */
-    // protected $appends = [];
+    protected $appends = [
+        'interval_human',
+        'price_formatted',
+        'price_formatted_full',
+    ];
 
     // Relationships
     public function priceable(): MorphTo
@@ -47,7 +56,25 @@ class PackPrice extends Model
     }
 
     // Accessors
+    public function getIntervalHumanAttribute(): ?string
+    {
+        if(empty($this->interval_count)){
+            return null;
+        }
+        $string = $this->interval_count == 1 ? __('per') : __('every');
+        $string .= ($this->interval_count == 1 ? '' : ' '.$this->interval_count).' '. __(Str::plural($this->interval, $this->interval_count));
+        return $string;
+    }
 
+    public function getPriceFormattedAttribute(): ?string
+    {
+        return $this->currency_symbol.number_format($this->price, 2);
+    }
+
+    public function getPriceFormattedFullAttribute(): ?string
+    {
+        return $this->price_formatted.' '.strtoupper($this->currency);
+    }
 
     //Local scopes
 
