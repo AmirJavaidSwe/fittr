@@ -41,6 +41,9 @@ select {
 .multiselect-caret{
     @apply bg-multiselect-caret bg-center bg-no-repeat w-2.5 h-4 py-px box-content mr-3.5 relative z-10 opacity-100 flex-shrink-0 flex-grow-0 transition-transform transform pointer-events-none rtl:mr-0 rtl:ml-3.5 !important;
 }
+.multiselect .multiselect-dropdown{
+    overflow-y: auto;
+}
 /* Tabs Styles */
 .tabs-wrapper {
     @apply inline-flex items-center bg-white rounded-xl font-medium text-base mb-3;
