@@ -33,10 +33,10 @@ class StoreClassController extends Controller
             'header' => __('Classes'),
             'classes' => ClassLesson::active()
                 ->with($eagerLoad)
-                ->when(count($request->get('class_type', [])), function($query) use($request) {
+                ->when(count($request->class_type ?? []), function($query) use($request) {
                     $query->whereIn('class_type_id', $request->class_type);
                 })
-                ->when(count($request->get('instructor', [])), function($query) use($request) {
+                ->when(count($request->instructor ?? []), function($query) use($request) {
                     $query->whereIn('instructor_id', $request->instructor);
                 })
                 // Left commented for discussion

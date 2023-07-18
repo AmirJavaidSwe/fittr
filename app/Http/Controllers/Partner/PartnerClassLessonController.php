@@ -91,14 +91,14 @@ class PartnerClassLessonController extends Controller
                     $query->whereIn('instructor_id', $request->instructor_id);
                 });
             }
-            
+
             // apply class_type filters
             if($request->has('class_type_id') && count($request->class_type_id)) {
                 $query->where(function ($query) use ($request) {
                     $query->whereIn('class_type_id', $request->class_type_id);
                 });
             }
-            
+
             // apply studio_id filters
             if($request->has('studio_id') && count($request->studio_id)) {
                 $query->where(function ($query) use ($request) {
@@ -107,14 +107,14 @@ class PartnerClassLessonController extends Controller
             }
             // apply off_peak filter
             if($request->has('is_off_peak')) {
-                $is_off_peak =  $request->is_off_peak == 'false' ? 0 : 1;
-                if($is_off_peak) {
+                $is_off_peak =  $request->is_off_peak;
+                if(is_numeric($is_off_peak)) {
                     $query->where(function ($query) use ($request, $is_off_peak) {
                         $query->where('is_off_peak', $is_off_peak);
                     });
                 }
             }
-            
+
             // apply off_peak filter
             if($request->has('status')) {
                 $query->where(function ($query) use ($request) {

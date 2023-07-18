@@ -69,7 +69,7 @@ const form = useForm({
     instructor_id: [],
     class_type_id: [],
     studio_id: [],
-    is_off_peak: false,
+    is_off_peak: '',
     runFilter: false,
     per_page: props.per_page,
     order_by: props.order_by,
@@ -801,7 +801,7 @@ const dropdownToggled = ($event) => {
             />
         </template>
     </SideModal>
-    
+
     <!-- Delete Confirmation Modal -->
     <ConfirmationModal :show="itemDeleting" @close="itemDeleting = false">
         <template #title> Confirmation required </template>
@@ -837,7 +837,7 @@ const dropdownToggled = ($event) => {
         <template #close>
             <CloseModal @click="closeInstructorCreateModal" />
         </template>
-    
+
         <template #content>
             <InstructorCreateForm :form="createInstructorFrom" :submitted="storeInstructor" modal />
         </template>
@@ -848,7 +848,7 @@ const dropdownToggled = ($event) => {
         <template #close>
             <CloseModal @click="closeClassTypeCreateModal" />
         </template>
-    
+
         <template #content>
             <ClassTypeCreateForm :form="createClassTypeFrom" :submitted="storeClassType" modal />
         </template>
@@ -859,7 +859,7 @@ const dropdownToggled = ($event) => {
         <template #close>
             <CloseModal @click="closeStudioCreateModal" />
         </template>
-    
+
         <template #content>
             <StudioCreateForm :form="createStudioFrom" :locations="locationList" @create-new-location='showLocationCreateModal = true' :submitted="storeStudio" modal />
         </template>
@@ -870,9 +870,9 @@ const dropdownToggled = ($event) => {
         <template #close>
             <CloseModal @click="closeLocationCreateModal" />
         </template>
-    
+
         <template #content>
-            <LocatoonCreateForm 
+            <LocatoonCreateForm
                 :form="createLocationFrom"
                 :users="usersList"
                 :amenities="amenities"
@@ -903,7 +903,7 @@ const dropdownToggled = ($event) => {
         <template #close>
             <CloseModal @click="closeGMCreateModal" />
         </template>
-    
+
         <template #content>
             <GMCreateForm :form="createGMFrom" :roles="rolesList" @create-new-role='showRoleCreateModal = true' :submitted="storeGM" modal />
         </template>
@@ -914,7 +914,7 @@ const dropdownToggled = ($event) => {
         <template #close>
             <CloseModal @click="closeRoleCreateModal" />
         </template>
-    
+
         <template #content>
             <RoleCreateForm :form="createRoleFrom" :system-modules="systemModules" @submitted="storeRole" modal />
         </template>
@@ -925,7 +925,7 @@ const dropdownToggled = ($event) => {
         <template #close>
             <CloseModal @click="closeAmenityCreateModal" />
         </template>
-    
+
         <template #content>
             <AmenityCreateForm :form="createAmenityFrom" @submitted="storeAmenity" modal />
         </template>

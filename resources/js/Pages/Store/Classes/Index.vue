@@ -37,7 +37,7 @@ const props = defineProps({
 const form = useForm({
     class_type: [],
     instructor: [],
-    time: '',
+    is_off_peak: '',
     date: '',
 });
 
@@ -68,8 +68,8 @@ onBeforeMount(() => {
         form.class_type = queryParams.get('class_type');
     if(queryParams.get('instructor'))
         form.instructor = queryParams.get('instructor');
-    if(queryParams.get('time'))
-        form.time = queryParams.get('time');
+    // if(queryParams.get('time'))
+    //     form.time = queryParams.get('time');
 
     let start = DateTime.now().setZone(props.business_seetings.timezone);
     let end = DateTime.now().setZone(props.business_seetings.timezone);
@@ -187,8 +187,8 @@ const handleMoved = (splide, index, prevIndex) => {
             <!-- <div class="text-xl mb-4">
                 Active classes list
             </div> -->
-            <div class="flex flex-col md:flex-row md:divide-x-2 md:divide-gray-300 md:border-b-2 md:border-gray-300 mb-3">
-                <div class="flex flex-col md:w-1/3 md:pr-3 h-full mb-4">
+            <div class="flex flex-row md:flex-row md:divide-x-2 md:divide-gray-300 md:border-b-2 md:border-gray-300 mb-3">
+                <div class="flex flex-col md:w-[30%] md:pr-3 h-full mb-4">
                     <InputLabel value="Class Type" for="class_type" />
                     <Multiselect
                         v-model="form.class_type"
@@ -198,7 +198,7 @@ const handleMoved = (splide, index, prevIndex) => {
                         :show-labels="true"
                         placeholder="Select Class Type"
                         mode="tags"
-                        :style="{height: (form.class_type.length ? 'auto' : '')}"
+                        :style="{height: 'auto', padding: 0}"
                     >
                         <template v-slot:singlelabel="{ value }">
                             <div class="multiselect-single-label flex items-center">
@@ -211,7 +211,7 @@ const handleMoved = (splide, index, prevIndex) => {
                         </template>
                     </Multiselect>
                 </div>
-                <div class="flex flex-col md:w-1/3 md:px-3 h-full mb-4">
+                <div class="flex flex-col md:w-[30%] md:px-3 h-full mb-4">
                     <InputLabel value="Instructor" for="instructor" />
                     <Multiselect
                         v-model="form.instructor"
@@ -221,7 +221,7 @@ const handleMoved = (splide, index, prevIndex) => {
                         :show-labels="true"
                         placeholder="Select Instructor"
                         mode="tags"
-                        :style="{height: (form.instructor.length ? 'auto' : '')}"
+                        :style="{height: 'auto', padding: 0}"
                     >
                         <template v-slot:singlelabel="{ value }">
                             <div class="multiselect-single-label flex items-center">
@@ -236,19 +236,23 @@ const handleMoved = (splide, index, prevIndex) => {
                         </template>
                     </Multiselect>
                 </div>
-                <div class="flex flex-col md:w-1/3 md:pl-3 h-full mb-4">
-                    <InputLabel value="Any Time" for="time" />
+                <div class="flex flex-col md:w-[30%] md:px-3 h-full mb-4">
+                    <InputLabel value="Peak/Off Peak" for="is_off_peak" />
                     <Multiselect
-                        id="time"
-                        v-model="form.time"
+                        id="is_off_peak"
+                        v-model="form.is_off_peak"
                         :options="[
-                            {value: 'am', label: 'AM'},
-                            {value: 'pm', label: 'PM'},
+                            {value: '0', label: 'Peak'},
+                            {value: '1', label: 'Off Peak'},
                         ]"
                         :searchable="true"
                         class="mt-1"
-                        placeholder="Select time"
+                        placeholder="Select Peak/Off Peak"
+                        :style="{height: 'auto', padding: 0}"
                     />
+                </div>
+                <div class="flex md:w-[10%] md:pl-3 h-full mb-4">
+                    <ButtonLink class="md:mt-5" styling="primary" size="default" @click="e => { form.class_type = []; form.instructor = []; form.is_off_peak = ''; }">Reset</ButtonLink>
                 </div>
             </div>
             <Splide
@@ -309,7 +313,7 @@ const handleMoved = (splide, index, prevIndex) => {
                         v-for="(item, index) in classes[time.toSQLDate()]"
                         class="flex flex-col cursor-pointer"
                         @click="showModal(item)"
-                        :class="{'hidden': form.time && DateTime.fromISO(item.start_date).setZone(business_seetings.timezone).toFormat('a').toUpperCase() != form.time.toUpperCase()}"
+                        :class="{'hidden': form.is_off_peak && item.is_off_peak != form.is_off_peak}"
                     >
                         <div class="flex flex-col bg-white rounded-md p-3 mb-3" :class="{'bg-yellow-300': classDetails.id == item.id}">
                             <div class="flex flex-row justify-between mb-4">
