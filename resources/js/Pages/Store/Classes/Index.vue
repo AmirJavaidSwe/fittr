@@ -138,7 +138,7 @@ const cancelBooking = () => {
     });
 }
 
-const { windowWidth, windowHeight, screen } = useWindowSize();
+const { screen } = useWindowSize();
 
 const calendarPerPage = computed(() => {
     switch(true) {
@@ -151,9 +151,9 @@ const calendarPerPage = computed(() => {
         case screen.value == 'md':
             return 4;
         case screen.value == 'sm':
-            return 5;
+            return 2;
         default:
-            return 4;
+            return 1;
     };
 });
 
@@ -187,8 +187,8 @@ const handleMoved = (splide, index, prevIndex) => {
             <!-- <div class="text-xl mb-4">
                 Active classes list
             </div> -->
-            <div class="flex flex-row md:flex-row md:divide-x-2 md:divide-gray-300 md:border-b-2 md:border-gray-300 mb-3">
-                <div class="flex flex-col md:w-[30%] md:pr-3 h-full mb-4">
+            <div class="flex flex-wrap gap-4 mb-3">
+                <div class="w-full md:flex-1">
                     <InputLabel value="Class Type" for="class_type" />
                     <Multiselect
                         v-model="form.class_type"
@@ -211,7 +211,7 @@ const handleMoved = (splide, index, prevIndex) => {
                         </template>
                     </Multiselect>
                 </div>
-                <div class="flex flex-col md:w-[30%] md:px-3 h-full mb-4">
+                <div class="w-full md:flex-1">
                     <InputLabel value="Instructor" for="instructor" />
                     <Multiselect
                         v-model="form.instructor"
@@ -236,7 +236,7 @@ const handleMoved = (splide, index, prevIndex) => {
                         </template>
                     </Multiselect>
                 </div>
-                <div class="flex flex-col md:w-[30%] md:px-3 h-full mb-4">
+                <div class="w-full md:flex-1">
                     <InputLabel value="Peak/Off Peak" for="is_off_peak" />
                     <Multiselect
                         id="is_off_peak"
@@ -251,9 +251,7 @@ const handleMoved = (splide, index, prevIndex) => {
                         :style="{height: 'auto', padding: 0}"
                     />
                 </div>
-                <div class="flex md:w-[10%] md:pl-3 h-full mb-4">
-                    <ButtonLink class="md:mt-5" styling="primary" size="default" @click="e => { form.class_type = []; form.instructor = []; form.is_off_peak = ''; }">Reset</ButtonLink>
-                </div>
+                <ButtonLink class="self-end" styling="primary" size="default" @click="e => { form.class_type = []; form.instructor = []; form.is_off_peak = ''; }">Reset</ButtonLink>
             </div>
             <Splide
                 class="classes-timetable"
