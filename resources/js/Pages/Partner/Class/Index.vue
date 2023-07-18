@@ -232,7 +232,7 @@ const handleUpdateForm = (data) => {
 const handleDuplicateForm = (data) => {
     showDuplicateClassModal.value = true;
     duplicateClassForm.title = data.title;
-    duplicateClassForm.status = data.status;
+    duplicateClassForm.status = 'inactive';
     duplicateClassForm.start_date = data.start_date;
     duplicateClassForm.end_date = data.end_date;
     duplicateClassForm.instructor_id = data.instructor_id;
