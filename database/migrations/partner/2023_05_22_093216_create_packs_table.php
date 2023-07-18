@@ -22,8 +22,6 @@ return new class extends Migration
             $table->string('stripe_product_id')->nullable();
             $table->boolean('is_active')->default(false)->comment('bool'); //global state
             $table->boolean('is_restricted')->default(false)->comment('bool'); //Indicator for book session limitations: off-peak, class types
-            $table->boolean('is_unlimited')->default(false)->comment('bool'); //If true, plan does not produce any session/credits and subscriber can book sessions without limitations
-            $table->boolean('is_fap')->default(false)->comment('bool'); //If true and is_unlimited is also true, bookings are limited by Fair access policy            
             $table->boolean('is_private')->default(false)->comment('bool');
             $table->json('restrictions')->nullable()->comment('json'); //Object having applicable restrictions by class type
             $table->string('private_url', 512)->nullable(); //must be set if is_private

@@ -74,11 +74,11 @@ enum PackType
                 case self::class_lesson->name:
                     return in_array($item['value'], $grouped);
                 case self::service->name:
-                    return in_array($item['value'], $grouped );
+                    return in_array($item['value'], $grouped);
                 case self::hybrid->name:
-                    return in_array($item['value'], $grouped );
+                    return in_array($item['value'], $grouped);
                 case self::corporate->name:
-                    return $for === $item['value'];;
+                    return $for === $item['value'];
                 default:
                     return false;
             }
