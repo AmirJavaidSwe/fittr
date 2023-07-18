@@ -47,7 +47,7 @@ Route::get('/auth/google-callback', [UserProfileController::class, 'googleAuth']
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'webhook']);
 
 //Routes to complete partner onboarding. Accessible and auto-redirected to from 'ConnectPartnerDatabase' middleware when user has no business relation.
-Route::middleware(['auth', 'verified'])->name('partner.onboarding.')->group(function () {
+Route::middleware(['auth', 'auth.source:partner', 'verified'])->name('partner.onboarding.')->group(function () {
     Route::get('/onboarding', [PartnerOnboardController::class, 'index'])->name('index');
     Route::post('/onboarding', [PartnerOnboardController::class, 'update'])->name('update');
 });
@@ -160,7 +160,7 @@ Route::domain('app.'.config('app.domain'))->group(function () {
             Route::resource('packs', PartnerPackController::class);
             Route::post('/packs/{pack}/duplicate', [PartnerPackController::class, 'duplicate'])->name('packs.duplicate');
             Route::post('/packs/{pack}/price', [PartnerPackController::class, 'storePrice'])->name('packs.price.store');
-            Route::put('/packs/{pack}/price/{price}', [PartnerPackController::class, 'updatePrice'])->name('packs.price.update');
+            Route::put('/packs/price/{price}', [PartnerPackController::class, 'updatePrice'])->name('packs.price.update');
 
             Route::get('/exports', [PartnerExportController::class, 'index'])->name('exports.index');
             Route::get('/exports/{export}', [PartnerExportController::class, 'show'])->name('exports.show');

@@ -8,9 +8,11 @@ use App\Enums\StripePriceType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Partner\PackFormRequest;
 use App\Http\Requests\Partner\PriceFormRequest;
+use App\Http\Requests\Partner\PriceUpdateRequest;
 use App\Models\Partner\Pack;
 use App\Models\Partner\ClassType;
 use App\Models\Partner\PackPrice;
+use App\Services\Partner\PackService;
 use App\Services\Shared\StripeProductService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -19,9 +21,10 @@ use Inertia\Inertia;
 class PartnerPackController extends Controller
 {
 
-    public function __construct(StripeProductService $stripe_product_service)
+    public function __construct(PackService $pack_service, StripeProductService $stripe_product_service)
     {
         $this->middleware('business.ready');
+        $this->pack_service = $pack_service;
         $this->stripe_product_service = $stripe_product_service;
     }
 
@@ -76,7 +79,7 @@ class PartnerPackController extends Controller
                 ],
                 [
                     'title' => __('Membership packs'),
-                    'link' => null,
+                    'link' => route('partner.packs.index'),
                 ],
             ),
             'classtypes' => ClassType::orderBy('id', 'desc')->pluck('title', 'id'),
@@ -211,7 +214,7 @@ class PartnerPackController extends Controller
                 ],
             ),
             'pack' => $pack->load(['prices']),
-            'pack_types' => PackType::labels(),
+            'pack_types' => PackType::labelsForExisting($pack->type),
             'price_types' => StripePriceType::labels(),
             'periods' => StripePeriod::labels(),
             'classtypes' => ClassType::orderBy('id', 'desc')->pluck('title', 'id'),
@@ -227,7 +230,11 @@ class PartnerPackController extends Controller
      */
     public function update(PackFormRequest $request, Pack $pack)
     {
-        //TODO Add method to normalize validated fields, e.g. if type is default, set sessions = 0, is_restricted = false, is_unlimited = false, etc
+        if(!$this->pack_service->canChangeType($request->type, $pack->type)){
+            return $this->redirectBackError(__('Pack type can not be changed.'));
+        }
+
+        //TODO Add method to normalize validated fields, e.g. if type is default, is_restricted = false, etc
 
         $pack->update($request->validated());
         $result = $this->stripe_product_service->createOrUpdatePackProduct($this->connected_account_id, $pack);
@@ -282,10 +289,15 @@ class PartnerPackController extends Controller
      */
     public function storePrice(Pack $pack, PriceFormRequest $request)
     {
+        if(empty($pack->stripe_product_id)){
+            return $this->redirectBackError(__('Please, save the pack and then try again.'));
+        }
+
         $params = array(
             'pack' => $pack,
             'validated_data' => $request->validated(),
-            'currency' => $this->business_seetings['default_currency'] ?? 'gbp',
+            'currency' => $this->business_seetings['default_currency'] ?? null,
+            'currency_symbol' => $this->business_seetings['default_currency_symbol'] ?? null,
             'connected_account_id' => $this->connected_account_id,
         );
         $result = $this->stripe_product_service->createPackPrice($params);
@@ -296,21 +308,24 @@ class PartnerPackController extends Controller
     /**
      * Update existing Price for Pack.
      *
-     * @param  \App\Models\Partner\Pack  $pack
      * @param  \App\Models\Partner\PackPrice  $price
      * @return \Illuminate\Http\Response
      */
-    public function updatePrice(Pack $pack, PackPrice $price, Request $request)
+    public function updatePrice(PackPrice $price, PriceUpdateRequest $request)
     {
         // this method handles price update and delete.
-        // update API cal can only change 'active' parameter
+        // update API call can only change 'active' parameter
         // delete method can only delete the price locally, API call is the same but 'active' param is false, so that price can be archived only
-        $active = false;       
-        $msg = 'Pricing option deleted.';
+
         switch ($request->action) {
+            case 'edit': //only local fields (no api call) excluding: type, status, price, interval...
+                $price->update($request->validated());
+                $msg = __('Price updated successfully.');
+
+                return $this->redirectBackSuccess($msg);
             case 'toggle':
                 $active = !$price->is_active;
-                $msg = 'Pricing option updated.';
+                $msg = $active ?  __('Pricing option enabled.') :  __('Pricing option disabled.');
                 $price->update(['is_active' => $active]);
                 $price_data = array(
                     'active' => $active,
@@ -319,12 +334,15 @@ class PartnerPackController extends Controller
             case 'delete':
                 $price->delete();
                 $price_data = array(
-                    'active' => $active,
+                    'active' => false,
                     'metadata' => [
                         'deleted_at' => $price->deleted_at,
                     ],
                 );
+                $msg = __('Price updated deleted.');
                 break;
+            default:
+                return $this->redirectBackError();
         }
 
         $result = $this->stripe_product_service->updatePrice($this->connected_account_id, $price->stripe_price_id, $price_data);

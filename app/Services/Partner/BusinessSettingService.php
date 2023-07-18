@@ -6,9 +6,12 @@ use Storage;
 use App\Enums\CastType;
 use App\Enums\SettingKey;
 use App\Enums\SettingGroup;
+use App\Enums\StripePriceType;
 use App\Events\BusinessSettingUpdated;
 use App\Models\BusinessSetting;
+use App\Models\Partner\Pack;
 use App\Services\Shared\CacheMasterService;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Crypt;
 
@@ -134,5 +137,21 @@ class BusinessSettingService
         $business = session('business');
 
         return BusinessSetting::where('business_id', '!=', $business->id)->where('key', $key)->where('val', $val)->doesntExist();
+    }
+
+    // Method to get Packs with prices having FAP enabled, used by Fair access policy setting
+    public function getFapPacks()
+    {
+        return Pack::whereHas('prices')
+            ->with(['prices' => function (Builder $query) {
+                $query->where('type', StripePriceType::recurring->name)->where('is_unlimited', true)->where('is_fap', true);
+            }])
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->reject(function ($item) {
+                // keep packs having fap prices only
+                return $item->prices->isEmpty();
+            })
+            ->values(); //reset keys, json
     }
 }

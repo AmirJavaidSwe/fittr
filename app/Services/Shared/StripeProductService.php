@@ -88,7 +88,7 @@ class StripeProductService extends StripeService
     //PACK PRICE methods:
     public function createPackPrice($params) : object
     {
-        extract($params); // [$pack, $validated_data, $currency, $connected_account_id]
+        extract($params); // [$pack, $validated_data, $currency, $currency_symbol, $connected_account_id]
 
         $price_data = array(
             'currency' => $currency,
@@ -116,6 +116,7 @@ class StripeProductService extends StripeService
             'stripe_price_id' => $attempt->data?->id,
             'unit_amount' => $price_data['unit_amount'],
             'currency' => $price_data['currency'],
+            'currency_symbol' => $currency_symbol,
         ] + $validated_data;
         $pack->prices()->create($model_data);
 

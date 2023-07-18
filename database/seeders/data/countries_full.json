@@ -3,6 +3,9 @@
         "iso": "AF",
         "name": "Afghanistan",
         "currency": "AFN",
+        "currency_name": "Afghan Afghani",
+        "currency_symbol": "Af",
+        "currency_symbol_native": "؋",
         "dial_code": "+93",
         "mask": "##-###-####"
     },
@@ -10,6 +13,9 @@
         "iso": "AX",
         "name": "Aland Islands",
         "currency": "EUR",
+        "currency_name": "Euro",
+        "currency_symbol": "€",
+        "currency_symbol_native": "€",
         "dial_code": "+358",
         "mask": "(###)###-##-##"
     },
@@ -17,6 +23,9 @@
         "iso": "AL",
         "name": "Albania",
         "currency": "ALL",
+        "currency_name": "Albanian Lek",
+        "currency_symbol": "ALL",
+        "currency_symbol_native": "Lek",
         "dial_code": "+355",
         "mask": "(###)###-###"
     },
@@ -24,6 +33,9 @@
         "iso": "DZ",
         "name": "Algeria",
         "currency": "DZD",
+        "currency_name": "Algerian Dinar",
+        "currency_symbol": "DA",
+        "currency_symbol_native": "د.ج.",
         "dial_code": "+213",
         "mask": "##-###-####"
     },
@@ -31,6 +43,9 @@
         "iso": "AS",
         "name": "American Samoa",
         "currency": "USD",
+        "currency_name": "US Dollar",
+        "currency_symbol": "$",
+        "currency_symbol_native": "$",
         "dial_code": "+1",
         "mask": "(684)###-####"
     },
@@ -38,6 +53,9 @@
         "iso": "AD",
         "name": "Andorra",
         "currency": "EUR",
+        "currency_name": "Euro",
+        "currency_symbol": "€",
+        "currency_symbol_native": "€",
         "dial_code": "+376",
         "mask": "###-###"
     },
@@ -45,6 +63,9 @@
         "iso": "AO",
         "name": "Angola",
         "currency": "AOA",
+        "currency_name": "",
+        "currency_symbol": "AOA",
+        "currency_symbol_native": "AOA",
         "dial_code": "+244",
         "mask": "(###)###-###"
     },
@@ -52,6 +73,9 @@
         "iso": "AI",
         "name": "Anguilla",
         "currency": "XCD",
+        "currency_name": "",
+        "currency_symbol": "XCD",
+        "currency_symbol_native": "XCD",
         "dial_code": "+1",
         "mask": "(264)###-####"
     },
@@ -59,6 +83,9 @@
         "iso": "AG",
         "name": "Antigua and Barbuda",
         "currency": "XCD",
+        "currency_name": "",
+        "currency_symbol": "XCD",
+        "currency_symbol_native": "XCD",
         "dial_code": "+1",
         "mask": "(268)###-####"
     },
@@ -66,6 +93,9 @@
         "iso": "AR",
         "name": "Argentina",
         "currency": "ARS",
+        "currency_name": "Argentine Peso",
+        "currency_symbol": "AR$",
+        "currency_symbol_native": "$",
         "dial_code": "+54",
         "mask": "(###)###-####"
     },
@@ -73,6 +103,9 @@
         "iso": "AM",
         "name": "Armenia",
         "currency": "AMD",
+        "currency_name": "Armenian Dram",
+        "currency_symbol": "AMD",
+        "currency_symbol_native": "դր.",
         "dial_code": "+374",
         "mask": "##-###-###"
     },
@@ -80,6 +113,9 @@
         "iso": "AW",
         "name": "Aruba",
         "currency": "AWG",
+        "currency_name": "",
+        "currency_symbol": "AWG",
+        "currency_symbol_native": "AWG",
         "dial_code": "+297",
         "mask": "###-####"
     },
@@ -87,6 +123,9 @@
         "iso": "AU",
         "name": "Australia",
         "currency": "AUD",
+        "currency_name": "Australian Dollar",
+        "currency_symbol": "AU$",
+        "currency_symbol_native": "$",
         "dial_code": "+61",
         "mask": "#-####-####",
         "status": true
@@ -95,6 +134,9 @@
         "iso": "AT",
         "name": "Austria",
         "currency": "EUR",
+        "currency_name": "Euro",
+        "currency_symbol": "€",
+        "currency_symbol_native": "€",
         "dial_code": "+43",
         "mask": "(###)###-####",
         "status": true
@@ -103,6 +145,9 @@
         "iso": "AZ",
         "name": "Azerbaijan",
         "currency": "AZN",
+        "currency_name": "Azerbaijani Manat",
+        "currency_symbol": "man.",
+        "currency_symbol_native": "ман.",
         "dial_code": "+994",
         "mask": "##-###-##-##"
     },
@@ -110,6 +155,9 @@
         "iso": "BS",
         "name": "Bahamas",
         "currency": "BSD",
+        "currency_name": "",
+        "currency_symbol": "BSD",
+        "currency_symbol_native": "BSD",
         "dial_code": "+1",
         "mask": "(242)###-####"
     },
@@ -117,6 +165,9 @@
         "iso": "BH",
         "name": "Bahrain",
         "currency": "BHD",
+        "currency_name": "Bahraini Dinar",
+        "currency_symbol": "BD",
+        "currency_symbol_native": "د.ب.‏",
         "dial_code": "+973",
         "mask": "####-####"
     },
@@ -124,6 +175,9 @@
         "iso": "BD",
         "name": "Bangladesh",
         "currency": "BDT",
+        "currency_name": "Bangladeshi Taka",
+        "currency_symbol": "Tk",
+        "currency_symbol_native": "৳",
         "dial_code": "+880",
         "mask": "1###-######"
     },
@@ -131,6 +185,9 @@
         "iso": "BB",
         "name": "Barbados",
         "currency": "BBD",
+        "currency_name": "",
+        "currency_symbol": "BBD",
+        "currency_symbol_native": "BBD",
         "dial_code": "+1",
         "mask": "(246)###-####"
     },
@@ -138,6 +195,9 @@
         "iso": "BY",
         "name": "Belarus",
         "currency": "BYR",
+        "currency_name": "",
+        "currency_symbol": "BYR",
+        "currency_symbol_native": "BYR",
         "dial_code": "+375",
         "mask": "(##)###-##-##"
     },
@@ -145,6 +205,9 @@
         "iso": "BE",
         "name": "Belgium",
         "currency": "EUR",
+        "currency_name": "Euro",
+        "currency_symbol": "€",
+        "currency_symbol_native": "€",
         "dial_code": "+32",
         "mask": "(###)###-###",
         "status": true
@@ -153,6 +216,9 @@
         "iso": "BZ",
         "name": "Belize",
         "currency": "BZD",
+        "currency_name": "Belize Dollar",
+        "currency_symbol": "BZ$",
+        "currency_symbol_native": "$",
         "dial_code": "+501",
         "mask": "###-####"
     },
@@ -160,6 +226,9 @@
         "iso": "BJ",
         "name": "Benin",
         "currency": "XOF",
+        "currency_name": "CFA Franc BCEAO",
+        "currency_symbol": "CFA",
+        "currency_symbol_native": "CFA",
         "dial_code": "+229",
         "mask": "##-##-####"
     },
@@ -167,6 +236,9 @@
         "iso": "BM",
         "name": "Bermuda",
         "currency": "BMD",
+        "currency_name": "",
+        "currency_symbol": "BMD",
+        "currency_symbol_native": "BMD",
         "dial_code": "+1",
         "mask": "(441)###-####"
     },
@@ -174,6 +246,9 @@
         "iso": "BT",
         "name": "Bhutan",
         "currency": "BTN",
+        "currency_name": "",
+        "currency_symbol": "BTN",
+        "currency_symbol_native": "BTN",
         "dial_code": "+975",
         "mask": [
             "17-###-###",
@@ -185,6 +260,9 @@
         "iso": "BO",
         "name": "Bolivia",
         "currency": "BOB",
+        "currency_name": "Bolivian Boliviano",
+        "currency_symbol": "Bs",
+        "currency_symbol_native": "Bs",
         "dial_code": "+591",
         "mask": "#-###-####"
     },
@@ -192,6 +270,9 @@
         "iso": "BA",
         "name": "Bosnia and Herzegovina",
         "currency": "BAM",
+        "currency_name": "Bosnia-Herzegovina Convertible Mark",
+        "currency_symbol": "KM",
+        "currency_symbol_native": "KM",
         "dial_code": "+387",
         "mask": [
             "##-####",
@@ -202,6 +283,9 @@
         "iso": "BW",
         "name": "Botswana",
         "currency": "BWP",
+        "currency_name": "Botswanan Pula",
+        "currency_symbol": "BWP",
+        "currency_symbol_native": "P",
         "dial_code": "+267",
         "mask": "##-###-###"
     },
@@ -209,6 +293,9 @@
         "iso": "BR",
         "name": "Brazil",
         "currency": "BRL",
+        "currency_name": "Brazilian Real",
+        "currency_symbol": "R$",
+        "currency_symbol_native": "R$",
         "dial_code": "+55",
         "mask": [
             "(##)####-####",
@@ -220,6 +307,9 @@
         "iso": "IO",
         "name": "British Indian Ocean Territory",
         "currency": "USD",
+        "currency_name": "US Dollar",
+        "currency_symbol": "$",
+        "currency_symbol_native": "$",
         "dial_code": "+246",
         "mask": "###-####"
     },
@@ -227,6 +317,9 @@
         "iso": "VG",
         "name": "British Virgin Islands",
         "currency": "USD",
+        "currency_name": "US Dollar",
+        "currency_symbol": "$",
+        "currency_symbol_native": "$",
         "dial_code": "+1",
         "mask": "(284)###-####"
     },
@@ -234,6 +327,9 @@
         "iso": "BN",
         "name": "Brunei",
         "currency": "BND",
+        "currency_name": "Brunei Dollar",
+        "currency_symbol": "BN$",
+        "currency_symbol_native": "$",
         "dial_code": "+673",
         "mask": "###-####"
     },
@@ -241,6 +337,9 @@
         "iso": "BG",
         "name": "Bulgaria",
         "currency": "BGN",
+        "currency_name": "Bulgarian Lev",
+        "currency_symbol": "BGN",
+        "currency_symbol_native": "лв.",
         "dial_code": "+359",
         "mask": "(###)###-###",
         "status": true
@@ -249,6 +348,9 @@
         "iso": "BF",
         "name": "Burkina Faso",
         "currency": "XOF",
+        "currency_name": "CFA Franc BCEAO",
+        "currency_symbol": "CFA",
+        "currency_symbol_native": "CFA",
         "dial_code": "+226",
         "mask": "##-##-####"
     },
@@ -256,6 +358,9 @@
         "iso": "BI",
         "name": "Burundi",
         "currency": "BIF",
+        "currency_name": "Burundian Franc",
+        "currency_symbol": "FBu",
+        "currency_symbol_native": "FBu",
         "dial_code": "+257",
         "mask": "##-##-####"
     },
@@ -263,6 +368,9 @@
         "iso": "KH",
         "name": "Cambodia",
         "currency": "KHR",
+        "currency_name": "Cambodian Riel",
+        "currency_symbol": "KHR",
+        "currency_symbol_native": "៛",
         "dial_code": "+855",
         "mask": "##-###-###"
     },
@@ -270,6 +378,9 @@
         "iso": "CM",
         "name": "Cameroon",
         "currency": "XAF",
+        "currency_name": "CFA Franc BEAC",
+        "currency_symbol": "FCFA",
+        "currency_symbol_native": "FCFA",
         "dial_code": "+237",
         "mask": "####-####"
     },
@@ -277,6 +388,9 @@
         "iso": "CA",
         "name": "Canada",
         "currency": "CAD",
+        "currency_name": "Canadian Dollar",
+        "currency_symbol": "CA$",
+        "currency_symbol_native": "$",
         "dial_code": "+1",
         "mask": "(###)###-####",
         "status": true
@@ -285,6 +399,9 @@
         "iso": "CV",
         "name": "Cape Verde",
         "currency": "CVE",
+        "currency_name": "Cape Verdean Escudo",
+        "currency_symbol": "CV$",
+        "currency_symbol_native": "CV$",
         "dial_code": "+238",
         "mask": "(###)##-##"
     },
@@ -292,6 +409,9 @@
         "iso": "KY",
         "name": "Cayman Islands",
         "currency": "KYD",
+        "currency_name": "",
+        "currency_symbol": "KYD",
+        "currency_symbol_native": "KYD",
         "dial_code": "+1",
         "mask": "(345)###-####"
     },
@@ -299,6 +419,9 @@
         "iso": "CF",
         "name": "Central African Republic",
         "currency": "XAF",
+        "currency_name": "",
+        "currency_symbol": "XAF",
+        "currency_symbol_native": "XAF",
         "dial_code": "+236",
         "mask": "##-##-####"
     },
@@ -306,6 +429,9 @@
         "iso": "TD",
         "name": "Chad",
         "currency": "XAF",
+        "currency_name": "",
+        "currency_symbol": "XAF",
+        "currency_symbol_native": "XAF",
         "dial_code": "+235",
         "mask": "##-##-##-##"
     },
@@ -313,6 +439,9 @@
         "iso": "CL",
         "name": "Chile",
         "currency": "CLF",
+        "currency_name": "",
+        "currency_symbol": "CLF",
+        "currency_symbol_native": "CLF",
         "dial_code": "+56",
         "mask": "#-####-####"
     },
@@ -320,6 +449,9 @@
         "iso": "CN",
         "name": "China",
         "currency": "CNY",
+        "currency_name": "Chinese Yuan",
+        "currency_symbol": "CN¥",
+        "currency_symbol_native": "CN¥",
         "dial_code": "+86",
         "mask": [
             "(###)####-###",
@@ -331,6 +463,9 @@
         "iso": "CX",
         "name": "Christmas Island",
         "currency": "AUD",
+        "currency_name": "Australian Dollar",
+        "currency_symbol": "AU$",
+        "currency_symbol_native": "$",
         "dial_code": "+61",
         "mask": "#-####-####"
     },
@@ -338,6 +473,9 @@
         "iso": "CC",
         "name": "Cocos Islands",
         "currency": "AUD",
+        "currency_name": "Australian Dollar",
+        "currency_symbol": "AU$",
+        "currency_symbol_native": "$",
         "dial_code": "+61",
         "mask": "#-####-####"
     },
@@ -345,6 +483,9 @@
         "iso": "CO",
         "name": "Colombia",
         "currency": "COP",
+        "currency_name": "Colombian Peso",
+        "currency_symbol": "CO$",
+        "currency_symbol_native": "$",
         "dial_code": "+57",
         "mask": "(###)###-####"
     },
@@ -352,6 +493,9 @@
         "iso": "KM",
         "name": "Comoros",
         "currency": "KMF",
+        "currency_name": "Comorian Franc",
+        "currency_symbol": "CF",
+        "currency_symbol_native": "FC",
         "dial_code": "+269",
         "mask": "##-#####"
     },
@@ -359,6 +503,9 @@
         "iso": "CK",
         "name": "Cook Islands",
         "currency": "NZD",
+        "currency_name": "",
+        "currency_symbol": "NZD",
+        "currency_symbol_native": "NZD",
         "dial_code": "+682",
         "mask": "##-###"
     },
@@ -366,6 +513,9 @@
         "iso": "CR",
         "name": "Costa Rica",
         "currency": "CRC",
+        "currency_name": "Costa Rican Colón",
+        "currency_symbol": "₡",
+        "currency_symbol_native": "₡",
         "dial_code": "+506",
         "mask": "####-####"
     },
@@ -373,6 +523,9 @@
         "iso": "HR",
         "name": "Croatia",
         "currency": "HRK",
+        "currency_name": "",
+        "currency_symbol": "HRK",
+        "currency_symbol_native": "HRK",
         "dial_code": "+385",
         "mask": "##-###-###",
         "status": true
@@ -381,6 +534,9 @@
         "iso": "CU",
         "name": "Cuba",
         "currency": "CUC",
+        "currency_name": "",
+        "currency_symbol": "CUC",
+        "currency_symbol_native": "CUC",
         "dial_code": "+53",
         "mask": "#-###-####"
     },
@@ -388,6 +544,9 @@
         "iso": "CY",
         "name": "Cyprus",
         "currency": "EUR",
+        "currency_name": "Euro",
+        "currency_symbol": "€",
+        "currency_symbol_native": "€",
         "dial_code": "+357",
         "mask": "##-###-###",
         "status": true
@@ -396,6 +555,9 @@
         "iso": "CZ",
         "name": "Czech Republic",
         "currency": "CZK",
+        "currency_name": "Czech Republic Koruna",
+        "currency_symbol": "Kč",
+        "currency_symbol_native": "Kč",
         "dial_code": "+420",
         "mask": "(###)###-###",
         "status": true
@@ -404,6 +566,9 @@
         "iso": "CD",
         "name": "Democratic Republic of the Congo",
         "currency": "CDF",
+        "currency_name": "Congolese Franc",
+        "currency_symbol": "CDF",
+        "currency_symbol_native": "FrCD",
         "dial_code": "+243",
         "mask": "(###)###-###"
     },
@@ -411,6 +576,9 @@
         "iso": "DK",
         "name": "Denmark",
         "currency": "DKK",
+        "currency_name": "Danish Krone",
+        "currency_symbol": "Dkr",
+        "currency_symbol_native": "kr",
         "dial_code": "+45",
         "mask": "##-##-##-##",
         "status": true
@@ -419,6 +587,9 @@
         "iso": "DJ",
         "name": "Djibouti",
         "currency": "DJF",
+        "currency_name": "Djiboutian Franc",
+        "currency_symbol": "Fdj",
+        "currency_symbol_native": "Fdj",
         "dial_code": "+253",
         "mask": "##-##-##-##"
     },
@@ -426,6 +597,9 @@
         "iso": "DM",
         "name": "Dominica",
         "currency": "XCD",
+        "currency_name": "",
+        "currency_symbol": "XCD",
+        "currency_symbol_native": "XCD",
         "dial_code": "+1",
         "mask": "(767)###-####"
     },
@@ -433,6 +607,9 @@
         "iso": "DO",
         "name": "Dominican Republic",
         "currency": "DOP",
+        "currency_name": "Dominican Peso",
+        "currency_symbol": "RD$",
+        "currency_symbol_native": "RD$",
         "dial_code": "+1",
         "mask": [
             "(809)###-####",
@@ -444,6 +621,9 @@
         "iso": "TL",
         "name": "East Timor",
         "currency": "USD",
+        "currency_name": "US Dollar",
+        "currency_symbol": "$",
+        "currency_symbol_native": "$",
         "dial_code": "+670",
         "mask": [
             "###-####",
@@ -455,6 +635,9 @@
         "iso": "EC",
         "name": "Ecuador",
         "currency": "USD",
+        "currency_name": "US Dollar",
+        "currency_symbol": "$",
+        "currency_symbol_native": "$",
         "dial_code": "+593",
         "mask": [
             "#-###-####",
@@ -465,6 +648,9 @@
         "iso": "EG",
         "name": "Egypt",
         "currency": "EGP",
+        "currency_name": "Egyptian Pound",
+        "currency_symbol": "EGP",
+        "currency_symbol_native": "ج.م.",
         "dial_code": "+20",
         "mask": "(###)###-####"
     },
@@ -472,6 +658,9 @@
         "iso": "SV",
         "name": "El Salvador",
         "currency": "SVC",
+        "currency_name": "",
+        "currency_symbol": "SVC",
+        "currency_symbol_native": "SVC",
         "dial_code": "+503",
         "mask": "##-##-####"
     },
@@ -479,6 +668,9 @@
         "iso": "GQ",
         "name": "Equatorial Guinea",
         "currency": "XAF",
+        "currency_name": "",
+        "currency_symbol": "XAF",
+        "currency_symbol_native": "XAF",
         "dial_code": "+240",
         "mask": "##-###-####"
     },
@@ -486,6 +678,9 @@
         "iso": "ER",
         "name": "Eritrea",
         "currency": "ERN",
+        "currency_name": "",
+        "currency_symbol": "ERN",
+        "currency_symbol_native": "ERN",
         "dial_code": "+291",
         "mask": "#-###-###"
     },
@@ -493,6 +688,9 @@
         "iso": "EE",
         "name": "Estonia",
         "currency": "EUR",
+        "currency_name": "Euro",
+        "currency_symbol": "€",
+        "currency_symbol_native": "€",
         "dial_code": "+372",
         "mask": [
             "###-####",
@@ -504,6 +702,9 @@
         "iso": "ET",
         "name": "Ethiopia",
         "currency": "ETB",
+        "currency_name": "Ethiopian Birr",
+        "currency_symbol": "Br",
+        "currency_symbol_native": "Br",
         "dial_code": "+251",
         "mask": "##-###-####"
     },
@@ -511,6 +712,9 @@
         "iso": "FK",
         "name": "Falkland Islands",
         "currency": "FKP",
+        "currency_name": "",
+        "currency_symbol": "FKP",
+        "currency_symbol_native": "FKP",
         "dial_code": "+500",
         "mask": "#####"
     },
@@ -518,6 +722,9 @@
         "iso": "FO",
         "name": "Faroe Islands",
         "currency": "DKK",
+        "currency_name": "Danish Krone",
+        "currency_symbol": "Dkr",
+        "currency_symbol_native": "kr",
         "dial_code": "+298",
         "mask": "###-###"
     },
@@ -525,6 +732,9 @@
         "iso": "FJ",
         "name": "Fiji",
         "currency": "FJD",
+        "currency_name": "",
+        "currency_symbol": "FJD",
+        "currency_symbol_native": "FJD",
         "dial_code": "+679",
         "mask": "##-#####"
     },
@@ -532,6 +742,9 @@
         "iso": "FI",
         "name": "Finland",
         "currency": "EUR",
+        "currency_name": "Euro",
+        "currency_symbol": "€",
+        "currency_symbol_native": "€",
         "dial_code": "+358",
         "mask": "(###)###-##-##",
         "status": true
@@ -540,6 +753,9 @@
         "iso": "FR",
         "name": "France",
         "currency": "EUR",
+        "currency_name": "Euro",
+        "currency_symbol": "€",
+        "currency_symbol_native": "€",
         "dial_code": "+33",
         "mask": "(###)###-###",
         "status": true
@@ -548,6 +764,9 @@
         "iso": "GF",
         "name": "French Guiana",
         "currency": "EUR",
+        "currency_name": "Euro",
+        "currency_symbol": "€",
+        "currency_symbol_native": "€",
         "dial_code": "+594",
         "mask": "#####-####"
     },
@@ -555,6 +774,9 @@
         "iso": "PF",
         "name": "French Polynesia",
         "currency": "XPF",
+        "currency_name": "",
+        "currency_symbol": "XPF",
+        "currency_symbol_native": "XPF",
         "dial_code": "+689",
         "mask": "##-##-##"
     },
@@ -562,6 +784,9 @@
         "iso": "GA",
         "name": "Gabon",
         "currency": "XAF",
+        "currency_name": "",
+        "currency_symbol": "XAF",
+        "currency_symbol_native": "XAF",
         "dial_code": "+241",
         "mask": "#-##-##-##"
     },
@@ -569,6 +794,9 @@
         "iso": "GM",
         "name": "Gambia",
         "currency": "GMD",
+        "currency_name": "",
+        "currency_symbol": "GMD",
+        "currency_symbol_native": "GMD",
         "dial_code": "+220",
         "mask": "(###)##-##"
     },
@@ -576,6 +804,9 @@
         "iso": "GE",
         "name": "Georgia",
         "currency": "GEL",
+        "currency_name": "Georgian Lari",
+        "currency_symbol": "GEL",
+        "currency_symbol_native": "GEL",
         "dial_code": "+995",
         "mask": "(###)###-###"
     },
@@ -583,6 +814,9 @@
         "iso": "DE",
         "name": "Germany",
         "currency": "EUR",
+        "currency_name": "Euro",
+        "currency_symbol": "€",
+        "currency_symbol_native": "€",
         "dial_code": "+49",
         "mask": [
             "###-###",
@@ -598,6 +832,9 @@
         "iso": "GH",
         "name": "Ghana",
         "currency": "GHS",
+        "currency_name": "",
+        "currency_symbol": "GHS",
+        "currency_symbol_native": "GHS",
         "dial_code": "+233",
         "mask": "(###)###-###"
     },
@@ -605,6 +842,9 @@
         "iso": "GI",
         "name": "Gibraltar",
         "currency": "GIP",
+        "currency_name": "",
+        "currency_symbol": "GIP",
+        "currency_symbol_native": "GIP",
         "dial_code": "+350",
         "mask": "###-#####",
         "status": true
@@ -613,6 +853,9 @@
         "iso": "GR",
         "name": "Greece",
         "currency": "EUR",
+        "currency_name": "Euro",
+        "currency_symbol": "€",
+        "currency_symbol_native": "€",
         "dial_code": "+30",
         "mask": "(###)###-####",
         "status": true
@@ -621,6 +864,9 @@
         "iso": "GL",
         "name": "Greenland",
         "currency": "DKK",
+        "currency_name": "Danish Krone",
+        "currency_symbol": "Dkr",
+        "currency_symbol_native": "kr",
         "dial_code": "+299",
         "mask": "##-##-##"
     },
@@ -628,6 +874,9 @@
         "iso": "GD",
         "name": "Grenada",
         "currency": "XCD",
+        "currency_name": "",
+        "currency_symbol": "XCD",
+        "currency_symbol_native": "XCD",
         "dial_code": "+1",
         "mask": "(473)###-####"
     },
@@ -635,6 +884,9 @@
         "iso": "GP",
         "name": "Guadeloupe",
         "currency": "EUR",
+        "currency_name": "Euro",
+        "currency_symbol": "€",
+        "currency_symbol_native": "€",
         "dial_code": "+590",
         "mask": "(###)###-###"
     },
@@ -642,6 +894,9 @@
         "iso": "GU",
         "name": "Guam",
         "currency": "USD",
+        "currency_name": "US Dollar",
+        "currency_symbol": "$",
+        "currency_symbol_native": "$",
         "dial_code": "+1",
         "mask": "(671)###-####"
     },
@@ -649,6 +904,9 @@
         "iso": "GT",
         "name": "Guatemala",
         "currency": "GTQ",
+        "currency_name": "Guatemalan Quetzal",
+        "currency_symbol": "GTQ",
+        "currency_symbol_native": "Q",
         "dial_code": "+502",
         "mask": "#-###-####"
     },
@@ -656,6 +914,9 @@
         "iso": "GG",
         "name": "Guernsey",
         "currency": "GBP",
+        "currency_name": "British Pound Sterling",
+        "currency_symbol": "£",
+        "currency_symbol_native": "£",
         "dial_code": "+44",
         "mask": "(####)######"
     },
@@ -663,6 +924,9 @@
         "iso": "GN",
         "name": "Guinea",
         "currency": "GNF",
+        "currency_name": "Guinean Franc",
+        "currency_symbol": "FG",
+        "currency_symbol_native": "FG",
         "dial_code": "+224",
         "mask": "##-###-###"
     },
@@ -670,6 +934,9 @@
         "iso": "GW",
         "name": "Guinea-Bissau",
         "currency": "XOF",
+        "currency_name": "CFA Franc BCEAO",
+        "currency_symbol": "CFA",
+        "currency_symbol_native": "CFA",
         "dial_code": "+245",
         "mask": "#-######"
     },
@@ -677,6 +944,9 @@
         "iso": "GY",
         "name": "Guyana",
         "currency": "GYD",
+        "currency_name": "",
+        "currency_symbol": "GYD",
+        "currency_symbol_native": "GYD",
         "dial_code": "+592",
         "mask": "###-####"
     },
@@ -684,6 +954,9 @@
         "iso": "HT",
         "name": "Haiti",
         "currency": "HTG",
+        "currency_name": "",
+        "currency_symbol": "HTG",
+        "currency_symbol_native": "HTG",
         "dial_code": "+509",
         "mask": "##-##-####"
     },
@@ -691,6 +964,9 @@
         "iso": "HN",
         "name": "Honduras",
         "currency": "HNL",
+        "currency_name": "Honduran Lempira",
+        "currency_symbol": "HNL",
+        "currency_symbol_native": "L",
         "dial_code": "+504",
         "mask": "####-####"
     },
@@ -698,6 +974,9 @@
         "iso": "HK",
         "name": "Hong Kong",
         "currency": "HKD",
+        "currency_name": "Hong Kong Dollar",
+        "currency_symbol": "HK$",
+        "currency_symbol_native": "$",
         "dial_code": "+852",
         "mask": "####-####",
         "status": true
@@ -706,6 +985,9 @@
         "iso": "HU",
         "name": "Hungary",
         "currency": "HUF",
+        "currency_name": "Hungarian Forint",
+        "currency_symbol": "Ft",
+        "currency_symbol_native": "Ft",
         "dial_code": "+36",
         "mask": "(###)###-###",
         "status": true
@@ -714,6 +996,9 @@
         "iso": "IS",
         "name": "Iceland",
         "currency": "ISK",
+        "currency_name": "Icelandic Króna",
+        "currency_symbol": "Ikr",
+        "currency_symbol_native": "kr",
         "dial_code": "+354",
         "mask": "###-####"
     },
@@ -721,6 +1006,9 @@
         "iso": "IN",
         "name": "India",
         "currency": "INR",
+        "currency_name": "Indian Rupee",
+        "currency_symbol": "Rs",
+        "currency_symbol_native": "টকা",
         "dial_code": "+91",
         "mask": "(####)###-###"
     },
@@ -728,6 +1016,9 @@
         "iso": "ID",
         "name": "Indonesia",
         "currency": "IDR",
+        "currency_name": "Indonesian Rupiah",
+        "currency_symbol": "Rp",
+        "currency_symbol_native": "Rp",
         "dial_code": "+62",
         "mask": [
             "##-###-##",
@@ -741,6 +1032,9 @@
         "iso": "IR",
         "name": "Iran",
         "currency": "IRR",
+        "currency_name": "",
+        "currency_symbol": "IRR",
+        "currency_symbol_native": "IRR",
         "dial_code": "+98",
         "mask": "(###)###-####"
     },
@@ -748,6 +1042,9 @@
         "iso": "IQ",
         "name": "Iraq",
         "currency": "IQD",
+        "currency_name": "",
+        "currency_symbol": "IQD",
+        "currency_symbol_native": "IQD",
         "dial_code": "+924",
         "mask": "(###)###-####"
     },
@@ -755,6 +1052,9 @@
         "iso": "IE",
         "name": "Ireland",
         "currency": "EUR",
+        "currency_name": "Euro",
+        "currency_symbol": "€",
+        "currency_symbol_native": "€",
         "dial_code": "+353",
         "mask": "(###)###-###",
         "status": true
@@ -763,6 +1063,9 @@
         "iso": "IM",
         "name": "Isle of Man",
         "currency": "GBP",
+        "currency_name": "British Pound Sterling",
+        "currency_symbol": "£",
+        "currency_symbol_native": "£",
         "dial_code": "+44",
         "mask": "(####)######"
     },
@@ -770,6 +1073,9 @@
         "iso": "IL",
         "name": "Israel",
         "currency": "ILS",
+        "currency_name": "Israeli New Sheqel",
+        "currency_symbol": "₪",
+        "currency_symbol_native": "₪",
         "dial_code": "+972",
         "mask": [
             "#-###-####",
@@ -780,6 +1086,9 @@
         "iso": "IT",
         "name": "Italy",
         "currency": "EUR",
+        "currency_name": "Euro",
+        "currency_symbol": "€",
+        "currency_symbol_native": "€",
         "dial_code": "+39",
         "mask": "(###)####-###",
         "status": true
@@ -788,6 +1097,9 @@
         "iso": "CI",
         "name": "Ivory Coast",
         "currency": "XOF",
+        "currency_name": "CFA Franc BCEAO",
+        "currency_symbol": "CFA",
+        "currency_symbol_native": "CFA",
         "dial_code": "+225",
         "mask": "##-###-###"
     },
@@ -795,6 +1107,9 @@
         "iso": "JM",
         "name": "Jamaica",
         "currency": "JMD",
+        "currency_name": "Jamaican Dollar",
+        "currency_symbol": "J$",
+        "currency_symbol_native": "$",
         "dial_code": "+1",
         "mask": "(876)###-####"
     },
@@ -802,6 +1117,9 @@
         "iso": "JP",
         "name": "Japan",
         "currency": "JPY",
+        "currency_name": "Japanese Yen",
+        "currency_symbol": "¥",
+        "currency_symbol_native": "¥",
         "dial_code": "+81",
         "mask": [
             "(###)###-###",
@@ -813,6 +1131,9 @@
         "iso": "JE",
         "name": "Jersey",
         "currency": "GBP",
+        "currency_name": "British Pound Sterling",
+        "currency_symbol": "£",
+        "currency_symbol_native": "£",
         "dial_code": "+44",
         "mask": "(####)####-######"
     },
@@ -820,6 +1141,9 @@
         "iso": "JO",
         "name": "Jordan",
         "currency": "JOD",
+        "currency_name": "Jordanian Dinar",
+        "currency_symbol": "JD",
+        "currency_symbol_native": "د.أ.‏",
         "dial_code": "+962",
         "mask": "#-####-####"
     },
@@ -827,6 +1151,9 @@
         "iso": "KZ",
         "name": "Kazakhstan",
         "currency": "KZT",
+        "currency_name": "Kazakhstani Tenge",
+        "currency_symbol": "KZT",
+        "currency_symbol_native": "тңг.",
         "dial_code": "+77",
         "mask": [
             "(6##)###-##-##",
@@ -837,6 +1164,9 @@
         "iso": "KE",
         "name": "Kenya",
         "currency": "KES",
+        "currency_name": "Kenyan Shilling",
+        "currency_symbol": "Ksh",
+        "currency_symbol_native": "Ksh",
         "dial_code": "+254",
         "mask": "###-######"
     },
@@ -844,6 +1174,9 @@
         "iso": "KI",
         "name": "Kiribati",
         "currency": "AUD",
+        "currency_name": "Australian Dollar",
+        "currency_symbol": "AU$",
+        "currency_symbol_native": "$",
         "dial_code": "+686",
         "mask": "##-###"
     },
@@ -851,6 +1184,9 @@
         "iso": "XK",
         "name": "Kosovo",
         "currency": "EUR",
+        "currency_name": "Euro",
+        "currency_symbol": "€",
+        "currency_symbol_native": "€",
         "dial_code": "+383",
         "mask": [
             "##-###-###",
@@ -861,6 +1197,9 @@
         "iso": "KW",
         "name": "Kuwait",
         "currency": "KWD",
+        "currency_name": "Kuwaiti Dinar",
+        "currency_symbol": "KD",
+        "currency_symbol_native": "د.ك.",
         "dial_code": "+965",
         "mask": "####-####"
     },
@@ -868,6 +1207,9 @@
         "iso": "KG",
         "name": "Kyrgyzstan",
         "currency": "KGS",
+        "currency_name": "",
+        "currency_symbol": "KGS",
+        "currency_symbol_native": "KGS",
         "dial_code": "+996",
         "mask": "(###)###-###"
     },
@@ -875,6 +1217,9 @@
         "iso": "LA",
         "name": "Laos",
         "currency": "LAK",
+        "currency_name": "",
+        "currency_symbol": "LAK",
+        "currency_symbol_native": "LAK",
         "dial_code": "+856",
         "mask": [
             "##-###-###",
@@ -885,6 +1230,9 @@
         "iso": "LV",
         "name": "Latvia",
         "currency": "EUR",
+        "currency_name": "Euro",
+        "currency_symbol": "€",
+        "currency_symbol_native": "€",
         "dial_code": "+371",
         "mask": "##-###-###",
         "status": true
@@ -893,6 +1241,9 @@
         "iso": "LB",
         "name": "Lebanon",
         "currency": "LBP",
+        "currency_name": "Lebanese Pound",
+        "currency_symbol": "LB£",
+        "currency_symbol_native": "ل.ل.‏",
         "dial_code": "+961",
         "mask": [
             "#-###-###",
@@ -903,6 +1254,9 @@
         "iso": "LS",
         "name": "Lesotho",
         "currency": "LSL",
+        "currency_name": "",
+        "currency_symbol": "LSL",
+        "currency_symbol_native": "LSL",
         "dial_code": "+266",
         "mask": "#-###-####"
     },
@@ -910,6 +1264,9 @@
         "iso": "LR",
         "name": "Liberia",
         "currency": "LRD",
+        "currency_name": "",
+        "currency_symbol": "LRD",
+        "currency_symbol_native": "LRD",
         "dial_code": "+231",
         "mask": "##-###-###"
     },
@@ -917,6 +1274,9 @@
         "iso": "LY",
         "name": "Libya",
         "currency": "LYD",
+        "currency_name": "",
+        "currency_symbol": "LYD",
+        "currency_symbol_native": "LYD",
         "dial_code": "+218",
         "mask": [
             "##-###-###",
@@ -927,6 +1287,9 @@
         "iso": "LI",
         "name": "Liechtenstein",
         "currency": "CHF",
+        "currency_name": "Swiss Franc",
+        "currency_symbol": "CHF",
+        "currency_symbol_native": "CHF",
         "dial_code": "+423",
         "mask": "(###)###-####",
         "status": true
@@ -935,6 +1298,9 @@
         "iso": "LT",
         "name": "Lithuania",
         "currency": "EUR",
+        "currency_name": "Euro",
+        "currency_symbol": "€",
+        "currency_symbol_native": "€",
         "dial_code": "+370",
         "mask": "(###)##-###",
         "status": true
@@ -943,6 +1309,9 @@
         "iso": "LU",
         "name": "Luxembourg",
         "currency": "EUR",
+        "currency_name": "Euro",
+        "currency_symbol": "€",
+        "currency_symbol_native": "€",
         "dial_code": "+352",
         "mask": "(###)###-###",
         "status": true
@@ -951,6 +1320,9 @@
         "iso": "MO",
         "name": "Macao",
         "currency": "MOP",
+        "currency_name": "Macanese Pataca",
+        "currency_symbol": "MOP$",
+        "currency_symbol_native": "MOP$",
         "dial_code": "+853",
         "mask": "####-####"
     },
@@ -958,6 +1330,9 @@
         "iso": "MK",
         "name": "Macedonia",
         "currency": "MKD",
+        "currency_name": "Macedonian Denar",
+        "currency_symbol": "MKD",
+        "currency_symbol_native": "MKD",
         "dial_code": "+389",
         "mask": "##-###-###"
     },
@@ -965,6 +1340,9 @@
         "iso": "MG",
         "name": "Madagascar",
         "currency": "MGA",
+        "currency_name": "Malagasy Ariary",
+        "currency_symbol": "MGA",
+        "currency_symbol_native": "MGA",
         "dial_code": "+261",
         "mask": "##-##-#####"
     },
@@ -972,6 +1350,9 @@
         "iso": "MW",
         "name": "Malawi",
         "currency": "MWK",
+        "currency_name": "",
+        "currency_symbol": "MWK",
+        "currency_symbol_native": "MWK",
         "dial_code": "+265",
         "mask": [
             "1-###-###",
@@ -982,6 +1363,9 @@
         "iso": "MY",
         "name": "Malaysia",
         "currency": "MYR",
+        "currency_name": "Malaysian Ringgit",
+        "currency_symbol": "RM",
+        "currency_symbol_native": "RM",
         "dial_code": "+60",
         "mask": [
             "#-###-###",
@@ -995,6 +1379,9 @@
         "iso": "MV",
         "name": "Maldives",
         "currency": "MVR",
+        "currency_name": "",
+        "currency_symbol": "MVR",
+        "currency_symbol_native": "MVR",
         "dial_code": "+960",
         "mask": "###-####"
     },
@@ -1002,6 +1389,9 @@
         "iso": "ML",
         "name": "Mali",
         "currency": "XOF",
+        "currency_name": "CFA Franc BCEAO",
+        "currency_symbol": "CFA",
+        "currency_symbol_native": "CFA",
         "dial_code": "+223",
         "mask": "##-##-####"
     },
@@ -1009,6 +1399,9 @@
         "iso": "MT",
         "name": "Malta",
         "currency": "EUR",
+        "currency_name": "Euro",
+        "currency_symbol": "€",
+        "currency_symbol_native": "€",
         "dial_code": "+356",
         "mask": "####-####",
         "status": true
@@ -1017,6 +1410,9 @@
         "iso": "MH",
         "name": "Marshall Islands",
         "currency": "USD",
+        "currency_name": "US Dollar",
+        "currency_symbol": "$",
+        "currency_symbol_native": "$",
         "dial_code": "+692",
         "mask": "###-####"
     },
@@ -1024,6 +1420,9 @@
         "iso": "MQ",
         "name": "Martinique",
         "currency": "EUR",
+        "currency_name": "Euro",
+        "currency_symbol": "€",
+        "currency_symbol_native": "€",
         "dial_code": "+596",
         "mask": "(###)##-##-##"
     },
@@ -1031,6 +1430,9 @@
         "iso": "MR",
         "name": "Mauritania",
         "currency": "MRO",
+        "currency_name": "",
+        "currency_symbol": "MRO",
+        "currency_symbol_native": "MRO",
         "dial_code": "+222",
         "mask": "##-##-####"
     },
@@ -1038,6 +1440,9 @@
         "iso": "MU",
         "name": "Mauritius",
         "currency": "MUR",
+        "currency_name": "Mauritian Rupee",
+        "currency_symbol": "MURs",
+        "currency_symbol_native": "MURs",
         "dial_code": "+230",
         "mask": "###-####"
     },
@@ -1045,6 +1450,9 @@
         "iso": "YT",
         "name": "Mayotte",
         "currency": "EUR",
+        "currency_name": "Euro",
+        "currency_symbol": "€",
+        "currency_symbol_native": "€",
         "dial_code": "+262",
         "mask": "#####-####"
     },
@@ -1052,6 +1460,9 @@
         "iso": "MX",
         "name": "Mexico",
         "currency": "MXN",
+        "currency_name": "Mexican Peso",
+        "currency_symbol": "MX$",
+        "currency_symbol_native": "$",
         "dial_code": "+52",
         "mask": [
             "##-##-####",
@@ -1063,6 +1474,9 @@
         "iso": "FM",
         "name": "Micronesia",
         "currency": "USD",
+        "currency_name": "US Dollar",
+        "currency_symbol": "$",
+        "currency_symbol_native": "$",
         "dial_code": "+691",
         "mask": "###-####"
     },
@@ -1070,6 +1484,9 @@
         "iso": "MD",
         "name": "Moldova",
         "currency": "MDL",
+        "currency_name": "Moldovan Leu",
+        "currency_symbol": "MDL",
+        "currency_symbol_native": "MDL",
         "dial_code": "+373",
         "mask": "####-####"
     },
@@ -1077,6 +1494,9 @@
         "iso": "MC",
         "name": "Monaco",
         "currency": "EUR",
+        "currency_name": "Euro",
+        "currency_symbol": "€",
+        "currency_symbol_native": "€",
         "dial_code": "+377",
         "mask": [
             "##-###-###",
@@ -1087,6 +1507,9 @@
         "iso": "MN",
         "name": "Mongolia",
         "currency": "MNT",
+        "currency_name": "",
+        "currency_symbol": "MNT",
+        "currency_symbol_native": "MNT",
         "dial_code": "+976",
         "mask": "##-##-####"
     },
@@ -1094,6 +1517,9 @@
         "iso": "ME",
         "name": "Montenegro",
         "currency": "EUR",
+        "currency_name": "Euro",
+        "currency_symbol": "€",
+        "currency_symbol_native": "€",
         "dial_code": "+382",
         "mask": "##-###-###"
     },
@@ -1101,6 +1527,9 @@
         "iso": "MS",
         "name": "Montserrat",
         "currency": "XCD",
+        "currency_name": "",
+        "currency_symbol": "XCD",
+        "currency_symbol_native": "XCD",
         "dial_code": "+1",
         "mask": "(664)###-####"
     },
@@ -1108,6 +1537,9 @@
         "iso": "MA",
         "name": "Morocco",
         "currency": "MAD",
+        "currency_name": "Moroccan Dirham",
+        "currency_symbol": "MAD",
+        "currency_symbol_native": "د.م.",
         "dial_code": "+212",
         "mask": "##-####-###"
     },
@@ -1115,6 +1547,9 @@
         "iso": "MZ",
         "name": "Mozambique",
         "currency": "MZN",
+        "currency_name": "Mozambican Metical",
+        "currency_symbol": "MTn",
+        "currency_symbol_native": "MTn",
         "dial_code": "+258",
         "mask": "##-###-###"
     },
@@ -1122,6 +1557,9 @@
         "iso": "MM",
         "name": "Myanmar",
         "currency": "MMK",
+        "currency_name": "Myanma Kyat",
+        "currency_symbol": "MMK",
+        "currency_symbol_native": "MMK",
         "dial_code": "+95",
         "mask": [
             "###-###",
@@ -1133,6 +1571,9 @@
         "iso": "NA",
         "name": "Namibia",
         "currency": "NAD",
+        "currency_name": "Namibian Dollar",
+        "currency_symbol": "N$",
+        "currency_symbol_native": "N$",
         "dial_code": "+224",
         "mask": "##-###-####"
     },
@@ -1140,6 +1581,9 @@
         "iso": "NR",
         "name": "Nauru",
         "currency": "AUD",
+        "currency_name": "Australian Dollar",
+        "currency_symbol": "AU$",
+        "currency_symbol_native": "$",
         "dial_code": "+674",
         "mask": "###-####"
     },
@@ -1147,6 +1591,9 @@
         "iso": "NP",
         "name": "Nepal",
         "currency": "NPR",
+        "currency_name": "Nepalese Rupee",
+        "currency_symbol": "NPRs",
+        "currency_symbol_native": "नेरू",
         "dial_code": "+977",
         "mask": "##-###-###"
     },
@@ -1154,6 +1601,9 @@
         "iso": "NL",
         "name": "Netherlands",
         "currency": "EUR",
+        "currency_name": "Euro",
+        "currency_symbol": "€",
+        "currency_symbol_native": "€",
         "dial_code": "+31",
         "mask": "##-###-####",
         "status": true
@@ -1162,6 +1612,9 @@
         "iso": "NC",
         "name": "New Caledonia",
         "currency": "XPF",
+        "currency_name": "",
+        "currency_symbol": "XPF",
+        "currency_symbol_native": "XPF",
         "dial_code": "+687",
         "mask": "##-####"
     },
@@ -1169,6 +1622,9 @@
         "iso": "NZ",
         "name": "New Zealand",
         "currency": "NZD",
+        "currency_name": "New Zealand Dollar",
+        "currency_symbol": "NZ$",
+        "currency_symbol_native": "$",
         "dial_code": "+24",
         "mask": [
             "#-###-###",
@@ -1181,6 +1637,9 @@
         "iso": "NI",
         "name": "Nicaragua",
         "currency": "NIO",
+        "currency_name": "Nicaraguan Córdoba",
+        "currency_symbol": "C$",
+        "currency_symbol_native": "C$",
         "dial_code": "+505",
         "mask": "####-####"
     },
@@ -1188,6 +1647,9 @@
         "iso": "NE",
         "name": "Niger",
         "currency": "XOF",
+        "currency_name": "CFA Franc BCEAO",
+        "currency_symbol": "CFA",
+        "currency_symbol_native": "CFA",
         "dial_code": "+227",
         "mask": "##-##-####"
     },
@@ -1195,6 +1657,9 @@
         "iso": "NG",
         "name": "Nigeria",
         "currency": "NGN",
+        "currency_name": "Nigerian Naira",
+        "currency_symbol": "₦",
+        "currency_symbol_native": "₦",
         "dial_code": "+234",
         "mask": [
             "##-###-##",
@@ -1206,6 +1671,9 @@
         "iso": "NU",
         "name": "Niue",
         "currency": "NZD",
+        "currency_name": "",
+        "currency_symbol": "NZD",
+        "currency_symbol_native": "NZD",
         "dial_code": "+683",
         "mask": "####"
     },
@@ -1213,6 +1681,9 @@
         "iso": "NF",
         "name": "Norfolk Island",
         "currency": "AUD",
+        "currency_name": "Australian Dollar",
+        "currency_symbol": "AU$",
+        "currency_symbol_native": "$",
         "dial_code": "+672",
         "mask": "3##-###"
     },
@@ -1220,6 +1691,9 @@
         "iso": "KP",
         "name": "North Korea",
         "currency": "KPW",
+        "currency_name": "",
+        "currency_symbol": "KPW",
+        "currency_symbol_native": "KPW",
         "dial_code": "+850",
         "mask": [
             "###-###",
@@ -1234,6 +1708,9 @@
         "iso": "MP",
         "name": "Northern Mariana Islands",
         "currency": "USD",
+        "currency_name": "US Dollar",
+        "currency_symbol": "$",
+        "currency_symbol_native": "$",
         "dial_code": "+1",
         "mask": "(670)###-####"
     },
@@ -1241,6 +1718,9 @@
         "iso": "NO",
         "name": "Norway",
         "currency": "NOK",
+        "currency_name": "Norwegian Krone",
+        "currency_symbol": "Nkr",
+        "currency_symbol_native": "kr",
         "dial_code": "+47",
         "mask": "(###)##-###",
         "status": true
@@ -1249,6 +1729,9 @@
         "iso": "OM",
         "name": "Oman",
         "currency": "OMR",
+        "currency_name": "Omani Rial",
+        "currency_symbol": "OMR",
+        "currency_symbol_native": "ر.ع.‏",
         "dial_code": "+968",
         "mask": "##-###-###"
     },
@@ -1256,6 +1739,9 @@
         "iso": "PK",
         "name": "Pakistan",
         "currency": "PKR",
+        "currency_name": "Pakistani Rupee",
+        "currency_symbol": "PKRs",
+        "currency_symbol_native": "₨",
         "dial_code": "+92",
         "mask": "(###)###-####"
     },
@@ -1263,6 +1749,9 @@
         "iso": "PW",
         "name": "Palau",
         "currency": "USD",
+        "currency_name": "US Dollar",
+        "currency_symbol": "$",
+        "currency_symbol_native": "$",
         "dial_code": "+680",
         "mask": "###-####"
     },
@@ -1270,6 +1759,9 @@
         "iso": "PS",
         "name": "Palestinian Territory",
         "currency": "ILS",
+        "currency_name": "",
+        "currency_symbol": "ILS",
+        "currency_symbol_native": "ILS",
         "dial_code": "+970",
         "mask": "##-###-####"
     },
@@ -1277,6 +1769,9 @@
         "iso": "PA",
         "name": "Panama",
         "currency": "PAB",
+        "currency_name": "Panamanian Balboa",
+        "currency_symbol": "B/.",
+        "currency_symbol_native": "B/.",
         "dial_code": "+507",
         "mask": "###-####"
     },
@@ -1284,6 +1779,9 @@
         "iso": "PG",
         "name": "Papua New Guinea",
         "currency": "PGK",
+        "currency_name": "",
+        "currency_symbol": "PGK",
+        "currency_symbol_native": "PGK",
         "dial_code": "+675",
         "mask": "(###)##-###"
     },
@@ -1291,6 +1789,9 @@
         "iso": "PY",
         "name": "Paraguay",
         "currency": "PYG",
+        "currency_name": "Paraguayan Guarani",
+        "currency_symbol": "₲",
+        "currency_symbol_native": "₲",
         "dial_code": "+595",
         "mask": "(###)###-###"
     },
@@ -1298,6 +1799,9 @@
         "iso": "PE",
         "name": "Peru",
         "currency": "PEN",
+        "currency_name": "Peruvian Nuevo Sol",
+        "currency_symbol": "S/.",
+        "currency_symbol_native": "S/.",
         "dial_code": "+51",
         "mask": "(###)###-###"
     },
@@ -1305,6 +1809,9 @@
         "iso": "PH",
         "name": "Philippines",
         "currency": "PHP",
+        "currency_name": "Philippine Peso",
+        "currency_symbol": "₱",
+        "currency_symbol_native": "₱",
         "dial_code": "+63",
         "mask": "(###)###-####"
     },
@@ -1312,6 +1819,9 @@
         "iso": "PN",
         "name": "Pitcairn",
         "currency": "NZD",
+        "currency_name": "",
+        "currency_symbol": "NZD",
+        "currency_symbol_native": "NZD",
         "dial_code": "+870",
         "mask": "###-###-###"
     },
@@ -1319,6 +1829,9 @@
         "iso": "PL",
         "name": "Poland",
         "currency": "PLN",
+        "currency_name": "Polish Zloty",
+        "currency_symbol": "zł",
+        "currency_symbol_native": "zł",
         "dial_code": "+48",
         "mask": "(###)###-###",
         "status": true
@@ -1327,6 +1840,9 @@
         "iso": "PT",
         "name": "Portugal",
         "currency": "EUR",
+        "currency_name": "Euro",
+        "currency_symbol": "€",
+        "currency_symbol_native": "€",
         "dial_code": "+351",
         "mask": "##-###-####",
         "status": true
@@ -1335,6 +1851,9 @@
         "iso": "PR",
         "name": "Puerto Rico",
         "currency": "USD",
+        "currency_name": "US Dollar",
+        "currency_symbol": "$",
+        "currency_symbol_native": "$",
         "dial_code": "+1",
         "mask": [
             "(787) ### ####",
@@ -1345,6 +1864,9 @@
         "iso": "QA",
         "name": "Qatar",
         "currency": "QAR",
+        "currency_name": "Qatari Rial",
+        "currency_symbol": "QR",
+        "currency_symbol_native": "ر.ق.",
         "dial_code": "+974",
         "mask": "####-####"
     },
@@ -1352,6 +1874,9 @@
         "iso": "CG",
         "name": "Republic of the Congo",
         "currency": "XAF",
+        "currency_name": "",
+        "currency_symbol": "XAF",
+        "currency_symbol_native": "XAF",
         "dial_code": "+242",
         "mask": "##-#####"
     },
@@ -1359,6 +1884,9 @@
         "iso": "RE",
         "name": "Reunion",
         "currency": "EUR",
+        "currency_name": "Euro",
+        "currency_symbol": "€",
+        "currency_symbol_native": "€",
         "dial_code": "+262",
         "mask": "#####-####"
     },
@@ -1366,6 +1894,9 @@
         "iso": "RO",
         "name": "Romania",
         "currency": "RON",
+        "currency_name": "Romanian Leu",
+        "currency_symbol": "RON",
+        "currency_symbol_native": "RON",
         "dial_code": "+40",
         "mask": "##-###-####",
         "status": true
@@ -1374,6 +1905,9 @@
         "iso": "RU",
         "name": "Russia",
         "currency": "RUB",
+        "currency_name": "Russian Ruble",
+        "currency_symbol": "RUB",
+        "currency_symbol_native": "₽",
         "dial_code": "+7",
         "mask": "(###)###-##-##"
     },
@@ -1381,6 +1915,9 @@
         "iso": "RW",
         "name": "Rwanda",
         "currency": "RWF",
+        "currency_name": "Rwandan Franc",
+        "currency_symbol": "RWF",
+        "currency_symbol_native": "FR",
         "dial_code": "+250",
         "mask": "(###)###-###"
     },
@@ -1388,6 +1925,9 @@
         "iso": "BL",
         "name": "Saint Barth\u00e9lemy",
         "currency": "EUR",
+        "currency_name": "Euro",
+        "currency_symbol": "€",
+        "currency_symbol_native": "€",
         "dial_code": "+590",
         "mask": "###-##-##-##"
     },
@@ -1395,6 +1935,9 @@
         "iso": "SH",
         "name": "Saint Helena",
         "currency": "SHP",
+        "currency_name": "",
+        "currency_symbol": "SHP",
+        "currency_symbol_native": "SHP",
         "dial_code": "+290",
         "mask": "####"
     },
@@ -1402,6 +1945,9 @@
         "iso": "KN",
         "name": "Saint Kitts and Nevis",
         "currency": "XCD",
+        "currency_name": "",
+        "currency_symbol": "XCD",
+        "currency_symbol_native": "XCD",
         "dial_code": "+1",
         "mask": "(869)###-####"
     },
@@ -1409,6 +1955,9 @@
         "iso": "LC",
         "name": "Saint Lucia",
         "currency": "XCD",
+        "currency_name": "",
+        "currency_symbol": "XCD",
+        "currency_symbol_native": "XCD",
         "dial_code": "+1",
         "mask": "(758)###-####"
     },
@@ -1416,6 +1965,9 @@
         "iso": "MF",
         "name": "Saint Martin",
         "currency": "EUR",
+        "currency_name": "Euro",
+        "currency_symbol": "€",
+        "currency_symbol_native": "€",
         "dial_code": "+590",
         "mask": "(###)###-###"
     },
@@ -1423,6 +1975,9 @@
         "iso": "PM",
         "name": "Saint Pierre and Miquelon",
         "currency": "EUR",
+        "currency_name": "Euro",
+        "currency_symbol": "€",
+        "currency_symbol_native": "€",
         "dial_code": "+508",
         "mask": "##-####"
     },
@@ -1430,6 +1985,9 @@
         "iso": "VC",
         "name": "Saint Vincent and the Grenadines",
         "currency": "XCD",
+        "currency_name": "",
+        "currency_symbol": "XCD",
+        "currency_symbol_native": "XCD",
         "dial_code": "+1",
         "mask": "(784)###-####"
     },
@@ -1437,6 +1995,9 @@
         "iso": "WS",
         "name": "Samoa",
         "currency": "WST",
+        "currency_name": "",
+        "currency_symbol": "WST",
+        "currency_symbol_native": "WST",
         "dial_code": "+685",
         "mask": "##-####"
     },
@@ -1444,6 +2005,9 @@
         "iso": "SM",
         "name": "San Marino",
         "currency": "EUR",
+        "currency_name": "Euro",
+        "currency_symbol": "€",
+        "currency_symbol_native": "€",
         "dial_code": "+378",
         "mask": "####-######"
     },
@@ -1451,6 +2015,9 @@
         "iso": "ST",
         "name": "Sao Tome and Principe",
         "currency": "STD",
+        "currency_name": "",
+        "currency_symbol": "STD",
+        "currency_symbol_native": "STD",
         "dial_code": "+239",
         "mask": "##-#####"
     },
@@ -1458,6 +2025,9 @@
         "iso": "SA",
         "name": "Saudi Arabia",
         "currency": "SAR",
+        "currency_name": "Saudi Riyal",
+        "currency_symbol": "SR",
+        "currency_symbol_native": "ر.س.",
         "dial_code": "+966",
         "mask": [
             "#-###-####",
@@ -1468,6 +2038,9 @@
         "iso": "SN",
         "name": "Senegal",
         "currency": "XOF",
+        "currency_name": "CFA Franc BCEAO",
+        "currency_symbol": "CFA",
+        "currency_symbol_native": "CFA",
         "dial_code": "+221",
         "mask": "##-###-####"
     },
@@ -1475,6 +2048,9 @@
         "iso": "RS",
         "name": "Serbia",
         "currency": "RSD",
+        "currency_name": "Serbian Dinar",
+        "currency_symbol": "din.",
+        "currency_symbol_native": "дин.",
         "dial_code": "+381",
         "mask": "##-###-####"
     },
@@ -1482,6 +2058,9 @@
         "iso": "SC",
         "name": "Seychelles",
         "currency": "SCR",
+        "currency_name": "",
+        "currency_symbol": "SCR",
+        "currency_symbol_native": "SCR",
         "dial_code": "+248",
         "mask": "#-###-###"
     },
@@ -1489,6 +2068,9 @@
         "iso": "SL",
         "name": "Sierra Leone",
         "currency": "SLL",
+        "currency_name": "",
+        "currency_symbol": "SLL",
+        "currency_symbol_native": "SLL",
         "dial_code": "+232",
         "mask": "##-######"
     },
@@ -1496,6 +2078,9 @@
         "iso": "SG",
         "name": "Singapore",
         "currency": "SGD",
+        "currency_name": "Singapore Dollar",
+        "currency_symbol": "S$",
+        "currency_symbol_native": "$",
         "dial_code": "+65",
         "mask": "####-####",
         "status": true
@@ -1504,6 +2089,9 @@
         "iso": "SX",
         "name": "Sint Maarten",
         "currency": "ANG",
+        "currency_name": "",
+        "currency_symbol": "ANG",
+        "currency_symbol_native": "ANG",
         "dial_code": "+1",
         "mask": "(721)###-####"
     },
@@ -1511,6 +2099,9 @@
         "iso": "SK",
         "name": "Slovakia",
         "currency": "EUR",
+        "currency_name": "Euro",
+        "currency_symbol": "€",
+        "currency_symbol_native": "€",
         "dial_code": "+421",
         "mask": "(###)###-###",
         "status": true
@@ -1519,6 +2110,9 @@
         "iso": "SI",
         "name": "Slovenia",
         "currency": "EUR",
+        "currency_name": "Euro",
+        "currency_symbol": "€",
+        "currency_symbol_native": "€",
         "dial_code": "+386",
         "mask": "##-###-###",
         "status": true
@@ -1527,6 +2121,9 @@
         "iso": "SB",
         "name": "Solomon Islands",
         "currency": "SDB",
+        "currency_name": "",
+        "currency_symbol": "SDB",
+        "currency_symbol_native": "SDB",
         "dial_code": "+677",
         "mask": [
             "#####",
@@ -1537,6 +2134,9 @@
         "iso": "SO",
         "name": "Somalia",
         "currency": "SOS",
+        "currency_name": "Somali Shilling",
+        "currency_symbol": "Ssh",
+        "currency_symbol_native": "Ssh",
         "dial_code": "+252",
         "mask": [
             "#-###-###",
@@ -1547,6 +2147,9 @@
         "iso": "ZA",
         "name": "South Africa",
         "currency": "ZAR",
+        "currency_name": "South African Rand",
+        "currency_symbol": "R",
+        "currency_symbol_native": "R",
         "dial_code": "+27",
         "mask": "##-###-####"
     },
@@ -1554,6 +2157,9 @@
         "iso": "GS",
         "name": "South Georgia and the South Sandwich Islands",
         "currency": "GBP",
+        "currency_name": "British Pound Sterling",
+        "currency_symbol": "£",
+        "currency_symbol_native": "£",
         "dial_code": "+500",
         "mask": "#####"
     },
@@ -1561,6 +2167,9 @@
         "iso": "KR",
         "name": "South Korea",
         "currency": "KRW",
+        "currency_name": "South Korean Won",
+        "currency_symbol": "₩",
+        "currency_symbol_native": "₩",
         "dial_code": "+82",
         "mask": "##-###-####"
     },
@@ -1568,6 +2177,9 @@
         "iso": "SS",
         "name": "South Sudan",
         "currency": "SSP",
+        "currency_name": "",
+        "currency_symbol": "SSP",
+        "currency_symbol_native": "SSP",
         "dial_code": "+211",
         "mask": "##-###-####"
     },
@@ -1575,6 +2187,9 @@
         "iso": "ES",
         "name": "Spain",
         "currency": "EUR",
+        "currency_name": "Euro",
+        "currency_symbol": "€",
+        "currency_symbol_native": "€",
         "dial_code": "+34",
         "mask": "(###)###-###",
         "status": true
@@ -1583,6 +2198,9 @@
         "iso": "LK",
         "name": "Sri Lanka",
         "currency": "LKR",
+        "currency_name": "Sri Lankan Rupee",
+        "currency_symbol": "SLRs",
+        "currency_symbol_native": "SL Re",
         "dial_code": "+94",
         "mask": "##-###-####"
     },
@@ -1590,6 +2208,9 @@
         "iso": "SD",
         "name": "Sudan",
         "currency": "SDG",
+        "currency_name": "",
+        "currency_symbol": "SDG",
+        "currency_symbol_native": "SDG",
         "dial_code": "+249",
         "mask": "##-###-####"
     },
@@ -1597,6 +2218,9 @@
         "iso": "SR",
         "name": "Suriname",
         "currency": "SRD",
+        "currency_name": "",
+        "currency_symbol": "SRD",
+        "currency_symbol_native": "SRD",
         "dial_code": "+597",
         "mask": [
             "###-###",
@@ -1607,6 +2231,9 @@
         "iso": "SJ",
         "name": "Svalbard and Jan Mayen",
         "currency": "NOK",
+        "currency_name": "",
+        "currency_symbol": "NOK",
+        "currency_symbol_native": "NOK",
         "dial_code": "+47",
         "mask": "(###)##-###"
     },
@@ -1614,6 +2241,9 @@
         "iso": "SZ",
         "name": "Swaziland",
         "currency": "SZL",
+        "currency_name": "",
+        "currency_symbol": "SZL",
+        "currency_symbol_native": "SZL",
         "dial_code": "+268",
         "mask": "##-##-####"
     },
@@ -1621,6 +2251,9 @@
         "iso": "SE",
         "name": "Sweden",
         "currency": "SEK",
+        "currency_name": "Swedish Krona",
+        "currency_symbol": "Skr",
+        "currency_symbol_native": "kr",
         "dial_code": "+46",
         "mask": "##-###-####",
         "status": true
@@ -1629,6 +2262,9 @@
         "iso": "CH",
         "name": "Switzerland",
         "currency": "CHF",
+        "currency_name": "Swiss Franc",
+        "currency_symbol": "CHF",
+        "currency_symbol_native": "CHF",
         "dial_code": "+41",
         "mask": "##-###-####",
         "status": true
@@ -1637,6 +2273,9 @@
         "iso": "SY",
         "name": "Syria",
         "currency": "SYP",
+        "currency_name": "",
+        "currency_symbol": "SYP",
+        "currency_symbol_native": "SYP",
         "dial_code": "+963",
         "mask": "##-####-###"
     },
@@ -1644,6 +2283,9 @@
         "iso": "TW",
         "name": "Taiwan",
         "currency": "TWD",
+        "currency_name": "New Taiwan Dollar",
+        "currency_symbol": "NT$",
+        "currency_symbol_native": "NT$",
         "dial_code": "+886",
         "mask": [
             "####-####",
@@ -1654,6 +2296,9 @@
         "iso": "TJ",
         "name": "Tajikistan",
         "currency": "TJS",
+        "currency_name": "",
+        "currency_symbol": "TJS",
+        "currency_symbol_native": "TJS",
         "dial_code": "+992",
         "mask": "##-###-####"
     },
@@ -1661,6 +2306,9 @@
         "iso": "TZ",
         "name": "Tanzania",
         "currency": "TZS",
+        "currency_name": "Tanzanian Shilling",
+        "currency_symbol": "TSh",
+        "currency_symbol_native": "TSh",
         "dial_code": "+255",
         "mask": "##-###-####"
     },
@@ -1668,6 +2316,9 @@
         "iso": "TH",
         "name": "Thailand",
         "currency": "THB",
+        "currency_name": "Thai Baht",
+        "currency_symbol": "฿",
+        "currency_symbol_native": "฿",
         "dial_code": "+66",
         "mask": [
             "##-###-###",
@@ -1679,6 +2330,9 @@
         "iso": "TG",
         "name": "Togo",
         "currency": "XOF",
+        "currency_name": "CFA Franc BCEAO",
+        "currency_symbol": "CFA",
+        "currency_symbol_native": "CFA",
         "dial_code": "+228",
         "mask": "##-###-###"
     },
@@ -1686,6 +2340,9 @@
         "iso": "TK",
         "name": "Tokelau",
         "currency": "NZD",
+        "currency_name": "",
+        "currency_symbol": "NZD",
+        "currency_symbol_native": "NZD",
         "dial_code": "+690",
         "mask": "####"
     },
@@ -1693,6 +2350,9 @@
         "iso": "TO",
         "name": "Tonga",
         "currency": "TOP",
+        "currency_name": "Tongan Paʻanga",
+        "currency_symbol": "T$",
+        "currency_symbol_native": "T$",
         "dial_code": "+676",
         "mask": "#####"
     },
@@ -1700,6 +2360,9 @@
         "iso": "TT",
         "name": "Trinidad and Tobago",
         "currency": "TTD",
+        "currency_name": "Trinidad and Tobago Dollar",
+        "currency_symbol": "TT$",
+        "currency_symbol_native": "$",
         "dial_code": "+1",
         "mask": "(868)###-####"
     },
@@ -1707,6 +2370,9 @@
         "iso": "TN",
         "name": "Tunisia",
         "currency": "TND",
+        "currency_name": "Tunisian Dinar",
+        "currency_symbol": "TD",
+        "currency_symbol_native": "د.ت.‏",
         "dial_code": "+216",
         "mask": "##-###-###"
     },
@@ -1714,6 +2380,9 @@
         "iso": "TR",
         "name": "Turkey",
         "currency": "TRY",
+        "currency_name": "Turkish Lira",
+        "currency_symbol": "TL",
+        "currency_symbol_native": "TL",
         "dial_code": "+90",
         "mask": "(###)###-####"
     },
@@ -1721,6 +2390,9 @@
         "iso": "TM",
         "name": "Turkmenistan",
         "currency": "TMT",
+        "currency_name": "",
+        "currency_symbol": "TMT",
+        "currency_symbol_native": "TMT",
         "dial_code": "+993",
         "mask": "#-###-####"
     },
@@ -1728,6 +2400,9 @@
         "iso": "TC",
         "name": "Turks and Caicos Islands",
         "currency": "USD",
+        "currency_name": "US Dollar",
+        "currency_symbol": "$",
+        "currency_symbol_native": "$",
         "dial_code": "+1",
         "mask": "(249)###-###"
     },
@@ -1735,6 +2410,9 @@
         "iso": "TV",
         "name": "Tuvalu",
         "currency": "AUD",
+        "currency_name": "Australian Dollar",
+        "currency_symbol": "AU$",
+        "currency_symbol_native": "$",
         "dial_code": "+688",
         "mask": [
             "2####",
@@ -1745,6 +2423,9 @@
         "iso": "VI",
         "name": "U.S. Virgin Islands",
         "currency": "USD",
+        "currency_name": "US Dollar",
+        "currency_symbol": "$",
+        "currency_symbol_native": "$",
         "dial_code": "+1",
         "mask": "(340)###-####"
     },
@@ -1752,6 +2433,9 @@
         "iso": "UG",
         "name": "Uganda",
         "currency": "UGX",
+        "currency_name": "Ugandan Shilling",
+        "currency_symbol": "USh",
+        "currency_symbol_native": "USh",
         "dial_code": "+256",
         "mask": "(###)###-###"
     },
@@ -1759,6 +2443,9 @@
         "iso": "UA",
         "name": "Ukraine",
         "currency": "UAH",
+        "currency_name": "Ukrainian Hryvnia",
+        "currency_symbol": "UAH",
+        "currency_symbol_native": "UAH",
         "dial_code": "+380",
         "mask": "(##)###-##-##"
     },
@@ -1766,6 +2453,9 @@
         "iso": "AE",
         "name": "United Arab Emirates",
         "currency": "AED",
+        "currency_name": "United Arab Emirates Dirham",
+        "currency_symbol": "AED",
+        "currency_symbol_native": "د.إ.",
         "dial_code": "+971",
         "mask": [
             "#-###-####",
@@ -1777,6 +2467,9 @@
         "iso": "GB",
         "name": "United Kingdom",
         "currency": "GBP",
+        "currency_name": "British Pound Sterling",
+        "currency_symbol": "£",
+        "currency_symbol_native": "£",
         "dial_code": "+44",
         "mask": "##-####-####",
         "status": true
@@ -1785,6 +2478,9 @@
         "iso": "US",
         "name": "United States",
         "currency": "USD",
+        "currency_name": "US Dollar",
+        "currency_symbol": "$",
+        "currency_symbol_native": "$",
         "dial_code": "+1",
         "mask": "(###)###-####",
         "status": true,
@@ -1794,6 +2490,9 @@
         "iso": "UY",
         "name": "Uruguay",
         "currency": "UYI",
+        "currency_name": "",
+        "currency_symbol": "UYI",
+        "currency_symbol_native": "UYI",
         "dial_code": "+598",
         "mask": "#-###-##-##"
     },
@@ -1801,6 +2500,9 @@
         "iso": "UZ",
         "name": "Uzbekistan",
         "currency": "UZS",
+        "currency_name": "Uzbekistan Som",
+        "currency_symbol": "UZS",
+        "currency_symbol_native": "UZS",
         "dial_code": "+998",
         "mask": "##-###-####"
     },
@@ -1808,6 +2510,9 @@
         "iso": "VU",
         "name": "Vanuatu",
         "currency": "VUV",
+        "currency_name": "",
+        "currency_symbol": "VUV",
+        "currency_symbol_native": "VUV",
         "dial_code": "+678",
         "mask": [
             "#####",
@@ -1818,6 +2523,9 @@
         "iso": "VA",
         "name": "Vatican",
         "currency": "EUR",
+        "currency_name": "Euro",
+        "currency_symbol": "€",
+        "currency_symbol_native": "€",
         "dial_code": "+39",
         "mask": "06 698#####"
     },
@@ -1825,6 +2533,9 @@
         "iso": "VE",
         "name": "Venezuela",
         "currency": "VEF",
+        "currency_name": "Venezuelan Bolívar",
+        "currency_symbol": "Bs.F.",
+        "currency_symbol_native": "Bs.F.",
         "dial_code": "+58",
         "mask": "(###)###-####"
     },
@@ -1832,6 +2543,9 @@
         "iso": "VN",
         "name": "Vietnam",
         "currency": "VND",
+        "currency_name": "Vietnamese Dong",
+        "currency_symbol": "₫",
+        "currency_symbol_native": "₫",
         "dial_code": "+84",
         "mask": [
             "##-####-###",
@@ -1842,6 +2556,9 @@
         "iso": "WF",
         "name": "Wallis and Futuna",
         "currency": "XPF",
+        "currency_name": "",
+        "currency_symbol": "XPF",
+        "currency_symbol_native": "XPF",
         "dial_code": "+681",
         "mask": "##-####"
     },
@@ -1849,6 +2566,9 @@
         "iso": "EH",
         "name": "Western Sahara",
         "currency": "MAD",
+        "currency_name": "",
+        "currency_symbol": "MAD",
+        "currency_symbol_native": "MAD",
         "dial_code": "+212",
         "mask": "####-#####"
     },
@@ -1856,6 +2576,9 @@
         "iso": "YE",
         "name": "Yemen",
         "currency": "YER",
+        "currency_name": "Yemeni Rial",
+        "currency_symbol": "YR",
+        "currency_symbol_native": "ر.ي.‏",
         "dial_code": "+967",
         "mask": [
             "#-###-###",
@@ -1867,6 +2590,9 @@
         "iso": "ZM",
         "name": "Zambia",
         "currency": "ZMK",
+        "currency_name": "",
+        "currency_symbol": "ZMK",
+        "currency_symbol_native": "ZMK",
         "dial_code": "+260",
         "mask": "##-###-####"
     },
@@ -1874,6 +2600,9 @@
         "iso": "ZW",
         "name": "Zimbabwe",
         "currency": "USD",
+        "currency_name": "US Dollar",
+        "currency_symbol": "$",
+        "currency_symbol_native": "$",
         "dial_code": "+263",
         "mask": "#-######"
     }

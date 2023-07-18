@@ -41,7 +41,6 @@ enum SettingKey: string
 
     // GROUP_FAP
     case fap_status = 'fap_status';
-    case fap_max = 'fap_max';
     
     //Online Store
     // GROUP_SERVICE_STORE_GENERAL
@@ -151,7 +150,6 @@ enum SettingKey: string
 
             // FAP
             static::fap_status => ['boolean'],
-            static::fap_max =>  ['required', 'integer', 'min:1', 'max:10'],
 
             //Online Store
             // General
@@ -222,8 +220,7 @@ enum SettingKey: string
             static::integration_sendinblue_api_key,
             static::integration_sendinblue_list_id => self::GROUP_INTEGRATIONS,
 
-            static::fap_status,
-            static::fap_max => self::GROUP_FAP,
+            static::fap_status => self::GROUP_FAP,
 
             static::subdomain,
             static::custom_domain => self::GROUP_SERVICE_STORE_GENERAL,
@@ -294,7 +291,6 @@ enum SettingKey: string
             ], 'name'),
             self::GROUP_FAP => array_column([
                 static::fap_status,
-                static::fap_max
             ], 'name'),
             self::GROUP_SERVICE_STORE_GENERAL => array_column([
                 static::subdomain,
@@ -369,7 +365,6 @@ enum SettingKey: string
             static::business_phone,
             static::date_format,
             static::time_format,
-            static::fap_max,
             static::days_max_booking,
             static::days_max_timetable => CastType::integer->name,
 
