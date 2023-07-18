@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('iso', 2);
             $table->string('dial_code', 5);
             $table->string('currency', 3)->nullable();
+            $table->string('currency_name')->nullable();
+            $table->string('currency_symbol', 10)->nullable();
             $table->string('mask', 20)->nullable();
             $table->boolean('status')->default(false)->comment('stripe supported');
             $table->boolean('has_states')->default(false)->comment('e.g. US');
