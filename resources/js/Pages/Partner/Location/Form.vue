@@ -86,17 +86,6 @@ const usersList = computed(() => {
   }
   return users;
 });
-const telInputDefaultCountry = ref(null);
-const bindTelInputOptions = ref({
-  inputOptions: {
-    styleClasses: "",
-    showDialCode: true,
-    id: "phone",
-  },
-  styleClasses: "mt-1 block w-full",
-  ignoredCountries: props.ignored_countries,
-  validCharactersOnly: true,
-});
 
 watch(phoneNumber, (newVal, oldVal) => {
   formatPhoneInput();
@@ -110,7 +99,6 @@ onMounted(async () => {
     formatOnDisplay: true,
     nationalMode: false,
     customContainer: "w-full",
-    excludeCountries: props.ignored_countries
   });
   formatPhoneInput();
 });

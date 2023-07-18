@@ -71,7 +71,6 @@ onMounted(async () => {
         formatOnDisplay: true,
         nationalMode: false,
         customContainer: "w-full",
-        excludeCountries: props.ignored_countries,
     });
     formatPhoneInput();
 });
