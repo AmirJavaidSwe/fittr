@@ -2,8 +2,7 @@
 import Section from '@/Components/Section.vue';
 import ButtonLink from '@/Components/ButtonLink.vue';
 import InputLabel from '@/Components/InputLabel.vue';
-import SelectInput from '@/Components/SelectInput.vue';
-import { router, useForm, usePage } from '@inertiajs/vue3';
+import { useForm } from '@inertiajs/vue3';
 import Multiselect from '@vueform/multiselect';
 import '@vueform/multiselect/themes/tailwind.css'
 import ClockIcon from '@/Icons/ClockIcon.vue';
@@ -11,12 +10,10 @@ import LocationIcon from '@/Icons/LocationIcon.vue';
 import { DateTime, Duration, Interval } from 'luxon';
 import Avatar from '@/Components/Avatar.vue';
 import ColoredValue from '@/Components/DataTable/ColoredValue.vue';
-import { onBeforeMount, ref, watch } from 'vue';
+import { computed, onBeforeMount, onMounted, ref, watch } from 'vue';
 import SideModal from '@/Components/SideModal.vue';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faClock, faUser, faUserAlt } from '@fortawesome/free-solid-svg-icons';
-import AvatarValue from '@/Components/DataTable/AvatarValue.vue';
-
+import { Splide, SplideSlide } from '@splidejs/vue-splide';
+import { useWindowSize } from '@/Composables/window_size';
 
 const props = defineProps({
     classes: {
@@ -38,12 +35,14 @@ const props = defineProps({
 });
 
 const form = useForm({
-    class_type: '',
-    instructor: '',
-    time: '',
+    class_type: [],
+    instructor: [],
+    is_off_peak: '',
     date: '',
 });
 
+const timetableEl = ref(null);
+const classesEl = ref(null);
 const timetable = ref([]);
 
 const onDateChange = (date) => {
@@ -52,7 +51,8 @@ const onDateChange = (date) => {
 }
 
 const onSearch = () => {
-    form.get(route('ss.classes.index', { subdomain: props.business_seetings.subdomain }), {
+    form.transform((data) => ({class_type: data.class_type, instructor: data.instructor}))
+    .get(route('ss.classes.index', { subdomain: props.business_seetings.subdomain }), {
         preserveScroll: true,
         preserveState: true,
         replace: true,
@@ -64,23 +64,38 @@ onBeforeMount(() => {
 
     let queryParams = new URLSearchParams(window.location.search);
 
-    form.class_type = queryParams.get('class_type') ?? '';
-    form.instructor = queryParams.get('instructor') ?? '';
-    form.time = queryParams.get('time') ?? '';
+    if(queryParams.get('class_type'))
+        form.class_type = queryParams.get('class_type');
+    if(queryParams.get('instructor'))
+        form.instructor = queryParams.get('instructor');
+    // if(queryParams.get('time'))
+    //     form.time = queryParams.get('time');
 
     let start = DateTime.now().setZone(props.business_seetings.timezone);
     let end = DateTime.now().setZone(props.business_seetings.timezone);
-    let noOfDays = start.daysInMonth;
+    let noOfDays = parseInt(props.business_seetings.days_max_timetable ?? start.daysInMonth) - 1; // Note: need to discuss the approach about showing unlimited dates here.
     end = end.plus(Duration.fromObject({days: noOfDays}));
 
     let intervalObj = Interval.fromDateTimes(start, end);
     timetable.value = intervalObj.splitBy({ days: 1}).map(d => d.start);
-    form.date = start.toSQLDate();
 
-    // console.log(timetable.value)
+    if(queryParams.get('date')) {
+        form.date = queryParams.get('date');
+    }
 });
 
-watch(() => ({...form.data()}), onSearch);
+onMounted(() => {
+
+    const timetableSplide = timetableEl.value?.splide;
+    const classesSplide = classesEl.value?.splide;
+
+    if(timetableSplide && classesSplide) {
+        timetableEl.value?.sync(classesEl.value?.splide);
+    }
+
+});
+
+watch(() => ({class_type: form.class_type, instructor: form.instructor}), onSearch);
 
 const modal = ref(false);
 const classDetails = ref({});
@@ -123,6 +138,47 @@ const cancelBooking = () => {
     });
 }
 
+const { screen } = useWindowSize();
+
+const calendarPerPage = computed(() => {
+    switch(true) {
+        case screen.value == '2xl':
+            return 7;
+        case screen.value == 'xl':
+            return 6;
+        case screen.value == 'lg':
+            return 5;
+        case screen.value == 'md':
+            return 4;
+        case screen.value == 'sm':
+            return 2;
+        default:
+            return 1;
+    };
+});
+
+const classesPerPage = computed(() => {
+    switch(true) {
+        case screen.value == '2xl':
+            return 7;
+        case screen.value == 'xl':
+            return 6;
+        case screen.value == 'lg':
+            return 5;
+        case screen.value == 'md':
+            return 4;
+        case screen.value == 'sm':
+            return 2;
+        default:
+            return 1;
+    };
+});
+
+const handleMoved = (splide, index, prevIndex) => {
+    const date = timetable.value[index].toSQLDate();
+    form.date = date;
+}
+
 </script>
 
 <template>
@@ -131,8 +187,8 @@ const cancelBooking = () => {
             <!-- <div class="text-xl mb-4">
                 Active classes list
             </div> -->
-            <div class="flex flex-col md:flex-row md:divide-x-2 md:divide-gray-300 md:border-b-2 md:border-gray-300 mb-3">
-                <div class="flex flex-col md:w-1/3 md:pr-3 h-full mb-4">
+            <div class="flex flex-wrap gap-4 mb-3">
+                <div class="w-full md:flex-1">
                     <InputLabel value="Class Type" for="class_type" />
                     <Multiselect
                         v-model="form.class_type"
@@ -141,6 +197,8 @@ const cancelBooking = () => {
                         :close-on-select="true"
                         :show-labels="true"
                         placeholder="Select Class Type"
+                        mode="tags"
+                        :style="{height: 'auto', padding: 0}"
                     >
                         <template v-slot:singlelabel="{ value }">
                             <div class="multiselect-single-label flex items-center">
@@ -153,7 +211,7 @@ const cancelBooking = () => {
                         </template>
                     </Multiselect>
                 </div>
-                <div class="flex flex-col md:w-1/3 md:px-3 h-full mb-4">
+                <div class="w-full md:flex-1">
                     <InputLabel value="Instructor" for="instructor" />
                     <Multiselect
                         v-model="form.instructor"
@@ -162,6 +220,8 @@ const cancelBooking = () => {
                         :close-on-select="true"
                         :show-labels="true"
                         placeholder="Select Instructor"
+                        mode="tags"
+                        :style="{height: 'auto', padding: 0}"
                     >
                         <template v-slot:singlelabel="{ value }">
                             <div class="multiselect-single-label flex items-center">
@@ -176,24 +236,51 @@ const cancelBooking = () => {
                         </template>
                     </Multiselect>
                 </div>
-                <div class="flex flex-col md:w-1/3 md:pl-3 h-full mb-4">
-                    <InputLabel value="Any Time" for="time" />
+                <div class="w-full md:flex-1">
+                    <InputLabel value="Peak/Off Peak" for="is_off_peak" />
                     <Multiselect
-                        id="time"
-                        v-model="form.time"
+                        id="is_off_peak"
+                        v-model="form.is_off_peak"
                         :options="[
-                            {value: 'am', label: 'AM'},
-                            {value: 'pm', label: 'PM'},
+                            {value: '0', label: 'Peak'},
+                            {value: '1', label: 'Off Peak'},
                         ]"
                         :searchable="true"
                         class="mt-1"
-                        placeholder="Select time"
+                        placeholder="Select Peak/Off Peak"
+                        :style="{height: 'auto', padding: 0}"
                     />
                 </div>
+                <ButtonLink class="self-end" styling="primary" size="default" @click="e => { form.class_type = []; form.instructor = []; form.is_off_peak = ''; }">Reset</ButtonLink>
             </div>
-            <div class="classes-timetable">
-                <div v-for="(time, index) in timetable" class="inline-flex shrink-0 md:w-[14%] py-2 px-3 rounded-lg justify-center bg-white cursor-pointer" :class="{'bg-yellow-500': time.toSQLDate() == form.date, 'mr-2': index < timetable.length-1}" @click="onDateChange(time)">
-                    <div class="flex flex-col md:flex-row" :class="{'text-black': time.toSQLDate() != form.date, 'text-white': time.toSQLDate() == form.date }">
+            <Splide
+                class="classes-timetable"
+                :options="{
+                    perPage: calendarPerPage,
+                    perMove: 1,
+                    arrows: false,
+                    pagination: false,
+                    gap: '1rem',
+                    isNavigation: true,
+                }"
+                ref="timetableEl"
+                @splide:moved="handleMoved"
+            >
+                <SplideSlide
+                    v-for="(time, index) in timetable"
+                    class="inline-flex shrink-0 py-2 px-3 rounded-lg justify-center bg-white"
+                    :class="{
+                        'bg-yellow-500': (!form.date && index == 0) || time.toSQLDate() == form.date,
+                        'mr-3': index < timetable.length-1
+                    }"
+                >
+                    <div
+                        class="flex flex-col md:flex-row"
+                        :class="{
+                            'text-white': (!form.date && index == 0) || time.toSQLDate() == form.date,
+                            'text-black': time.toSQLDate() != form.date,
+                        }"
+                    >
                         <div class="text-2xl font-bold mr-2 self-center">{{ time.toFormat('d') }}</div>
                         <div class="flex flex-row md:flex-col justify-center">
                             <div class="text-xs">{{ time.toFormat('MMM') }}</div>
@@ -201,45 +288,67 @@ const cancelBooking = () => {
                             <div class="text-xs">{{ time.toFormat('EEE') }}</div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="mt-3 gap-4 xl:gap-8 grid xl:grid-cols-6 md:grid-cols-4">
-                <div v-for="(item, index) in classes" :key="item.id" class="cursor-pointer" @click="showModal(item)">
-                    <div class="flex flex-col bg-white rounded-md p-3" :class="{'bg-yellow-300': classDetails.id == item.id}">
-                        <div class="flex flex-row justify-between mb-4">
-                            <div class="text-xl font-medium self-center">
-                                {{ DateTime.fromISO(item.start_date).setZone(business_seetings.timezone).toFormat('hh:mm a') }}
+                </SplideSlide>
+            </Splide>
+
+            <Splide
+                class="mt-3"
+                :options="{
+                    perPage: classesPerPage,
+                    perMove: 1,
+                    arrows: false,
+                    pagination: false,
+                    gap: '1rem',
+                }"
+                ref="classesEl"
+            >
+                <SplideSlide
+                    v-for="(time, index) in timetable"
+                    :key="index"
+                >
+                    <div v-if="!classes[time.toSQLDate()]" class="flex flex-col">&nbsp;</div>
+                    <div v-else
+                        v-for="(item, index) in classes[time.toSQLDate()]"
+                        class="flex flex-col cursor-pointer"
+                        @click="showModal(item)"
+                        :class="{'hidden': form.is_off_peak && item.is_off_peak != form.is_off_peak}"
+                    >
+                        <div class="flex flex-col bg-white rounded-md p-3 mb-3" :class="{'bg-yellow-300': classDetails.id == item.id}">
+                            <div class="flex flex-row justify-between mb-4">
+                                <div class="text-xl font-medium self-center" v-tooltip="DateTime.fromISO(item.start_date).setZone(business_seetings.timezone).toFormat(business_seetings.date_format.format_js +' '+ business_seetings.time_format.format_js)">
+                                    {{ DateTime.fromISO(item.start_date).setZone(business_seetings.timezone).toFormat('hh:mm a') }}
+                                </div>
+                                <div class="flex flex-row rounded-lg text-green-800 px-2 py-1 h-8 items-center" style="background: rgba(66, 112, 95, 0.2)">
+                                    <div class="mr-1"><ClockIcon /></div>
+                                    <div class="text-base font-semibold">{{ item.duration }}</div>
+                                </div>
                             </div>
-                            <div class="flex flex-row rounded-lg text-green-800 px-2 py-1 h-8 items-center" style="background: rgba(66, 112, 95, 0.2)">
-                                <div class="mr-1"><ClockIcon /></div>
-                                <div class="text-base font-semibold">{{ item.duration }}</div>
+                            <div class="flex flex-row mb-4 pt-4 border-t-2 border-gray-300 items-center">
+                                <div class="flex mr-2 w-7 h-7 justify-center items-center">
+                                    <span class="inline-flex rounded-xl w-3 h-3 bg-red-500"></span>
+                                </div>
+                                <div class="flex-grow uppercase font-medium">{{ item.class_type?.title }}</div>
                             </div>
-                        </div>
-                        <div class="flex flex-row mb-4 pt-4 border-t-2 border-gray-300 items-center">
-                            <div class="flex mr-2 w-7 h-7 justify-center items-center">
-                                <span class="inline-flex rounded-xl w-3 h-3 bg-red-500"></span>
+                            <div class="flex flex-row mb-4 items-center">
+                                <div class="flex mr-2 w-7 h-7">
+                                    <!-- <img src="" class="inline-block rounded-xl w-full h-full bg-gray-500" alt="User" /> -->
+                                    <Avatar :title="item.instructor?.name" size="small" />
+                                </div>
+                                <div class="flex-grow font-medium text-gray-800">{{ item.instructor?.name }}</div>
                             </div>
-                            <div class="flex-grow uppercase font-medium">{{ item.class_type?.title }}</div>
-                        </div>
-                        <div class="flex flex-row mb-4 items-center">
-                            <div class="flex mr-2 w-7 h-7">
-                                <!-- <img src="" class="inline-block rounded-xl w-full h-full bg-gray-500" alt="User" /> -->
-                                <Avatar :title="item.instructor?.name" size="small" />
+                            <div class="flex flex-row justify-between pt-4 border-t-2 border-gray-300">
+                                <div class="flex mr-2">
+                                    <LocationIcon />
+                                </div>
+                                <div class="flex-grow font-medium text-green-700">{{ item.studio?.location?.title }}</div>
                             </div>
-                            <div class="flex-grow font-medium text-gray-800">{{ item.instructor?.name }}</div>
-                        </div>
-                        <div class="flex flex-row justify-between pt-4 border-t-2 border-gray-300">
-                            <div class="flex mr-2">
-                                <LocationIcon />
-                            </div>
-                            <div class="flex-grow font-medium text-green-700">{{ item.studio?.location?.title }}</div>
                         </div>
                     </div>
-                </div>
-            </div>
-
+                </SplideSlide>
+            </Splide>
         </Section>
     </div>
+
     <!-- Class detail Modal -->
     <SideModal :show="modal" @close="closeModal">
         <template #title>Details</template>
@@ -265,15 +374,6 @@ const cancelBooking = () => {
                     </div>
                 </div>
 
-                <!-- <div class="flex flex-row mb-3">
-                    <div class="flex mr-2 w-5 justify-center items-center">
-                        <span class="inline-block rounded-xl w-3 h-3 bg-red-500"></span>
-                    </div>
-                    <div>
-                        {{ classDetails.class_type?.title }}
-                    </div>
-                </div> -->
-
                 <div class="flex flex-row mb-3">
                     <div class="w-1/2 flex mr-2 items-center">
                         Class Type:
@@ -285,7 +385,6 @@ const cancelBooking = () => {
 
                 <div class="flex flex-row mb-3">
                     <div class="w-1/2 flex mr-2 items-center">
-                        <!-- <FontAwesomeIcon :icon="faClock" class="text-gray-400" /> -->
                         Time:
                     </div>
                     <div class="flex w-1/2 justify-end font-bold">
@@ -310,15 +409,6 @@ const cancelBooking = () => {
                         {{ classDetails.start_date?.toFormat(business_seetings.date_format?.format_js) }}
                     </div>
                 </div>
-
-                <!-- <div class="flex flex-row mb-3">
-                    <div class="flex mr-2 w-5 justify-center items-center">
-                        <LocationIcon />
-                    </div>
-                    <div>
-                        {{ classDetails.studio?.location?.title }}
-                    </div>
-                </div> -->
             </div>
         </template>
         <template #footer>

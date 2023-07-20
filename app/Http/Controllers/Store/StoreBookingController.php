@@ -44,7 +44,7 @@ class StoreBookingController extends Controller
             'per_page' => intval($this->per_page),
             'order_by' => $this->order_by,
             'order_dir' => $this->order_dir,
-            'page_title' => __('My boookings'),
+            'page_title' => __('My bookings'),
         ]);
     }
 
@@ -52,16 +52,43 @@ class StoreBookingController extends Controller
     {
         $class = ClassLesson::with(['bookings' => function ($query) {
             $query->where('user_id', auth()->user()?->id)->active();
-        }])->find($request->class_id);
+        }])
+        ->active()
+        ->find($request->class_id);
+
+        $maxDaysBooking = session('business_seetings.days_max_booking');
+
+        $maxBookingStart = now(session('business_seetings.timezone'))->startOfDay();
+        $maxBookingEnd = $maxBookingStart->copy()
+        ->when($maxDaysBooking, fn($date) => $date->addDays($maxDaysBooking-1))
+        ->endOfDay()
+        ->utc();
+        $maxBookingStart = $maxBookingStart->utc();
+
+        if(!$class) {
+            return $this->redirectBackError(__('The class does not exist.'));
+        }
+
+        if(
+            $maxDaysBooking
+            && !(
+                $maxBookingStart->lte($class->start_date)
+                && $maxBookingEnd->gte($class->end_date)
+            )
+        ) {
+            return $this->redirectBackError(__('The class cannot be booked.'));
+        }
 
         if($class->bookings->count()) {
-            return $this->redirectBackError('The class cannot be booked again.');
+            return $this->redirectBackError(__('The class cannot be booked again.'));
         }
 
         //allow late booking, up to the end of class (TBD)
         if (now()->greaterThan($class->end_date)) {
             return $this->redirectBackError(__('This class can no longer be booked.'));
         }
+
+
 
         // TODO
         // $decision = $this->service->getReservationDecision($request);

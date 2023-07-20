@@ -18,7 +18,7 @@ export function useWindowSize() {
             return 'sm';
     
         default:
-            return '';
+            return 'mobile';
     }
   });
 

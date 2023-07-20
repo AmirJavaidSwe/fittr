@@ -136,11 +136,22 @@ const emit = defineEmits(["reset", "submitted"]);
 
             <!-- Off-peak -->
             <div class="">
-                <Switcher
+                <InputLabel for="classtype" value="Peak/Off-peak" />
+                <Multiselect
+                    v-model="form.is_off_peak"
+                    :options="[{value: '0', label: 'Peak'}, {value: '1', label: 'Off-peak'}]"
+                    :searchable="true"
+                    :close-on-select="true"
+                    :show-labels="true"
+                    placeholder="Select Peak/Off-peak"
+                >
+                </Multiselect>
+                <InputError :message="form.errors.is_off_peak" class="mt-2" />
+                <!-- <Switcher
                     v-model="form.is_off_peak"
                     title="Off Peak"
                     description="Would you like to tag the class as off peak?"
-                />
+                /> -->
             </div>
         </template>
 

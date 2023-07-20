@@ -2,7 +2,6 @@
 import Section from '@/Components/Section.vue';
 import { useForm } from '@inertiajs/vue3';
 import Avatar from '@/Components/Avatar.vue';
-import { onBeforeMount, ref, watch } from 'vue';
 import { DateTime } from 'luxon';
 import ButtonLink from '@/Components/ButtonLink.vue';
 
@@ -18,47 +17,19 @@ const props = defineProps({
     },
 });
 
-const form = useForm({
-    date: '',
-});
+const bookingForm = useForm({ class_id: ''});
 
-const onDateChange = (date) => {
-    form.date = date.toSQLDate();
-    // onSearch();
+const handleBooking = () => {
+    bookingForm.class_id = props.classDetail.id;
+
+    bookingForm.post(route('ss.member.bookings.store', {subdomain: props.business_seetings.subdomain}));
 }
 
-const onSearch = () => {
-    form.get(route('ss.classes.index', { subdomain: props.business_seetings.subdomain }), {
-        preserveScroll: true,
-        preserveState: true,
-        replace: true,
-        only: ['classes']
-    });
+const cancelBooking = () => {
+    bookingForm.class_id = props.classDetail.id;
+
+    bookingForm.post(route('ss.member.bookings.cancel', {subdomain: props.business_seetings.subdomain}));
 }
-
-onBeforeMount(() => {
-
-    // let queryParams = new URLSearchParams(window.location.search);
-
-    // form.class_type = queryParams.get('class_type') ?? '';
-    // form.instructor = queryParams.get('instructor') ?? '';
-    // form.time = queryParams.get('time') ?? '';
-
-    // let start = DateTime.now().setZone(props.business_seetings.timezone);
-    // let end = DateTime.now().setZone(props.business_seetings.timezone);
-    // let noOfDays = start.daysInMonth;
-    // end = end.plus(Duration.fromObject({days: noOfDays}));
-
-    // let intervalObj = Interval.fromDateTimes(start, end);
-    // timetable.value = intervalObj.splitBy({ days: 1}).map(d => d.start);
-    // form.date = start.toSQLDate();
-
-    // console.log(timetable.value)
-});
-
-watch(() => ({...form.data()}), onSearch);
-
-console.log(props.classes)
 
 </script>
 
@@ -133,7 +104,9 @@ console.log(props.classes)
                         </div>
                     </div>
                     <div class="flex justify-end mt-3">
-                        <ButtonLink styling="secondary" size="default">Book</ButtonLink>
+                        <ButtonLink v-if="classDetail.bookings?.length" styling="secondary" size="default" @click="cancelBooking">Cancel Booking</ButtonLink>
+                        <ButtonLink v-else-if="$page.props.user" styling="secondary" size="default" @click="handleBooking" :class="{ 'opacity-25': bookingForm.processing }" :disabled="bookingForm.processing">Book</ButtonLink>
+                        <ButtonLink v-else styling="secondary" size="default" @click="handleBooking" :class="{ 'opacity-25': bookingForm.processing }" :disabled="bookingForm.processing">Sign in to Book</ButtonLink>
                     </div>
                 </div>
             </div>

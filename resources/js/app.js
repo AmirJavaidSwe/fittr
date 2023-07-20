@@ -1,4 +1,6 @@
 import './bootstrap';
+import "sweetalert2/dist/sweetalert2.css";
+import "floating-vue/dist/style.css";
 import '../css/app.css';
 
 import { createApp, h } from 'vue';
@@ -9,6 +11,8 @@ import AppLayout from './Layouts/AppLayout.vue';
 import StoreLayout from './Layouts/StoreLayout.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import directive from './directive';
+import FloatingVue from "floating-vue";
+import "@splidejs/vue-splide/css/core";
 
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
@@ -49,6 +53,7 @@ createInertiaApp({
         app.use(ZiggyVue, Ziggy);
         app.component('font-awesome-icon', FontAwesomeIcon);
         app.use(directive); // Register the custom directive here
+        app.use(FloatingVue);
 
         return app.mount(el);
     },

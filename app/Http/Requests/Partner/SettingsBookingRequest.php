@@ -25,8 +25,14 @@ class SettingsBookingRequest extends FormRequest
     public function rules()
     {
         return [
-            'days_max_booking' => array_merge(['required_if:days_max_booking_on,true'], SettingKey::days_max_booking->rules()),
-            'days_max_timetable' => array_merge(['required_if:days_max_timetable_on,true'], SettingKey::days_max_timetable->rules()),
+            'days_max_booking' => array_merge([
+                'required_if:days_max_booking_on,true',
+                'exclude_if:days_max_booking_on,false'
+            ], SettingKey::days_max_booking->rules()),
+            'days_max_timetable' => array_merge([
+                'required_if:days_max_timetable_on,true',
+                'exclude_if:days_max_timetable_on,false'
+            ], SettingKey::days_max_timetable->rules()),
         ];
     }
 

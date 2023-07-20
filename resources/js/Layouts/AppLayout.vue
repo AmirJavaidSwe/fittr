@@ -17,6 +17,7 @@ import {
 import Notifications from "@/Icons/Notifications.vue";
 import Messages from "@/Icons/Messages.vue";
 import Avatar from "@/Components/Avatar.vue";
+import { useSwal } from "@/Composables/swal";
 
 const showingNavigationDropdown = ref(false);
 
@@ -60,6 +61,11 @@ let back = function (e) {
     e.preventDefault();
     window.history.back();
 };
+
+const flash = computed(() => usePage().props.flash);
+const errors = computed(() => usePage().props.errors);
+
+const { toast } = useSwal({flash, errors});
 </script>
 
 <template>
@@ -72,10 +78,10 @@ let back = function (e) {
         </AppHead>
 
         <Banner />
-        <FlashMessage
+        <!-- <FlashMessage
             :flash="$page.props.flash"
             :errors="$page.props.errors"
-        />
+        /> -->
 
         <div class="min-h-screen bg-gray-50 overflow-hidden">
             <!-- Desktop, flex -->

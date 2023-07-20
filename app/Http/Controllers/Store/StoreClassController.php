@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Partner\ClassLesson;
 use App\Models\Partner\ClassType;
 use App\Models\Partner\User;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -14,8 +13,12 @@ class StoreClassController extends Controller
 {
     public function index(Request $request)
     {
-        //Needs work with dates and tz - wrong results on edges!
-        $searchDate = $request->get('date', now(session('business_seetings.timezone')));
+
+        $maxDaysTimetable = (session('business_seetings.days_max_timetable') ?? 30) - 1;
+
+        $startDate = now(session('business_seetings.timezone'))->startOfDay();
+        $endDate = $startDate->copy()->addDays($maxDaysTimetable)->endOfDay()->utc();
+        $startDate = $startDate->utc();
 
         $eagerLoad = ['studio.location.images', 'instructor', 'classType'];
 
@@ -30,30 +33,59 @@ class StoreClassController extends Controller
             'header' => __('Classes'),
             'classes' => ClassLesson::active()
                 ->with($eagerLoad)
-                ->when($request->class_type, function($query) use($request) {
-                    $query->where('class_type_id', $request->class_type);
+                ->when(count($request->class_type ?? []), function($query) use($request) {
+                    $query->whereIn('class_type_id', $request->class_type);
                 })
-                ->when($request->instructor, function($query) use($request) {
-                    $query->where('instructor_id', $request->instructor);
+                ->when(count($request->instructor ?? []), function($query) use($request) {
+                    $query->whereIn('instructor_id', $request->instructor);
                 })
-                ->when($request->time, function($query) use($request, $searchDate) {
-                    $start = Carbon::parse($searchDate, session('business_seetings.timezone'));
-                    if($request->time == 'pm') {
-                        $start->addHours(12);
-                    }
+                // Left commented for discussion
+                // ->when($request->time, function($query) use($request, $startDate) {
 
-                    $end = $start->clone()->addHours(12);
+                //     $app_tz = now(config('app.timezone'))->timezone->toOffsetName();
+                //     $user_tz = now(session('business_seetings.timezone'))->timezone->toOffsetName();
+                //     // dd($app_tz, $user_tz);
 
-                    $query->where('start_date', '>', $start->utc())
-                    ->where('end_date', '<', $end->utc());
-                })
-                ->when(!$request->time, function($query) use($searchDate) {
-                    $query->whereDate('start_date', $searchDate);
-                })
+                //     $raw = "DATE_FORMAT(CONVERT_TZ(start_date,'$app_tz','$user_tz'), '%p') = '".strtoupper($request->time)."'";
+                //     $query->whereRaw($raw);
+                //     /* $start = $startDate->copy();
+                //     if($request->time == 'pm') {
+                //         $start->addHours(12);
+                //     }
+
+                //     $end = $start->copy()->addHours(12);
+
+                //     $query->where('start_date', '>=', $start)
+                //     ->where('end_date', '<=', $end); */
+                // })
+                ->where('start_date', '>=', $startDate)
+                ->where('end_date', '<=', $endDate)
                 ->orderBy('start_date', 'asc')
-                ->get(),
+                ->get()
+                ->groupBy(function($item) {
+                    return $item->start_date
+                    ->tz(session('business_seetings.timezone'))
+                    ->format('Y-m-d');
+                }),
             'class_types' => ClassType::select('id as value', 'title as label')->get(),
             'instructors' => User::select('id as value', 'name as label')->instructor()->get(),
+        ]);
+    }
+
+    public function show(Request $request, $subdomain, ClassLesson $class)
+    {
+        $loadRelations = ['studio.location.images', 'instructor', 'classType'];
+
+        if(auth()->user()) {
+            $loadRelations['bookings'] = function($query) {
+                $query->active()->where('user_id', auth()->user()->id);
+            };
+        }
+
+        return Inertia::render('Store/Classes/Show', [
+            'page_title' => __('Classes'),
+            'header' => __('Classes'),
+            'classDetail' => $class->load($loadRelations),
         ]);
     }
 }

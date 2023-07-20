@@ -188,6 +188,7 @@ Route::domain('{subdomain}.'.config('app.domain'))->middleware(['auth.subdomain'
     Route::get('/', [StorePublicController::class, 'index'])->name('home');
 
     Route::get('/classes', [StoreClassController::class, 'index'])->name('classes.index');
+    Route::get('/classes/{class}', [StoreClassController::class, 'show'])->name('classes.show');
 
     Route::get('/instructors', [StoreInstructorController::class, 'index'])->name('instructors.index');
     Route::get('/locations', [StoreLocationController::class, 'index'])->name('locations.index');
