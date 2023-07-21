@@ -23,7 +23,6 @@ import { parsePhoneNumber, AsYouType } from "libphonenumber-js";
 
 const props = defineProps({
     countries: Array,
-    ignored_countries: Array,
     timezones: Array,
     form_data: Object,
     business_seetings: Object,

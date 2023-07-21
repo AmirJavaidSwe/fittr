@@ -157,7 +157,7 @@ enum SettingKey: string
             static::custom_domain => ['nullable', 'max:255', 'regex:"^[a-z0-9-.]+$"'],
 
             // Header & Footer
-            static::logo => ['nullable', 'mimes:jpg,jpeg,png,svg', 'max:2048'], //2MB
+            static::logo => ['nullable', 'mimes:jpg,jpeg,png,webp,svg', 'max:2048'], //2MB
             static::logo_url => ['nullable', 'max:255', 'regex:"^(http:\/\/|https:\/\/)"'],
             static::favicon => ['nullable', 'mimes:png,ico,svg', 'max:1024'], //1MB
             static::show_address => ['nullable', 'boolean'],

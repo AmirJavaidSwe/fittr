@@ -14,7 +14,7 @@ const hasActions = computed(() => !!useSlots().actions);
     <div class="bg-white shadow rounded mt-5 w-ful">
         <div class="flex">
             <slot name="tabsList" />
-            <div class="flex-initial w-full lg:w-9/12 border-l-2 border-gray-200 p-5">
+            <div class="flex-initial w-full flex-1 border-l-2 border-gray-200 p-5">
                 <slot name="heading" />
                 <form @submit.prevent="$emit('submitted')" class="h-full w-full">
                     <slot name="form" />

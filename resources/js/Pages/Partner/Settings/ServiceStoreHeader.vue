@@ -113,7 +113,7 @@ const removeFile = ($event) => {
                 <div class="uploadfiles">
                     <InputLabel for="header-image" value="Business Logo" />
                     <Dropzone id="header-image" v-model="form.logo" :uploaded_file="logo_img_url ? logo_img_url : ''"
-                        :accept="['.jpg', '.png', '.bmp', '.svg']" max_width="200" max_height="200"
+                        :accept="['.jpg', '.jpeg', '.png', '.webp', '.svg']" max_width="200" max_height="200"
                         :buttonText="'Select new business logo'" :instance_name="'logo'" @remove_file="removeFile" />
                     <InputError :message="form.errors.logo" class="mt-2" />
                 </div>
@@ -147,7 +147,7 @@ const removeFile = ($event) => {
                     <InputLabel for="favicon_url" value="Favicon" />
                     <Dropzone id="favicon_url" v-model="form.favicon"
                     :uploaded_file="favicon_img_url ? favicon_img_url : ''" :img_used_for="'business_favicon'"
-                    :accept="['.jpg', '.png']" max_width="200" max_height="200" :buttonText="'Select new favicon'"
+                    :accept="['.ico', '.svg', '.png']" max_width="512" max_height="512" :buttonText="'Select new favicon'"
                     :instance_name="'favicon'" @remove_file="removeFile" />
                     <InputError :message="form.errors.favicon" class="mt-2" />
                 </div>

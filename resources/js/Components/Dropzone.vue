@@ -135,29 +135,24 @@ const show_logo = computed(() => {
         </button>
       </div>
     </div>
-    <div class="flex flex-col items-center justify-start z-[9999]" v-if="show_logo" :class="[(props.modal ? 'p-2' : 'p-6')]">
-      <div class="inline-block relative z-50" v-if="imgPreview">
-        <a :href="'javascript:;'">
-          <img :src="imgPreview" :alt="files[0].name"
-            class="inline-block w-20 h-20 rounded-lg cursor-pointer border-gray-300 border">
-        </a>
-        <div class="absolute z-[9999] top-[0px] right-[0px] px-2 cursor-pointer" @click="deletePreview">
-          <font-awesome-icon class="text-red-900" size="xs" :icon="faTrash" />
-        </div>
+    <div class="flex flex-col items-center justify-start p-2 z-[9999]" v-if="show_logo">
+      <div class="relative z-50 w-20 h-20 flex items-center justify-center" v-if="imgPreview">  
+          <img :src="imgPreview" :alt="files[0].name" class="inline-block rounded-lg cursor-pointer border-gray-300 border">
+          <div class="absolute z-[9999] top-[0px] right-[0px] px-2 cursor-pointer" @click="deletePreview">
+            <font-awesome-icon class="text-red-900" size="xs" :icon="faTrash" />
+          </div>
       </div>
-      <div class="inline-block relative z-50" v-else-if="props.uploaded_file">
+      <div class="relative z-50 w-20 h-20 flex items-center justify-center" v-else-if="props.uploaded_file">
         <a :href="props.uploaded_file" target="_blank" title="Click to View">
-          <img :src="props.uploaded_file" :alt="props.uploaded_file"
-            class="inline-block w-20 h-20 rounded-lg cursor-pointer border-gray-300 border">
+          <img :src="props.uploaded_file" :alt="props.uploaded_file" class="inline-block rounded-lg cursor-pointer border-gray-300 border">
         </a>
         <div class="absolute z-[9999] top-[0px] right-[0px] px-2 cursor-pointer" @click="deletePreview(props.instance_name)">
           <font-awesome-icon class="text-red-900" size="xs" :icon="faTrash" />
         </div>
       </div>
-      <div v-else-if="uploaded_files.length" v-for="(image, index) in uploaded_files" :key="index" class="inline-block relative">
+      <div v-else-if="uploaded_files.length" v-for="(image, index) in uploaded_files" :key="index" class="relative w-20 h-20 flex items-center justify-center">
         <a :href="image.url" target="_blank" title="Click to View">
-          <img :src="image.url" :alt="image.original_filename"
-            class="inline-block w-20 h-20 rounded-lg cursor-pointer border-gray-300 border">
+          <img :src="image.url" :alt="image.original_filename" class="inline-blockrounded-lg cursor-pointer border-gray-300 border">
         </a>
         <div class="absolute z-[99999] top-[0px] right-[0px] px-2 cursor-pointer" @click="removeUploadedFile(image.id)">
           <font-awesome-icon class="text-red-900" size="xs" :icon="faTrash" />

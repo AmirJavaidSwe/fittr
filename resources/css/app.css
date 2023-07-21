@@ -62,7 +62,7 @@ select {
 }
 /* Tabs Styles */
 .tabs-wrapper {
-    @apply inline-flex items-center bg-white rounded-xl font-medium text-base mb-3;
+    @apply inline-flex flex-wrap items-center bg-white rounded-xl font-medium text-base mb-3;
 }
 .tabs-wrapper li a, .vertical-tabs li a {
     @apply py-3 px-4 block rounded-xl !no-underline flex items-center;
@@ -86,7 +86,7 @@ select {
 }
 
 div.iti__selected-flag {
-    @apply pl-3 pr-5 border-e-2 border-e-gray-400 !important;
+    @apply pl-3 pr-5 border-r;
 }
 
 div.iti .input-field {

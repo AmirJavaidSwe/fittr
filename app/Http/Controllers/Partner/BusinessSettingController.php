@@ -73,7 +73,6 @@ class BusinessSettingController extends Controller
                 ],
             ),
             'countries' => Country::where('status', true)->get(),
-            'ignored_countries' => Country::where('status', false)->pluck('iso')->toArray(),
             'timezones' => Timezone::where('status', true)->orderBy('title', 'asc')->get(),
             'form_data' => $this->service->getByGroup(SettingGroup::general_details),
         ]);
@@ -256,6 +255,7 @@ class BusinessSettingController extends Controller
 
     public function serviceStoreHeaderUpdate(SettingsServiceStoreHeaderRequest $request)
     {
+        // dd($request->validated());
         $this->service->update($request);
 
         return $this->redirectBackSuccess(__('Settings saved'));
