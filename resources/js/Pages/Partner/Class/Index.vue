@@ -50,7 +50,7 @@ const props = defineProps({
     business_seetings: Object,
 
     statuses: Object,
-    studios: Object,
+    studios: Array,
     instructors: Object,
     classtypes: Object,
     locations: Array,
@@ -89,6 +89,8 @@ const form_class = useForm({
     does_repeat: false,
     repeat_end_date: null,
     week_days: [],
+    use_defaults: true,
+    spaces: null,
 });
 
 const setOrdering = (col) => {
@@ -161,7 +163,11 @@ const closeCreateModal = () => {
 };
 
 const storeClass = () => {
-    form_class.post(route("partner.classes.store"), {
+    form_class.transform((data) => ({
+        ...data,
+        spaces: data.use_defaults ? null : data.spaces
+    }))
+    .post(route("partner.classes.store"), {
         preserveScroll: true,
         onSuccess: () => {
             form_class.reset();
@@ -187,6 +193,8 @@ let formEdit = useForm({
     class_type_id: null,
     studio_id: null,
     is_off_peak: null,
+    use_defaults: false,
+    spaces: null,
 });
 const handleUpdateForm = (data) => {
     showEditModal.value = true;
@@ -199,10 +207,16 @@ const handleUpdateForm = (data) => {
     formEdit.class_type_id = data.class_type_id;
     formEdit.studio_id = data.studio_id;
     formEdit.is_off_peak = data.is_off_peak;
+    formEdit.use_defaults = data.spaces ? false : true;
+    formEdit.spaces = data.spaces;
 };
 
 const updateClass = () => {
-    formEdit.put(route("partner.classes.update", formEdit.id), {
+    formEdit.transform((data) => ({
+        ...data,
+        spaces: data.use_defaults ? null : data.spaces
+    }))
+    .put(route("partner.classes.update", formEdit.id), {
         preserveScroll: true,
         onSuccess: () => (showEditModal.value = false),
     });
@@ -338,8 +352,8 @@ const storeStudio = () => {
 };
 
 const studioList = computed(() => {
-    let newStudioList = { ...props.studios }; // Create a shallow copy of the object
-    newStudioList.create_new_studio = "Add New"; // Add a new property
+    let newStudioList = [...props.studios]; // Create a shallow copy of the array
+    newStudioList.push({id: 'create_new_studio', title: "Add New"}); // Add a new item
     return newStudioList;
 });
 const showLocationCreateModal = ref(false)

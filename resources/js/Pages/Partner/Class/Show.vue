@@ -89,8 +89,14 @@ defineProps({
             />
 
             <single-view-row
-                label="Created At"
+                label="Spaces"
                 :even="false"
+                :value="class_lesson.spaces"
+            />
+
+            <single-view-row
+                label="Created At"
+                :even="true"
                 :value="
                     DateTime.fromISO(class_lesson.created_at)
                         .setZone(business_seetings.timezone)
@@ -100,7 +106,7 @@ defineProps({
 
             <single-view-row
                 label="Updated At"
-                :even="true"
+                :even="false"
                 :value="DateTime.fromISO(class_lesson.updated_at).toRelative()"
             />
         </template>

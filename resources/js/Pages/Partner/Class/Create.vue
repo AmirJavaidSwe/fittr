@@ -28,7 +28,9 @@ let form = useForm({
     is_off_peak: false,
     does_repeat: false,
     repeat_end_date: null,
-    week_days: []
+    week_days: [],
+    use_defaults: false,
+    spaces: null,
 });
 
 </script>

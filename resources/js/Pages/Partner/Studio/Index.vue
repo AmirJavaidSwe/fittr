@@ -26,6 +26,7 @@ const props = defineProps({
     business_seetings: Object,
     studios: Object,
     locations: Array,
+    class_types: Array,
     search: String,
     per_page: Number,
     order_by: String,
@@ -67,7 +68,6 @@ watch(() => form.search, runSearch);
 // Create/Edit Studios Queries
 let form_class = useForm({
     title: null,
-    title: null,
     location_id: null,
 });
 
@@ -87,6 +87,7 @@ let form_edit = useForm({
     id: "",
     title: null,
     location_id: null,
+    class_type_studios: []
 });
 
 const showEditModal = ref(false);
@@ -99,12 +100,13 @@ const handleUpdateForm = (studio) => {
     form_edit.id = studio.id;
     form_edit.title = studio.title;
     form_edit.location_id = studio.location_id;
+    form_edit.class_type_studios = [...studio.class_type_studios];
 };
 
 const updateStudios = () => {
     form_edit.put(route("partner.studios.update", form_edit), {
         preserveScroll: true,
-        onSuccess: () => [form_class.reset(), closeEditModal()],
+        onSuccess: () => [form_edit.reset(), closeEditModal()],
     });
 };
 
@@ -286,7 +288,7 @@ const deleteItem = () => {
         <template #title> Update studio </template>
 
         <template #content>
-            <Form :form="form_edit" :submitted="updateStudios" :locations="locations" modal />
+            <Form :form="form_edit" :submitted="updateStudios" :locations="locations" :class_types="class_types" modal />
         </template>
     </SideModal>
 

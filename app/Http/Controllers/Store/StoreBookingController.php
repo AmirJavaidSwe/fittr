@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Store;
 
 use App\Enums\BookingStatus;
+use App\Events\BookingCancellation;
 use App\Events\BookingConfirmation;
 use App\Http\Controllers\Controller;
 use App\Models\Partner\Booking;
@@ -108,7 +109,7 @@ class StoreBookingController extends Controller
 
     public function cancel(Request $request)
     {
-        $booking = Booking::with('class', 'user')->where('class_id', $request->class_id)->where('user_id', auth()->user()?->id)->active()->first();
+        $booking = Booking::with(['user', 'class.classType', 'class.instructor', 'class.studio.location'])->where('class_id', $request->class_id)->where('user_id', auth()->user()?->id)->active()->first();
 
         if(!$booking) {
             return $this->redirectBackError('The booking not found.');
@@ -126,6 +127,8 @@ class StoreBookingController extends Controller
             'status' => BookingStatus::get('cancelled'),
             'cancelled_at' => now(),
         ]);
+
+        event(new BookingCancellation($booking));
 
         return $this->redirectBackSuccess('The booking has been cancelled.');
     }

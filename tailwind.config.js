@@ -39,7 +39,7 @@ module.exports = {
                     600: "#284A32",
                     700: "#1c4629",
                     800: "#163c22",
-                    900: "#0e3019"
+                    900: "#0e3019",
                 },
                 //orange
                 secondary: {
@@ -66,12 +66,22 @@ module.exports = {
                 },
                 dark: "#292D32",
                 grey: "#939393", //darker grey
-                blue: "#1269FB",
+                blue: {
+                    50: "#eef7ff",
+                    100: "#d8ecff",
+                    200: "#badeff",
+                    300: "#8accff",
+                    400: "#54aeff",
+                    500: "#2c8bff",
+                    600: "#1269fb",
+                    700: "#0e54e7",
+                    800: "#1244bb",
+                    900: "#153e93",
+                    950: "#122659",
+                }, // #1269FB
                 mainBg: "#E8EAE9", //soft grey
                 lightblue: "#EAF1F8",
                 darkblue: "#4299E1",
-                
-
             },
             fontFamily: {
                 sans: ["Urbanist", ...defaultTheme.fontFamily.sans],
@@ -115,7 +125,6 @@ module.exports = {
                 "56vw": "2.91vw",
                 "60vw": "3.125vw",
             },
-         
         },
     },
 

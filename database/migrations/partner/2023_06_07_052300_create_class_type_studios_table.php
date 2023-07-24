@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('class_type_studios', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('location_id')->index('location_id');
-            $table->unsignedBigInteger('class_type')->index('class_type');
-            $table->integer('no_of_places');
+            $table->unsignedBigInteger('studio_id')->index('studio_id');
+            $table->unsignedBigInteger('class_type_id')->index('class_type_id');
+            $table->unsignedSmallInteger('spaces');
             $table->timestamps();
         });
     }

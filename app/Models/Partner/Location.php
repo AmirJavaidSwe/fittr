@@ -45,11 +45,6 @@ class Location extends Model
         return $this->hasMany(Studio::class);
     }
 
-    public function class_type_studios(): HasMany
-    {
-        return $this->hasMany(ClassTypeStudio::class);
-    }
-
     public function manager(): BelongsTo
     {
         return $this->belongsTo(User::class, 'manager_id', 'id');

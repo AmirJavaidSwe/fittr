@@ -25,6 +25,7 @@ return new class extends Migration
             $table->integer('class_type_id')->unsigned();
             $table->integer('studio_id')->unsigned();
             $table->string('file_path')->nullable();
+            $table->smallInteger('spaces')->unsigned()->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

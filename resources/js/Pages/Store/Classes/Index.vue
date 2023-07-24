@@ -316,7 +316,7 @@ const handleMoved = (splide, index, prevIndex) => {
                         <div class="flex flex-col bg-white rounded-md p-3 mb-3" :class="{'bg-yellow-300': classDetails.id == item.id}">
                             <div class="flex flex-row justify-between mb-4">
                                 <div class="text-xl font-medium self-center" v-tooltip="DateTime.fromISO(item.start_date).setZone(business_seetings.timezone).toFormat(business_seetings.date_format.format_js +' '+ business_seetings.time_format.format_js)">
-                                    {{ DateTime.fromISO(item.start_date).setZone(business_seetings.timezone).toFormat('hh:mm a') }}
+                                    {{ DateTime.fromISO(item.start_date).setZone(business_seetings.timezone).toFormat(business_seetings.time_format.format_js) }}
                                 </div>
                                 <div class="flex flex-row rounded-lg text-green-800 px-2 py-1 h-8 items-center" style="background: rgba(66, 112, 95, 0.2)">
                                     <div class="mr-1"><ClockIcon /></div>
