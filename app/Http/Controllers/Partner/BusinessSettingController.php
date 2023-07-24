@@ -246,6 +246,13 @@ class BusinessSettingController extends Controller
                 ],
             ),
             'form_data' => $this->service->getByGroup(SettingGroup::service_store_header),
+            'logo_url' => array(
+                '/' => __('Homepage'),
+                '/classes' => __('Classes'),
+                '/instructors'=> __('Instructors'),
+                '/locations'=> __('Locations'),
+                '/memberships'=> __('Memberships'),
+            ),
         ]);
     }
 

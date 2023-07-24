@@ -158,7 +158,7 @@ enum SettingKey: string
 
             // Header & Footer
             static::logo => ['nullable', 'mimes:jpg,jpeg,png,svg', 'max:2048'], //2MB
-            static::logo_url => ['nullable', 'max:255', 'regex:"^(http:\/\/|https:\/\/)"'],
+            static::logo_url => ['nullable', 'in:/,/classes,/instructors,/locations,/memberships'],
             static::favicon => ['nullable', 'mimes:png,ico,svg', 'max:1024'], //1MB
             static::show_address => ['nullable', 'boolean'],
             static::show_phone => ['nullable', 'boolean'],

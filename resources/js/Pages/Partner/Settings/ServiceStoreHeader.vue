@@ -18,8 +18,12 @@ import {
     faArrowsUpToLine,
 } from "@fortawesome/free-solid-svg-icons";
 
+import Multiselect from "@vueform/multiselect";
+import "@vueform/multiselect/themes/tailwind.css";
+
 const props = defineProps({
     business_seetings: Object,
+    logo_url: Object,
     form_data: Object,
 });
 
@@ -193,18 +197,18 @@ const submitForm = () => {
                 <InputLabel for="logo_url" value="Logo URL" />
                 <div class="text-sm text-gray-600">
                     <p>
-                        Add a redirect to home or any other page when clients
-                        click on the logo.
+                        Add a redirect to home or any other page when clients click on the logo.
                     </p>
                     <p>
-                        NOTE : By default, a click on the logo will redirect to
-                        the Service Store homepage.
+                        NOTE : By default, a click on the logo will redirect to the Service Store homepage.
                     </p>
                 </div>
-                <TextInput
+                <Multiselect
                     id="logo_url"
                     v-model="form.logo_url"
-                    type="text"
+                    :options="logo_url"
+                    :searchable="true"
+                    autocomplete="one-time-code"
                     class="mt-1 block w-full"
                 />
                 <InputError :message="form.errors.logo_url" class="mt-2" />
