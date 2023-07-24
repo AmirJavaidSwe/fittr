@@ -118,7 +118,10 @@ class StripeProductService extends StripeService
             'currency' => $price_data['currency'],
             'currency_symbol' => $currency_symbol,
         ] + $validated_data;
-        $pack->prices()->create($model_data);
+        //create new price
+        $price = $pack->prices()->create($model_data);
+        //sync location restrictions
+        $price->locations()->sync($validated_data['location_ids'] ?? []);
 
         return $attempt;
     }

@@ -3,6 +3,7 @@
 namespace App\Models\Partner;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Str;
@@ -53,6 +54,11 @@ class PackPrice extends Model
     {
         // will return either a App\Models\Partner\Pack or other morphable model as listed under App\Providers\AppServiceProvider
         return $this->morphTo();
+    }
+
+    public function locations(): BelongsToMany
+    {
+        return $this->belongsToMany(Location::class);
     }
 
     // Accessors

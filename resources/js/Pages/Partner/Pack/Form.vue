@@ -24,6 +24,7 @@ const props = defineProps({
     pack_types: Array,
     periods: Array,
     price_types: Array,
+    locations: Array,
     classtypes: Object,
     prices: Array,
     default_currency: String,
@@ -77,6 +78,7 @@ const default_price_fields = {
     fixed_count: null,
     is_renewable: true,
     is_intro: false,
+    location_ids: [],
 };
 const shown_price_form = ref(false);
 const is_new_price = ref(false);
@@ -316,6 +318,7 @@ const showEditPrice = (price) => {
                             :pack_types="pack_types"
                             :periods="periods"
                             :price_types="price_types"
+                            :locations="locations"
                             :default_currency="default_currency"
                             :pack_type="form.type"
                             :price="price_edited"

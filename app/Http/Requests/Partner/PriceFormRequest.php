@@ -81,6 +81,10 @@ class PriceFormRequest extends FormRequest
                 'integer',
                 'min:1'
             ],
+            'location_ids' => [
+                'nullable',
+                'exists:mysql_partner.locations,id'
+            ],
         ];
 
         return $rules;

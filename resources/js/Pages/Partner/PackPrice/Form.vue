@@ -10,13 +10,17 @@ import ActionMessage from "@/Components/ActionMessage.vue";
 import ButtonLink from '@/Components/ButtonLink.vue';
 import Switcher from "@/Components/Switcher.vue";
 import Datepicker from '@vuepic/vue-datepicker';
+import Multiselect from '@vueform/multiselect';
+import ColoredValue from "@/Components/DataTable/ColoredValue.vue";
 import { RadioGroup, RadioGroupOption } from '@headlessui/vue';
 import '@vuepic/vue-datepicker/dist/main.css';
+import '@vueform/multiselect/themes/tailwind.css';
 
 const props = defineProps({
     pack_types: Array,
     periods: Array,
     price_types: Array,
+    locations: Array,
     default_currency: String,
     pack_type: String,
     price: Object,
@@ -330,6 +334,25 @@ const showRenewable = computed(() => {
                     title="Intro pack"
                     :description="'Pack available to ' + (formPrice.is_intro ? 'members who made no purchases in the past' : 'anyone')"/>
                 <InputError :message="formPrice.errors.is_intro" class="mt-2"/>
+            </div>
+
+            <!-- Location restrictions -->
+            <div>
+                <InputLabel for="locations" value="Location restrictions"/>
+                <Multiselect
+                    v-model="formPrice.location_ids"
+                    mode="tags"
+                    id="locations"
+                    :options="locations"
+                    :close-on-select="true"
+                    :hide-selected="true"
+                    placeholder="Select locations"
+                    >
+                    <template v-slot:option="{ option }">
+                        <ColoredValue :color="option.status ? 'grey' : 'green'" :title="option.label" />
+                    </template>
+                </Multiselect>
+                <div class="text-gray-500 text-xs">Leave blank to make this option available for all locations or select locations to restrict option availability.</div>
             </div>
 
             <!-- is_active -->

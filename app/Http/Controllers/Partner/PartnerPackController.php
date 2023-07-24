@@ -11,6 +11,7 @@ use App\Http\Requests\Partner\PriceFormRequest;
 use App\Http\Requests\Partner\PriceUpdateRequest;
 use App\Models\Partner\Pack;
 use App\Models\Partner\ClassType;
+use App\Models\Partner\Location;
 use App\Models\Partner\PackPrice;
 use App\Services\Partner\PackService;
 use App\Services\Shared\StripeProductService;
@@ -189,6 +190,12 @@ class PartnerPackController extends Controller
      */
     public function edit(Pack $pack)
     {
+        $pack->load(['prices.locations'])->prices->transform(function ($item) {
+            $item->location_ids = $item->locations->pluck('id');
+
+            return $item;
+        });
+
         return Inertia::render('Partner/Pack/Edit', [
             'page_title' => __('Edit Pack'),
             'header' => array(
@@ -213,11 +220,18 @@ class PartnerPackController extends Controller
                     'link' => null,
                 ],
             ),
-            'pack' => $pack->load(['prices']),
+            'pack' => $pack,
             'pack_types' => PackType::labelsForExisting($pack->type),
             'price_types' => StripePriceType::labels(),
             'periods' => StripePeriod::labels(),
             'classtypes' => ClassType::orderBy('id', 'desc')->pluck('title', 'id'),
+            'locations' => Location::select('id', 'status', 'title')->get()->map(function ($item) {
+                return array(
+                    'label' => $item->title,
+                    'value' => $item->id,
+                    'status' => $item->status,
+                );
+            }),
         ]);
     }
 
@@ -319,6 +333,7 @@ class PartnerPackController extends Controller
 
         switch ($request->action) {
             case 'edit': //only local fields (no api call) excluding: type, status, price, interval...
+                $price->locations()->sync($request->location_ids ?? []);
                 $price->update($request->validated());
                 $msg = __('Price updated successfully.');
 
