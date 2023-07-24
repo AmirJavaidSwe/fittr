@@ -598,16 +598,14 @@ const dropdownToggled = ($event) => {
             >
                 <table-data :title="class_lesson.id" />
                 <table-data>
-                    <Link
-                        class="font-medium text-indigo-600 hover:text-indigo-500"
-                        :href="route('partner.classes.show', class_lesson)"
-                    >
-                        {{
-                            class_lesson.title.length > 25
-                                ? class_lesson.title.substring(0, 25) + "..."
-                                : class_lesson.title
-                        }}
-                    </Link>
+                    <ButtonLink :href="route('partner.classes.show', class_lesson)">
+                        <span v-if="class_lesson.title.length > 25" v-tooltip="class_lesson.title">
+                            {{ class_lesson.title.substring(0, 25) }}...
+                        </span>
+                        <span v-else>
+                            {{ class_lesson.title }} 
+                        </span>
+                    </ButtonLink>
                 </table-data>
                 <table-data
                     :title="
@@ -618,7 +616,7 @@ const dropdownToggled = ($event) => {
                 <table-data>
                     <ColoredValue
                         color="#F47560"
-                        :title="class_lesson?.classType?.title ?? 'Test'"
+                        :title="class_lesson?.class_type?.title ?? 'Test'"
                     />
                 </table-data>
                 <table-data>

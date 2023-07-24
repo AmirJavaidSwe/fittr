@@ -18,7 +18,7 @@ class ClassTypeFactory extends Factory
     public function definition()
     {
         return [
-            'status' => $this->faker->randomElement(StateType::all()),
+            'status' => StateType::get('active'),
             'title' => $this->faker->word(),
             'description' => $this->faker->sentence(),
         ];
