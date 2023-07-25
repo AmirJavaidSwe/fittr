@@ -14,6 +14,19 @@ class ClasstypeSeeder extends Seeder
      */
     public function run()
     {
-        ClassType::factory()->count(5)->create();
+        ClassType::factory()
+            ->count(9)
+            ->sequence(
+                ['title' => 'cycle'],
+                ['title' => 'circuits'],
+                ['title' => 'yoga'],
+                ['title' => 'barre'],
+                ['title' => 'pilates'],
+                ['title' => 'dance'],
+                ['title' => 'hiit'],
+                ['title' => 'wall climbing'],
+                ['title' => 'water aerobics'],
+            )
+            ->create();
     }
 }

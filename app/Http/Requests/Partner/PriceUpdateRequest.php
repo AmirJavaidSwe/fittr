@@ -28,6 +28,10 @@ class PriceUpdateRequest extends FormRequest
     public function rules()
     {
         $rules =  [
+            'location_ids' => [
+                'nullable',
+                'exists:mysql_partner.locations,id'
+            ],
             'sessions' => [
                 'sometimes',
                 Rule::excludeIf(

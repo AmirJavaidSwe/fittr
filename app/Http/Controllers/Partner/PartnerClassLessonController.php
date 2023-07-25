@@ -44,7 +44,6 @@ class PartnerClassLessonController extends Controller
      */
     public function index(Request $request)
     {
-        // dd($request->all());
         $this->search = $request->query('search', null);
         $this->per_page = $request->query('per_page', 10);
         $this->order_by = $request->query('order_by', 'id');
@@ -132,8 +131,8 @@ class PartnerClassLessonController extends Controller
             'header' => __('Classes'),
             'classes' => $classes,
             'statuses' => ClassStatus::labels(),
-            'instructors' => Instructor::latest('id')->pluck('name', 'id'),
-            'classtypes' => ClassType::latest('id')->pluck('title', 'id'),
+            'instructors' => Instructor::pluck('name', 'id'),
+            'classtypes' => ClassType::pluck('title', 'id'),
             'studios' => Studio::latest('id')->pluck('title', 'id'),
             'roles' => Role::select('id', 'title')->where('source', auth()->user()->source)->where('business_id', auth()->user()->business_id)->get(),
             'users' => User::select('id', 'name', 'email')->partner()->where('business_id', auth()->user()->business_id)->get(),

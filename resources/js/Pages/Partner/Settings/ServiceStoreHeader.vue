@@ -24,8 +24,12 @@ import {
     faArrowsUpToLine,
 } from "@fortawesome/free-solid-svg-icons";
 
+import Multiselect from "@vueform/multiselect";
+import "@vueform/multiselect/themes/tailwind.css";
+
 const props = defineProps({
     business_seetings: Object,
+    logo_url: Object,
     form_data: Object,
 });
 
@@ -117,25 +121,21 @@ const removeFile = ($event) => {
                 <InputLabel for="logo_url" value="Logo URL" />
                 <div class="text-sm text-gray-600">
                     <p>
-                        Add a redirect to home or any other page when clients
-                        click on the logo.
+                        Add a redirect to home or any other page when clients click on the logo.
                     </p>
                     <p>
-                        NOTE : By default, a click on the logo will redirect to
-                        the Service Store homepage.
+                        NOTE : By default, a click on the logo will redirect to the Service Store homepage.
                     </p>
                 </div>
-                <div class="relative flex items-center">
-                    <span class="w-28 rounded-s-lg border md:h-10 pt-0 md:pt-2 mt-1 flex gap-2 justify-center">
-                        <span class="">
-                            <LinkIcon />
-                        </span>
-                        <span>https://</span>
-                    </span>
-                    <TextInput id="logo_url" v-model="form.logo_url" type="text"
-                        class="mt-1 block w-full start-radius-none" placeholder="https://www.example.com/xyz" />
-                    <InputError :message="form.errors.logo_url" class="mt-2" />
-                </div>
+                <Multiselect
+                    id="logo_url"
+                    v-model="form.logo_url"
+                    :options="logo_url"
+                    :searchable="true"
+                    autocomplete="one-time-code"
+                    class="mt-1 block w-full"
+                />
+                <InputError :message="form.errors.logo_url" class="mt-2" />
             </div>
             <div class="col-span-12 sm:col-span-12 mt-4">
                 <div class="uploadfiles">

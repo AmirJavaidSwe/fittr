@@ -8,6 +8,7 @@ const props = defineProps({
     pack_types: Array,
     periods: Array,
     price_types: Array,
+    locations: Array,
     classtypes: Object,
     pack: {
         type: Object,
@@ -50,6 +51,7 @@ const toggleOrDeletePrice = (action, id) => {
           :pack_types="pack_types"
           :periods="periods"
           :price_types="price_types"
+          :locations="locations"
           :classtypes="classtypes"
           :default_currency="business_seetings.default_currency"
           :prices="pack.prices"
