@@ -151,6 +151,7 @@ Route::domain('app.'.config('app.domain'))->group(function () {
             //partner.members.index
             //partner.members.destroy /members/{member}
             Route::resource('amenity', PartnerAmenityController::class);
+            Route::put('classes/bulk-edit', [PartnerClassLessonController::class, 'bulkEdit'])->name('classes.bulk-edit');
             Route::resource('classes', PartnerClassLessonController::class);
             Route::resource('classtypes', PartnerClassTypeController::class);
             Route::resource('instructors', PartnerInstructorController::class);
@@ -172,7 +173,7 @@ Route::domain('app.'.config('app.domain'))->group(function () {
             Route::post('/exports', [PartnerExportController::class, 'store']);
             Route::resource('locations', PartnerLocationController::class);
             Route::delete('/locations/{location}/delete-image', [PartnerLocationController::class, 'deleteImage'])->name('locations.delete-image');
-            
+
             Route::resource('taxes', PartnerTaxController::class);
             Route::resource('charges', PartnerChargeController::class);
         });

@@ -1,4 +1,5 @@
 <script setup>
+import { onMounted } from "vue";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { useSlots } from "vue";
 
@@ -11,6 +12,14 @@ const props = defineProps({
 
 const slots = useSlots();
 const emit = defineEmits(["close"]);
+
+onMounted(() => document.addEventListener('keydown', closeOnEscape));
+
+const closeOnEscape = (e) => {
+    if (e.key === 'Escape' && props.show) {
+        close();
+    }
+};
 
 const close = () => {
     emit("close");

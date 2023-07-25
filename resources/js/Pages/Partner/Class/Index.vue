@@ -1,12 +1,16 @@
+use Class;
 <script setup>
 import { ref, watch, computed } from "vue";
 import { Link, useForm, usePage, router } from "@inertiajs/vue3";
 import { DateTime } from "luxon";
-import uniqBy from 'lodash/uniqBy';
-import cloneDeep from 'lodash/cloneDeep';
+import uniqBy from "lodash/uniqBy";
+import map from "lodash/map";
+import uniq from "lodash/uniq";
+import find from "lodash/find";
 import Form from "./Form.vue";
 import FormExport from "./FormExport.vue";
 import FormFilter from "./FormFilter.vue";
+import BulkEditForm from "./BulkEditForm.vue";
 import Search from "@/Components/DataTable/Search.vue";
 import Pagination from "@/Components/Pagination.vue";
 import TableHead from "@/Components/DataTable/TableHead.vue";
@@ -35,7 +39,8 @@ import StatusLabel from "@/Components/StatusLabel.vue";
 import ColoredValue from "@/Components/DataTable/ColoredValue.vue";
 import AvatarValue from "@/Components/DataTable/AvatarValue.vue";
 import DateValue from "@/Components/DataTable/DateValue.vue";
-import ActionsIcon from '@/Icons/ActionsIcon.vue';
+import ActionsIcon from "@/Icons/ActionsIcon.vue";
+import Checkbox from "@/Components/Checkbox.vue";
 
 const props = defineProps({
     disableSearch: {
@@ -70,7 +75,7 @@ const form = useForm({
     instructor_id: [],
     class_type_id: [],
     studio_id: [],
-    is_off_peak: '',
+    is_off_peak: "",
     runFilter: false,
     per_page: props.per_page,
     order_by: props.order_by,
@@ -129,7 +134,7 @@ const runSearch = () => {
 };
 
 // form.search getter only;
-watch(() => form.search, runSearch);
+watch(() => form.isDirty, runSearch);
 
 //delete confirmation modal:
 const itemDeleting = ref(false);
@@ -165,7 +170,7 @@ const closeFilterModal = () => {
 const resetClassFilters = () => {
     form.runFilter = false;
     form.reset();
-    router.visit(route("partner.classes.index"))
+    router.visit(route("partner.classes.index"));
 };
 
 //create confirmation modal:
@@ -203,7 +208,7 @@ const closeEditModal = () => {
 };
 const closeDuplicateClassModal = () => {
     showDuplicateClassModal.value = false;
-    duplicateClassForm.reset()
+    duplicateClassForm.reset();
 };
 
 let formEdit = useForm({
@@ -232,7 +237,7 @@ const handleUpdateForm = (data) => {
 const handleDuplicateForm = (data) => {
     showDuplicateClassModal.value = true;
     duplicateClassForm.title = data.title;
-    duplicateClassForm.status = 'inactive';
+    duplicateClassForm.status = "inactive";
     duplicateClassForm.start_date = data.start_date;
     duplicateClassForm.end_date = data.end_date;
     duplicateClassForm.instructor_id = data.instructor_id;
@@ -307,49 +312,59 @@ const checkExportStatus = () => {
 const showLink = (exporting) => {
     completed_at.value = exporting.completed_at;
 };
-const showInstructorCreateModal = ref(false)
+const showInstructorCreateModal = ref(false);
 const closeInstructorCreateModal = () => {
-    showInstructorCreateModal.value = false
-}
+    showInstructorCreateModal.value = false;
+};
 const createInstructorFrom = useForm({
     name: "",
-    email: ""
+    email: "",
 });
 
 const storeInstructor = () => {
-    createInstructorFrom.transform((data) => ({
-        ...data,
-        returnTo: 'partner.classes.index',
-    })).post(route("partner.instructors.store"), {
-        preserveScroll: true,
-        onSuccess: () => [createInstructorFrom.reset(), closeInstructorCreateModal()],
-    });
+    createInstructorFrom
+        .transform((data) => ({
+            ...data,
+            returnTo: "partner.classes.index",
+        }))
+        .post(route("partner.instructors.store"), {
+            preserveScroll: true,
+            onSuccess: () => [
+                createInstructorFrom.reset(),
+                closeInstructorCreateModal(),
+            ],
+        });
 };
 
 const instructorsList = computed(() => {
-  let newInstructorsList = { ...props.instructors }; // Create a shallow copy of the object
-  newInstructorsList.create_new_instructor = "Add New"; // Add a new property
-  return newInstructorsList;
+    let newInstructorsList = { ...props.instructors }; // Create a shallow copy of the object
+    newInstructorsList.create_new_instructor = "Add New"; // Add a new property
+    return newInstructorsList;
 });
 
-const showClassTypeCreateModal = ref(false)
+const showClassTypeCreateModal = ref(false);
 const closeClassTypeCreateModal = () => {
     createClassTypeFrom.reset();
-    showClassTypeCreateModal.value = false
-}
+    showClassTypeCreateModal.value = false;
+};
 const createClassTypeFrom = useForm({
     title: null,
     description: null,
 });
 
 const storeClassType = () => {
-    createClassTypeFrom.transform((data) => ({
-        ...data,
-        returnTo: 'partner.classes.index',
-    })).post(route("partner.classtypes.store"), {
-        preserveScroll: true,
-        onSuccess: () => [createClassTypeFrom.reset(), closeClassTypeCreateModal()],
-    });
+    createClassTypeFrom
+        .transform((data) => ({
+            ...data,
+            returnTo: "partner.classes.index",
+        }))
+        .post(route("partner.classtypes.store"), {
+            preserveScroll: true,
+            onSuccess: () => [
+                createClassTypeFrom.reset(),
+                closeClassTypeCreateModal(),
+            ],
+        });
 };
 
 const classTypeList = computed(() => {
@@ -357,24 +372,30 @@ const classTypeList = computed(() => {
     newClassTypeList.create_new_class_type = "Add New"; // Add a new property
     return newClassTypeList;
 });
-const showStudioCreateModal = ref(false)
+const showStudioCreateModal = ref(false);
 const closeStudioCreateModal = () => {
-    showStudioCreateModal.value = false
+    showStudioCreateModal.value = false;
     createStudioFrom.reset();
-}
+};
 const createStudioFrom = useForm({
     title: null,
     location_id: null,
 });
 
 const storeStudio = () => {
-    createStudioFrom.transform((data) => ({
-        ...data,
-        returnTo: 'partner.classes.index',
-    })).post(route("partner.studios.store"), {
-        preserveScroll: true,
-        onSuccess: () => [createStudioFrom.reset(), closeStudioCreateModal(), form_class.studio_id = null],
-    });
+    createStudioFrom
+        .transform((data) => ({
+            ...data,
+            returnTo: "partner.classes.index",
+        }))
+        .post(route("partner.studios.store"), {
+            preserveScroll: true,
+            onSuccess: () => [
+                createStudioFrom.reset(),
+                closeStudioCreateModal(),
+                (form_class.studio_id = null),
+            ],
+        });
 };
 
 const studioList = computed(() => {
@@ -382,149 +403,243 @@ const studioList = computed(() => {
     newStudioList.create_new_studio = "Add New"; // Add a new property
     return newStudioList;
 });
-const showLocationCreateModal = ref(false)
+const showLocationCreateModal = ref(false);
 const closeLocationCreateModal = () => {
-    showLocationCreateModal.value = false
-    createLocationFrom.reset()
-}
+    showLocationCreateModal.value = false;
+    createLocationFrom.reset();
+};
 const createLocationFrom = useForm({
     title: null,
     brief: null,
     manager_id: null,
     address_line_1: null,
     address_line_2: null,
-    country_id:null,
-    city:null,
-    postcode:null,
-    map_latitude:null,
-    map_longitude:null,
-    tel:null,
-    email:null,
-    image:null,
-    amenity_ids:[],
+    country_id: null,
+    city: null,
+    postcode: null,
+    map_latitude: null,
+    map_longitude: null,
+    tel: null,
+    email: null,
+    image: null,
+    amenity_ids: [],
 });
 
 const storeLocation = () => {
-    createLocationFrom.transform((data) => ({
-        ...data,
-        returnTo: 'partner.classes.index',
-    })).post(route("partner.locations.store"), {
-        preserveScroll: true,
-        onSuccess: () => [createLocationFrom.reset(), closeLocationCreateModal(), createStudioFrom.location_id = null],
-    });
+    createLocationFrom
+        .transform((data) => ({
+            ...data,
+            returnTo: "partner.classes.index",
+        }))
+        .post(route("partner.locations.store"), {
+            preserveScroll: true,
+            onSuccess: () => [
+                createLocationFrom.reset(),
+                closeLocationCreateModal(),
+                (createStudioFrom.location_id = null),
+            ],
+        });
 };
 
 const locationList = computed(() => {
-    let newLocationList =  props.locations
+    let newLocationList = props.locations;
     newLocationList.push({
         id: "create_new_location",
-        title: "Add New"
+        title: "Add New",
     });
-    return uniqBy(newLocationList, 'id');
-
+    return uniqBy(newLocationList, "id");
 });
 const usersList = computed(() => {
-    let newUsersList =  props.users
+    let newUsersList = props.users;
     newUsersList.push({
         id: "create_new_user",
         name: "Add New",
-        email: null
+        email: null,
     });
-    console.log(uniqBy(newUsersList, 'id'))
-    return uniqBy(newUsersList, 'id');
-
+    console.log(uniqBy(newUsersList, "id"));
+    return uniqBy(newUsersList, "id");
 });
 const rolesList = computed(() => {
-    let newRolesList =  props.roles
+    let newRolesList = props.roles;
     newRolesList.push({
         id: "create_new_role",
-        title: "Add New"
+        title: "Add New",
     });
-    return uniqBy(newRolesList, 'id');
-
+    return uniqBy(newRolesList, "id");
 });
 
-const showGMCreateModal = ref(false)
+const showGMCreateModal = ref(false);
 const closeGMCreateModal = () => {
-    createGMFrom.reset()
-    showGMCreateModal.value = false
-}
+    createGMFrom.reset();
+    showGMCreateModal.value = false;
+};
 const createGMFrom = useForm({
     name: "",
     email: "",
     password: "",
     is_super: true,
-    roles: []
+    roles: [],
 });
 
 const storeGM = () => {
-    createGMFrom.transform((data) => ({
-        ...data,
-        roles: data.is_super ? [] : data.roles,
-        is_super: data.is_super,
-        is_new: 1,
-        returnTo: 'partner.classes.index',
-    })).post(route("partner.users.store"), {
-        preserveScroll: true,
-        onSuccess: () => [createGMFrom.reset(), closeGMCreateModal(), createLocationFrom.manager_id = null],
-    });
+    createGMFrom
+        .transform((data) => ({
+            ...data,
+            roles: data.is_super ? [] : data.roles,
+            is_super: data.is_super,
+            is_new: 1,
+            returnTo: "partner.classes.index",
+        }))
+        .post(route("partner.users.store"), {
+            preserveScroll: true,
+            onSuccess: () => [
+                createGMFrom.reset(),
+                closeGMCreateModal(),
+                (createLocationFrom.manager_id = null),
+            ],
+        });
 };
-const showRoleCreateModal = ref(false)
+const showRoleCreateModal = ref(false);
 const closeRoleCreateModal = () => {
-    createRoleFrom.reset()
-    showRoleCreateModal.value = false
-}
-const createRoleFrom = useForm({
-});
+    createRoleFrom.reset();
+    showRoleCreateModal.value = false;
+};
+const createRoleFrom = useForm({});
 
 const storeRole = ($event) => {
-    let title = null
-    let permissions = []
-    if($event.title) {
-        title = $event.title
+    let title = null;
+    let permissions = [];
+    if ($event.title) {
+        title = $event.title;
     }
-    if($event.permissions) {
-        permissions = $event.permissions
+    if ($event.permissions) {
+        permissions = $event.permissions;
     }
-    createRoleFrom.transform((data) => ({
-        title: title,
-        permissions: permissions,
-        returnTo: 'partner.classes.index',
-    })).post(route(`${usePage().props.user.source}.roles.store`), {
-        preserveScroll: true,
-        onSuccess: () => [createRoleFrom.reset(), closeRoleCreateModal(), createGMFrom.roles = []],
-    });
+    createRoleFrom
+        .transform((data) => ({
+            title: title,
+            permissions: permissions,
+            returnTo: "partner.classes.index",
+        }))
+        .post(route(`${usePage().props.user.source}.roles.store`), {
+            preserveScroll: true,
+            onSuccess: () => [
+                createRoleFrom.reset(),
+                closeRoleCreateModal(),
+                (createGMFrom.roles = []),
+            ],
+        });
 };
-const showAmenityCreateModal = ref(false)
+const showAmenityCreateModal = ref(false);
 const closeAmenityCreateModal = () => {
-    createAmenityFrom.reset()
-    showAmenityCreateModal.value = false
-}
+    createAmenityFrom.reset();
+    showAmenityCreateModal.value = false;
+};
 const createAmenityFrom = useForm({
-    title: '',
-    status: false
+    title: "",
+    status: false,
 });
 
 const storeAmenity = () => {
-    createAmenityFrom.transform((data) => ({
-        ...data,
-        returnTo: 'partner.classes.index',
-    })).post(route(`partner.amenity.store`), {
-        preserveScroll: true,
-        onSuccess: () => [createAmenityFrom.reset(), closeAmenityCreateModal(), createLocationFrom.amenity_ids = []],
-    });
+    createAmenityFrom
+        .transform((data) => ({
+            ...data,
+            returnTo: "partner.classes.index",
+        }))
+        .post(route(`partner.amenity.store`), {
+            preserveScroll: true,
+            onSuccess: () => [
+                createAmenityFrom.reset(),
+                closeAmenityCreateModal(),
+                (createLocationFrom.amenity_ids = []),
+            ],
+        });
 };
 
-const ddToggled = ref(false)
-const dropdownToggled = ($event) => {
-    ddToggled.value = false
-    if($event.open === true && $event.rowIndex === 0) {
-        ddToggled.value = true
+const rowSelected = ref([]);
+
+const addIdsToSelection = () => {
+    const now = DateTime.now().setZone(props.business_seetings.timezone);
+    const upcomingItems = props.classes.data.filter((item) => {
+        const itemDate = DateTime.fromISO(item.start_date).setZone(
+            props.business_seetings.timezone
+        );
+        return itemDate > now;
+    });
+
+    const ids = uniq(map(upcomingItems, "id"));
+    if (ids.length == rowSelected.value.length) {
+        rowSelected.value = [];
+    } else {
+        rowSelected.value = ids;
     }
-}
+};
+const selectableRowsCount = computed(() => {
+    const now = DateTime.now().setZone(props.business_seetings.timezone);
+    const upcomingItems = props.classes.data.filter((item) => {
+        const itemDate = DateTime.fromISO(item.start_date).setZone(
+            props.business_seetings.timezone
+        );
+        return itemDate > now;
+    });
+    return upcomingItems.length;
+});
+
+const notUpcommingItem = (id) => {
+    const now = DateTime.now().setZone(props.business_seetings.timezone);
+    const item = find(props.classes.data, function (o) {
+        return o.id == id;
+    });
+    const itemDate = item
+        ? DateTime.fromISO(item.start_date).setZone(
+              props.business_seetings.timezone
+          )
+        : null;
+    return itemDate > now ? true : false;
+};
+
+const showBulkEditForm = ref(false);
+const bulkEdit = () => {
+    showBulkEditForm.value = true;
+};
+const bulkDelete = () => {};
+
+const closeBulkEditForm = () => {
+    formBulkEdit.reset();
+    showBulkEditForm.value = false;
+};
+const updateBulkEdit = () => {
+    formBulkEdit
+        .transform((data) => ({
+            ...data,
+            ids: rowSelected.value,
+            _method: 'PUT'
+        }))
+        .post(route("partner.classes.bulk-edit"), {
+            preserveScroll: true,
+            preserveState: true,
+            onSuccess: (data) => {
+                formBulkEdit.reset();
+                rowSelected.value = []
+                showBulkEditForm.value = false;
+            },
+        });
+};
+const formBulkEdit = useForm({
+    status: null,
+    instructor_id: [],
+    class_type_id: null,
+    studio_id: null,
+    password: null,
+});
 </script>
 <template>
-    <data-table-layout :disableButton="true" :dd-toggled="ddToggled">
+    <data-table-layout
+        :disableButton="true"
+        :extra-actions="rowSelected.length"
+        @bulk-edit="bulkEdit"
+        @bulk-delete="bulkDelete"
+    >
         <template #button>
             <ButtonLink styling="default" size="default" @click="null">
                 <ImportIcon class="w-4 h-4 2xl:w-6 2xl:h-6 mr-0 md:mr-2" />
@@ -568,12 +683,15 @@ const dropdownToggled = ($event) => {
         </template>
 
         <template #tableHead>
-            <table-head
-                title="Id"
-                @click="setOrdering('id')"
-                :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'id'"
-            />
+            <table-head>
+                <template #checkbox>
+                    <Checkbox
+                        :checked="rowSelected.length == selectableRowsCount"
+                        class="p-2.5"
+                        @click="addIdsToSelection"
+                    />
+                </template>
+            </table-head>
             <table-head
                 title="Title"
                 @click="setOrdering('title')"
@@ -636,7 +754,17 @@ const dropdownToggled = ($event) => {
                 v-for="(class_lesson, index) in classes.data"
                 :key="class_lesson.id"
             >
-                <table-data :title="class_lesson.id" />
+                <table-data>
+                    <div v-if="notUpcommingItem(class_lesson.id)">
+                        <label class="flex items-center">
+                            <Checkbox
+                                v-model:checked="rowSelected"
+                                :checked="rowSelected.includes(class_lesson.id)"
+                                :value="class_lesson.id"
+                            />
+                        </label>
+                    </div>
+                </table-data>
                 <table-data>
                     <Link
                         class="font-medium text-indigo-600 hover:text-indigo-500"
@@ -658,7 +786,7 @@ const dropdownToggled = ($event) => {
                 <table-data>
                     <ColoredValue
                         color="#F47560"
-                        :title="class_lesson?.classType?.title ?? 'Test'"
+                        :title="class_lesson?.class_type?.title ?? 'Test'"
                     />
                 </table-data>
                 <table-data>
@@ -706,7 +834,6 @@ const dropdownToggled = ($event) => {
                         :top="index > classes.data.length - 3"
                         :content-classes="['bg-white']"
                         :row-index="index"
-                        @toggled="dropdownToggled"
                     >
                         <template #trigger>
                             <button class="text-dark text-lg">
@@ -734,8 +861,10 @@ const dropdownToggled = ($event) => {
                                 />
                                 Edit (Modal)
                             </DropdownLink>
-                            <DropdownLink as="button"
-                                @click="handleDuplicateForm(class_lesson)">
+                            <DropdownLink
+                                as="button"
+                                @click="handleDuplicateForm(class_lesson)"
+                            >
                                 <DuplicateIcon
                                     class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
                                 />
@@ -771,6 +900,9 @@ const dropdownToggled = ($event) => {
     <!-- Export form Modal -->
     <SideModal :show="showFilterModal" @close="closeFilterModal">
         <template #title>Filter</template>
+        <template #close>
+            <CloseModal @click="closeFilterModal" />
+        </template>
         <template #content>
             <FormFilter
                 :form="form"
@@ -778,7 +910,7 @@ const dropdownToggled = ($event) => {
                 :studios="studios"
                 :instructors="instructors"
                 :classtypes="classtypes"
-                @submitted="runSearch"
+                @close="closeFilterModal"
                 @reset="resetClassFilters"
             />
         </template>
@@ -787,6 +919,9 @@ const dropdownToggled = ($event) => {
     <!-- Export form Modal -->
     <SideModal :show="showExportModal" @close="closeExportModal">
         <template #title> Export Classes </template>
+        <template #close>
+            <CloseModal @click="closeExportModal" />
+        </template>
 
         <template #content>
             <FormExport
@@ -806,6 +941,9 @@ const dropdownToggled = ($event) => {
     <!-- Create new class Modal -->
     <SideModal :show="showCreateModal" @close="closeCreateModal">
         <template #title> Create new Class </template>
+        <template #close>
+            <CloseModal @click="closeCreateModal" />
+        </template>
 
         <template #content>
             <Form
@@ -828,6 +966,9 @@ const dropdownToggled = ($event) => {
     <!-- Edit class Modal -->
     <SideModal :show="showEditModal" @close="closeEditModal">
         <template #title> Edit Class </template>
+        <template #close>
+            <CloseModal @click="closeEditModal" />
+        </template>
 
         <template #content>
             <Form
@@ -842,10 +983,16 @@ const dropdownToggled = ($event) => {
             />
         </template>
     </SideModal>
-    
+
     <!-- Duplicate class Modal -->
-    <SideModal :show="showDuplicateClassModal" @close="closeDuplicateClassModal">
+    <SideModal
+        :show="showDuplicateClassModal"
+        @close="closeDuplicateClassModal"
+    >
         <template #title> Duplicate Class </template>
+        <template #close>
+            <CloseModal @click="closeEditModal" />
+        </template>
 
         <template #content>
             <Form
@@ -861,7 +1008,7 @@ const dropdownToggled = ($event) => {
             />
         </template>
     </SideModal>
-    
+
     <!-- Delete Confirmation Modal -->
     <ConfirmationModal :show="itemDeleting" @close="itemDeleting = false">
         <template #title> Confirmation required </template>
@@ -880,9 +1027,9 @@ const dropdownToggled = ($event) => {
             </ButtonLink>
 
             <ButtonLink
-            size="default"
-            styling="danger"
-            class="ml-3"
+                size="default"
+                styling="danger"
+                class="ml-3"
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
                 @click="deleteItem"
@@ -892,25 +1039,39 @@ const dropdownToggled = ($event) => {
         </template>
     </ConfirmationModal>
     <!-- Instructor Create Modal -->
-    <SideModal :show="showInstructorCreateModal" @close="closeInstructorCreateModal">
+    <SideModal
+        :show="showInstructorCreateModal"
+        @close="closeInstructorCreateModal"
+    >
         <template #title> Add Instructor </template>
         <template #close>
             <CloseModal @click="closeInstructorCreateModal" />
         </template>
 
         <template #content>
-            <InstructorCreateForm :form="createInstructorFrom" :submitted="storeInstructor" modal />
+            <InstructorCreateForm
+                :form="createInstructorFrom"
+                :submitted="storeInstructor"
+                modal
+            />
         </template>
     </SideModal>
     <!-- Class Type Create Modal -->
-    <SideModal :show="showClassTypeCreateModal" @close="closeClassTypeCreateModal">
+    <SideModal
+        :show="showClassTypeCreateModal"
+        @close="closeClassTypeCreateModal"
+    >
         <template #title> Create new classtype </template>
         <template #close>
             <CloseModal @click="closeClassTypeCreateModal" />
         </template>
 
         <template #content>
-            <ClassTypeCreateForm :form="createClassTypeFrom" :submitted="storeClassType" modal />
+            <ClassTypeCreateForm
+                :form="createClassTypeFrom"
+                :submitted="storeClassType"
+                modal
+            />
         </template>
     </SideModal>
     <!-- Studio Create Modal -->
@@ -921,11 +1082,20 @@ const dropdownToggled = ($event) => {
         </template>
 
         <template #content>
-            <StudioCreateForm :form="createStudioFrom" :locations="locationList" @create-new-location='showLocationCreateModal = true' :submitted="storeStudio" modal />
+            <StudioCreateForm
+                :form="createStudioFrom"
+                :locations="locationList"
+                @create-new-location="showLocationCreateModal = true"
+                :submitted="storeStudio"
+                modal
+            />
         </template>
     </SideModal>
     <!-- Location Create Modal -->
-    <SideModal :show="showLocationCreateModal" @close="closeLocationCreateModal">
+    <SideModal
+        :show="showLocationCreateModal"
+        @close="closeLocationCreateModal"
+    >
         <template #title> Create new location </template>
         <template #close>
             <CloseModal @click="closeLocationCreateModal" />
@@ -939,8 +1109,8 @@ const dropdownToggled = ($event) => {
                 :countries="countries"
                 :studios="[]"
                 :editMode="false"
-                @create_new_gm="showGMCreateModal=true"
-                @create_new_amenity="showAmenityCreateModal=true"
+                @create_new_gm="showGMCreateModal = true"
+                @create_new_amenity="showAmenityCreateModal = true"
             />
         </template>
         <template #footer>
@@ -965,7 +1135,13 @@ const dropdownToggled = ($event) => {
         </template>
 
         <template #content>
-            <GMCreateForm :form="createGMFrom" :roles="rolesList" @create-new-role='showRoleCreateModal = true' :submitted="storeGM" modal />
+            <GMCreateForm
+                :form="createGMFrom"
+                :roles="rolesList"
+                @create-new-role="showRoleCreateModal = true"
+                :submitted="storeGM"
+                modal
+            />
         </template>
     </SideModal>
     <!-- Role Create Modal -->
@@ -976,7 +1152,12 @@ const dropdownToggled = ($event) => {
         </template>
 
         <template #content>
-            <RoleCreateForm :form="createRoleFrom" :system-modules="systemModules" @submitted="storeRole" modal />
+            <RoleCreateForm
+                :form="createRoleFrom"
+                :system-modules="systemModules"
+                @submitted="storeRole"
+                modal
+            />
         </template>
     </SideModal>
     <!-- Amenity Create Modal -->
@@ -987,7 +1168,33 @@ const dropdownToggled = ($event) => {
         </template>
 
         <template #content>
-            <AmenityCreateForm :form="createAmenityFrom" @submitted="storeAmenity" modal />
+            <AmenityCreateForm
+                :form="createAmenityFrom"
+                :submitted="storeAmenity"
+                modal
+            />
+        </template>
+    </SideModal>
+    <SideModal :show="showBulkEditForm" @close="closeBulkEditForm">
+        <template #title> Edit Detail for Select Items </template>
+        <template #close>
+            <CloseModal @click="closeBulkEditForm" />
+        </template>
+
+        <template #content>
+            <BulkEditForm
+                :form="formBulkEdit"
+                :statuses="statuses"
+                :studios="studioList"
+                :instructors="instructorsList"
+                :classtypes="classTypeList"
+                :business_seetings="business_seetings"
+                :submitted="updateBulkEdit"
+                @create-new-instructor="showInstructorCreateModal = true"
+                @create-new-class-type="showClassTypeCreateModal = true"
+                @create-new-studio="showStudioCreateModal = true"
+                modal
+            />
         </template>
     </SideModal>
 </template>

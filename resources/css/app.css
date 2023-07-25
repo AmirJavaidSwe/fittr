@@ -30,7 +30,13 @@ select {
     @apply rounded-md lg:h-10 py-1 flex items-center lg:text-base border border-gray-400 focus:border-[1.5px] focus:border-primary-500 focus:outline-none focus:shadow-none focus:ring-0;
 }
 .multiselect{
-    @apply border-gray-400 !important;
+    @apply border-gray-400 min-h-min h-auto !important;
+}
+.multiselect-tag{
+    @apply bg-green-600 !important;
+}
+.multiselect-tag-remove-icon{
+    @apply opacity-60 w-4 h-4 !important;
 }
 .dp__theme_light input {
     @apply lg:text-base border border-gray-300 focus:border-primary-500 rounded-md focus:ring-0 !important;

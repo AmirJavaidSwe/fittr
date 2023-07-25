@@ -9,19 +9,21 @@ use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Country;
 use App\Enums\ClassStatus;
+use App\Models\SystemModule;
 use Illuminate\Http\Request;
 use App\Models\Partner\Studio;
 use Illuminate\Support\Carbon;
 use App\Models\Partner\Amenity;
+use App\Rules\OldPasswordMatch;
 use App\Models\Partner\Location;
 use App\Models\Partner\ClassType;
 use Illuminate\Http\JsonResponse;
 use App\Models\Partner\Instructor;
 use Illuminate\Support\Facades\DB;
 use App\Models\Partner\ClassLesson;
-use App\Models\SystemModule;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\Partner\ClassFormRequest;
 
 // use Spatie\SimpleExcel\SimpleExcelReader;
@@ -46,7 +48,7 @@ class PartnerClassLessonController extends Controller
         $this->search = $request->query('search', null);
         $this->per_page = $request->query('per_page', 10);
         $this->order_by = $request->query('order_by', 'id');
-        $this->order_dir = $request->query('order_dir', 'desc');
+        $this->order_dir = $request->query('order_dir', 'asc');
         $this->runFilter = $request->input('runFilter');
 
         $classes = ClassLesson::with('studio', 'classType', 'instructor')->orderBy($this->order_by, $this->order_dir)
@@ -388,4 +390,25 @@ class PartnerClassLessonController extends Controller
         $export->toBrowser();
     }
 
+    public function bulkEdit(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'status' => 'required',
+            'instructor_id' => 'required',
+            'class_type_id' => 'required',
+            'studio_id' => 'required',
+            'password' => ['required', new OldPasswordMatch],
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            return back()->withErrors($errors)->withInput();
+        }
+
+        $classes = ClassLesson::whereIn('id', request()->ids)->get();
+
+        foreach($classes as $k => $class) {
+
+        }
+
+    }
 }
