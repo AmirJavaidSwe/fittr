@@ -2,13 +2,12 @@
 
 namespace App\Listeners;
 
-use App\Events\BookingConfirmation;
+use App\Events\BookingCancellation;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
-class BookingCancellationListener implements ShouldQueue
+class BookingCancellationListener extends PartnerListener implements ShouldQueue
 {
     /**
      * Create the event listener.
@@ -23,21 +22,19 @@ class BookingCancellationListener implements ShouldQueue
     /**
      * Handle the event.
      *
-     * @param  \App\Events\BookingConfirmation  $event
+     * @param  \App\Events\BookingCancellation  $event
      * @return void
      */
-    public function handle(BookingConfirmation $event)
+    public function handle(BookingCancellation $event)
     {
+        //parent method will set 1 public prop on this class: array $business_seetings
+        $this->setPartnerConnection($event);
         $booking = $event->booking;
+        $business_seetings = $this->business_seetings;
 
-        $timezone = session('business_seetings.timezone') ?? config('app.timezone');
-
-        $booking->class->start_date = $booking->class->start_date->tz($timezone);
-        $booking->class->end_date = $booking->class->end_date->tz($timezone);
-
-        Mail::send('emails.booking_cancellation', ['booking' => $booking, 'settings' => session('business_seetings')], function($message) use ($booking) {
+        Mail::send('emails.booking_cancellation', ['booking' => $booking, 'settings' => $business_seetings], function($message) use ($booking) {
             $message->to($booking->user->email);
-            $message->subject('Booking Confirmation');
+            $message->subject('Booking cancellation confirmation');
         });
     }
 }
