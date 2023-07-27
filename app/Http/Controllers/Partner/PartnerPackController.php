@@ -61,7 +61,7 @@ class PartnerPackController extends Controller
                               ->orWhere('title', 'LIKE', '%'.$this->search.'%');
                     });
                 })
-                ->with(['prices'])
+                ->with(['prices.locations'])
                 ->paginate($this->per_page)
                 ->withQueryString(),
             'search' => $this->search,

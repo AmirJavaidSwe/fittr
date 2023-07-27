@@ -11,6 +11,7 @@ import DataTableLayout from "@/Components/DataTable/Layout.vue";
 import DialogModal from '@/Components/DialogModal.vue';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue';
 import ButtonLink from '@/Components/ButtonLink.vue';
+import { faPowerOff, faLocationPinLock } from '@fortawesome/free-solid-svg-icons';
 
 const props = defineProps({
     disableSearch: {
@@ -135,9 +136,21 @@ const duplicateItem = () => {
                 </table-data>
                 <table-data>
                     <div v-if="pack.prices">
-                        <div v-for="price in pack.prices">
+                        <div v-for="price in pack.prices" class="space-x-1">
                             <span class="font-bold" :title="price.currency.toUpperCase()">{{price.price_formatted}}</span>
-                            {{price_types.find(({value}) => value === price.type)?.label}} {{price.is_active ? 'ON' : 'OFF'}}
+                            <span>
+                                {{price_types.find(({value}) => value === price.type)?.label}}
+                            </span>
+                            <span>
+                                <font-awesome-icon 
+                                    :icon="faPowerOff"
+                                    :class="[price.is_active  ? 'text-primary-500' : 'text-danger-200']"
+                                     v-tooltip="price.is_active ? 'Active' : 'Inactive'"
+                                />
+                            </span>
+                            <span v-if="price.locations.length">
+                                <font-awesome-icon :icon="faLocationPinLock" v-tooltip="'Location restricted'" />
+                            </span>
                         </div>
                     </div>
                 </table-data>

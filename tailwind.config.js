@@ -70,27 +70,9 @@ module.exports = {
                 mainBg: "#E8EAE9", //soft grey
                 lightblue: "#EAF1F8",
                 darkblue: "#4299E1",
-                
-
             },
             fontFamily: {
                 sans: ["Urbanist", ...defaultTheme.fontFamily.sans],
-            },
-            spacing: {
-                "8vw": "0.42vw",
-                "10vw": "0.53vw",
-                "12vw": "0.625vw",
-                "16vw": "0.833vw",
-                "18vw": "0.95vw",
-                "20vw": "1.05vw",
-                "24vw": "1.25vw",
-                "30vw": "1.56vw",
-                "33vw": "1.72vw",
-                "36vw": "1.875vw",
-                "40vw": "2.08vw",
-                "48vw": "2.5vw",
-                "56vw": "2.91vw",
-                "60vw": "3.125vw",
             },
             width: {
                 sidebar: "280px",
@@ -98,24 +80,7 @@ module.exports = {
             height: {
                 applayout: "calc(100vh - 32px)",
                 applayout_footer: "32px",
-            },
-            fontSize: {
-                "8vw": "0.42vw",
-                "10vw": "0.53vw",
-                "12vw": "0.625vw",
-                "16vw": "0.833vw",
-                "18vw": "0.95vw",
-                "20vw": "1.05vw",
-                "24vw": "1.25vw",
-                "30vw": "1.56vw",
-                "33vw": "1.72vw",
-                "36vw": "1.875vw",
-                "40vw": "2.08vw",
-                "48vw": "2.5vw",
-                "56vw": "2.91vw",
-                "60vw": "3.125vw",
-            },
-         
+            },         
         },
     },
 

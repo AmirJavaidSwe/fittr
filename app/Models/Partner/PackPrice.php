@@ -45,6 +45,9 @@ class PackPrice extends Model
      */
     protected $appends = [
         'interval_human',
+        'price_floor',
+        'price_floor_formatted',
+        'price_decimals',
         'price_formatted',
         'price_formatted_full',
     ];
@@ -70,6 +73,21 @@ class PackPrice extends Model
         $string = $this->interval_count == 1 ? __('per') : __('every');
         $string .= ($this->interval_count == 1 ? '' : ' '.$this->interval_count).' '. __(Str::plural($this->interval, $this->interval_count));
         return $string;
+    }
+
+    public function getPriceFloorAttribute(): int
+    {
+        return floor($this->price);
+    }
+
+    public function getPriceFloorFormattedAttribute(): ?string
+    {
+        return number_format($this->price_floor);
+    }
+
+    public function getPriceDecimalsAttribute(): ?int
+    {
+        return round(fmod($this->price, 1), 2) * 100;
     }
 
     public function getPriceFormattedAttribute(): ?string

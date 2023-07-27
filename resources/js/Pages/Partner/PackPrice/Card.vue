@@ -1,7 +1,8 @@
 <script setup>
+import { computed, ref } from 'vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import ButtonLink from '@/Components/ButtonLink.vue';
-import { faGear } from '@fortawesome/free-solid-svg-icons';
+import { faGear, faLocationPinLock, faRecycle, faUserPlus, faHourglassEnd } from '@fortawesome/free-solid-svg-icons';
 
 const props = defineProps({
     price: {
@@ -13,12 +14,31 @@ const props = defineProps({
         required: true,
     },
 });
+const restricted_locations = ref([]);
+const locationRestrictionsTooltip = computed(() => {
+    let ids = props.price.location_ids;
+    let count = ids.length;
+    restricted_locations.value = props.price.locations.filter(o => ids.includes(o.id));
+    return 'This option restricted to ' + count + ' location' + (count > 1 ? 's':'');
+});
+const isRecurring = computed(() => {
+  return props.price.type == 'recurring';
+});
+const showRenewable = computed(() => {
+  return props.price.is_renewable;
+});
+const showIntro = computed(() => {
+  return props.price.is_intro;
+});
+const showExpiration = computed(() => {
+  return props.price.is_expiring;
+});
 
 defineEmits(['toggle', 'edit', 'delete']);
 
 </script>
 <template>
-    <div class="shadow-md w-80">
+    <div class="flex flex-col shadow-md w-80">
         <div 
         class="flex font-medium items-center justify-between space-between"
         :class="{
@@ -63,16 +83,27 @@ defineEmits(['toggle', 'edit', 'delete']);
                 </template>
             </Dropdown>
         </div>
-        <div class="p-2">
+        <div class="flex-grow p-2 space-y-2">
             <!-- <div>ID: {{price.id}}</div> -->
             <div> 
                 <span class="font-bold" :title="price.currency.toUpperCase()">{{price.price_formatted}}</span>
                 <span v-if="price.interval_count">&nbsp;{{price.interval_human}}</span>
             </div>
-            <div>{{'Pack is ' + (price.is_unlimited ? '' : 'not ') + 'unlimited'}}</div>
-            <div>{{'Pack is ' + (price.is_fap ? '' : 'not ') + 'fap'}}</div>
-            <div>{{'Pack is ' + (price.is_renewable ? '' : 'not ') + 'renewable'}}</div>
-            <div>{{'Pack is ' + (price.is_intro ? 'intro' : 'not intro')}}</div>
+            <div> 
+                <span class="font-bold text-2xl" :title="price.sessions">{{price.sessions}}</span>
+                <span class="ml-1">session credits</span>
+            </div>
+            <div v-if="price.location_ids.length" class="flex flex-wrap items-center gap-2" v-tooltip="locationRestrictionsTooltip">
+                <font-awesome-icon :icon="faLocationPinLock" />
+                <span v-for="location in restricted_locations" :key="location.id" class="bg-red-100 font-semibold px-2 py-2 rounded-md text-red-800 text-xs">
+                    {{location.title}}
+                </span>
+            </div>
+        </div>
+        <div class="bg-gray-100 flex flex-wrap gap-2">
+            <font-awesome-icon v-if="showRenewable" :icon="faRecycle" class="w-4 h-4 m-2 p-1 bg-white rounded" v-tooltip="'Auto renewable option'" />
+            <font-awesome-icon v-if="showIntro" :icon="faUserPlus" class="w-4 h-4 m-2 p-1 bg-white rounded" v-tooltip="'Intro option. Available to new or existing members who have never made a purchase in the past'" />
+            <font-awesome-icon v-if="showExpiration" :icon="faHourglassEnd" class="w-4 h-4 m-2 p-1 bg-white rounded" v-tooltip="'Produced session credits will expire. Expiration period: '+price.expiration+' '+price.expiration_period" />
         </div>
     </div>
 </template>
