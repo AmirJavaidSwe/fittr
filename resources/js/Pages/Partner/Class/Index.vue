@@ -63,13 +63,7 @@ const props = defineProps({
     statuses: Object,
     studios: Object,
     instructors: Object,
-    classtypes: Object,
-    locations: Array,
-    users: Array,
-    amenities: Array,
-    countries: Array,
-    roles: Array,
-    systemModules: Array,
+    classtypes: Object
 });
 
 const form = useForm({

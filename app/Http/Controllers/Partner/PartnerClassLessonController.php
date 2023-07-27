@@ -91,7 +91,9 @@ class PartnerClassLessonController extends Controller
                 // apply instructors filters
                 if ($request->has('instructor_id') && count($request->instructor_id)) {
                     $query->where(function ($query) use ($request) {
-                        $query->whereIn('instructor_id', $request->instructor_id);
+                        $query->whereHas('instructor', function($q) {
+                            $q->whereIn('id', request()->instructor_id);
+                        });
                     });
                 }
 
@@ -136,12 +138,6 @@ class PartnerClassLessonController extends Controller
             'instructors' => Instructor::pluck('name', 'id'),
             'classtypes' => ClassType::pluck('title', 'id'),
             'studios' => Studio::latest('id')->pluck('title', 'id'),
-            'roles' => Role::select('id', 'title')->where('source', auth()->user()->source)->where('business_id', auth()->user()->business_id)->get(),
-            'users' => User::select('id', 'name', 'email')->partner()->where('business_id', auth()->user()->business_id)->get(),
-            'locations' => Location::select('id', 'title')->get(),
-            'countries' => Country::select('id', 'name')->whereStatus(1)->get(),
-            'amenities' => Amenity::select('id', 'title')->get()->map(fn ($item) => ['label' => $item->title, 'value' => $item->id]),
-            'systemModules' => SystemModule::with('permissions')->where('is_for', auth()->user()->source)->get(),
             'search' => $this->search,
             'per_page' => intval($this->per_page),
             'order_by' => $this->order_by,
