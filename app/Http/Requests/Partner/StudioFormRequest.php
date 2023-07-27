@@ -29,6 +29,13 @@ class StudioFormRequest extends FormRequest
             // 'ordering' => 'required|integer',
         ];
 
+        if($this->class_type_studios) {
+            $rules += [
+                'class_type_studios.*.class_type_id' => 'required|distinct|numeric',
+                'class_type_studios.*.spaces' => 'required|numeric|min:1|max:1000',
+            ];
+        }
+
         return $rules;
     }
 
@@ -36,6 +43,8 @@ class StudioFormRequest extends FormRequest
     {
         return [
             'location_id' => 'location',
+            'class_type_studios.*.class_type_id' => 'class type',
+            'class_type_studios.*.spaces' => 'number of places',
         ];
     }
 }

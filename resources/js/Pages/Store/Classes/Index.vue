@@ -309,39 +309,43 @@ const handleMoved = (splide, index, prevIndex) => {
                     <div v-if="!classes[time.toSQLDate()]" class="flex flex-col">&nbsp;</div>
                     <div v-else
                         v-for="(item, index) in classes[time.toSQLDate()]"
-                        class="flex flex-col cursor-pointer"
+                        class="cursor-pointer bg-white relative rounded-md p-3 mb-3"
                         @click="showModal(item)"
-                        :class="{'hidden': form.is_off_peak && item.is_off_peak != form.is_off_peak}"
+                        :class="{
+                            'hidden': form.is_off_peak && item.is_off_peak != form.is_off_peak,
+                            'bg-yellow-300': classDetails.id == item.id || item.is_booked
+                        }"
                     >
-                        <div class="flex flex-col bg-white rounded-md p-3 mb-3" :class="{'bg-yellow-300': classDetails.id == item.id}">
-                            <div class="flex flex-row justify-between mb-4">
-                                <div class="text-xl font-medium self-center" v-tooltip="DateTime.fromISO(item.start_date).setZone(business_seetings.timezone).toFormat(business_seetings.date_format.format_js +' '+ business_seetings.time_format.format_js)">
-                                    {{ DateTime.fromISO(item.start_date).setZone(business_seetings.timezone).toFormat('hh:mm a') }}
-                                </div>
-                                <div class="flex flex-row rounded-lg text-green-800 px-2 py-1 h-8 items-center" style="background: rgba(66, 112, 95, 0.2)">
-                                    <div class="mr-1"><ClockIcon /></div>
-                                    <div class="text-base font-semibold">{{ item.duration }}</div>
-                                </div>
+                        <div v-if="item.is_booked" class="absolute bg-secondary-300/80 flex inset-0 items-center justify-center text-4xl">
+                            Booked
+                        </div>
+                        <div class="flex justify-between mb-4">
+                            <div class="text-xl font-medium self-center" v-tooltip="DateTime.fromISO(item.start_date).setZone(business_seetings.timezone).toFormat(business_seetings.date_format.format_js +' '+ business_seetings.time_format.format_js)">
+                                {{ DateTime.fromISO(item.start_date).setZone(business_seetings.timezone).toFormat(business_seetings.time_format.format_js) }}
                             </div>
-                            <div class="flex flex-row mb-4 pt-4 border-t-2 border-gray-300 items-center">
-                                <div class="flex mr-2 w-7 h-7 justify-center items-center">
-                                    <span class="inline-flex rounded-xl w-3 h-3 bg-red-500"></span>
-                                </div>
-                                <div class="flex-grow uppercase font-medium">{{ item.class_type?.title }}</div>
+                            <div class="flex flex-row rounded-lg text-green-800 px-2 py-1 h-8 items-center" style="background: rgba(66, 112, 95, 0.2)">
+                                <div class="mr-1"><ClockIcon /></div>
+                                <div class="text-base font-semibold">{{ item.duration }}</div>
                             </div>
-                            <div class="flex flex-row mb-4 items-center">
-                                <div class="flex mr-2 w-7 h-7">
-                                    <!-- <img src="" class="inline-block rounded-xl w-full h-full bg-gray-500" alt="User" /> -->
-                                    <Avatar :title="item.instructor?.name" size="small" />
-                                </div>
-                                <div class="flex-grow font-medium text-gray-800">{{ item.instructor?.name }}</div>
+                        </div>
+                        <div class="flex mb-4 pt-4 border-t-2 border-gray-300 items-center">
+                            <div class="flex mr-2 w-7 h-7 justify-center items-center">
+                                <span class="inline-flex rounded-xl w-3 h-3 bg-red-500"></span>
                             </div>
-                            <div class="flex flex-row justify-between pt-4 border-t-2 border-gray-300">
-                                <div class="flex mr-2">
-                                    <LocationIcon />
-                                </div>
-                                <div class="flex-grow font-medium text-green-700">{{ item.studio?.location?.title }}</div>
+                            <div class="flex-grow uppercase font-medium">{{ item.class_type?.title }}</div>
+                        </div>
+                        <div class="flex mb-4 items-center">
+                            <div class="flex mr-2 w-7 h-7">
+                                <!-- <img src="" class="inline-block rounded-xl w-full h-full bg-gray-500" alt="User" /> -->
+                                <Avatar :title="item.instructor?.name" size="small" />
                             </div>
+                            <div class="flex-grow font-medium text-gray-800">{{ item.instructor?.name }}</div>
+                        </div>
+                        <div class="flex justify-between pt-4 border-t-2 border-gray-300">
+                            <div class="flex mr-2">
+                                <LocationIcon />
+                            </div>
+                            <div class="flex-grow font-medium text-green-700">{{ item.studio?.location?.title }}</div>
                         </div>
                     </div>
                 </SplideSlide>
@@ -413,7 +417,7 @@ const handleMoved = (splide, index, prevIndex) => {
         </template>
         <template #footer>
             <ButtonLink class="mr-2" styling="default" size="default" @click="closeModal">Close</ButtonLink>
-            <ButtonLink v-if="classDetails.bookings?.length" styling="secondary" size="default" @click="cancelBooking">Cancel Booking</ButtonLink>
+            <ButtonLink v-if="classDetails.is_booked" styling="secondary" size="default" @click="cancelBooking">Cancel Booking</ButtonLink>
             <ButtonLink v-else-if="$page.props.user" styling="secondary" size="default" @click="handleBooking" :class="{ 'opacity-25': bookingForm.processing }" :disabled="bookingForm.processing">Book</ButtonLink>
             <ButtonLink v-else styling="secondary" size="default" @click="handleBooking" :class="{ 'opacity-25': bookingForm.processing }" :disabled="bookingForm.processing">Sign in to Book</ButtonLink>
         </template>

@@ -10,7 +10,7 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 
-class BookingConfirmation extends PartnerEvent
+class BookingCancellation extends PartnerEvent
 {
     use Dispatchable, InteractsWithSockets;
 

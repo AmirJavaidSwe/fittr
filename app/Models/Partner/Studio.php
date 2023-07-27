@@ -26,4 +26,9 @@ class Studio extends Model
     {
         return $this->belongsTo(Location::class);
     }
+
+    public function class_type_studios(): HasMany
+    {
+        return $this->hasMany(ClassTypeStudio::class);
+    }
 }

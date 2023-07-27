@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Store;
 
+use App\Enums\ClassStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Partner\ClassLesson;
 use App\Models\Partner\ClassType;
 use App\Models\Partner\User;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -20,19 +22,13 @@ class StoreClassController extends Controller
         $endDate = $startDate->copy()->addDays($maxDaysTimetable)->endOfDay()->utc();
         $startDate = $startDate->utc();
 
-        $eagerLoad = ['studio.location.images', 'instructor', 'classType'];
-
-        if(auth()->user()) {
-            $eagerLoad['bookings'] = function($query) {
-                $query->active()->where('user_id', auth()->user()->id);
-            };
-        }
-
         return Inertia::render('Store/Classes/Index', [
             'page_title' => __('Classes'),
             'header' => __('Classes'),
             'classes' => ClassLesson::active()
-                ->with($eagerLoad)
+                ->with(['studio.location.images', 'instructor', 'classType', 'bookings' => function (Builder $query) {
+                    $query->active();
+                }])
                 ->when(count($request->class_type ?? []), function($query) use($request) {
                     $query->whereIn('class_type_id', $request->class_type);
                 })
@@ -62,6 +58,15 @@ class StoreClassController extends Controller
                 ->where('end_date', '<=', $endDate)
                 ->orderBy('start_date', 'asc')
                 ->get()
+                ->map(function ($item) {
+                    //inject spaces left
+                    $item->spaces_booked = $item->bookings->count();
+                    $item->spaces_left = $item->spaces - $item->spaces_booked;
+                    //inject is_booked, always false for not auth user, true/false if logged in user active booking is found
+                    $item->is_booked = $item->bookings->contains('user_id', auth()->user()?->id);
+
+                    return $item;
+                })
                 ->groupBy(function($item) {
                     return $item->start_date
                     ->tz(session('business_seetings.timezone'))

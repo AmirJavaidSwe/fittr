@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Partner;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Partner\StudioFormRequest;
+use App\Models\Partner\ClassType;
 use App\Models\Partner\Location;
 use App\Models\Partner\Studio;
 use Illuminate\Http\Request;
@@ -24,7 +25,7 @@ class PartnerStudioController extends Controller
         $this->order_dir = $request->query('order_dir', 'desc');
 
         return Inertia::render('Partner/Studio/Index', [
-            'studios' => Studio::with('location')->orderBy($this->order_by, $this->order_dir)
+            'studios' => Studio::with('location', 'class_type_studios')->orderBy($this->order_by, $this->order_dir)
                 ->when($this->search, function ($query) {
                     $query->where(function($query) {
                         $query->orWhere('id', intval($this->search))
@@ -34,6 +35,7 @@ class PartnerStudioController extends Controller
                 ->paginate($this->per_page)
                 ->withQueryString(),
             'locations' => Location::select('id', 'title')->get(),
+            'class_types' => ClassType::select('id as value', 'title as label')->get(),
             'search' => $this->search,
             'per_page' => intval($this->per_page),
             'order_by' => $this->order_by,
@@ -155,6 +157,7 @@ class PartnerStudioController extends Controller
         return Inertia::render('Partner/Studio/Edit', [
             'page_title' => __('Edit Studio'),
             'locations' => Location::select('id', 'title')->get(),
+            'class_types' => ClassType::select('id as value', 'title as label')->get(),
             'header' => array(
                 [
                     'title' => __('Settings'),
@@ -177,7 +180,7 @@ class PartnerStudioController extends Controller
                     'link' => null,
                 ],
             ),
-            'studio' => $studio
+            'studio' => $studio->load('class_type_studios')
         ]);
     }
 
@@ -190,7 +193,27 @@ class PartnerStudioController extends Controller
      */
     public function update(StudioFormRequest $request, Studio $studio)
     {
-        $studio->update($request->validated());
+        $validated = $request->validated();
+        $classTypeStudios = collect($validated['class_type_studios'] ?? []);
+        $studio->update($validated);
+
+        $ids = $studio->class_type_studios->pluck('id');
+        $updatedIds = $classTypeStudios->pluck('id');
+        $diff = $ids->diff($updatedIds);
+
+        if($diff->count()) {
+            $studio->class_type_studios()->whereIn('id', $diff)->delete();
+        }
+
+        if($classTypeStudios->where(fn ($item) => !@$item['id'])->count()) {
+            $studio->class_type_studios()->createMany($classTypeStudios->where(fn ($item) => !@$item['id']));
+        }
+
+        if($classTypeStudios->where(fn ($item) => @$item['id'])->count()) {
+            $classTypeStudios->where(fn ($item) => @$item['id'])->each(function ($item) use($studio) {
+                $studio->class_type_studios()->whereId(@$item['id'])->update($item);
+            });
+        }
 
         return $this->redirectBackSuccess(__('Studio updated successfully'));
     }

@@ -18,18 +18,22 @@ let props = defineProps({
     locations: {
         type: Array,
         required: true
-    }
+    },
+    class_types: {
+        type: Array,
+        required: true
+    },
 });
 
 let form = useForm({
     title: props.studio.title,
     location_id: props.studio.location_id,
-    // ordering: props.studio.ordering
 });
 
 </script>
 
 <template>
     <Form :form="form" :locations="locations"
+          :class_types="class_types"
           :submitted="storeStudio"/>
 </template>

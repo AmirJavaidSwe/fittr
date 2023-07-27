@@ -68,6 +68,19 @@ const studioChanged = () => {
         emit('createNewStudio')
     }
 }
+
+const studiosOptions = computed(() => {
+    return props.studios.map(item => ({value: item.id, label: item.title}));
+});
+
+const defaultCapacity = computed(() => {
+    const studio = props.studios.filter(item => props.form.studio_id == item.id)[0];
+    if(studio) {
+        const classTypeStudio = studio.class_type_studios.filter(item => props.form.class_type_id == item.class_type_id)[0];
+        return classTypeStudio?.spaces;
+    }
+    return '';
+});
 </script>
 
 <template>
@@ -202,7 +215,7 @@ const studioChanged = () => {
                             <span class="ml-2">{{ value.label }}</span>
                         </div>
                     </template>
-                    
+
                     <template v-slot:option="{ option }">
                         <span class="ml-5">{{ option.label }}</span>
                     </template>
@@ -215,7 +228,7 @@ const studioChanged = () => {
                 <InputLabel for="studios" value="Studio" />
                 <Multiselect
                     v-model="form.studio_id"
-                    :options="studios"
+                    :options="studiosOptions"
                     :searchable="true"
                     :close-on-select="true"
                     :show-labels="true"
@@ -301,6 +314,29 @@ const studioChanged = () => {
                     </label>
                 </div>
                 <InputError :message="form.errors.week_days" class="mt-2" />
+            </div>
+            <div class="">
+                <InputLabel
+                    value="Class Capacity"
+                    class="mb-2"
+                />
+
+                <div class="flex mt-1 items-center">
+                    <div v-if="form.use_defaults" class="mr-2">Default:</div>
+                    <div v-if="form.use_defaults" class="flex flex-grow mr-2">{{ defaultCapacity }}</div>
+                    <TextInput
+                        v-else
+                        id="title"
+                        v-model="form.spaces"
+                        type="number"
+                        min="1"
+                        max="1000"
+                        class="mr-2 block w-full"
+                    />
+                    <ButtonLink v-if="form.use_defaults" type="button" size="small" styling="secondary" @click="form.use_defaults = false">Change</ButtonLink>
+                </div>
+
+
             </div>
         </template>
 
