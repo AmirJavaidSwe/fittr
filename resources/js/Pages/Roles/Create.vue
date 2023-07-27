@@ -160,7 +160,7 @@ const create = () => {
 
         <template #actions>
             <ActionMessage :on="form.recentlySuccessful" class="mr-3">
-                Role has been created.
+                Saved.
             </ActionMessage>
 
             <ButtonLink

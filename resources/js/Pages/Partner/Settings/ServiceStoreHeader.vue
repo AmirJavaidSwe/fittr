@@ -36,7 +36,7 @@ const props = defineProps({
 const form = useForm({
     _method: "PUT", //use spoofing for multipart/form-data support
     logo: null, //file
-    logo_url: props?.form_data?.logo_url?.replace("https://", ""),
+    logo_url: props?.form_data?.logo_url,
     favicon: null, //file
     show_address: props.form_data.show_address,
     show_phone: props.form_data.show_phone,
@@ -62,7 +62,7 @@ const logo_img_url = computed(() => {
 
 
 const favicon_img_url = computed(() => {
-    return props.form_data.favicon ? usePage().props.asset_url + form.favicon : null;
+    return props.form_data.favicon ? usePage().props.asset_url + props.form_data.favicon : null;
 });
 
 
@@ -74,11 +74,6 @@ const submitForm = () => {
         else if (data.logo === undefined) data.logo = null
         if (data.favicon === null) delete data.favicon;
         else if (data.favicon === undefined) data.favicon = null
-        if(data.logo_url) {
-            let logo_url = data.logo_url.replace("https://", "");
-            logo_url = "https://" + logo_url
-            data.logo_url = logo_url
-        }
         return data;
     }).post(route("partner.settings.service-store-header"), {
         preserveScroll: true,
@@ -142,36 +137,14 @@ const removeFile = ($event) => {
                 />
                 <InputError :message="form.errors.logo_url" class="mt-2" />
             </div>
-            <!-- favicon -->
-            <div class="col-span-6 sm:col-span-4">
-                <input
-                    ref="faviconInput"
-                    type="file"
-                    class="hidden"
-                    @change="updateFaviconPreview"
-                />
-
-                <InputLabel for="favicon" value="Favicon" />
-                <div class="text-sm text-gray-600">
-                    <p>Upload a PNG, or JPG favicon image.</p>
-                </div>
-
-                <div v-if="show_favicon">
-                    <!-- Current favicon -->
-                    <div v-show="!faviconPreview && form.favicon" class="mt-2">
-                        <img
-                            :src="favicon_img_url"
-                            class="bg-gray-900 h-12 p-2"
-                        />
-                    </div>
-
-                    <!-- New favicon -->
-                    <div v-show="faviconPreview" class="mt-2">
-                        <img
-                            :src="faviconPreview"
-                            class="bg-gray-900 h-12 p-2"
-                        />
-                    </div>
+            <div class="col-span-12 sm:col-span-12 mt-4">
+                <div class="uploadfiles">
+                    <InputLabel for="favicon_url" value="Favicon" />
+                    <Dropzone id="favicon_url" v-model="form.favicon"
+                    :uploaded_file="favicon_img_url ? favicon_img_url : ''" :img_used_for="'business_favicon'"
+                    :accept="['.ico', '.svg', '.png']" max_width="200" max_height="200" :buttonText="'Select new favicon'"
+                    :instance_name="'favicon'" @remove_file="removeFile" />
+                    <InputError :message="form.errors.favicon" class="mt-2" />
                 </div>
             </div>
 
@@ -215,7 +188,7 @@ const removeFile = ($event) => {
                         <TextInput id="link_instagram" placeholder="https://www.instagram.com/xyz" v-model="form.link_instagram" type="text"
                         class="mt-1 block w-full pl-10 md:pl-12" />
                         <InputError :message="form.errors.link_instagram" class="mt-2" />
-                            
+
                     </div>
                 </div>
                 <div class="flex flex-row flex-wrap mt-8 mb-8">

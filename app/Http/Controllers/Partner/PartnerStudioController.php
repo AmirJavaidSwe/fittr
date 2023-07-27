@@ -17,7 +17,7 @@ class PartnerStudioController extends Controller
     public $per_page;
     public $order_by;
     public $order_dir;
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -28,7 +28,7 @@ class PartnerStudioController extends Controller
         $this->search = $request->query('search', null);
         $this->per_page = $request->query('per_page', 10);
         $this->order_by = $request->query('order_by', 'id');
-        $this->order_dir = $request->query('order_dir', 'desc');
+        $this->order_dir = $request->query('order_dir', 'asc');
 
         return Inertia::render('Partner/Studio/Index', [
             'studios' => Studio::with('location', 'class_type_studios')->orderBy($this->order_by, $this->order_dir)

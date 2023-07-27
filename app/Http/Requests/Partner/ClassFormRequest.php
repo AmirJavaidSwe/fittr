@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests\Partner;
 
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Enum;
 use App\Enums\ClassStatus;
+use Illuminate\Validation\Rules\Enum;
+use App\Rules\ArrayFieldExistsInDatabase;
+use Illuminate\Foundation\Http\FormRequest;
 
 class ClassFormRequest extends FormRequest
 {
@@ -27,7 +28,7 @@ class ClassFormRequest extends FormRequest
     {
         $rules =  [
             'title' => 'required|string|max:255',
-            'instructor_id' => 'required|integer|exists:mysql_partner.users,id',
+            'instructor_id' => ['required', 'array', new ArrayFieldExistsInDatabase('mysql_partner', 'users', 'id')],
             'class_type_id' => 'required|integer|exists:mysql_partner.class_types,id',
             'studio_id' => 'required|integer|exists:mysql_partner.studios,id',
             'start_date' => 'required|date',

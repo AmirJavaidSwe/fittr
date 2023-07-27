@@ -16,10 +16,7 @@ return new class extends Migration
         Schema::create('amenities', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('icon')->nullable();
-            $table->text('contents')->nullable();
-            $table->integer('ordering')->default(0)->unsigned();
-            $table->tinyInteger('status')->default(1)->unsigned();
+            $table->boolean('status')->default(false);
             $table->timestamps();
         });
     }

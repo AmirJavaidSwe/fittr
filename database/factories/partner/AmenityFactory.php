@@ -26,9 +26,6 @@ class AmenityFactory extends Factory
 
         return [
             'title' => $this->faker->word,
-            'icon' => $filename,
-            'contents' => $this->faker->paragraph,
-            'ordering' => $this->faker->numberBetween(0, 100),
             'status' => $this->faker->numberBetween(0, 1)
         ];
     }

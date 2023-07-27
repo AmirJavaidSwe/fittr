@@ -29,6 +29,15 @@ html {
 select {
     @apply rounded-md flex items-center lg:text-base border border-gray-300 focus:border-[1.5px] focus:border-primary-500 focus:outline-none focus:shadow-none focus:ring-0;
 }
+.multiselect-tag{
+    @apply bg-primary-500 !important;
+}
+.multiselect-option.is-selected{
+    @apply bg-primary-500 !important;
+}
+.multiselect-tag-remove-icon{
+    @apply opacity-60 w-4 h-4 bg-[#d6dfd9] hover:bg-[#de331d] hover:opacity-100 !important;
+}
 .dp__theme_light input {
     @apply lg:text-base border border-gray-300 focus:border-primary-500 rounded-md focus:ring-0 !important;
 }

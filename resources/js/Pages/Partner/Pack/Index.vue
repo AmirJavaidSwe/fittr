@@ -1,6 +1,6 @@
 <script setup>
-import { ref, watch } from 'vue';
-import { Link, useForm, usePage } from '@inertiajs/vue3';
+import { ref, watch } from "vue";
+import { Link, useForm, usePage } from "@inertiajs/vue3";
 import { DateTime } from "luxon";
 import Form from "./Form.vue";
 import Search from "@/Components/DataTable/Search.vue";
@@ -16,7 +16,7 @@ import { faPowerOff, faLocationPinLock } from '@fortawesome/free-solid-svg-icons
 const props = defineProps({
     disableSearch: {
         type: Boolean,
-        default: false
+        default: false,
     },
     business_seetings: Object,
     classtypes: Object,
@@ -38,7 +38,7 @@ const form = useForm({
 });
 
 const runSearch = () => {
-    form.get(route('partner.packs.index'), {
+    form.get(route("partner.packs.index"), {
         preserveScroll: true,
         preserveState: true,
         replace: true,
@@ -61,7 +61,7 @@ const confirmDeletion = (id) => {
     itemDeleting.value = true;
 };
 const deleteItem = () => {
-    form.delete(route('partner.packs.destroy', { id: itemIdDeleting.value }), {
+    form.delete(route("partner.packs.destroy", { id: itemIdDeleting.value }), {
         preserveScroll: true,
         preserveState: true,
         onSuccess: () => {
@@ -79,28 +79,28 @@ const confirmDuplication = (id) => {
     itemDuplicating.value = true;
 };
 const duplicateItem = () => {
-    form.post(route('partner.packs.duplicate', { id: itemIdDuplicating.value }), {
-        preserveScroll: true,
-        preserveState: true,
-        onSuccess: () => {
-            itemDuplicating.value = false;
-            itemIdDuplicating.value = null;
-        },
-    });
+    form.post(
+        route("partner.packs.duplicate", { id: itemIdDuplicating.value }),
+        {
+            preserveScroll: true,
+            preserveState: true,
+            onSuccess: () => {
+                itemDuplicating.value = false;
+                itemIdDuplicating.value = null;
+            },
+        }
+    );
 };
-
 </script>
 <template>
-    <data-table-layout
-        :disableButton="true"
-       >
+    <data-table-layout :disableButton="true">
         <template #button>
             <div class="flex gap-2">
                 <ButtonLink
                     :href="route('partner.packs.create')"
                     styling="primary"
                     size="default"
-                    >
+                >
                     Create new
                 </ButtonLink>
             </div>
@@ -112,26 +112,30 @@ const duplicateItem = () => {
                 :disable-search="disableSearch"
                 @reset="form.search = null"
                 @pp_changed="setPerPage"
-                />
+            />
         </template>
 
         <template #tableHead>
-            <table-head title="Id"/>
-            <table-head title="Title"/>
-            <table-head title="Prices"/>
-            <table-head title="Type"/>
-            <table-head title="Status"/>
-            <table-head title="Created At"/>
-            <table-head title="Updated At"/>
-            <table-head title="Action"/>
+            <!-- <table-head title="Id"/> -->
+            <table-head title="Title" />
+            <table-head title="Prices" />
+            <table-head title="Type" />
+            <table-head title="Status" />
+            <table-head title="Created At" />
+            <table-head title="Updated At" />
+            <table-head title="Action" />
         </template>
 
         <template #tableData>
-            <tr v-for="pack in packs.data" >
-                <table-data :title="pack.id"/>
+            <tr v-for="pack in packs.data">
+                <!-- <table-data :title="pack.id"/> -->
                 <table-data>
                     <ButtonLink :href="route('partner.packs.show', pack)">
-                        {{ pack.title.length > 50 ? pack.title.substring(0, 50) + '...' : pack.title }} 
+                        {{
+                            pack.title.length > 50
+                                ? pack.title.substring(0, 50) + "..."
+                                : pack.title
+                        }}
                     </ButtonLink>
                 </table-data>
                 <table-data>
@@ -154,10 +158,23 @@ const duplicateItem = () => {
                         </div>
                     </div>
                 </table-data>
-                <table-data :title="pack_types.find(({value}) => value === pack.type)?.label "/>
-                <table-data :title="pack.is_active ? 'ON' : 'OFF' "/>
-                <table-data :title="DateTime.fromISO(pack.created_at).setZone(business_seetings.timezone).toFormat(business_seetings.date_format.format_js)"/>
-                <table-data :title="DateTime.fromISO(pack.updated_at).toRelative()"/>
+                <table-data
+                    :title="
+                        pack_types.find(({ value }) => value === pack.type)
+                            ?.label
+                    "
+                />
+                <table-data :title="pack.is_active ? 'ON' : 'OFF'" />
+                <table-data
+                    :title="
+                        DateTime.fromISO(pack.created_at)
+                            .setZone(business_seetings.timezone)
+                            .toFormat(business_seetings.date_format.format_js)
+                    "
+                />
+                <table-data
+                    :title="DateTime.fromISO(pack.updated_at).toRelative()"
+                />
                 <table-data>
                     <div class="flex gap-4">
                         <ButtonLink :href="route('partner.packs.edit', pack)">
@@ -166,7 +183,11 @@ const duplicateItem = () => {
                         <ButtonLink @click="confirmDuplication(pack.id)">
                             Duplicate
                         </ButtonLink>
-                        <ButtonLink styling="danger" size="small" @click="confirmDeletion(pack.id)">
+                        <ButtonLink
+                            styling="danger"
+                            size="small"
+                            @click="confirmDeletion(pack.id)"
+                        >
                             Delete
                         </ButtonLink>
                     </div>
@@ -175,17 +196,17 @@ const duplicateItem = () => {
         </template>
 
         <template #pagination>
-            <pagination
-                :links="packs.links"/>
-            <p class="p-2 text-xs">Viewing {{packs.from}} - {{packs.to}} of {{packs.total}} results</p>
-        </template>    
+            <pagination :links="packs.links" />
+            <p class="p-2 text-xs">
+                Viewing {{ packs.from }} - {{ packs.to }} of
+                {{ packs.total }} results
+            </p>
+        </template>
     </data-table-layout>
 
     <!-- Delete Confirmation Modal -->
     <ConfirmationModal :show="itemDeleting" @close="itemDeleting = false">
-        <template #title>
-            Confirmation required
-        </template>
+        <template #title> Confirmation required </template>
 
         <template #content>
             Are you sure you would like to delete this?
@@ -195,7 +216,8 @@ const duplicateItem = () => {
             <ButtonLink
                 styling="default"
                 size="default"
-                @click="itemDeleting = false">
+                @click="itemDeleting = false"
+            >
                 Cancel
             </ButtonLink>
 
@@ -214,21 +236,20 @@ const duplicateItem = () => {
 
     <!-- Duplicate Confirmation Modal -->
     <ConfirmationModal :show="itemDuplicating" @close="itemDuplicating = false">
-        <template #title>
-            Confirmation required
-        </template>
+        <template #title> Confirmation required </template>
 
         <template #content>
-            Once confirmed, a copy of this pack will be created.<br>
-            Duplicated pack will be inactive and hidden to public.<br>
-            You will need to update new pack pricing to suit your needs.<br>
+            Once confirmed, a copy of this pack will be created.<br />
+            Duplicated pack will be inactive and hidden to public.<br />
+            You will need to update new pack pricing to suit your needs.<br />
         </template>
 
         <template #footer>
             <ButtonLink
                 styling="default"
                 size="default"
-                @click="itemDuplicating = false">
+                @click="itemDuplicating = false"
+            >
                 Cancel
             </ButtonLink>
 

@@ -28,7 +28,6 @@ class ClassLessonFactory extends Factory
             'is_off_peak' => $this->faker->boolean,
             'start_date' => $dt,
             'end_date' => $dt->copy()->addMinutes(45),
-            'instructor_id' => $instructors->random()->id ?? $this->faker->numberBetween(1, 5),
             'class_type_id' => $this->faker->numberBetween(1, 5),
             'studio_id' => $this->faker->numberBetween(1, 5),
             'spaces' => $this->faker->numberBetween(1, 50),

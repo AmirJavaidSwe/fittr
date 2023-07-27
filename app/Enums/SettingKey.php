@@ -41,7 +41,7 @@ enum SettingKey: string
 
     // GROUP_FAP
     case fap_status = 'fap_status';
-    
+
     //Online Store
     // GROUP_SERVICE_STORE_GENERAL
     case subdomain = 'subdomain';
@@ -68,7 +68,7 @@ enum SettingKey: string
     case google_gtag = 'google_gtag';
     case google_adsense = 'google_adsense';
     case fb_pixel = 'fb_pixel';
-    
+
     //Waivers
     // GROUP_SERVICE_STORE_WAIVERS
     case waiver_text = 'waiver_text';

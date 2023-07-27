@@ -8,7 +8,7 @@ import ButtonLink from "@/Components/ButtonLink.vue";
 import Checkbox from "@/Components/Checkbox.vue";
 import Switcher from "@/Components/Switcher.vue";
 
-defineProps({
+const props = defineProps({
     form: {
         type: Object,
         required: true,
@@ -16,6 +16,11 @@ defineProps({
     submitted: {
         type: Function,
         required: true,
+    },
+    customFooter: {
+        type: Boolean,
+        required: false,
+        default: false,
     },
 });
 </script>
@@ -37,29 +42,26 @@ defineProps({
 
             <!-- Status -->
             <div>
-                <Switcher
-                    v-model="form.status"
-                    title="Status"
-                    description=""
-                />
+                <Switcher v-model="form.status" title="Status" description="" />
                 <InputError :message="form.errors.status" class="mt-2" />
             </div>
         </template>
-
         <template #actions>
-            <ActionMessage :on="form.recentlySuccessful" class="mr-3">
-                Saved.
-            </ActionMessage>
+            <template v-if="!customFooter">
+                <ActionMessage :on="form.recentlySuccessful" class="mr-3">
+                    Saved.
+                </ActionMessage>
 
-            <ButtonLink
-                styling="secondary"
-                size="default"
-                type="submit"
-                :class="{ 'opacity-25': form.processing }"
-                :disabled="form.processing"
-            >
-                Save
-            </ButtonLink>
+                <ButtonLink
+                    styling="secondary"
+                    size="default"
+                    type="submit"
+                    :class="{ 'opacity-25': form.processing }"
+                    :disabled="form.processing"
+                >
+                    Save
+                </ButtonLink>
+            </template>
         </template>
     </FormSection>
 </template>

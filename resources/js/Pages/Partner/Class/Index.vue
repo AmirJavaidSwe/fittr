@@ -1,12 +1,16 @@
+use Class;
 <script setup>
 import { ref, watch, computed } from "vue";
 import { Link, useForm, usePage, router } from "@inertiajs/vue3";
 import { DateTime } from "luxon";
-import uniqBy from 'lodash/uniqBy';
-import cloneDeep from 'lodash/cloneDeep';
+import uniqBy from "lodash/uniqBy";
+import map from "lodash/map";
+import uniq from "lodash/uniq";
+import find from "lodash/find";
 import Form from "./Form.vue";
 import FormExport from "./FormExport.vue";
 import FormFilter from "./FormFilter.vue";
+import BulkEditForm from "./BulkEditForm.vue";
 import Search from "@/Components/DataTable/Search.vue";
 import Pagination from "@/Components/Pagination.vue";
 import TableHead from "@/Components/DataTable/TableHead.vue";
@@ -24,7 +28,7 @@ import DropdownLink from "@/Components/DropdownLink.vue";
 import InstructorCreateForm from "@/Pages/Partner/Instructor/Form.vue";
 import ClassTypeCreateForm from "@/Pages/Partner/Classtype/Form.vue";
 import StudioCreateForm from "@/Pages/Partner/Studio/Form.vue";
-import LocatoonCreateForm from "@/Pages/Partner/Location/Form.vue";
+import LocationCreateForm from "@/Pages/Partner/Location/Form.vue";
 import GMCreateForm from "@/Pages/Partner/Users/Form.vue";
 import RoleCreateForm from "@/Pages/Roles/Form.vue";
 import AmenityCreateForm from "@/Pages/Partner/Amenity/Form.vue";
@@ -35,7 +39,13 @@ import StatusLabel from "@/Components/StatusLabel.vue";
 import ColoredValue from "@/Components/DataTable/ColoredValue.vue";
 import AvatarValue from "@/Components/DataTable/AvatarValue.vue";
 import DateValue from "@/Components/DataTable/DateValue.vue";
-import ActionsIcon from '@/Icons/ActionsIcon.vue';
+import ActionsIcon from "@/Icons/ActionsIcon.vue";
+import Checkbox from "@/Components/Checkbox.vue";
+import InputLabel from "@/Components/InputLabel.vue";
+import InputError from "@/Components/InputError.vue";
+import TextInput from "@/Components/TextInput.vue";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import OnTheFlyResourceCreate from "@/Components/OnTheFlyResourceCreate.vue";
 
 const props = defineProps({
     disableSearch: {
@@ -53,13 +63,7 @@ const props = defineProps({
     statuses: Object,
     studios: Array,
     instructors: Object,
-    classtypes: Object,
-    locations: Array,
-    users: Array,
-    amenities: Array,
-    countries: Array,
-    roles: Array,
-    systemModules: Array,
+    classtypes: Object
 });
 
 const form = useForm({
@@ -70,7 +74,7 @@ const form = useForm({
     instructor_id: [],
     class_type_id: [],
     studio_id: [],
-    is_off_peak: '',
+    is_off_peak: "",
     runFilter: false,
     per_page: props.per_page,
     order_by: props.order_by,
@@ -82,7 +86,7 @@ const form_class = useForm({
     status: null,
     start_date: null,
     end_date: null,
-    instructor_id: null,
+    instructor_id: [],
     class_type_id: null,
     studio_id: null,
     file_type: "csv",
@@ -98,7 +102,7 @@ const duplicateClassForm = useForm({
     status: null,
     start_date: null,
     end_date: null,
-    instructor_id: null,
+    instructor_id: [],
     class_type_id: null,
     studio_id: null,
     file_type: "csv",
@@ -131,7 +135,7 @@ const runSearch = () => {
 };
 
 // form.search getter only;
-watch(() => form.search, runSearch);
+watch(() => form.isDirty, runSearch);
 
 //delete confirmation modal:
 const itemDeleting = ref(false);
@@ -166,8 +170,8 @@ const closeFilterModal = () => {
 };
 const resetClassFilters = () => {
     form.runFilter = false;
-    form.reset();
-    router.visit(route("partner.classes.index"))
+    form.reset().clearErrors();
+    router.visit(route("partner.classes.index"));
 };
 
 //create confirmation modal:
@@ -185,7 +189,7 @@ const storeClass = () => {
     .post(route("partner.classes.store"), {
         preserveScroll: true,
         onSuccess: () => {
-            form_class.reset();
+            form_class.reset().clearErrors();
             closeCreateModal();
         },
     });
@@ -195,7 +199,7 @@ const storeDuplicateClass = () => {
         preserveScroll: true,
         onSuccess: () => {
             showDuplicateClassModal.value = false;
-            duplicateClassForm.reset();
+            duplicateClassForm.reset().clearErrors();
         },
     });
 };
@@ -209,7 +213,7 @@ const closeEditModal = () => {
 };
 const closeDuplicateClassModal = () => {
     showDuplicateClassModal.value = false;
-    duplicateClassForm.reset()
+    duplicateClassForm.reset().clearErrors();
 };
 
 let formEdit = useForm({
@@ -218,7 +222,7 @@ let formEdit = useForm({
     status: null,
     start_date: null,
     end_date: null,
-    instructor_id: null,
+    instructor_id: [],
     class_type_id: null,
     studio_id: null,
     is_off_peak: null,
@@ -226,13 +230,14 @@ let formEdit = useForm({
     spaces: null,
 });
 const handleUpdateForm = (data) => {
+
     showEditModal.value = true;
     formEdit.id = data.id;
     formEdit.title = data.title;
     formEdit.status = data.status;
     formEdit.start_date = data.start_date;
     formEdit.end_date = data.end_date;
-    formEdit.instructor_id = data.instructor_id;
+    formEdit.instructor_id = map(data.instructor, "id");
     formEdit.class_type_id = data.class_type_id;
     formEdit.studio_id = data.studio_id;
     formEdit.is_off_peak = data.is_off_peak;
@@ -242,10 +247,10 @@ const handleUpdateForm = (data) => {
 const handleDuplicateForm = (data) => {
     showDuplicateClassModal.value = true;
     duplicateClassForm.title = data.title;
-    duplicateClassForm.status = 'inactive';
+    duplicateClassForm.status = "inactive";
     duplicateClassForm.start_date = data.start_date;
     duplicateClassForm.end_date = data.end_date;
-    duplicateClassForm.instructor_id = data.instructor_id;
+    duplicateClassForm.instructor_id = map(data.instructor, "id");
     duplicateClassForm.class_type_id = data.class_type_id;
     duplicateClassForm.studio_id = data.studio_id;
     duplicateClassForm.is_off_peak = data.is_off_peak;
@@ -270,7 +275,7 @@ const closeExportModal = () => {
     showExportModal.value = false;
 };
 const resetExportFilters = () => {
-    form_class.reset();
+    form_class.reset().clearErrors();
 };
 
 const exportClasses = () => {
@@ -291,7 +296,7 @@ const exportClasses = () => {
             preserveScroll: true,
             preserveState: true,
             onSuccess: (data) => {
-                form_class.reset();
+                form_class.reset().clearErrors();
                 exportInitiated.value = true;
                 export_id.value = data.props.extra?.export_id;
                 checkExportStatus();
@@ -321,75 +326,40 @@ const checkExportStatus = () => {
 const showLink = (exporting) => {
     completed_at.value = exporting.completed_at;
 };
-const showInstructorCreateModal = ref(false)
-const closeInstructorCreateModal = () => {
-    showInstructorCreateModal.value = false
-}
-const createInstructorFrom = useForm({
-    name: "",
-    email: ""
-});
 
-const storeInstructor = () => {
-    createInstructorFrom.transform((data) => ({
-        ...data,
-        returnTo: 'partner.classes.index',
-    })).post(route("partner.instructors.store"), {
-        preserveScroll: true,
-        onSuccess: () => [createInstructorFrom.reset(), closeInstructorCreateModal()],
-    });
+const showInstructorCreateForm = ref(false);
+
+const closeInstructorCreateForm = () => {
+    showInstructorCreateForm.value = false
+    let filtered = form_class.instructor_id.filter((item) => item != 'create_new_instructor')
+    form_class.instructor_id = filtered
+    filtered = formEdit.instructor_id.filter((item) => item != 'create_new_instructor')
+    formEdit.instructor_id = filtered
+    filtered = formBulkEdit.instructor_id.filter((item) => item != 'create_new_instructor')
+    formBulkEdit.instructor_id = filtered
 };
 
-const instructorsList = computed(() => {
-  let newInstructorsList = { ...props.instructors }; // Create a shallow copy of the object
-  newInstructorsList.create_new_instructor = "Add New"; // Add a new property
-  return newInstructorsList;
-});
-
-const showClassTypeCreateModal = ref(false)
-const closeClassTypeCreateModal = () => {
-    createClassTypeFrom.reset();
-    showClassTypeCreateModal.value = false
-}
-const createClassTypeFrom = useForm({
-    title: null,
-    description: null,
-});
-
-const storeClassType = () => {
-    createClassTypeFrom.transform((data) => ({
-        ...data,
-        returnTo: 'partner.classes.index',
-    })).post(route("partner.classtypes.store"), {
-        preserveScroll: true,
-        onSuccess: () => [createClassTypeFrom.reset(), closeClassTypeCreateModal()],
-    });
+const showClassTypeCreateForm = ref(false);
+const closeClassTypeCreateForm = () => {
+    showClassTypeCreateForm.value = false
+    form_class.class_type_id = null
+    formEdit.class_type_id = null
+    formBulkEdit.class_type_id = null
 };
 
-const classTypeList = computed(() => {
-    let newClassTypeList = { ...props.classtypes }; // Create a shallow copy of the object
-    newClassTypeList.create_new_class_type = "Add New"; // Add a new property
-    return newClassTypeList;
-});
-const showStudioCreateModal = ref(false)
-const closeStudioCreateModal = () => {
-    showStudioCreateModal.value = false
-    createStudioFrom.reset();
-}
+const showStudioCreateForm = ref(false);
+const closeStudioCreateForm = () => {
+    showStudioCreateForm.value = false;
+    form_class.studio_id = null
+    formEdit.studio_id = null
+    formBulkEdit.studio_id = null
+};
 const createStudioFrom = useForm({
     title: null,
     location_id: null,
 });
 
-const storeStudio = () => {
-    createStudioFrom.transform((data) => ({
-        ...data,
-        returnTo: 'partner.classes.index',
-    })).post(route("partner.studios.store"), {
-        preserveScroll: true,
-        onSuccess: () => [createStudioFrom.reset(), closeStudioCreateModal(), form_class.studio_id = null],
-    });
-};
+const rowSelected = ref([]);
 
 const studioList = computed(() => {
     let newStudioList = [...props.studios]; // Create a shallow copy of the array
@@ -418,127 +388,121 @@ const createLocationFrom = useForm({
     amenity_ids:[],
 });
 
-const storeLocation = () => {
-    createLocationFrom.transform((data) => ({
-        ...data,
-        returnTo: 'partner.classes.index',
-    })).post(route("partner.locations.store"), {
-        preserveScroll: true,
-        onSuccess: () => [createLocationFrom.reset(), closeLocationCreateModal(), createStudioFrom.location_id = null],
+const addIdsToSelection = () => {
+    const now = DateTime.now().setZone(props.business_seetings.timezone);
+    const upcomingItems = props.classes.data.filter((item) => {
+        const itemDate = DateTime.fromISO(item.start_date).setZone(
+            props.business_seetings.timezone
+        );
+        return itemDate > now;
     });
-};
 
-const locationList = computed(() => {
-    let newLocationList =  props.locations
-    newLocationList.push({
-        id: "create_new_location",
-        title: "Add New"
-    });
-    return uniqBy(newLocationList, 'id');
-
-});
-const usersList = computed(() => {
-    let newUsersList =  props.users
-    newUsersList.push({
-        id: "create_new_user",
-        name: "Add New",
-        email: null
-    });
-    console.log(uniqBy(newUsersList, 'id'))
-    return uniqBy(newUsersList, 'id');
-
-});
-const rolesList = computed(() => {
-    let newRolesList =  props.roles
-    newRolesList.push({
-        id: "create_new_role",
-        title: "Add New"
-    });
-    return uniqBy(newRolesList, 'id');
-
-});
-
-const showGMCreateModal = ref(false)
-const closeGMCreateModal = () => {
-    createGMFrom.reset()
-    showGMCreateModal.value = false
-}
-const createGMFrom = useForm({
-    name: "",
-    email: "",
-    password: "",
-    is_super: true,
-    roles: []
-});
-
-const storeGM = () => {
-    createGMFrom.transform((data) => ({
-        ...data,
-        roles: data.is_super ? [] : data.roles,
-        is_super: data.is_super,
-        is_new: 1,
-        returnTo: 'partner.classes.index',
-    })).post(route("partner.users.store"), {
-        preserveScroll: true,
-        onSuccess: () => [createGMFrom.reset(), closeGMCreateModal(), createLocationFrom.manager_id = null],
-    });
-};
-const showRoleCreateModal = ref(false)
-const closeRoleCreateModal = () => {
-    createRoleFrom.reset()
-    showRoleCreateModal.value = false
-}
-const createRoleFrom = useForm({
-});
-
-const storeRole = ($event) => {
-    let title = null
-    let permissions = []
-    if($event.title) {
-        title = $event.title
+    const ids = uniq(map(upcomingItems, "id"));
+    if (ids.length == rowSelected.value.length) {
+        rowSelected.value = [];
+    } else {
+        rowSelected.value = ids;
     }
-    if($event.permissions) {
-        permissions = $event.permissions
-    }
-    createRoleFrom.transform((data) => ({
-        title: title,
-        permissions: permissions,
-        returnTo: 'partner.classes.index',
-    })).post(route(`${usePage().props.user.source}.roles.store`), {
-        preserveScroll: true,
-        onSuccess: () => [createRoleFrom.reset(), closeRoleCreateModal(), createGMFrom.roles = []],
-    });
 };
-const showAmenityCreateModal = ref(false)
-const closeAmenityCreateModal = () => {
-    createAmenityFrom.reset()
-    showAmenityCreateModal.value = false
-}
-const createAmenityFrom = useForm({
-    title: '',
-    status: false
+const selectableRowsCount = computed(() => {
+    const now = DateTime.now().setZone(props.business_seetings.timezone);
+    const upcomingItems = props.classes.data.filter((item) => {
+        const itemDate = DateTime.fromISO(item.start_date).setZone(
+            props.business_seetings.timezone
+        );
+        return itemDate > now;
+    });
+    return upcomingItems.length;
 });
 
-const storeAmenity = () => {
-    createAmenityFrom.transform((data) => ({
-        ...data,
-        returnTo: 'partner.classes.index',
-    })).post(route(`partner.amenity.store`), {
-        preserveScroll: true,
-        onSuccess: () => [createAmenityFrom.reset(), closeAmenityCreateModal(), createLocationFrom.amenity_ids = []],
+const notUpcommingItem = (id) => {
+    const now = DateTime.now().setZone(props.business_seetings.timezone);
+    const item = find(props.classes.data, function (o) {
+        return o.id == id;
     });
+    const itemDate = item
+        ? DateTime.fromISO(item.start_date).setZone(
+              props.business_seetings.timezone
+          )
+        : null;
+    return itemDate > now ? true : false;
 };
 
-const ddToggled = ref(false)
-const dropdownToggled = ($event) => {
-    ddToggled.value = false
-    if($event.open === true && $event.rowIndex === 0) {
-        ddToggled.value = true
-    }
+const showBulkEditForm = ref(false);
+const bulkEdit = () => {
+    showBulkEditForm.value = true;
+};
+
+const closeBulkEditForm = () => {
+    formBulkEdit.reset().clearErrors();
+    showBulkEditForm.value = false;
+};
+const updateBulkEdit = () => {
+    formBulkEdit
+        .transform((data) => ({
+            ...data,
+            ids: rowSelected.value,
+            _method: "PUT",
+        }))
+        .post(route("partner.classes.bulk-edit"), {
+            preserveScroll: true,
+            preserveState: true,
+            onSuccess: (data) => {
+                formBulkEdit.reset().clearErrors();
+                rowSelected.value = [];
+                showBulkEditForm.value = false;
+            },
+        });
+};
+const formBulkEdit = useForm({
+    status: null,
+    instructor_id: [],
+    class_type_id: null,
+    studio_id: null,
+    password: null,
+});
+const showBulkDeleteConfirmationModal = ref(false);
+const closeBulkDeleteConfirmationModal = () => {
+    showBulkDeleteConfirmationModal.value = false;
+    formBulkDelete.reset().clearErrors();
 }
+
+const formBulkDelete = useForm({
+    password: null,
+});
+
+const bulkDelete = () => {
+    showBulkDeleteConfirmationModal.value = true
+};
+const handleBulkDelete = () => {
+    formBulkDelete
+        .transform((data) => ({
+            ...data,
+            ids: rowSelected.value,
+            _method: "DELETE",
+        }))
+        .post(route("partner.classes.bulk-delete"), {
+            preserveScroll: true,
+            preserveState: true,
+            onSuccess: (data) => {
+                rowSelected.value = [];
+                closeBulkDeleteConfirmationModal();
+            },
+        });
+};
+
+const showPassword = ref(false);
+const inputPasswordType = computed(() =>
+    showPassword.value ? "text" : "password"
+);
 </script>
 <template>
-    <data-table-layout :disableButton="true" :dd-toggled="ddToggled">
+    <data-table-layout
+        :disableButton="true"
+        :extra-actions="rowSelected.length"
+        @bulk-edit="bulkEdit"
+        @bulk-delete="bulkDelete"
+    >
         <template #button>
             <ButtonLink styling="default" size="default" @click="null">
                 <ImportIcon class="w-4 h-4 2xl:w-6 2xl:h-6 mr-0 md:mr-2" />
@@ -582,12 +546,15 @@ const dropdownToggled = ($event) => {
         </template>
 
         <template #tableHead>
-            <table-head
-                title="Id"
-                @click="setOrdering('id')"
-                :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'id'"
-            />
+            <table-head>
+                <template #checkbox>
+                    <Checkbox
+                        :checked="rowSelected.length == selectableRowsCount && selectableRowsCount > 0"
+                        class="p-2.5"
+                        @click="addIdsToSelection"
+                    />
+                </template>
+            </table-head>
             <table-head
                 title="Title"
                 @click="setOrdering('title')"
@@ -650,14 +617,29 @@ const dropdownToggled = ($event) => {
                 v-for="(class_lesson, index) in classes.data"
                 :key="class_lesson.id"
             >
-                <table-data :title="class_lesson.id" />
                 <table-data>
-                    <ButtonLink :href="route('partner.classes.show', class_lesson)">
-                        <span v-if="class_lesson.title.length > 25" v-tooltip="class_lesson.title">
+                    <div v-if="notUpcommingItem(class_lesson.id)">
+                        <label class="flex items-center">
+                            <Checkbox
+                                v-model:checked="rowSelected"
+                                :checked="rowSelected.includes(class_lesson.id)"
+                                :value="class_lesson.id"
+                            />
+                        </label>
+                    </div>
+                </table-data>
+                <table-data>
+                    <ButtonLink
+                        :href="route('partner.classes.show', class_lesson)"
+                    >
+                        <span
+                            v-if="class_lesson.title.length > 25"
+                            v-tooltip="class_lesson.title"
+                        >
                             {{ class_lesson.title.substring(0, 25) }}...
                         </span>
                         <span v-else>
-                            {{ class_lesson.title }} 
+                            {{ class_lesson.title }}
                         </span>
                     </ButtonLink>
                 </table-data>
@@ -673,12 +655,26 @@ const dropdownToggled = ($event) => {
                         :title="class_lesson?.class_type?.title ?? 'Test'"
                     />
                 </table-data>
-                <table-data>
-                    <AvatarValue
-                        :title="class_lesson?.instructor?.name ?? 'Demo Ins'"
-                    />
+                <table-data class="text-center">
+                    <template v-if="class_lesson?.instructor.length">
+                        <template
+                            v-for="(
+                                instructor, ins
+                            ) in class_lesson?.instructor"
+                            :key="ins"
+                        >
+                            <AvatarValue
+                                class="cursor-pointer inline-flex justify-center mr-1 text-center items-center"
+                                :onlyTooltip="true"
+                                :title="instructor?.name ?? 'Demo Ins'"
+                            />
+                        </template>
+                    </template>
+                    <template v-else>
+                        <AvatarValue :title="'Demo Ins'" />
+                    </template>
                 </table-data>
-                <table-data>
+                <table-data class="text-center">
                     <StatusLabel :status="class_lesson.status_label" />
                 </table-data>
                 <table-data>
@@ -718,7 +714,6 @@ const dropdownToggled = ($event) => {
                         :top="index > classes.data.length - 3"
                         :content-classes="['bg-white']"
                         :row-index="index"
-                        @toggled="dropdownToggled"
                     >
                         <template #trigger>
                             <button class="text-dark text-lg">
@@ -728,9 +723,8 @@ const dropdownToggled = ($event) => {
 
                         <template #content>
                             <DropdownLink
-                                :href="
-                                    route('partner.classes.edit', class_lesson)
-                                "
+                                as="button"
+                                @click="handleUpdateForm(class_lesson)"
                             >
                                 <EditIcon
                                     class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
@@ -739,15 +733,8 @@ const dropdownToggled = ($event) => {
                             </DropdownLink>
                             <DropdownLink
                                 as="button"
-                                @click="handleUpdateForm(class_lesson)"
+                                @click="handleDuplicateForm(class_lesson)"
                             >
-                                <EditIcon
-                                    class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
-                                />
-                                Edit (Modal)
-                            </DropdownLink>
-                            <DropdownLink as="button"
-                                @click="handleDuplicateForm(class_lesson)">
                                 <DuplicateIcon
                                     class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
                                 />
@@ -783,6 +770,9 @@ const dropdownToggled = ($event) => {
     <!-- Export form Modal -->
     <SideModal :show="showFilterModal" @close="closeFilterModal">
         <template #title>Filter</template>
+        <template #close>
+            <CloseModal @click="closeFilterModal" />
+        </template>
         <template #content>
             <FormFilter
                 :form="form"
@@ -790,7 +780,7 @@ const dropdownToggled = ($event) => {
                 :studios="studios"
                 :instructors="instructors"
                 :classtypes="classtypes"
-                @submitted="runSearch"
+                @close="closeFilterModal"
                 @reset="resetClassFilters"
             />
         </template>
@@ -799,6 +789,9 @@ const dropdownToggled = ($event) => {
     <!-- Export form Modal -->
     <SideModal :show="showExportModal" @close="closeExportModal">
         <template #title> Export Classes </template>
+        <template #close>
+            <CloseModal @click="closeExportModal" />
+        </template>
 
         <template #content>
             <FormExport
@@ -818,20 +811,23 @@ const dropdownToggled = ($event) => {
     <!-- Create new class Modal -->
     <SideModal :show="showCreateModal" @close="closeCreateModal">
         <template #title> Create new Class </template>
+        <template #close>
+            <CloseModal @click="closeCreateModal" />
+        </template>
 
         <template #content>
             <Form
                 :form="form_class"
                 :isNew="true"
                 :statuses="statuses"
-                :studios="studioList"
-                :instructors="instructorsList"
-                :classtypes="classTypeList"
+                :studios="studios"
+                :instructors="instructors"
+                :classtypes="classtypes"
                 :business_seetings="business_seetings"
                 :submitted="storeClass"
-                @create-new-instructor="showInstructorCreateModal = true"
-                @create-new-class-type="showClassTypeCreateModal = true"
-                @create-new-studio="showStudioCreateModal = true"
+                @create-new-instructor="showInstructorCreateForm = true"
+                @create-new-class-type="showClassTypeCreateForm = true"
+                @create-new-studio="showStudioCreateForm = true"
                 modal
             />
         </template>
@@ -840,6 +836,9 @@ const dropdownToggled = ($event) => {
     <!-- Edit class Modal -->
     <SideModal :show="showEditModal" @close="closeEditModal">
         <template #title> Edit Class </template>
+        <template #close>
+            <CloseModal @click="closeEditModal" />
+        </template>
 
         <template #content>
             <Form
@@ -850,14 +849,23 @@ const dropdownToggled = ($event) => {
                 :classtypes="classtypes"
                 :business_seetings="business_seetings"
                 :submitted="updateClass"
+                @create-new-instructor="showInstructorCreateForm = true"
+                @create-new-class-type="showClassTypeCreateForm = true"
+                @create-new-studio="showStudioCreateForm = true"
                 modal
             />
         </template>
     </SideModal>
-    
+
     <!-- Duplicate class Modal -->
-    <SideModal :show="showDuplicateClassModal" @close="closeDuplicateClassModal">
+    <SideModal
+        :show="showDuplicateClassModal"
+        @close="closeDuplicateClassModal"
+    >
         <template #title> Duplicate Class </template>
+        <template #close>
+            <CloseModal @click="closeEditModal" />
+        </template>
 
         <template #content>
             <Form
@@ -873,7 +881,7 @@ const dropdownToggled = ($event) => {
             />
         </template>
     </SideModal>
-    
+
     <!-- Delete Confirmation Modal -->
     <ConfirmationModal :show="itemDeleting" @close="itemDeleting = false">
         <template #title> Confirmation required </template>
@@ -892,9 +900,9 @@ const dropdownToggled = ($event) => {
             </ButtonLink>
 
             <ButtonLink
-            size="default"
-            styling="danger"
-            class="ml-3"
+                size="default"
+                styling="danger"
+                class="ml-3"
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
                 @click="deleteItem"
@@ -903,103 +911,108 @@ const dropdownToggled = ($event) => {
             </ButtonLink>
         </template>
     </ConfirmationModal>
-    <!-- Instructor Create Modal -->
-    <SideModal :show="showInstructorCreateModal" @close="closeInstructorCreateModal">
-        <template #title> Add Instructor </template>
+
+    <SideModal :show="showBulkEditForm" @close="closeBulkEditForm">
+        <template #title> Edit Detail for Select Items </template>
         <template #close>
-            <CloseModal @click="closeInstructorCreateModal" />
+            <CloseModal @click="closeBulkEditForm" />
         </template>
 
         <template #content>
-            <InstructorCreateForm :form="createInstructorFrom" :submitted="storeInstructor" modal />
-        </template>
-    </SideModal>
-    <!-- Class Type Create Modal -->
-    <SideModal :show="showClassTypeCreateModal" @close="closeClassTypeCreateModal">
-        <template #title> Create new classtype </template>
-        <template #close>
-            <CloseModal @click="closeClassTypeCreateModal" />
-        </template>
-
-        <template #content>
-            <ClassTypeCreateForm :form="createClassTypeFrom" :submitted="storeClassType" modal />
-        </template>
-    </SideModal>
-    <!-- Studio Create Modal -->
-    <SideModal :show="showStudioCreateModal" @close="closeStudioCreateModal">
-        <template #title> Create new studio </template>
-        <template #close>
-            <CloseModal @click="closeStudioCreateModal" />
-        </template>
-
-        <template #content>
-            <StudioCreateForm :form="createStudioFrom" :locations="locationList" @create-new-location='showLocationCreateModal = true' :submitted="storeStudio" modal />
-        </template>
-    </SideModal>
-    <!-- Location Create Modal -->
-    <SideModal :show="showLocationCreateModal" @close="closeLocationCreateModal">
-        <template #title> Create new location </template>
-        <template #close>
-            <CloseModal @click="closeLocationCreateModal" />
-        </template>
-
-        <template #content>
-            <LocatoonCreateForm
-                :form="createLocationFrom"
-                :users="usersList"
-                :amenities="amenities"
-                :countries="countries"
-                :studios="[]"
-                :editMode="false"
-                @create_new_gm="showGMCreateModal=true"
-                @create_new_amenity="showAmenityCreateModal=true"
+            <BulkEditForm
+                :form="formBulkEdit"
+                :statuses="statuses"
+                :studios="studioList"
+                :instructors="instructors"
+                :classtypes="classtypes"
+                :business_seetings="business_seetings"
+                :submitted="updateBulkEdit"
+                @create-new-instructor="showInstructorCreateForm = true"
+                @create-new-class-type="showClassTypeCreateForm = true"
+                @create-new-studio="showStudioCreateForm = true"
+                modal
             />
         </template>
+    </SideModal>
+
+    <!-- Delete Confirmation Modal -->
+    <ConfirmationModal :show="showBulkDeleteConfirmationModal" @close="closeBulkDeleteConfirmationModal">
+        <template #title> Confirmation required </template>
+
+        <template #content>
+            <div class="mt-5">
+                <span class="text-danger-500">
+                    Are you sure you would like to delete this all selected items?
+                </span>
+            </div>
+            <div class="mt-3">
+                <span class="font-semibold">
+                    You need to provide your password to confirm
+                </span>
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="password" value="Your Password" class="mb-1" />
+                <div class="relative">
+                    <TextInput
+                        :type="inputPasswordType"
+                        id="password"
+                        v-model="formBulkDelete.password"
+                        class="mt-1 block w-full"
+                        autocomplete="current-password"
+                    />
+                    <button
+                        type="button"
+                        @click="showPassword = !showPassword"
+                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-dark-400 focus:outline-none"
+                    >
+                        <template v-if="showPassword">
+                            <font-awesome-icon
+                                :icon="faEyeSlash"
+                                style="color: #b0b2b5"
+                            />
+                        </template>
+                        <template v-else>
+                            <font-awesome-icon
+                                style="color: #4ca054"
+                                :icon="faEye"
+                                class="blue-grey-50"
+                            />
+                        </template>
+                    </button>
+                </div>
+                <InputError class="mt-2" :message="formBulkDelete.errors.password" />
+            </div>
+        </template>
+
         <template #footer>
             <ButtonLink
-                :class="{ 'opacity-25': createLocationFrom.processing }"
-                :disabled="createLocationFrom.processing"
-                styling="secondary"
                 size="default"
-                type="submit"
-                @click="storeLocation"
+                styling="default"
+                @click="closeBulkDeleteConfirmationModal"
             >
-                <span>Create</span>
+                Cancel
+            </ButtonLink>
+
+            <ButtonLink
+                size="default"
+                styling="danger"
+                class="ml-3"
+                :class="{ 'opacity-25': form.processing }"
+                :disabled="form.processing"
+                @click="handleBulkDelete"
+            >
+                Delete
             </ButtonLink>
         </template>
-    </SideModal>
+    </ConfirmationModal>
 
-    <!-- GM Create Modal -->
-    <SideModal :show="showGMCreateModal" @close="closeGMCreateModal">
-        <template #title> Create new General Manager </template>
-        <template #close>
-            <CloseModal @click="closeGMCreateModal" />
-        </template>
-
-        <template #content>
-            <GMCreateForm :form="createGMFrom" :roles="rolesList" @create-new-role='showRoleCreateModal = true' :submitted="storeGM" modal />
-        </template>
-    </SideModal>
-    <!-- Role Create Modal -->
-    <SideModal :show="showRoleCreateModal" @close="closeRoleCreateModal">
-        <template #title> Create new Role </template>
-        <template #close>
-            <CloseModal @click="closeRoleCreateModal" />
-        </template>
-
-        <template #content>
-            <RoleCreateForm :form="createRoleFrom" :system-modules="systemModules" @submitted="storeRole" modal />
-        </template>
-    </SideModal>
-    <!-- Amenity Create Modal -->
-    <SideModal :show="showAmenityCreateModal" @close="closeAmenityCreateModal">
-        <template #title> Create new Amenity </template>
-        <template #close>
-            <CloseModal @click="closeAmenityCreateModal" />
-        </template>
-
-        <template #content>
-            <AmenityCreateForm :form="createAmenityFrom" @submitted="storeAmenity" modal />
-        </template>
-    </SideModal>
+    <OnTheFlyResourceCreate
+        :show-instructor-create-form="showInstructorCreateForm"
+        :show-class-type-create-form="showClassTypeCreateForm"
+        :show-studio-create-form="showStudioCreateForm"
+        @close-instructor-create-form="closeInstructorCreateForm"
+        @close-class-type-create-form="closeClassTypeCreateForm"
+        @close-studio-create-form="closeStudioCreateForm"
+        />
 </template>

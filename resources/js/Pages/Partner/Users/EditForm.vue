@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from "vue";
 import { useForm } from "@inertiajs/vue3";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faEyeSlash, faCircleQuestion } from "@fortawesome/free-solid-svg-icons";
 import FormSection from "@/Components/FormSection.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import InputError from "@/Components/InputError.vue";
@@ -54,6 +54,11 @@ const showPassword = ref(false);
 const inputPasswordType = computed(() =>
     showPassword.value ? "text" : "password"
 );
+
+const showPasswordField = ref(false);
+const newPasswordLabel = computed(() =>
+    showPasswordField.value ? "Set new password" : "Keep current password"
+);
 </script>
 
 <template>
@@ -84,33 +89,7 @@ const inputPasswordType = computed(() =>
                 />
                 <InputError :message="form.errors.email" class="mt-2" />
             </div>
-            <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="password" value="Password" />
-                <div class="relative">
-                    <TextInput
-                        id="password"
-                        v-model="form.password"
-                        :type="inputPasswordType"
-                        class="mt-1 block w-full"
-                    />
-                    <button
-                        type="button"
-                        @click="showPassword = !showPassword"
-                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 focus:outline-none"
-                    >
-                        <template v-if="showPassword">
-                            <font-awesome-icon
-                                :icon="faEye"
-                                class="text-green-600"
-                            />
-                        </template>
-                        <template v-else>
-                            <font-awesome-icon :icon="faEyeSlash" />
-                        </template>
-                    </button>
-                </div>
-                <InputError :message="form.errors.password" class="mt-2" />
-            </div>
+
             <div class="flex flex-row items-center justify-start">
                 <Checkbox
                     id="is_super_admin"
@@ -135,10 +114,49 @@ const inputPasswordType = computed(() =>
                 />
                 <InputError :message="form.errors.roles" class="mt-2" />
             </div>
+
+            <div class="col-span-6 sm:col-span-4">
+                <div class="inline-flex items-center" @click="showPasswordField = !showPasswordField">
+
+                    <InputLabel @click="showPasswordField = !showPasswordField"
+                    for="password"
+                    :value="newPasswordLabel"
+                    class="cursor-pointer" />
+                    <font-awesome-icon
+                    :icon="faCircleQuestion"
+                    class="ml-1 text-dark-600 cursor-pointer"
+                    v-tooltip="showPasswordField ? 'Click to hide new password field' : 'Click to show new password field'"
+                    />
+                </div>
+                <div class="relative" v-if="showPasswordField">
+                    <TextInput
+                        id="password"
+                        v-model="form.password"
+                        :type="inputPasswordType"
+                        class="mt-1 block w-full"
+                    />
+                    <button
+                        type="button"
+                        @click="showPassword = !showPassword"
+                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 focus:outline-none"
+                    >
+                        <template v-if="showPassword">
+                            <font-awesome-icon
+                                :icon="faEye"
+                                class="text-green-600"
+                            />
+                        </template>
+                        <template v-else>
+                            <font-awesome-icon :icon="faEyeSlash" />
+                        </template>
+                    </button>
+                </div>
+                <InputError :message="form.errors.password" class="mt-2" />
+            </div>
         </template>
         <template #actions>
             <ActionMessage :on="form.recentlySuccessful" class="mr-3">
-                Saved.
+                Updated.
             </ActionMessage>
             <ButtonLink
                 styling="secondary"
@@ -146,7 +164,7 @@ const inputPasswordType = computed(() =>
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
             >
-                Save
+                Update
             </ButtonLink>
         </template>
     </FormSection>
