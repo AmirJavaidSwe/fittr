@@ -21,6 +21,11 @@ const props = defineProps({
         type: String,
         default: null,
     },
+    descriptionLeftBorder: {
+        type: Boolean,
+        default: null,
+        required: false,
+    },
 });
 
 const enabled = ref(props.modelValue);
@@ -35,6 +40,7 @@ const enabled = ref(props.modelValue);
                 {{ title }}
             </SwitchLabel>
             <SwitchDescription as="span" class="text-sm text-gray-500">
+                <span v-if="props.descriptionLeftBorder" class="mt-1 mr-2 border-l-[3px] border-primary-500 rounded-md border-t-[4px]"></span>
                 {{ description }}
             </SwitchDescription>
         </span>

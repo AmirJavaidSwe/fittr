@@ -23,6 +23,7 @@ import SideModal from "@/Components/SideModal.vue";
 import CloseModal from "@/Components/CloseModal.vue";
 import uniqBy from 'lodash/uniqBy';
 import RoleCreateForm from "@/Pages/Roles/Form.vue";
+import ActionsIcon from '@/Icons/ActionsIcon.vue';
 import {
     faPencil,
     faChevronRight,
@@ -219,7 +220,7 @@ const storeRole = ($event) => {
                         :content-classes="['bg-white']">
                         <template #trigger>
                             <button class="text-dark text-lg">
-                                <font-awesome-icon :icon="faCog" />
+                                <ActionsIcon />
                             </button>
                         </template>
 

@@ -24,6 +24,8 @@ use App\Http\Controllers\Partner\PartnerDashboardController;
 use App\Http\Controllers\Partner\PartnerExportController;
 use App\Http\Controllers\Partner\PartnerInstructorController;
 use App\Http\Controllers\Partner\PartnerLocationController;
+use App\Http\Controllers\Partner\PartnerTaxController;
+use App\Http\Controllers\Partner\PartnerChargeController;
 use App\Http\Controllers\Partner\PartnerMemberController;
 use App\Http\Controllers\Partner\PartnerOnboardController;
 use App\Http\Controllers\Partner\PartnerPackController;
@@ -168,10 +170,11 @@ Route::domain('app.'.config('app.domain'))->group(function () {
             Route::get('exports/download/request/{export}', [PartnerExportController::class, 'requestToDownload'])->name('exports.request-to-download');
             Route::delete('/exports/{export}', [PartnerExportController::class, 'destroy'])->name('exports.destroy');
             Route::post('/exports', [PartnerExportController::class, 'store']);
-
             Route::resource('locations', PartnerLocationController::class);
             Route::delete('/locations/{location}/delete-image', [PartnerLocationController::class, 'deleteImage'])->name('locations.delete-image');
-
+            
+            Route::resource('taxes', PartnerTaxController::class);
+            Route::resource('charges', PartnerChargeController::class);
         });
 
     });

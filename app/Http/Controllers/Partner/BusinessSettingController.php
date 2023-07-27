@@ -32,6 +32,10 @@ use Storage;
 
 class BusinessSettingController extends Controller
 {
+
+    public $service;
+    public $stripe_connect_service;
+    
     public function __construct(BusinessSettingService $service, StripeConnectService $stripe_connect_service)
     {
         $this->service = $service;
@@ -258,6 +262,7 @@ class BusinessSettingController extends Controller
 
     public function serviceStoreHeaderUpdate(SettingsServiceStoreHeaderRequest $request)
     {
+        // dd($request->validated());
         $this->service->update($request);
 
         return $this->redirectBackSuccess(__('Settings saved'));

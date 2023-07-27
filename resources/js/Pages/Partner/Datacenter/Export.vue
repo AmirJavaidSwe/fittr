@@ -106,6 +106,7 @@ const requestExport = (exporting) => {
             <Search
                 v-model="form.search"
                 :disable-search="disableSearch"
+                :noFilter="true"
                 @reset="form.search = null"
                 @pp_changed="setPerPage"
             />

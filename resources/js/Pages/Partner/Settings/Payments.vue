@@ -16,6 +16,7 @@ import ButtonLink from "@/Components/ButtonLink.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import { faCog } from "@fortawesome/free-solid-svg-icons";
+import ActionsIcon from '@/Icons/ActionsIcon.vue';
 const props = defineProps({
     has_account: Boolean,
     stripe_account: Object,
@@ -29,9 +30,9 @@ const submitForm = () => {
     <Section bg="bg-white space-y-4">
         <div>
             <div
-                class="bg-white rounded bg-white bg-white-50 hover:bg-white-100 items-center p-3 pt-5 gap-4 relative transition rounded">
+                class="bg-white rounded bg-white bg-white-50 hover:bg-white-100 items-center p-8 pt-5 gap-4 relative transition rounded">
                 <h3 class="text-2xl"><strong>Stripe Connect</strong></h3>
-                <p class="text-base">
+                <p class="text-base mt-2">
                     Connect your Stripe merchant account to let Appointment thing charge your customers as appointments are
                     scheduled.
                 </p>
@@ -41,44 +42,25 @@ const submitForm = () => {
                 </div>
                 <div class="bg-gray-100 p-5 rounded mt-10">
                     <StipesIcon />
-                    <div class="block h-px mt-4 mb-4 bg-gray-200 border-0 dark:bg-gray-700"></div>
+                    <div class="block h-[3px] mt-4 mb-4 bg-gray-200 border-0 dark:bg-gray-200"></div>
                     <div class="flex flex-col">
-                        <h3 class="text-lg">
-                            <strong>Connect your Stripe Account.</strong>
-                        </h3>
-                        <p class="text-gray-400 mt-2">
-                            <span class="mr-2 border-l-4 border-[#315D3F] rounded-md border-t-[4px]">
-                            </span> Allows your to accept Stripe Payments for appointments.
-                        <form @submit.prevent="submitForm" class="inline-flex float-right items-center">
-                            <ButtonLink styling="secondary" size="default" v-if="!has_account"
-                                :class="['float-right', 'opacity-25' && form.processing]" :disabled="form.processing"
-                                type="submit">
-                                <DoubleArrow /> &nbsp; Connect
-                            </ButtonLink>
-                            <ButtonLink size="default" v-if="has_account"
-                                :class="['float-right', 'opacity-25' && form.processing]" :disabled="form.processing"
-                                type="button">
-                                <CheckIcon /> &nbsp; <span class="text-[#36B07E]">Connected</span>
-                            </ButtonLink>
-                            <Dropdown v-if="has_account" @click.prevent class="ms-4" align="right" width="48" :content-classes="['bg-white']">
-                                <template #trigger>
-                                    <button class="text-dark text-lg">
-                                        <font-awesome-icon :icon="faCog" />
-                                    </button>
-                                </template>
-                                <template #content>
-                                    <DropdownLink as="button" @click="submitForm">
-                                        <span class="text-primary-500 flex items-center">
-                                            <DoubleArrow /> &nbsp; <span>Update Details</span>
-                                        </span>
-                                    </DropdownLink>
-                                </template>
-                            </Dropdown>
-                        </form>
-                        </p>
+                        
+                        <!-- <p class="text-gray-400 mt-2">     -->
+                            <form @submit.prevent="submitForm" class="inline-flex float-left items-center">
+                                <ButtonLink styling="secondary" size="default" v-if="!has_account"
+                                    :class="['opacity-25' && form.processing]" :disabled="form.processing"
+                                    type="submit">
+                                    <DoubleArrow /> &nbsp; Connect
+                                </ButtonLink>
+
+                                <button v-if="has_account" type="button" @click="submitForm" class="bg-[#D5EDDE] text-[#36B07E] font-semibold rounded-lg" :class="['py-2 px-4']">
+                                    {{ 'Manage Stripe Account' }}
+                                </button>
+                            </form>
+                        <!-- </p> -->
                     </div>
                 </div>
-                <div class="mt-2 bg-white rounded pt-5 flex gap-4 md:flex-col lg:flex-row sm:flex-col" v-if="has_account">
+                <div class="mt-2 bg-white rounded pt-5 flex gap-4 flex-col md:flex-col lg:flex-row sm:flex-col" v-if="has_account">
                     <div class="bg-gray-100 p-5 rounded">
                         <h2 class="flex justify-between items-center text-slate-400"><strong>PAYMENTS</strong>
                             <StipesIcon />

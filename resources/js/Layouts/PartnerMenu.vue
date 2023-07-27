@@ -3,6 +3,12 @@ import { reactive } from "vue";
 import { router } from "@inertiajs/vue3";
 import NavLink from "@/Components/NavLink.vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import PartnerSidebarDashboardIcon from "@/Icons/PartnerSidebarDashboardIcon.vue";
+import PartnerSidebarClassesIcon from "@/Icons/PartnerSidebarClassesIcon.vue";
+import PartnerSidebarMemberIcon from "@/Icons/PartnerSidebarMemberIcon.vue";
+import PartnerSidebarInstructorIcon from "@/Icons/PartnerSidebarInstructorIcon.vue";
+import PartnerSidebarDataCenterIcon from "@/Icons/PartnerSidebarDataCenterIcon.vue";
+import PartnerSidebarSettingsIcon from "@/Icons/PartnerSidebarSettingsIcon.vue";
 import {
     faHome,
     faBookOpen,
@@ -34,7 +40,7 @@ router.on("navigate", (event) => {
                 user: $page.props.user,
             }"
         >
-            <font-awesome-icon :icon="faHome" />
+            <PartnerSidebarDashboardIcon />
             <div>Dashboard</div>
         </NavLink>
         <NavLink
@@ -47,7 +53,7 @@ router.on("navigate", (event) => {
                 user: $page.props.user,
             }"
         >
-            <font-awesome-icon :icon="faBookOpen" />
+            <PartnerSidebarClassesIcon />
             <div>Classes</div>
         </NavLink>
         <NavLink
@@ -60,7 +66,7 @@ router.on("navigate", (event) => {
                 user: $page.props.user,
             }"
         >
-            <font-awesome-icon :icon="faUsers" />
+            <PartnerSidebarMemberIcon />
             <div>Members</div>
         </NavLink>
         <NavLink
@@ -73,14 +79,14 @@ router.on("navigate", (event) => {
                 user: $page.props.user,
             }"
         >
-            <font-awesome-icon :icon="faUserTie" />
+            <PartnerSidebarInstructorIcon />
             <div>Instructors</div>
         </NavLink>
         <NavLink
             :href="route('partner.exports.index')"
             :active="active_route.name == 'partner.exports.index'"
         >
-            <font-awesome-icon :icon="faRepeat" />
+            <PartnerSidebarDataCenterIcon />
             <div>Data Center</div>
         </NavLink>
         <NavLink
@@ -93,7 +99,7 @@ router.on("navigate", (event) => {
                 user: $page.props.user,
             }"
         >
-            <font-awesome-icon :icon="faGears" />
+            <PartnerSidebarSettingsIcon />
             <div>Settings</div>
         </NavLink>
     </div>

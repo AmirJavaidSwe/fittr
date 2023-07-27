@@ -49,6 +49,7 @@ class PartnerLocationController extends Controller
                 ->withQueryString(),
             'users' => User::select('id', 'name', 'email')->partner()->where('business_id', auth()->user()->business_id)->get(),
             'countries' => Country::select('id', 'name')->whereStatus(1)->get(),
+            'ignored_countries' => Country::where('status', false)->pluck('iso')->toArray(),
             'amenities' => Amenity::select('id', 'title')->get()->map(fn($item) => ['label' => $item->title, 'value' => $item->id]),
             'studios' => Studio::select('id', 'title')->get()->map(fn($item) => ['label' => $item->title, 'value' => $item->id]),
             'search' => $this->search,
@@ -257,7 +258,7 @@ class PartnerLocationController extends Controller
 
             return $this->redirectBackSuccess(__('Location updated successfully'), 'partner.locations.index');
 
-        } catch(Exception $e) {
+        } catch(\Exception $e) {
             return $this->redirectBackError(__('Something went wrong!'), 'partner.locations.index');
         }
     }

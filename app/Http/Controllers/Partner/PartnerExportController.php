@@ -20,6 +20,12 @@ use Inertia\Response;
 
 class PartnerExportController extends Controller
 {
+
+    public $search;
+    public $per_page;
+    public $order_by;
+    public $order_dir;
+    
     use ExportDownloader;
     /**
      * Display a listing of the resource.

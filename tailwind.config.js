@@ -31,24 +31,24 @@ module.exports = {
             colors: {
                 //green
                 primary: {
-                    100: "#D6DFD9",
+                    100: "#d6dfd9",
                     200: "#66ff99",
                     300: "#33cc66",
                     400: "#339933",
-                    500: "#315D3F",
-                    600: "#284A32",
+                    500: "#315d3f",
+                    600: "#284a32",
                     700: "#1c4629",
                     800: "#163c22",
                     900: "#0e3019",
                 },
                 //orange
                 secondary: {
-                    100: "#FCE7D6",
+                    100: "#fce7d6",
                     200: "#f9e2bb",
                     300: "#f9d492",
                     400: "#ffcc66",
-                    500: "#E8A838",
-                    600: "#EE8934",
+                    500: "#e8a838",
+                    600: "#ee8934",
                     700: "#c1861f",
                     800: "#663300",
                     900: "#330000",
@@ -58,30 +58,17 @@ module.exports = {
                     200: "#ff9999",
                     300: "#ff6666",
                     400: "#ff3333",
-                    500: "#E40000",
+                    500: "#e40000",
                     600: "#c20707",
                     700: "#a10606",
                     800: "#7a0404",
                     900: "#480202",
                 },
-                dark: "#292D32",
-                grey: "#939393", //darker grey
-                blue: {
-                    50: "#eef7ff",
-                    100: "#d8ecff",
-                    200: "#badeff",
-                    300: "#8accff",
-                    400: "#54aeff",
-                    500: "#2c8bff",
-                    600: "#1269fb",
-                    700: "#0e54e7",
-                    800: "#1244bb",
-                    900: "#153e93",
-                    950: "#122659",
-                }, // #1269FB
-                mainBg: "#E8EAE9", //soft grey
-                lightblue: "#EAF1F8",
-                darkblue: "#4299E1",
+                dark: "#292d32",
+                grey: "#939393", // darker grey
+                mainbg: "#e8eae9", // soft grey
+                blue: "#1269fb",
+                fileinputbg: "#eaf1f8",
             },
             fontFamily: {
                 sans: ["Urbanist", ...defaultTheme.fontFamily.sans],

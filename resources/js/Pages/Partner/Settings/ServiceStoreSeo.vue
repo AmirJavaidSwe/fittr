@@ -2,7 +2,7 @@
 import { computed, ref, onMounted } from "vue";
 import { useForm } from "@inertiajs/vue3";
 import ServiceStoreMenu from "@/Pages/Partner/Settings/ServiceStoreMenu.vue";
-
+import ServiceStoreVerticalTabs from "@/Pages/Partner/Settings/ServiceStoreVerticalTabs.vue";
 import SectionTitle from "@/Components/SectionTitle.vue";
 import FormSection from "@/Components/FormSection.vue";
 import InputLabel from "@/Components/InputLabel.vue";
@@ -12,6 +12,7 @@ import InputError from "@/Components/InputError.vue";
 import ActionMessage from "@/Components/ActionMessage.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
 import CardBasic from "@/Components/CardBasic.vue";
+import FormSectionVertical from "@/Components/FormSectionVertical.vue";
 
 const props = defineProps({
     form_data: Object,
@@ -47,98 +48,75 @@ const submitForm = () => {
 </script>
 
 <template>
-    <FormSection @submitted="submitForm">
-        <template #description>
-            <ServiceStoreMenu />
+    <ServiceStoreMenu class="lg:hidden" />
+    <FormSectionVertical @submitted="submitForm">
+        <template #tabsList>
+            <ServiceStoreVerticalTabs />
         </template>
-
+        <template #heading>
+            <h3 class="text-2xl pt-3 pb-3 font-bold">SEO Settings</h3>
+        </template>
         <template #form>
-            <!-- HEADER -->
-            <div class="col-span-full">
-                <SectionTitle>
-                    <template #title> SEO Settings </template>
-                </SectionTitle>
-                <div class="text-sm text-gray-600">
-                    <p>
-                        Specify your Service Store's title & description to be
-                        displayed in search engine results pages (SERPs).
-                    </p>
-                </div>
-
-                <!-- Google search results preview -->
-                <CardBasic class="my-4">
-                    <template #header> Google search results preview </template>
-
-                    <div>
-                        <div class="flex items-center gap-2 mb-2">
-                            <span class="w-7 h-7">
-                                <img
-                                    src="https://ui-avatars.com/api/?background=0D8ABC&color=fff"
-                                    alt="favicon"
-                                />
-                            </span>
-                            <div>
-                                <span class="text-sm">Biz name</span>
-                                <div class="text-xs">
-                                    https://your-site.fittr.tech
-                                </div>
-                            </div>
+            <p>Specify your Service Store's title & description to be displayed in search engine results pages (SERPs).</p>
+            <div
+                class="bg-mainBg w-full  border border-gray-200 flex flex-col gap-4 p-3 lg:p-4 rounded-lg shadow-md sm:max-w-full my-4">
+                <div
+                    class="pt-2 pb-2 border-b-2 border-slate-300 text-xl 2xl:text-3xl font-bold tracking-tight text-gray-900">
+                    Google search results preview </div>
+                <div>
+                    <div class="flex gap-2 mb-5">
+                        <span class="w-7 h-7 mr-5">
+                            <div
+                                class="bg-secondary-500 p-1 text-white rounded-full flex items-center justify-center text-center uppercase font-semibold w-11 h-11">
+                                DP</div>
+                        </span>
+                        <div>
+                            <span class="text-sm"><strong>Biz name</strong></span>
+                            <div class="text-xs"> https://your-site.fittr.tech </div>
                         </div>
-                        <div class="font-bold text-xl text-blue-800">
-                            {{ meta_title }}
-                        </div>
-                        <div class="text-sm">{{ meta_description }}</div>
                     </div>
-                </CardBasic>
+                    <div class="font-bold text-xl text-blue-800">{{ meta_title }}</div>
+                    <div class="text-sm">
+                        <div class="border-l-[3px] border-primary-500 mr-3 pl-3">
+                            <span class="block">
+                                {{ meta_description }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <!--v-if-->
             </div>
-            <!-- Meta Title -->
-            <div class="col-span-6 sm:col-span-4">
+            <div class="mt-8 mb-4">
                 <InputLabel for="meta_title" value="Meta Title" />
-                <TextInput
-                    id="logo_url"
-                    v-model="form.meta_title"
-                    type="text"
-                    class="mt-1 block w-full"
-                    placeholder="Title of your page. Optimal length is 55-60. Max 255."
-                />
+                <TextInput id="logo_url" v-model="form.meta_title" type="text" class="mt-1 block w-full"
+                    placeholder="Title of your page. Optimal length is 55-60. Max 255." />
                 <div v-if="form.meta_title" class="text-sm">
                     Chars: {{ form.meta_title.length }}
                 </div>
                 <InputError :message="form.errors.meta_title" class="mt-2" />
             </div>
             <!-- Meta Description -->
-            <div class="col-span-6 sm:col-span-4">
+            <div class="mt-8 mb-4">
                 <InputLabel for="meta_description" value="Meta Description" />
-                <TextArea
-                    id="meta_description"
-                    v-model="form.meta_description"
-                    type="text"
-                    class="mt-1 block w-full"
-                    placeholder="Describe your page here. Optimal length is 100-160 characters. Max 255."
-                />
+                <TextArea id="meta_description" v-model="form.meta_description" type="text"
+                    class="mt-1 block w-full rounded focus:border-primary-500 shadow-none focus:shadow-none ring-0 focus:outline-none focus:ring-0"
+                    placeholder="Describe your page here. Optimal length is 100-160 characters. Max 255." />
                 <div v-if="form.meta_description" class="text-sm">
                     Chars: {{ form.meta_description.length }}
                 </div>
-                <InputError
-                    :message="form.errors.meta_description"
-                    class="mt-2"
-                />
+                <InputError :message="form.errors.meta_description" class="mt-2" />
             </div>
         </template>
-
         <template #actions>
-            <ActionMessage :on="form.recentlySuccessful" class="mr-3">
-                Saved.
-            </ActionMessage>
-
-            <ButtonLink
-                styling="secondary"
-                size="default"
-                :class="{ 'opacity-25': form.processing }"
-                :disabled="form.processing"
-            >
-                Save
-            </ButtonLink>
+            <div class="flex mt-5">
+                <ActionMessage :on="form.recentlySuccessful" class="font-semibold mr-3 mt-3">
+                    Saved.
+                </ActionMessage>
+                <ButtonLink styling="secondary" size="default" :class="{ 'opacity-25': form.processing }"
+                    :disabled="form.processing">
+                    Save
+                </ButtonLink>
+            </div>
         </template>
-    </FormSection>
+    </FormSectionVertical>
 </template>

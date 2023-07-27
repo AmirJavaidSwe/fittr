@@ -35,6 +35,7 @@ import StatusLabel from "@/Components/StatusLabel.vue";
 import ColoredValue from "@/Components/DataTable/ColoredValue.vue";
 import AvatarValue from "@/Components/DataTable/AvatarValue.vue";
 import DateValue from "@/Components/DataTable/DateValue.vue";
+import ActionsIcon from '@/Icons/ActionsIcon.vue';
 
 const props = defineProps({
     disableSearch: {
@@ -91,6 +92,20 @@ const form_class = useForm({
     week_days: [],
     use_defaults: true,
     spaces: null,
+});
+const duplicateClassForm = useForm({
+    title: null,
+    status: null,
+    start_date: null,
+    end_date: null,
+    instructor_id: null,
+    class_type_id: null,
+    studio_id: null,
+    file_type: "csv",
+    is_off_peak: false,
+    does_repeat: false,
+    repeat_end_date: null,
+    week_days: [],
 });
 
 const setOrdering = (col) => {
@@ -175,12 +190,26 @@ const storeClass = () => {
         },
     });
 };
+const storeDuplicateClass = () => {
+    duplicateClassForm.post(route("partner.classes.store"), {
+        preserveScroll: true,
+        onSuccess: () => {
+            showDuplicateClassModal.value = false;
+            duplicateClassForm.reset();
+        },
+    });
+};
 
 // Edit Class Query
 const showEditModal = ref(false);
+const showDuplicateClassModal = ref(false);
 const editModalData = ref({});
 const closeEditModal = () => {
     showEditModal.value = false;
+};
+const closeDuplicateClassModal = () => {
+    showDuplicateClassModal.value = false;
+    duplicateClassForm.reset()
 };
 
 let formEdit = useForm({
@@ -209,6 +238,17 @@ const handleUpdateForm = (data) => {
     formEdit.is_off_peak = data.is_off_peak;
     formEdit.use_defaults = data.spaces ? false : true;
     formEdit.spaces = data.spaces;
+};
+const handleDuplicateForm = (data) => {
+    showDuplicateClassModal.value = true;
+    duplicateClassForm.title = data.title;
+    duplicateClassForm.status = 'inactive';
+    duplicateClassForm.start_date = data.start_date;
+    duplicateClassForm.end_date = data.end_date;
+    duplicateClassForm.instructor_id = data.instructor_id;
+    duplicateClassForm.class_type_id = data.class_type_id;
+    duplicateClassForm.studio_id = data.studio_id;
+    duplicateClassForm.is_off_peak = data.is_off_peak;
 };
 
 const updateClass = () => {
@@ -476,9 +516,6 @@ const closeAmenityCreateModal = () => {
 }
 const createAmenityFrom = useForm({
     title: '',
-    icon: '',
-    contents: '',
-    ordering: '',
     status: false
 });
 
@@ -515,14 +552,17 @@ const dropdownToggled = ($event) => {
                 <ExportIcon class="w-4 h-4 2xl:w-6 2xl:h-6 mr-0 md:mr-2" />
                 <span class="hidden md:block">Export</span>
             </ButtonLink>
-            <ButtonLink
-                styling="secondary"
-                size="default"
-                @click="showCreateModal = true"
-            >
-                Create new
-                <font-awesome-icon class="ml-2" :icon="faPlus" />
-            </ButtonLink>
+            <span class="ml-5">
+                <ButtonLink
+                    styling="secondary"
+                    size="default"
+                    @click="showCreateModal = true"
+                >
+                    Create new
+                    <font-awesome-icon class="ml-2" :icon="faPlus" />
+                </ButtonLink>
+            </span>
+
             <!-- <ButtonLink
                 styling="secondary"
                 size="default"
@@ -682,7 +722,7 @@ const dropdownToggled = ($event) => {
                     >
                         <template #trigger>
                             <button class="text-dark text-lg">
-                                <font-awesome-icon :icon="faCog" />
+                                <ActionsIcon />
                             </button>
                         </template>
 
@@ -706,7 +746,8 @@ const dropdownToggled = ($event) => {
                                 />
                                 Edit (Modal)
                             </DropdownLink>
-                            <DropdownLink href="#">
+                            <DropdownLink as="button"
+                                @click="handleDuplicateForm(class_lesson)">
                                 <DuplicateIcon
                                     class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
                                 />
@@ -813,7 +854,26 @@ const dropdownToggled = ($event) => {
             />
         </template>
     </SideModal>
+    
+    <!-- Duplicate class Modal -->
+    <SideModal :show="showDuplicateClassModal" @close="closeDuplicateClassModal">
+        <template #title> Duplicate Class </template>
 
+        <template #content>
+            <Form
+                :form="duplicateClassForm"
+                :statuses="statuses"
+                :studios="studios"
+                :instructors="instructors"
+                :classtypes="classtypes"
+                :business_seetings="business_seetings"
+                :submitted="storeDuplicateClass"
+                modal
+                :isDuplicate="true"
+            />
+        </template>
+    </SideModal>
+    
     <!-- Delete Confirmation Modal -->
     <ConfirmationModal :show="itemDeleting" @close="itemDeleting = false">
         <template #title> Confirmation required </template>

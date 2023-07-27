@@ -16,6 +16,7 @@ import { faCog, faPlus } from '@fortawesome/free-solid-svg-icons';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import EditIcon from '@/Icons/Edit.vue';
 import DeleteIcon from '@/Icons/Delete.vue';
+import ActionsIcon from '@/Icons/ActionsIcon.vue';
 import DateValue from '@/Components/DataTable/DateValue.vue';
 import SideModal from '@/Components/SideModal.vue';
 
@@ -33,6 +34,7 @@ const props = defineProps({
     users: Array,
     amenities: Array,
     countries: Array,
+    ignored_countries: Array,
     studios: Array,
 });
 
@@ -283,7 +285,7 @@ const removeUploadedFile = (id) => {
                     >
                         <template #trigger>
                             <button class="text-dark text-lg">
-                                <font-awesome-icon :icon="faCog" />
+                               <ActionsIcon />
                             </button>
                         </template>
 
@@ -365,9 +367,11 @@ const removeUploadedFile = (id) => {
                 :users="users"
                 :amenities="amenities"
                 :countries="countries"
+                :ignored_countries="ignored_countries"
                 :studios="studios"
                 :editMode="editMode"
                 @remove_uploaded_file="removeUploadedFile"
+                modal
             />
         </template>
         <template #footer>

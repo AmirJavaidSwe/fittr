@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('icon')->nullable();
-            $table->text('contents');
+            $table->text('contents')->nullable();
             $table->integer('ordering')->default(0)->unsigned();
             $table->tinyInteger('status')->default(1)->unsigned();
             $table->timestamps();

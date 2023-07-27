@@ -23,7 +23,7 @@ defineProps({
 <template>
     <FormSection @submitted="submitted">
         <template #form>
-            <div class="col-span-6 sm:col-span-4">
+            <div class="col-span-6 sm:col-span-4 mb-12">
                 <InputLabel for="title" value="Title" />
                 <TextInput
                     id="title"
@@ -35,42 +35,7 @@ defineProps({
                 <InputError :message="form.errors.title" class="mt-2" />
             </div>
 
-            <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="icon" value="Icon" />
-                <TextInput
-                    id="icon"
-                    v-model="form.icon"
-                    type="text"
-                    class="mt-1 block w-full"
-                    autocomplete="one-time-code"
-                />
-                <InputError :message="form.errors.icon" class="mt-2" />
-            </div>
-
-            <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="contents" value="Contents" />
-                <TextInput
-                    id="icon"
-                    v-model="form.contents"
-                    type="text"
-                    class="mt-1 block w-full"
-                    autocomplete="one-time-code"
-                />
-                <InputError :message="form.errors.contents" class="mt-2" />
-            </div>
-
-            <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="ordering" value="Ordering" />
-                <TextInput
-                    id="icon"
-                    v-model="form.ordering"
-                    type="number"
-                    class="mt-1 block w-full"
-                />
-                <InputError :message="form.errors.ordering" class="mt-2" />
-            </div>
-
-            <!-- Off-peak -->
+            <!-- Status -->
             <div>
                 <Switcher
                     v-model="form.status"
@@ -79,17 +44,6 @@ defineProps({
                 />
                 <InputError :message="form.errors.status" class="mt-2" />
             </div>
-
-            <!-- <div class="flex justify-between">
-                <InputLabel for="icon" value="Icon" />
-                <Checkbox
-                    id="status"
-                    v-model="form.status"
-                    :checked="form.status === 1"
-                    class="mt-1 w-4"
-                />
-                <InputError :message="form.errors.status" class="mt-2" />
-            </div> -->
         </template>
 
         <template #actions>

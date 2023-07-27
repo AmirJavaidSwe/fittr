@@ -9,6 +9,7 @@ import Checkbox from "@/Components/Checkbox.vue";
 import InputError from "@/Components/InputError.vue";
 import ActionMessage from "@/Components/ActionMessage.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
+import Switcher from "@/Components/Switcher.vue";
 
 const props = defineProps({
     default_waiver: String,
@@ -33,15 +34,12 @@ const submitForm = () => {
 
 <template>
     <FormSection @submitted="submitForm">
-        <template #description>
-            <div>
+        <template #form>
+            <!-- Waiver Content -->
+            <div class="mb-12">
                 Customize your waiver that comes up when clients sign up on your
                 service store, or when they are making a booking.
             </div>
-        </template>
-
-        <template #form>
-            <!-- Waiver Content -->
             <div class="col-span-6">
                 <div class="flex justify-between">
                     <InputLabel for="waiver_text" value="Waiver Content" />
@@ -56,12 +54,18 @@ const submitForm = () => {
                     id="waiver_text"
                     v-model="form.waiver_text"
                     :rows="10"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full md:w-2/3 t-1 block rounded focus:border-primary-500 shadow-none focus:shadow-none ring-0 focus:outline-none focus:ring-0"
                     placeholder="Place your waiver content here. HTML tags not allowed."
                 />
                 <InputError :message="form.errors.waiver_text" class="mt-2" />
 
-                <label class="flex items-center">
+                <div class="bg-mainBg w-full md:w-2/3 mt-4 p-5 rounded mt-6">
+                    <Switcher v-model="form.enforce_waiver" title="Enforce waiver before checkout"
+                        description="Enabling this option will show the waiver and require acceptance on booking page." description-left-border />
+                    <InputError :message="form.errors.show_timezone" class="mt-2" />
+                </div>
+
+                <!-- <label class="flex items-center">
                     <span
                         class="mr-4 w-6 text-sm text-gray-700"
                         v-text="form.enforce_waiver ? 'On' : 'Off'"
@@ -77,7 +81,7 @@ const submitForm = () => {
                 <div class="text-sm">
                     Enabling this option will show the waiver and require
                     acceptance on booking page.
-                </div>
+                </div> -->
                 <InputError
                     :message="form.errors.enforce_waiver"
                     class="mt-2"

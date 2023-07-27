@@ -13,6 +13,7 @@ import DeleteIcon from "@/Icons/Delete.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import { DateTime } from "luxon";
+import ActionsIcon from '@/Icons/ActionsIcon.vue';
 import {
     faPencil,
     faChevronRight,
@@ -158,7 +159,7 @@ watch(() => form.search, runSearch);
                     >
                         <template #trigger>
                             <button class="text-dark text-lg">
-                                <font-awesome-icon :icon="faCog" />
+                                <ActionsIcon />
                             </button>
                         </template>
 

@@ -1,5 +1,5 @@
 <script setup>
-import { watchEffect, computed, ref } from "vue";
+import { watchEffect, watch, computed, ref, onMounted } from "vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
 import InputError from "@/Components/InputError.vue";
@@ -13,7 +13,15 @@ import "@vueform/multiselect/themes/tailwind.css";
 // import UploadFileIcon from "@/Icons/Upload.vue";
 // import UploadingIcon from "@/Icons/Uploading.vue";
 
-const emit = defineEmits(["remove_uploaded_file", "create_new_gm", 'create_new_amenity']);
+import intlTelInput from "intl-tel-input";
+import "intl-tel-input/build/css/intlTelInput.css";
+import { parsePhoneNumber, AsYouType } from "libphonenumber-js";
+
+const emit = defineEmits([
+  "remove_uploaded_file",
+  "create_new_gm",
+  "create_new_amenity",
+]);
 
 const props = defineProps({
   form: {
@@ -23,26 +31,32 @@ const props = defineProps({
   users: Array,
   amenities: Array,
   countries: Array,
+  ignored_countries: Array,
   studios: Array,
   editMode: Boolean,
+  modal: Boolean,
 });
+
+const { form } = props;
+const phoneNumber = ref(null);
+phoneNumber.value = form.tel;
 const manager = computed(() => {
   return props.users.find((item) => item.id == props.form.manager_id);
 });
 
 const amenitiesList = computed(() => {
   let amenities = [];
-    for (let i = 0; i < props.amenities.length; i++) {
-        amenities.push({
-            value: props.amenities[i].value,
-            label: props.amenities[i].label,
-        });
-    }
+  for (let i = 0; i < props.amenities.length; i++) {
     amenities.push({
-      value: "create_new_amenity",
-      label: "Add New"
+      value: props.amenities[i].value,
+      label: props.amenities[i].label,
     });
-    return amenities;
+  }
+  amenities.push({
+    value: "create_new_amenity",
+    label: "Add New",
+  });
+  return amenities;
 });
 
 const gmChanged = () => {
@@ -51,24 +65,64 @@ const gmChanged = () => {
   }
 };
 
-
+watchEffect(() => {
+  if (!phoneNumber.value.startsWith("+")) {
+    phoneNumber.value = "+" + phoneNumber.value;
+  }
+});
 watchEffect(() => {
   if (props.form.amenity_ids.includes("create_new_amenity")) {
     emit("create_new_amenity");
   }
-})
-
+});
 
 const usersList = computed(() => {
-    let users = [];
-    for (let i = 0; i < props.users.length; i++) {
-        users.push({
-            value: props.users[i].id,
-            label: props.users[i].name,
-        });
-    }
-    return users;
+  let users = [];
+  for (let i = 0; i < props.users.length; i++) {
+    users.push({
+      value: props.users[i].id,
+      label: props.users[i].name,
+    });
+  }
+  return users;
 });
+
+watch(phoneNumber, (newVal, oldVal) => {
+  formatPhoneInput();
+});
+
+onMounted(async () => {
+  const input = document.querySelector("#phone");
+  intlTelInput(input, {
+    utilsScript: await import("intl-tel-input/build/js/utils.js"),
+    autoInsertDialCode: true,
+    formatOnDisplay: true,
+    nationalMode: false,
+    customContainer: "w-full",
+  });
+  formatPhoneInput();
+});
+const formatPhoneInput = () => {
+
+  setTimeout(() => {
+        phoneNumber.value = phoneNumber.value.replace(/\D+/, "");
+        if (!phoneNumber.value || !phoneNumber.value.startsWith("+")) {
+            phoneNumber.value = "+" + phoneNumber.value;
+        }
+        let letFormattedNumber = "";
+        try {
+            const newNumber = parsePhoneNumber(phoneNumber.value);
+            letFormattedNumber = new AsYouType().input(phoneNumber.value);
+            phoneNumber.value = letFormattedNumber
+                ? letFormattedNumber
+                : phoneNumber.value;
+              form.tel = phoneNumber.value;
+            } catch (error) {
+                phoneNumber.value = phoneNumber.value.replace(/\D+/, "");
+                form.tel = phoneNumber.value;
+            }
+    }, 100);
+};
 </script>
 
 <template>
@@ -215,10 +269,12 @@ const usersList = computed(() => {
   </div>
   <div class="my-3">
     <InputLabel for="phone" value="Phone" />
+
     <TextInput
       id="phone"
-      v-model="form.tel"
+      v-model="phoneNumber"
       type="text"
+      maxlength="16"
       class="mt-1 block w-full"
     />
     <InputError :message="form.errors.tel" class="mt-2" />
@@ -238,10 +294,12 @@ const usersList = computed(() => {
     <Dropzone
       id="image"
       v-model="form.image"
+      :modal="props.modal"
       :uploaded_files="form.uploaded_images ? form.uploaded_images : []"
-      :accept="['.jpg', '.png', '.bmp']"
+      :accept="['.jpg', '.png', '.bmp', '.svg']"
       max_width="200"
       max_height="200"
+      :buttonText="'Select new image'"
       @remove_uploaded_file="$emit('remove_uploaded_file', $event)"
     />
     <InputError :message="form.errors.image" class="mt-2" />
@@ -269,4 +327,3 @@ const usersList = computed(() => {
     <InputError :message="form.errors.status" class="mt-2" />
   </div>
 </template>
-<style src="@vueform/multiselect/themes/tailwind.css"></style>

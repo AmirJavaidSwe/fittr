@@ -22,9 +22,6 @@ let props = defineProps({
 
 let form = useForm({
     title: props.amenity?.title !== undefined ? props.amenity?.title : '',
-    icon: props.amenity?.icon !== undefined ? props.amenity?.icon : '',
-    contents: props.amenity?.contents !== undefined ? props.amenity?.contents : '',
-    ordering: props.amenity?.ordering !== undefined ? props.amenity?.ordering : '',
     status: props.amenity?.status !== undefined ? props.amenity?.status : ''
 });
 </script>
