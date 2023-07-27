@@ -3,12 +3,13 @@
 namespace App\Models\Partner;
 
 use App\Enums\ClassStatus;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class ClassLesson extends Model
 {
@@ -24,6 +25,7 @@ class ClassLesson extends Model
         'start_date' => 'datetime',
         'end_date' => 'datetime',
         'deleted_at' => 'datetime',
+        'original_instructors' => 'array',
     ];
 
     /**
@@ -48,9 +50,9 @@ class ClassLesson extends Model
         return $this->belongsTo(Studio::class);
     }
 
-    public function instructor(): BelongsTo
+    public function instructor(): BelongsToMany
     {
-        return $this->belongsTo(Instructor::class);
+        return $this->belongsToMany(Instructor::class, 'class_instructor', 'class_id', 'instructor_id');
     }
 
     public function classType(): BelongsTo

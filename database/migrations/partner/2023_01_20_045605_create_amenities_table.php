@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('amenities', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->tinyInteger('status')->default(1)->unsigned();
+            $table->boolean('status')->default(false);
             $table->timestamps();
         });
     }

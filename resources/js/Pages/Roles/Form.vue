@@ -20,8 +20,13 @@ const props = defineProps({
     },
     systemModules: {
         type: Array,
-        required: true
-    }
+        required: true,
+    },
+    customFooter: {
+        type: Boolean,
+        required: false,
+        default: false,
+    },
 });
 
 const permissions = ref([]);
@@ -29,7 +34,9 @@ const title = ref(null);
 const roleHelpers = RoleHelpers();
 const allowAllPermissions = ref(false);
 
-const allPermissionIds = ref(roleHelpers.collectAllPermissions(props.systemModules));
+const allPermissionIds = ref(
+    roleHelpers.collectAllPermissions(props.systemModules)
+);
 
 const togglePermission = (permissionId) => {
     const data = roleHelpers.togglePermission(
@@ -48,18 +55,17 @@ const toggleAllPermission = () => {
     );
     if (data.allowAllPermissions == false) {
         permissions.value = [];
-    }
-    else if (data.permissions) {
+    } else if (data.permissions) {
         permissions.value = data.permissions;
     }
     allowAllPermissions.value = data.allowAllPermissions;
 };
-const emit = defineEmits(['submitted'])
+const emit = defineEmits(["submitted"]);
 const create = () => {
-    emit('submitted', {
+    emit("submitted", {
         title: title.value,
-        permissions: permissions.value
-    })
+        permissions: permissions.value,
+    });
 };
 </script>
 
@@ -105,33 +111,32 @@ const create = () => {
 
                 <SectionBorder />
 
-                
-                    <template
-                        v-for="system_module in props.systemModules"
-                        :key="system_module.id"
-                    >
-                        <div class="grid pb-5 mb-5">
-                            <strong>
-
-                                {{ system_module.title }}
-                            </strong>
-                            <div
-                                class="grid grid-cols-6 gap-6 items-center justify-start mt-4"
+                <template
+                    v-for="system_module in props.systemModules"
+                    :key="system_module.id"
+                >
+                    <div class="grid pb-5 mb-5">
+                        <strong>
+                            {{ system_module.title }}
+                        </strong>
+                        <div
+                            class="grid grid-cols-6 gap-6 items-center justify-start mt-4"
+                        >
+                            <template
+                                v-for="permission in system_module.permissions"
+                                :key="permission.id"
                             >
-                                <template
-                                    v-for="permission in system_module.permissions"
-                                    :key="permission.id"
-                                >
-                                <div class="flex flex-col justify-start ">
-
+                                <div class="flex flex-col justify-start">
                                     <Checkbox
-                                    :id="
+                                        :id="
                                             system_module.slug +
                                             '-' +
                                             permission.slug
                                         "
                                         :value="permission.id"
-                                        :checked="permissions.includes(permission.id)"
+                                        :checked="
+                                            permissions.includes(permission.id)
+                                        "
                                         @change="
                                             togglePermission(permission.id)
                                         "
@@ -143,25 +148,26 @@ const create = () => {
                                             system_module.slug +
                                             '-' +
                                             permission.slug
-                                            "
+                                        "
                                         :value="permission.title"
                                         class="mr-3 w-full"
-                                        />
-                                    </div>
-                                    </template>
-                            </div>
+                                    />
+                                </div>
+                            </template>
                         </div>
-                    </template>
+                    </div>
+                </template>
                 <InputError :message="form.errors.permissions" class="mt-2" />
             </Section>
         </template>
 
         <template #actions>
             <ActionMessage :on="form.recentlySuccessful" class="mr-3">
-                Role has been created.
+                Saved.
             </ActionMessage>
 
             <ButtonLink
+                type="submit"
                 size="default"
                 styling="secondary"
                 :class="{ 'opacity-25': form.processing }"

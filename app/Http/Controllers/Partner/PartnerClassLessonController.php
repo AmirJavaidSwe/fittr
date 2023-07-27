@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 use App\Models\Partner\Studio;
 use Illuminate\Support\Carbon;
 use App\Models\Partner\Amenity;
-use App\Rules\OldPasswordMatch;
+use App\Rules\UserPasswordMatch;
 use App\Models\Partner\Location;
 use App\Models\Partner\ClassType;
 use Illuminate\Http\JsonResponse;
@@ -23,6 +23,8 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Partner\ClassLesson;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Validation\Rules\Enum;
+use App\Rules\ArrayFieldExistsInDatabase;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\Partner\ClassFormRequest;
 
@@ -51,80 +53,80 @@ class PartnerClassLessonController extends Controller
         $this->runFilter = $request->input('runFilter');
 
         $classes = ClassLesson::with('studio', 'classType', 'instructor')->orderBy($this->order_by, $this->order_dir)
-        ->when($this->search, function ($query) {
-            $query->where(function ($query) {
-                $query->orWhere('id', intval($this->search))
-                    ->orWhere('title', 'LIKE', '%' . $this->search . '%');
-            });
-        })
-        // if applied filters
-        ->when($this->runFilter == true, function ($query) use ($request) {
-            // both starta and end date
-            if(($request->has('start_date') && $request->start_date != null) || ($request->has('end_date') && $request->end_date != null)) {
-                if(($request->has('start_date') && $request->start_date != null) && ($request->has('end_date') && $request->end_date != null)) {
-                    $start_date = Carbon::parse($request->start_date)->startOfDay()->format('Y-m-d H:i:s');
-                    $end_date = Carbon::parse($request->end_date)->endOfDay()->format('Y-m-d H:i:s');
-                    $query->where(function ($query) use ($request, $start_date, $end_date) {
-                        $query->whereBetween(DB::raw('CONCAT(start_date, " ", end_date)'), [$start_date, $end_date]);
+            ->when($this->search, function ($query) {
+                $query->where(function ($query) {
+                    $query->orWhere('id', intval($this->search))
+                        ->orWhere('title', 'LIKE', '%' . $this->search . '%');
+                });
+            })
+            // if applied filters
+            ->when($this->runFilter == true, function ($query) use ($request) {
+                // both starta and end date
+                if (($request->has('start_date') && $request->start_date != null) || ($request->has('end_date') && $request->end_date != null)) {
+                    if (($request->has('start_date') && $request->start_date != null) && ($request->has('end_date') && $request->end_date != null)) {
+                        $start_date = Carbon::parse($request->start_date)->startOfDay()->format('Y-m-d H:i:s');
+                        $end_date = Carbon::parse($request->end_date)->endOfDay()->format('Y-m-d H:i:s');
+                        $query->where(function ($query) use ($request, $start_date, $end_date) {
+                            $query->whereBetween(DB::raw('CONCAT(start_date, " ", end_date)'), [$start_date, $end_date]);
+                        });
+                    }
+
+                    // only start date
+                    else if ($request->has('start_date') && $request->start_date != null) {
+                        $start_date = Carbon::parse($request->start_date)->startOfDay()->format('Y-m-d H:i:s');
+                        $query->where(function ($query) use ($request, $start_date) {
+                            $query->where('start_date', '>=', $start_date);
+                        });
+                    }
+
+                    // only end date
+                    else if ($request->has('end_date') && $request->end_date != null) {
+                        $end_date = Carbon::parse($request->end_date)->endOfDay()->format('Y-m-d H:i:s');
+                        $query->where(function ($query) use ($request, $end_date) {
+                            $query->where('end_date', '<=', $end_date);
+                        });
+                    }
+                }
+
+                // apply instructors filters
+                if ($request->has('instructor_id') && count($request->instructor_id)) {
+                    $query->where(function ($query) use ($request) {
+                        $query->whereIn('instructor_id', $request->instructor_id);
                     });
                 }
 
-                // only start date
-                else if ($request->has('start_date') && $request->start_date != null) {
-                    $start_date = Carbon::parse($request->start_date)->startOfDay()->format('Y-m-d H:i:s');
-                    $query->where(function ($query) use ($request, $start_date) {
-                        $query->where('start_date', '>=', $start_date);
+                // apply class_type filters
+                if ($request->has('class_type_id') && count($request->class_type_id)) {
+                    $query->where(function ($query) use ($request) {
+                        $query->whereIn('class_type_id', $request->class_type_id);
                     });
                 }
 
-                // only end date
-                else if($request->has('end_date') && $request->end_date != null) {
-                    $end_date = Carbon::parse($request->end_date)->endOfDay()->format('Y-m-d H:i:s');
-                    $query->where(function ($query) use ($request, $end_date) {
-                        $query->where('end_date', '<=', $end_date);
+                // apply studio_id filters
+                if ($request->has('studio_id') && count($request->studio_id)) {
+                    $query->where(function ($query) use ($request) {
+                        $query->whereIn('studio_id', $request->studio_id);
                     });
                 }
-            }
+                // apply off_peak filter
+                if ($request->has('is_off_peak')) {
+                    $is_off_peak =  $request->is_off_peak;
+                    if (is_numeric($is_off_peak)) {
+                        $query->where(function ($query) use ($request, $is_off_peak) {
+                            $query->where('is_off_peak', $is_off_peak);
+                        });
+                    }
+                }
 
-            // apply instructors filters
-            if($request->has('instructor_id') && count($request->instructor_id)) {
-                $query->where(function ($query) use ($request) {
-                    $query->whereIn('instructor_id', $request->instructor_id);
-                });
-            }
-
-            // apply class_type filters
-            if($request->has('class_type_id') && count($request->class_type_id)) {
-                $query->where(function ($query) use ($request) {
-                    $query->whereIn('class_type_id', $request->class_type_id);
-                });
-            }
-
-            // apply studio_id filters
-            if($request->has('studio_id') && count($request->studio_id)) {
-                $query->where(function ($query) use ($request) {
-                    $query->whereIn('studio_id', $request->studio_id);
-                });
-            }
-            // apply off_peak filter
-            if($request->has('is_off_peak')) {
-                $is_off_peak =  $request->is_off_peak;
-                if(is_numeric($is_off_peak)) {
-                    $query->where(function ($query) use ($request, $is_off_peak) {
-                        $query->where('is_off_peak', $is_off_peak);
+                // apply off_peak filter
+                if ($request->has('status')) {
+                    $query->where(function ($query) use ($request) {
+                        $query->whereIn('status', $request->status);
                     });
                 }
-            }
-
-            // apply off_peak filter
-            if($request->has('status')) {
-                $query->where(function ($query) use ($request) {
-                    $query->whereIn('status', $request->status);
-                });
-            }
-        })
-        ->paginate($this->per_page)
-        ->withQueryString();
+            })
+            ->paginate($this->per_page)
+            ->withQueryString();
 
         return Inertia::render('Partner/Class/Index', [
             'page_title' => __('Classes'),
@@ -138,7 +140,7 @@ class PartnerClassLessonController extends Controller
             'users' => User::select('id', 'name', 'email')->partner()->where('business_id', auth()->user()->business_id)->get(),
             'locations' => Location::select('id', 'title')->get(),
             'countries' => Country::select('id', 'name')->whereStatus(1)->get(),
-            'amenities' => Amenity::select('id', 'title')->get()->map(fn($item) => ['label' => $item->title, 'value' => $item->id]),
+            'amenities' => Amenity::select('id', 'title')->get()->map(fn ($item) => ['label' => $item->title, 'value' => $item->id]),
             'systemModules' => SystemModule::with('permissions')->where('is_for', auth()->user()->source)->get(),
             'search' => $this->search,
             'per_page' => intval($this->per_page),
@@ -254,7 +256,11 @@ class PartnerClassLessonController extends Controller
             ]);
         }
 
-        ClassLesson::create($validated);
+        $class = ClassLesson::create($validated);
+
+        if (!empty($validated['instructor_id'])) {
+            $class->instructor()->sync($validated['instructor_id']);
+        }
 
         return $this->redirectBackSuccess(__('Class updated successfully'), 'partner.classes.index');
     }
@@ -311,7 +317,7 @@ class PartnerClassLessonController extends Controller
                     'link' => null,
                 ],
             ),
-            'class_lesson' => $class,
+            'class_lesson' => $class->load(['studio', 'instructor', 'classType']),
             'statuses' => ClassStatus::labels(),
             'instructors' => Instructor::orderBy('id', 'desc')->pluck('name', 'id'),
             'classtypes' => ClassType::orderBy('id', 'desc')->pluck('title', 'id'),
@@ -328,7 +334,12 @@ class PartnerClassLessonController extends Controller
      */
     public function update(ClassFormRequest $request, ClassLesson $class)
     {
-        $class->update($request->validated());
+        $validated = $request->validated();
+        $class->update($validated);
+
+        if (!empty($validated['instructor_id'])) {
+            $class->instructor()->sync($validated['instructor_id']);
+        }
 
         return $this->redirectBackSuccess(__('Class updated successfully'), 'partner.classes.index');
     }
@@ -341,31 +352,30 @@ class PartnerClassLessonController extends Controller
      */
     public function destroy(ClassLesson $class)
     {
-        //TODO: prevent delete here or early, when class has active bookings
+        // TODO: prevent delete here or early, when class has active bookings
+        $class->instructor()->sync([]);
         $class->delete();
 
-        //TODO: if bookings exist and admin really wants to delete a class, we need to cancel and refund all bookings made for this class
+        // TODO: if bookings exist and admin really wants to delete a class, we need to cancel and refund all bookings made for this class
 
         return $this->redirectBackSuccess(__('Class deleted successfully'), 'partner.classes.index');
     }
 
     public function import(ImportFile $request)
     {
-
     }
 
     public function export()
     {
-
     }
 
     public function exportClasses()
-    {
+    {/*
         $classes = ClassLesson::whereIn('id', request('classes'))->get();
 
         $export = SimpleExcelWriter::streamDownload('classes_' . date('d') . '_' . date('M') . '_' . date('Y') . '.csv');
 
-        $export->addHeader(['Title', 'Start Date', 'End Date', 'Instructor ID', 'Studio ID', 'Status']);
+        $export->addHeader(['Title', 'Start Date', 'End Date', 'Instructor', 'Studio ID', 'Status']);
 
         $i = 0;
 
@@ -376,8 +386,8 @@ class PartnerClassLessonController extends Controller
                 $class->name,
                 $class->start_date,
                 $class->end_date,
-                $class->instructor_id,
-                $class->studio_id,
+                implode(', ', $class->instructor()->pluck('name')->toArray()),
+                $class->studio()->first()->name,
                 $class->status
             ]);
 
@@ -387,15 +397,17 @@ class PartnerClassLessonController extends Controller
         }
 
         $export->toBrowser();
+     */
     }
 
-    public function bulkEdit(Request $request) {
+    public function bulkEdit(Request $request)
+    {
         $validator = Validator::make($request->all(), [
-            'status' => 'required',
-            'instructor_id' => 'required',
-            'class_type_id' => 'required',
-            'studio_id' => 'required',
-            'password' => ['required', new OldPasswordMatch],
+            'status' => ['required', new Enum(ClassStatus::class)],
+            'instructor_id' => ['required', 'array', new ArrayFieldExistsInDatabase('mysql_partner', 'users', 'id')],
+            'class_type_id' => 'required|integer|exists:mysql_partner.class_types,id',
+            'studio_id' => 'required|integer|exists:mysql_partner.studios,id',
+            'password' => ['required', new UserPasswordMatch],
         ]);
 
         if ($validator->fails()) {
@@ -405,9 +417,34 @@ class PartnerClassLessonController extends Controller
 
         $classes = ClassLesson::whereIn('id', request()->ids)->get();
 
-        foreach($classes as $k => $class) {
-
+        foreach ($classes as $k => $class) {
+            $class->studio_id = request()->studio_id;
+            $class->class_type_id = request()->class_type_id;
+            $class->status = request()->status;
+            $class->save();
+            $class->instructor()->sync(request()->instructor_id);
         }
 
+        return $this->redirectBackSuccess(__('Classes updated successfully'), 'partner.classes.index');
+    }
+    public function bulkDelete(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'password' => ['required', new UserPasswordMatch],
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            return back()->withErrors($errors)->withInput();
+        }
+
+        $classes = ClassLesson::whereIn('id', request()->ids)->get();
+
+        foreach ($classes as $k => $class) {
+            $class->instructor()->detach();
+            $class->delete();
+        }
+
+        return $this->redirectBackSuccess(__('Classes deleted successfully'), 'partner.classes.index');
     }
 }

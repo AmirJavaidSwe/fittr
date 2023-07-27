@@ -59,7 +59,7 @@ const formatDate = computed(() => {
     );
 });
 const instructorChanged = () => {
-    if(props.form.instructor_id == 'create_new_instructor') {
+    if(props.form.instructor_id.includes('create_new_instructor')) {
         emit('createNewInstructor')
     }
 }
@@ -73,6 +73,24 @@ const studioChanged = () => {
         emit('createNewStudio')
     }
 }
+
+const instructorsList = computed(() => {
+    let newInstructorsList = { ...props.instructors }; // Create a shallow copy of the object
+    newInstructorsList.create_new_instructor = "Add New"; // Add a new property
+    return newInstructorsList;
+});
+
+const classTypeList = computed(() => {
+    let newClassTypeList = { ...props.classtypes }; // Create a shallow copy of the object
+    newClassTypeList.create_new_class_type = "Add New"; // Add a new property
+    return newClassTypeList;
+});
+
+const studioList = computed(() => {
+    let newStudioList = { ...props.studios }; // Create a shallow copy of the object
+    newStudioList.create_new_studio = "Add New"; // Add a new property
+    return newStudioList;
+});
 </script>
 
 <template>
@@ -165,14 +183,15 @@ const studioChanged = () => {
 
             <!-- Instructors -->
             <div class="">
-                <InputLabel for="instructors" value="Instructor" />
+                <InputLabel for="instructors" value="Instructors" />
                 <Multiselect
+                    :mode="'tags'"
                     v-model="form.instructor_id"
-                    :options="instructors"
+                    :options="instructorsList"
                     :searchable="true"
                     :close-on-select="true"
                     :show-labels="true"
-                    placeholder="Select Instructor"
+                    placeholder="Select Instructors"
                     @select="instructorChanged"
                 >
                     <template v-slot:singlelabel="{ value }">
@@ -195,7 +214,7 @@ const studioChanged = () => {
                 <InputLabel for="classtype" value="Class Type" />
                 <Multiselect
                     v-model="form.class_type_id"
-                    :options="classtypes"
+                    :options="classTypeList"
                     :searchable="true"
                     :close-on-select="true"
                     :show-labels="true"
@@ -207,7 +226,7 @@ const studioChanged = () => {
                             <span class="ml-2">{{ value.label }}</span>
                         </div>
                     </template>
-                    
+
                     <template v-slot:option="{ option }">
                         <span class="ml-5">{{ option.label }}</span>
                     </template>
@@ -220,7 +239,7 @@ const studioChanged = () => {
                 <InputLabel for="studios" value="Studio" />
                 <Multiselect
                     v-model="form.studio_id"
-                    :options="studios"
+                    :options="studioList"
                     :searchable="true"
                     :close-on-select="true"
                     :show-labels="true"

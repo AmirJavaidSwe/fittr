@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Contracts\Validation\ValidationRule;
 
-class OldPasswordMatch implements ValidationRule
+class UserPasswordMatch implements ValidationRule
 {
     /**
      * Run the validation rule.

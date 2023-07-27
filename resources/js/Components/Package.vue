@@ -8,7 +8,7 @@ import InputLabel from '@/Components/InputLabel.vue';
 import InputError from '@/Components/InputError.vue';
 import DialogModal from '@/Components/DialogModal.vue';
 import { faPencil } from '@fortawesome/free-solid-svg-icons';
- 
+
 const props = defineProps({
     pack: Object,
     has_subscription: Boolean,
@@ -35,14 +35,12 @@ const form = useForm({
     // period: 'annually',
 });
 const confirmSubscribe = () => {
-    console.log(form.period);
     form.post(route('partner.subscriptions.store', {id: props.pack.id}), {
         preserveScroll: false,
         onSuccess: () => {
             closeModal();
         },
         onError: errors => {
-            // console.log(errors)
         },
     });
 };
@@ -112,14 +110,14 @@ const confirmSubscribe = () => {
                 </div>
         </div>
         <div v-else>
-            <ButtonLink 
+            <ButtonLink
                 v-if="pack.subscribed"
                 :href="route('partner.subscriptions.index')"
                 styling="secondary"
                 >
                 Manage
             </ButtonLink>
-            <ButtonLink 
+            <ButtonLink
                 styling="primary"
                 size="default"
                 v-if="!pack.subscribed"

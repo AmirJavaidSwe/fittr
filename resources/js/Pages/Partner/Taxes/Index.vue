@@ -131,7 +131,7 @@ const deleteItem = () => {
     };
 </script>
 <template>
-    
+
     <div class="mb-12">
         <TopMenu />
     </div>
@@ -156,7 +156,7 @@ const deleteItem = () => {
             Create a new tax (direct)
         </ButtonLink> -->
     </template>
-    
+
     <template #search>
         <Search
         v-model="form.search"
@@ -165,19 +165,19 @@ const deleteItem = () => {
         noFilter
         />
         </template>
-        
+
         <template #tableHead v-if="!taxes.length">
             <p class="text-xl font-medium pl-12">
                 Create your first tax…
             </p>
         </template>
         <template #tableHead v-else>
-            <table-head
+            <!-- <table-head
             title="Id"
             @click="setOrdering('id')"
             :arrowSide="form.order_dir"
             :currentSort="form.order_by === 'id'"
-            />
+            /> -->
             <table-head
             title="Title"
             @click="setOrdering('title')"

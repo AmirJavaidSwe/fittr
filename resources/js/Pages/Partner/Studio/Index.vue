@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 import { Link, useForm } from "@inertiajs/vue3";
 import { DateTime } from "luxon";
 import Form from "./Form.vue";
@@ -17,7 +17,9 @@ import DeleteIcon from "@/Icons/Delete.vue";
 import { faCog, faPlus } from "@fortawesome/free-solid-svg-icons";
 import ButtonLink from "@/Components/ButtonLink.vue";
 import DateValue from "@/Components/DataTable/DateValue.vue";
-import ActionsIcon from '@/Icons/ActionsIcon.vue';
+import OnTheFlyResourceCreate from "@/Components/OnTheFlyResourceCreate.vue";
+import ActionsIcon from "@/Icons/ActionsIcon.vue";
+import uniqBy from "lodash/uniqBy";
 
 const props = defineProps({
     disableSearch: {
@@ -75,6 +77,7 @@ let form_class = useForm({
 const showCreateModal = ref(false);
 const closeCreateModal = () => {
     showCreateModal.value = false;
+    form_class.reset().clearErrors();
 };
 
 const storeStudio = () => {
@@ -93,6 +96,7 @@ let form_edit = useForm({
 const showEditModal = ref(false);
 const closeEditModal = () => {
     showEditModal.value = false;
+    form_edit.reset().clearErrors();
 };
 
 const handleUpdateForm = (studio) => {
@@ -105,7 +109,7 @@ const handleUpdateForm = (studio) => {
 const updateStudios = () => {
     form_edit.put(route("partner.studios.update", form_edit), {
         preserveScroll: true,
-        onSuccess: () => [form_class.reset(), closeEditModal()],
+        onSuccess: () => [form_edit.reset(), closeEditModal()],
     });
 };
 
@@ -129,6 +133,22 @@ const deleteItem = () => {
         }
     );
 };
+
+const showLocationCreateForm = ref(false);
+const closeLocationCreateForm = () => {
+    showLocationCreateForm.value = false;
+    form_class.location_id = null;
+    form_edit.location_id = null;
+};
+
+const locationList = computed(() => {
+    let newLocationList = props.locations;
+    newLocationList.push({
+        id: "create_new_location",
+        title: "Add New",
+    });
+    return uniqBy(newLocationList, "id");
+});
 </script>
 <template>
     <data-table-layout :disable-search="disableSearch" :disableButton="true">
@@ -161,19 +181,19 @@ const deleteItem = () => {
         </template>
 
         <template #tableHead>
-            <table-head
+            <!-- <table-head
                 title="Id"
                 @click="setOrdering('id')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'id'"
-            />
+            /> -->
             <table-head
                 title="Title"
                 @click="setOrdering('title')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'title'"
             />
-            <table-head title="Location"/>
+            <table-head title="Location" />
             <table-head
                 title="Ordering"
                 @click="setOrdering('ordering')"
@@ -197,7 +217,7 @@ const deleteItem = () => {
 
         <template #tableData>
             <tr v-for="(studio, index) in studios.data" :key="index">
-                <table-data :title="studio.id" />
+                <!-- <table-data :title="studio.id" /> -->
                 <table-data>
                     <Link
                         class="font-medium text-indigo-600 hover:text-indigo-500"
@@ -206,13 +226,23 @@ const deleteItem = () => {
                         {{ studio.title }}
                     </Link>
                 </table-data>
-                <table-data :title="studio.location?.title"/>
+                <table-data :title="studio.location?.title" />
                 <table-data :title="studio.ordering" />
                 <table-data>
-                    <DateValue :date="DateTime.fromISO(studio.created_at).setZone(business_seetings.timezone).toFormat(business_seetings.date_format.format_js)" />
+                    <DateValue
+                        :date="
+                            DateTime.fromISO(studio.created_at)
+                                .setZone(business_seetings.timezone)
+                                .toFormat(
+                                    business_seetings.date_format.format_js
+                                )
+                        "
+                    />
                 </table-data>
                 <table-data>
-                    <DateValue :date="DateTime.fromISO(studio.updated_at).toRelative()"/>
+                    <DateValue
+                        :date="DateTime.fromISO(studio.updated_at).toRelative()"
+                    />
                 </table-data>
                 <table-data class="justify-end flex">
                     <Dropdown
@@ -229,21 +259,13 @@ const deleteItem = () => {
 
                         <template #content>
                             <DropdownLink
-                                :href="route('partner.studios.edit', studio)"
-                            >
-                                <EditIcon
-                                    class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
-                                />
-                                Edit
-                            </DropdownLink>
-                            <DropdownLink
                                 as="button"
                                 @click="handleUpdateForm(studio)"
                             >
                                 <EditIcon
                                     class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
                                 />
-                                <span> Edit (Modal) </span>
+                                <span> Edit </span>
                             </DropdownLink>
                             <DropdownLink
                                 as="button"
@@ -278,7 +300,13 @@ const deleteItem = () => {
         <template #title> Create new studio </template>
 
         <template #content>
-            <Form :form="form_class" :submitted="storeStudio" :locations="locations" modal />
+            <Form
+                :form="form_class"
+                :submitted="storeStudio"
+                :locations="locationList"
+                @create-new-location="showLocationCreateForm = true"
+                modal
+            />
         </template>
     </SideModal>
 
@@ -287,7 +315,13 @@ const deleteItem = () => {
         <template #title> Update studio </template>
 
         <template #content>
-            <Form :form="form_edit" :submitted="updateStudios" :locations="locations" modal />
+            <Form
+                :form="form_edit"
+                :submitted="updateStudios"
+                :locations="locations"
+                @create-new-location="showLocationCreateForm = true"
+                modal
+            />
         </template>
     </SideModal>
 
@@ -320,4 +354,9 @@ const deleteItem = () => {
             </ButtonLink>
         </template>
     </ConfirmationModal>
+
+    <OnTheFlyResourceCreate
+        :show-location-create-form="showLocationCreateForm"
+        @close-location-create-form="closeLocationCreateForm"
+    />
 </template>

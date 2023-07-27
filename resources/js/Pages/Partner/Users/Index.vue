@@ -18,12 +18,14 @@ import Avatar from "@/Components/Avatar.vue";
 import Search from "@/Components/DataTable/Search.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
-import Form from './Form.vue';
+import Form from "./Form.vue";
+import EditForm from "./EditForm.vue";
 import SideModal from "@/Components/SideModal.vue";
 import CloseModal from "@/Components/CloseModal.vue";
-import uniqBy from 'lodash/uniqBy';
+import uniqBy from "lodash/uniqBy";
 import RoleCreateForm from "@/Pages/Roles/Form.vue";
-import ActionsIcon from '@/Icons/ActionsIcon.vue';
+import ActionsIcon from "@/Icons/ActionsIcon.vue";
+import StatusLabel from "@/Components/StatusLabel.vue";
 import {
     faPencil,
     faChevronRight,
@@ -86,81 +88,149 @@ const runSearch = () => {
 // form.search getter only;
 watch(() => form.search, runSearch);
 
-const showUserCreateModal = ref(false)
+const showUserCreateModal = ref(false);
 const closeUserCreateModal = () => {
-    createUserFrom.reset()
-    showUserCreateModal.value = false
-}
+    createUserFrom.reset().clearErrors();
+    showUserCreateModal.value = false;
+};
 const createUserFrom = useForm({
     name: "",
     email: "",
     password: "",
     is_super: true,
+    roles: [],
+});
+const showUserEditModal = ref(false);
+const closeUserEditModal = () => {
+    editUserFrom.reset().clearErrors();
+    showUserEditModal.value = false;
+};
+const editUserFrom = useForm({
+    name: null,
+    id: null,
+    email: null,
+    password: null,
+    is_super: true,
     roles: []
 });
 
-const rolesList = computed(() => {
-    let newRolesList =  props.roles
-    newRolesList.push({
-        id: "create_new_role",
-        title: "Add New"
-    });
-    return uniqBy(newRolesList, 'id');
 
-});
-
-const storeUser = () => {
-    createUserFrom.transform((data) => ({
+const updateUser = () => {
+    editUserFrom.transform((data) => ({
         ...data,
         roles: data.is_super ? [] : data.roles,
         is_super: data.is_super,
-        is_new: 1,
-    })).post(route("partner.users.store"), {
+    })).put(route("partner.users.update", editUserFrom.id), {
         preserveScroll: true,
-        onSuccess: () => [createUserFrom.reset(), closeUserCreateModal()],
+        onSuccess: () => closeUserEditModal(),
     });
 };
 
-const showRoleCreateModal = ref(false)
-const closeRoleCreateModal = () => {
-    createRoleFrom.reset()
-    showRoleCreateModal.value = false
-}
-const createRoleFrom = useForm({
+const getUserRoles = (roles) => {
+    const rolesArray = Object.keys(roles);
+    const userRoles = [];
+    for (let i = 0; i < props.roles.length; i++) {
+        if(rolesArray.includes(props.roles[i].slug)) {
+            userRoles.push(props.roles[i].id);
+        }
+    }
+    return userRoles
+};
+const handleUpdateForm = (data) => {
+    showUserEditModal.value = true;
+    editUserFrom.id = data.id;
+    editUserFrom.name = data.name;
+    editUserFrom.email = data.email;
+    editUserFrom.password = null;
+    editUserFrom.is_super = data.is_super;
+    editUserFrom.roles = getUserRoles(data.user_roles);
+};
+
+const rolesList = computed(() => {
+    let newRolesList = props.roles;
+    newRolesList.push({
+        id: "create_new_role",
+        title: "Add New",
+    });
+    return uniqBy(newRolesList, "id");
 });
 
+const storeUser = () => {
+    createUserFrom
+        .transform((data) => ({
+            ...data,
+            roles: data.is_super ? [] : data.roles,
+            is_super: data.is_super,
+            is_new: 1,
+        }))
+        .post(route("partner.users.store"), {
+            preserveScroll: true,
+            onSuccess: () => closeUserCreateModal(),
+        });
+};
+
+const showRoleCreateModal = ref(false);
+const closeRoleCreateModal = () => {
+    createRoleFrom.reset();
+    showRoleCreateModal.value = false;
+    let filtered = createUserFrom.roles.filter(
+        (item) => item != "create_new_role"
+    );
+    createUserFrom.roles = filtered;
+    filtered = editUserFrom.roles.filter(
+        (item) => item != "create_new_role"
+    );
+    createUserFrom.roles = filtered;
+};
+const createRoleFrom = useForm({});
+
 const storeRole = ($event) => {
-    let title = null
-    let permissions = []
-    if($event.title) {
-        title = $event.title
+    let title = null;
+    let permissions = [];
+    if ($event.title) {
+        title = $event.title;
     }
-    if($event.permissions) {
-        permissions = $event.permissions
+    if ($event.permissions) {
+        permissions = $event.permissions;
     }
-    createRoleFrom.transform((data) => ({
-        title: title,
-        permissions: permissions,
-        returnTo: 'partner.users.index',
-    })).post(route(`${usePage().props.user.source}.roles.store`), {
-        preserveScroll: true,
-        onSuccess: () => [createRoleFrom.reset(), closeRoleCreateModal(), createUserFrom.roles = []],
-    });
+    createRoleFrom
+        .transform((data) => ({
+            title: title,
+            permissions: permissions,
+            returnTo: "partner.users.index",
+        }))
+        .post(route(`${usePage().props.user.source}.roles.store`), {
+            preserveScroll: true,
+            onSuccess: () => [
+                createRoleFrom.reset(),
+                closeRoleCreateModal(),
+                (createUserFrom.roles = []),
+            ],
+        });
 };
 </script>
 <template>
     <data-table-layout :disableButton="true">
         <template #search>
-            <Search :noFilter="true" v-model="form.search" @reset="form.search = null" />
+            <Search
+                :noFilter="true"
+                v-model="form.search"
+                @reset="form.search = null"
+            />
         </template>
 
         <template #button>
-            <ButtonLink v-can="{
-                module: 'users',
-                roles: $page.props.user.user_roles,
-                permission: 'create',
-                user: $page.props.user,
-            }" styling="secondary" size="default" @click="showUserCreateModal = true">
+            <ButtonLink
+                v-can="{
+                    module: 'users',
+                    roles: $page.props.user.user_roles,
+                    permission: 'create',
+                    user: $page.props.user,
+                }"
+                styling="secondary"
+                size="default"
+                @click="showUserCreateModal = true"
+            >
                 Create new
                 <font-awesome-icon class="ml-2" :icon="faPlus" />
             </ButtonLink>
@@ -174,50 +244,68 @@ const storeRole = ($event) => {
         </template>
 
         <template #tableHead>
-            <table-head title="ID" @click="setOrdering('id')" :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'id'" />
-            <table-head title="Name" @click="setOrdering('name')" :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'name'" />
-            <table-head title="Email" @click="setOrdering('email')" :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'email'" />
+            <!-- <table-head title="ID" @click="setOrdering('id')" :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'id'" /> -->
+            <table-head
+                title="Name"
+                @click="setOrdering('name')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'name'"
+            />
+            <table-head
+                title="Email"
+                @click="setOrdering('email')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'email'"
+            />
             <table-head title="Is Super Admin" />
             <table-head title="Roles" />
             <table-head title="Avatar" />
-            <table-head title="Date created" @click="setOrdering('created_at')" :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'created_at'" />
+            <table-head
+                title="Date created"
+                @click="setOrdering('created_at')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'created_at'"
+            />
             <table-head title="" />
         </template>
 
         <template #tableData>
             <tr v-for="(user, index) in props.users.data" :key="user.id">
-                <table-data>{{ user.id }}</table-data>
+                <!-- <table-data>{{ user.id }}</table-data> -->
                 <table-data>{{ user.name }}</table-data>
                 <table-data>{{ user.email }}</table-data>
-                <table-data>
-                    <div
-                        class="ml-4 w-16 rounded my-1 bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 dark:bg-gray-700 dark:text-gray-300 text-center">
-                        {{ user.is_super ? "Yes" : "No" }}
+                <table-data class="items-center text-center">
+                    <div class="block">
+                        <StatusLabel :status="user.is_super ? 'Yes' : 'No'" />
                     </div>
                 </table-data>
-                <table-data>
+                <table-data class="items-center">
                     <template v-if="!user.is_super">
                         <template v-for="(role, role_i) in user.user_roles" :key="role_i">
-                            <div
-                                class="block my-1 bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">
-                                {{ role }}
+                            <div class="block mb-2">
+                                <StatusLabel :bg-color="'amber'" :status="role" />
                             </div>
                         </template>
                     </template>
                 </table-data>
-                <table-data>
+                <table-data class="text-center">
                     <Avatar :title="user.name" size="small" />
                 </table-data>
                 <table-data>
-                    <DateValue :date="DateTime.fromISO(user.created_at).toLocaleString()" />
+                    <DateValue
+                        :date="
+                            DateTime.fromISO(user.created_at).toLocaleString()
+                        "
+                    />
                 </table-data>
                 <table-data>
-                    <Dropdown align="right" width="48" :top="index > props.users.data.length - 3"
-                        :content-classes="['bg-white']">
+                    <Dropdown
+                        align="right"
+                        width="48"
+                        :top="index > props.users.data.length - 3"
+                        :content-classes="['bg-white']"
+                    >
                         <template #trigger>
                             <button class="text-dark text-lg">
                                 <ActionsIcon />
@@ -225,23 +313,36 @@ const storeRole = ($event) => {
                         </template>
 
                         <template #content>
-                            <DropdownLink :href="route('partner.users.edit', user.id)" v-can="{
-                                module: 'users',
-                                roles: $page.props.user.user_roles,
-                                permission: 'update',
-                                user: $page.props.user,
-                            }">
-                                <EditIcon class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2" />
-                                Edit
+                            <DropdownLink
+                                v-can="{
+                                    module: 'users',
+                                    roles: $page.props.user.user_roles,
+                                    permission: 'update',
+                                    user: $page.props.user,
+                                }"
+                                as="button"
+                                @click="handleUpdateForm(user)"
+                            >
+                                <EditIcon
+                                    class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
+                                />
+                                <span> Edit </span>
                             </DropdownLink>
-                            <DropdownLink v-if="$page.props.user.id != user.id" v-can="{
-                                module: 'users',
-                                roles: $page.props.user.user_roles,
-                                permission: 'destroy',
-                                user: $page.props.user,
-                            }" as="button" @click="confirmDeletion(user.id)">
+                            <DropdownLink
+                                v-if="$page.props.user.id != user.id"
+                                v-can="{
+                                    module: 'users',
+                                    roles: $page.props.user.user_roles,
+                                    permission: 'destroy',
+                                    user: $page.props.user,
+                                }"
+                                as="button"
+                                @click="confirmDeletion(user.id)"
+                            >
                                 <span class="text-danger-500 flex items-center">
-                                    <DeleteIcon class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2" />
+                                    <DeleteIcon
+                                        class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
+                                    />
                                     <span> Delete </span>
                                 </span>
                             </DropdownLink>
@@ -252,8 +353,13 @@ const storeRole = ($event) => {
         </template>
 
         <template #pagination>
-            <pagination :links="users.links" :to="users.to" :from="users.from" :total="users.total"
-                @pp_changed="runSearch" />
+            <pagination
+                :links="users.links"
+                :to="users.to"
+                :from="users.from"
+                :total="users.total"
+                @pp_changed="runSearch"
+            />
         </template>
     </data-table-layout>
 
@@ -261,15 +367,27 @@ const storeRole = ($event) => {
     <ConfirmationModal :show="itemDeleting" @close="itemDeleting = false">
         <template #title> Confirmation required </template>
 
-        <template #content> Are you sure you would like to delete this? </template>
+        <template #content>
+            Are you sure you would like to delete this?
+        </template>
 
         <template #footer>
-            <ButtonLink size="default" styling="default" @click="itemDeleting = null">
+            <ButtonLink
+                size="default"
+                styling="default"
+                @click="itemDeleting = null"
+            >
                 Cancel
             </ButtonLink>
 
-            <ButtonLink size="default" styling="danger" class="ml-3" :class="{ 'opacity-25': form.processing }"
-                :disabled="form.processing" @click="deleteItem">
+            <ButtonLink
+                size="default"
+                styling="danger"
+                class="ml-3"
+                :class="{ 'opacity-25': form.processing }"
+                :disabled="form.processing"
+                @click="deleteItem"
+            >
                 Delete
             </ButtonLink>
         </template>
@@ -277,14 +395,36 @@ const storeRole = ($event) => {
 
     <!-- GM Create Modal -->
     <SideModal :show="showUserCreateModal" @close="closeUserCreateModal">
-        <template #title> Create new General Manager </template>
+        <template #title> Create new User </template>
         <template #close>
             <CloseModal @click="closeUserCreateModal" />
         </template>
 
         <template #content>
-            <Form :form="createUserFrom" :roles="rolesList" @create-new-role='showRoleCreateModal = true' :submitted="storeUser"
-                modal />
+            <Form
+                :form="createUserFrom"
+                :roles="rolesList"
+                @create-new-role="showRoleCreateModal = true"
+                :submitted="storeUser"
+                modal
+            />
+        </template>
+    </SideModal>
+    <!-- GM Create Modal -->
+    <SideModal :show="showUserEditModal" @close="closeUserEditModal">
+        <template #title> Edit User </template>
+        <template #close>
+            <CloseModal @click="closeUserEditModal" />
+        </template>
+
+        <template #content>
+            <EditForm
+                :form="editUserFrom"
+                :roles="rolesList"
+                @create-new-role="showRoleCreateModal = true"
+                :submitted="updateUser"
+                modal
+            />
         </template>
     </SideModal>
 
@@ -294,9 +434,14 @@ const storeRole = ($event) => {
         <template #close>
             <CloseModal @click="closeRoleCreateModal" />
         </template>
-    
+
         <template #content>
-            <RoleCreateForm :form="createRoleFrom" :system-modules="systemModules" @submitted="storeRole" modal />
+            <RoleCreateForm
+                :form="createRoleFrom"
+                :system-modules="systemModules"
+                @submitted="storeRole"
+                modal
+            />
         </template>
     </SideModal>
 </template>

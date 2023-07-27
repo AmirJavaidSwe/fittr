@@ -66,7 +66,7 @@ module.exports = {
                 },
                 dark: "#292D32",
                 grey: "#939393", // darker grey
-                mainBg: "#E8EAE9", // soft grey                
+                mainBg: "#E8EAE9", // soft grey
                 blue: "#1269FB",
                 fileInputBg: "#EAF1F8",
 
@@ -113,7 +113,7 @@ module.exports = {
                 "56vw": "2.91vw",
                 "60vw": "3.125vw",
             },
-         
+
         },
     },
 

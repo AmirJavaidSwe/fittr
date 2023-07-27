@@ -59,16 +59,7 @@ class PartnerUserController extends Controller
                     });
                 })
                 ->paginate($this->per_page)
-                ->withQueryString()
-                //AbstractPaginator@through(), transforms chunk
-                ->through(fn ($user) => [
-                    'id' => $user->id,
-                    'name' => $user->name,
-                    'email' => $user->email,
-                    'is_super' => $user->is_super,
-                    'profile_photo_path' => $user->profile_photo_path,
-                    'created_at' => $user->created_at,
-                ]),
+                ->withQueryString(),
             'search' => $this->search,
             'per_page' => intval($this->per_page),
             'order_by' => $this->order_by,

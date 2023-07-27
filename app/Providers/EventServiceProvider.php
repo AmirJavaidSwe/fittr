@@ -12,10 +12,12 @@ use App\Listeners\BusinessSettingUpdatedListener;
 use App\Listeners\SubscriptionCancelledListener;
 use App\Listeners\SubscriptionChangedListener;
 use App\Listeners\SubscriptionStartedListener;
+use App\Models\Partner\ClassLesson;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
+use App\Observers\ClassLessonObserver;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -52,7 +54,7 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        ClassLesson::observe(ClassLessonObserver::class);
     }
 
     /**

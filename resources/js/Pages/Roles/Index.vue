@@ -13,7 +13,7 @@ import DeleteIcon from "@/Icons/Delete.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import { DateTime } from "luxon";
-import ActionsIcon from '@/Icons/ActionsIcon.vue';
+import ActionsIcon from "@/Icons/ActionsIcon.vue";
 import {
     faPencil,
     faChevronRight,
@@ -79,7 +79,11 @@ watch(() => form.search, runSearch);
 <template>
     <data-table-layout :disableButton="true">
         <template #search>
-            <Search :noFilter="true" v-model="form.search" @reset="form.search = null" />
+            <Search
+                :noFilter="true"
+                v-model="form.search"
+                @reset="form.search = null"
+            />
         </template>
 
         <template #button>
@@ -99,12 +103,12 @@ watch(() => form.search, runSearch);
         </template>
 
         <template #tableHead>
-            <table-head
+            <!-- <table-head
                 title="ID"
                 @click="setOrdering('id')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'id'"
-            />
+            /> -->
             <table-head
                 title="Title"
                 @click="setOrdering('title')"
@@ -122,7 +126,7 @@ watch(() => form.search, runSearch);
 
         <template #tableData>
             <tr v-for="(role, index) in props.roles.data" :key="role.id">
-                <table-data>{{ role.id }}</table-data>
+                <!-- <table-data>{{ role.id }}</table-data> -->
                 <table-data>{{ role.title }}</table-data>
                 <table-data>
                     <div v-if="business_seetings">

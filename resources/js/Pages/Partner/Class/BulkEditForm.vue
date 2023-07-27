@@ -65,6 +65,18 @@ const showPassword = ref(false);
 const inputPasswordType = computed(() =>
     showPassword.value ? "text" : "password"
 );
+
+const instructorsList = computed(() => {
+    let newInstructorsList = { ...props.instructors }; // Create a shallow copy of the object
+    newInstructorsList.create_new_instructor = "Add New"; // Add a new property
+    return newInstructorsList;
+});
+
+const classTypeList = computed(() => {
+    let newClassTypeList = { ...props.classtypes }; // Create a shallow copy of the object
+    newClassTypeList.create_new_class_type = "Add New"; // Add a new property
+    return newClassTypeList;
+});
 </script>
 
 <template>
@@ -96,15 +108,15 @@ const inputPasswordType = computed(() =>
 
             <!-- Instructors -->
             <div class="">
-                <InputLabel for="instructors" value="Instructor" />
+                <InputLabel for="instructors" value="Instructors" />
                 <Multiselect
                     mode="tags"
                     v-model="form.instructor_id"
-                    :options="instructors"
+                    :options="instructorsList"
                     :searchable="true"
-                    :close-on-select="false"
+                    :close-on-select="true"
                     :show-labels="true"
-                    placeholder="Select Instructor"
+                    placeholder="Select Instructors"
                     @select="instructorChanged"
                 >
                     <template v-slot:singlelabel="{ value }">
@@ -135,7 +147,7 @@ const inputPasswordType = computed(() =>
                 <InputLabel for="classtype" value="Class Type" />
                 <Multiselect
                     v-model="form.class_type_id"
-                    :options="classtypes"
+                    :options="newClassTypeList"
                     :searchable="true"
                     :close-on-select="true"
                     :show-labels="true"
@@ -190,7 +202,6 @@ const inputPasswordType = computed(() =>
                         id="password"
                         v-model="form.password"
                         class="mt-1 block w-full"
-                        required
                         autocomplete="current-password"
                     />
                     <button

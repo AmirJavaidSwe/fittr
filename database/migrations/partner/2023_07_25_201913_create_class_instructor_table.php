@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::connection('mysql_partner')->table('classes', function (Blueprint $table) {
-            $table->json('original_instructors')->nullable();
+        Schema::create('class_instructor', function (Blueprint $table) {
+            $table->unsignedBigInteger('class_id');
+            $table->unsignedBigInteger('instructor_id');
         });
     }
 
@@ -21,9 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::connection('mysql_partner')->table('classes', function (Blueprint $table) {
-            $table->dropColumn('original_instructors');
-            //
-        });
+        Schema::dropIfExists('class_instructor');
     }
 };

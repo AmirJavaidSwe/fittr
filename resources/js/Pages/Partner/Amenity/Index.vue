@@ -147,12 +147,12 @@ const deleteItem = () => {
         </template>
 
         <template #tableHead>
-            <table-head
+            <!-- <table-head
                 title="Id"
                 @click="setOrdering('id')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'id'"
-            />
+            /> -->
             <table-head
                 title="Title"
                 @click="setOrdering('title')"
@@ -182,7 +182,7 @@ const deleteItem = () => {
 
         <template #tableData>
             <tr v-for="(amenity, index) in amenities.data" :key="index">
-                <table-data :title="amenity.id" />
+                <!-- <table-data :title="amenity.id" /> -->
                 <table-data>
                     <Link
                         class="font-medium text-indigo-600 hover:text-indigo-500"
@@ -221,21 +221,13 @@ const deleteItem = () => {
 
                         <template #content>
                             <DropdownLink
-                                :href="route('partner.amenity.edit', amenity)"
-                            >
-                                <EditIcon
-                                    class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
-                                />
-                                Edit
-                            </DropdownLink>
-                            <DropdownLink
                                 as="button"
                                 @click="handleUpdateForm(amenity)"
                             >
                                 <EditIcon
                                     class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
                                 />
-                                <span> Edit (Modal) </span>
+                                <span> Edit </span>
                             </DropdownLink>
                             <DropdownLink
                                 as="button"
