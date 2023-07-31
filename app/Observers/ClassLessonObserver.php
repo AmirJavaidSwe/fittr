@@ -6,11 +6,6 @@ use App\Models\Partner\ClassLesson;
 
 class ClassLessonObserver
 {
-    public function updating(ClassLesson $classLesson): void
-    {
-        $this->updateOriginalInstructors($classLesson);
-    }
-
     public function saving(ClassLesson $classLesson)
     {
         $this->updateOriginalInstructors($classLesson);

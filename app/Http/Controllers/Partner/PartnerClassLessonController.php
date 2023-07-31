@@ -337,7 +337,8 @@ class PartnerClassLessonController extends Controller
     public function update(ClassFormRequest $request, ClassLesson $class)
     {
         $validated = $request->validated();
-        $class->update($validated);
+        $class->fill($validated);
+        $class->save();
 
         if (!empty($validated['instructor_id'])) {
             $class->instructor()->sync($validated['instructor_id']);
