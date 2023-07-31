@@ -19,6 +19,7 @@ import { faCog, faPlus } from "@fortawesome/free-solid-svg-icons";
 import StatusLabel from "../../../Components/StatusLabel.vue";
 import DateValue from "../../../Components/DataTable/DateValue.vue";
 import ActionsIcon from '@/Icons/ActionsIcon.vue';
+import CloseModal from "@/Components/CloseModal.vue";
 
 const props = defineProps({
     disableSearch: {
@@ -30,6 +31,7 @@ const props = defineProps({
     per_page: Number,
     order_by: String,
     order_dir: String,
+    business_seetings: Object,
 });
 
 const form = useForm({
@@ -92,7 +94,7 @@ const handleUpdateForm = (data) => {
     showEditModal.value = true;
     form_edit["id"] = data.id;
     form_edit["title"] = data.title;
-    form_edit["status"] = data.status;
+    form_edit["status"] = data.status ? true : false;
 };
 
 const updateAmenities = () => {
@@ -197,7 +199,11 @@ const deleteItem = () => {
                     />
                 </table-data>
                 <table-data>
-                    <DateValue :date="DateTime.fromISO(amenity.created_at)" />
+                    <DateValue :date="DateTime.fromISO(amenity.created_at)
+                                .setZone(business_seetings.timezone)
+                                .toFormat(
+                                    business_seetings.date_format?.format_js
+                                )" />
                 </table-data>
                 <table-data>
                     <DateValue
@@ -261,6 +267,10 @@ const deleteItem = () => {
     <SideModal :show="showCreateModal" @close="closeCreateModal">
         <template #title> Create new amenity </template>
 
+        <template #close>
+            <CloseModal @click="closeCreateModal" />
+        </template>
+
         <template #content>
             <Form :form="form_class" :submitted="storeAmenity" modal />
         </template>
@@ -269,6 +279,10 @@ const deleteItem = () => {
     <!-- Update studio Modal -->
     <SideModal :show="showEditModal" @close="closeEditModal">
         <template #title> Update studio </template>
+
+        <template #close>
+            <CloseModal @click="closeEditModal" />
+        </template>
 
         <template #content>
             <Form :form="form_edit" :submitted="updateAmenities" modal />

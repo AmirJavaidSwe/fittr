@@ -10,7 +10,7 @@ const classes = `block px-4 py-2 text-sm lg:text-md 2xl:text-lg w-full text-left
 </script>
 
 <template>
-    <div>
+    <div class="dropdown-inner-link">
         <button v-if="as == 'button'" type="submit" :class="classes">
             <slot />
         </button>

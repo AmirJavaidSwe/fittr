@@ -18,6 +18,7 @@ import DeleteIcon from "@/Icons/Delete.vue";
 import { faCog, faPlus } from "@fortawesome/free-solid-svg-icons";
 import DateValue from "../../../Components/DataTable/DateValue.vue";
 import ActionsIcon from '@/Icons/ActionsIcon.vue';
+import CloseModal from "@/Components/CloseModal.vue";
 
 const props = defineProps({
     disableSearch: {
@@ -267,6 +268,10 @@ const deleteItem = () => {
     <SideModal :show="showCreateModal" @close="closeCreateModal">
         <template #title> Create new classtype </template>
 
+        <template #close>
+            <CloseModal @click="closeCreateModal" />
+        </template>
+
         <template #content>
             <Form :form="form_class" :submitted="storeItem" modal />
         </template>
@@ -275,6 +280,10 @@ const deleteItem = () => {
     <!-- Update classtype Modal -->
     <SideModal :show="showEditModal" @close="closeEditModal">
         <template #title> Update classtype </template>
+
+        <template #close>
+            <CloseModal @click="closeEditModal" />
+        </template>
 
         <template #content>
             <Form :form="form_edit" :submitted="updateItem" modal />
