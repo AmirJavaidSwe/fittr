@@ -52,7 +52,7 @@ class PartnerClassLessonController extends Controller
         $this->order_dir = $request->query('order_dir', 'asc');
         $this->runFilter = $request->input('runFilter');
 
-        $classes = ClassLesson::with('studio', 'classType', 'instructor')->orderBy($this->order_by, $this->order_dir)
+        $classes = ClassLesson::with('studio.class_type_studios', 'classType', 'instructor')->orderBy($this->order_by, $this->order_dir)
             ->when($this->search, function ($query) {
                 $query->where(function ($query) {
                     $query->orWhere('id', intval($this->search))
@@ -137,7 +137,7 @@ class PartnerClassLessonController extends Controller
             'statuses' => ClassStatus::labels(),
             'instructors' => Instructor::pluck('name', 'id'),
             'classtypes' => ClassType::pluck('title', 'id'),
-            'studios' => Studio::with('class_type_studios')->latest('id')->get(['id', 'title']),
+            'studios' => Studio::latest('id')->pluck('title', 'id'),
             'roles' => Role::select('id', 'title')->where('source', auth()->user()->source)->where('business_id', auth()->user()->business_id)->get(),
             'users' => User::select('id', 'name', 'email')->partner()->where('business_id', auth()->user()->business_id)->get(),
             'locations' => Location::select('id', 'title')->get(),

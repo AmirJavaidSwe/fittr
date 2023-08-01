@@ -9,6 +9,7 @@ enum BookingStatus: string
     case ACTIVE = 'active';
     case INACTIVE = 'inactive';
     case CANCELLED = 'cancelled';
+    case WAITLISTED = 'waitlisted';
 
     public static function all(): array
     {

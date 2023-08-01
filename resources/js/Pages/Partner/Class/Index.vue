@@ -61,7 +61,7 @@ const props = defineProps({
     business_seetings: Object,
 
     statuses: Object,
-    studios: Array,
+    studios: Object,
     instructors: Object,
     classtypes: Object
 });
@@ -228,6 +228,7 @@ let formEdit = useForm({
     is_off_peak: null,
     use_defaults: false,
     spaces: null,
+    default_spaces: null,
 });
 const handleUpdateForm = (data) => {
 
@@ -243,6 +244,7 @@ const handleUpdateForm = (data) => {
     formEdit.is_off_peak = data.is_off_peak;
     formEdit.use_defaults = data.spaces ? false : true;
     formEdit.spaces = data.spaces;
+    formEdit.default_spaces = data.default_spaces;
 };
 const handleDuplicateForm = (data) => {
     showDuplicateClassModal.value = true;
@@ -254,6 +256,9 @@ const handleDuplicateForm = (data) => {
     duplicateClassForm.class_type_id = data.class_type_id;
     duplicateClassForm.studio_id = data.studio_id;
     duplicateClassForm.is_off_peak = data.is_off_peak;
+    duplicateClassForm.use_defaults = data.spaces ? false : true;
+    duplicateClassForm.spaces = data.spaces;
+    duplicateClassForm.default_spaces = data.default_spaces;
 };
 
 const updateClass = () => {
@@ -362,8 +367,8 @@ const createStudioFrom = useForm({
 const rowSelected = ref([]);
 
 const studioList = computed(() => {
-    let newStudioList = [...props.studios]; // Create a shallow copy of the array
-    newStudioList.push({id: 'create_new_studio', title: "Add New"}); // Add a new item
+    let newStudioList = {...props.studios}; // Create a shallow copy of the object
+    newStudioList.create_new_studio = "Add New"; // Add a new item
     return newStudioList;
 });
 const showLocationCreateModal = ref(false)

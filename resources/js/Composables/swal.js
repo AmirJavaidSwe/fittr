@@ -1,14 +1,11 @@
 import Swal from "sweetalert2";
 import { computed, ref, watch } from "vue";
 
-export function useSwal({ flash, errors: propsErrors, options }) {
-
-    if(!flash && !propsErrors) return { toast, messageBox };
-
-    const toast = (params) => {
-        Swal.fire({
+export function useSwal({ flash, errors: propsErrors, options } = {}) {
+    const toast = async (params) => {
+        return await Swal.fire({
             showConfirmButton: false,
-            position: 'top',
+            position: "top",
             timer: 5000,
             ...options,
             ...params,
@@ -16,14 +13,16 @@ export function useSwal({ flash, errors: propsErrors, options }) {
         });
     };
 
-    const messageBox = (params) => {
-        Swal.fire({
-            timer: 5000,
+    const messageBox = async (params) => {
+        return await Swal.fire({
+            // timer: 5000,
             ...options,
             ...params,
-            toast: false // toast always false
+            toast: false, // toast always false
         });
     };
+
+    if (!flash && !propsErrors) return { toast, messageBox };
 
     const has_msg = computed(() => flash.value.timestamp);
     const msg_type = computed(() => flash.value.type);
@@ -55,7 +54,6 @@ export function useSwal({ flash, errors: propsErrors, options }) {
                 title.value = "";
         }
 
-
         toast({
             title: title.value,
             icon: msg_type.value,
@@ -67,7 +65,7 @@ export function useSwal({ flash, errors: propsErrors, options }) {
         if (Object.keys(errors.value).length == 0) return;
 
         let errorText = "<ul class='text-sm text-red-500'>";
-        for(let [key, error] of Object.entries(errors.value)) {
+        for (let [key, error] of Object.entries(errors.value)) {
             errorText += `<li>${error}</li>`;
         }
         errorText += "</ul>";

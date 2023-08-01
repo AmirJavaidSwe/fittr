@@ -74,19 +74,6 @@ const studioChanged = () => {
     }
 }
 
-const studiosOptions = computed(() => {
-    return props.studios.map(item => ({value: item.id, label: item.title}));
-});
-
-const defaultCapacity = computed(() => {
-    const studio = props.studios.filter(item => props.form.studio_id == item.id)[0];
-    if(studio) {
-        const classTypeStudio = studio.class_type_studios.filter(item => props.form.class_type_id == item.class_type_id)[0];
-        return classTypeStudio?.spaces;
-    }
-    return '';
-});
-
 const instructorsList = computed(() => {
     let newInstructorsList = { ...props.instructors }; // Create a shallow copy of the object
     newInstructorsList.create_new_instructor = "Add New"; // Add a new property
@@ -252,7 +239,7 @@ const studioList = computed(() => {
                 <InputLabel for="studios" value="Studio" />
                 <Multiselect
                     v-model="form.studio_id"
-                    :options="studiosOptions"
+                    :options="studioList"
                     :searchable="true"
                     :close-on-select="true"
                     :show-labels="true"
@@ -347,7 +334,7 @@ const studioList = computed(() => {
 
                 <div class="flex mt-1 items-center">
                     <div v-if="form.use_defaults" class="mr-2">Default:</div>
-                    <div v-if="form.use_defaults" class="flex flex-grow mr-2">{{ defaultCapacity }}</div>
+                    <div v-if="form.use_defaults" class="flex flex-grow mr-2">{{ form.default_spaces }}</div>
                     <TextInput
                         v-else
                         id="title"

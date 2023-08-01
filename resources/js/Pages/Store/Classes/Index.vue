@@ -2,7 +2,7 @@
 import Section from '@/Components/Section.vue';
 import ButtonLink from '@/Components/ButtonLink.vue';
 import InputLabel from '@/Components/InputLabel.vue';
-import { useForm } from '@inertiajs/vue3';
+import { useForm, usePage } from '@inertiajs/vue3';
 import Multiselect from '@vueform/multiselect';
 import '@vueform/multiselect/themes/tailwind.css'
 import ClockIcon from '@/Icons/ClockIcon.vue';
@@ -14,6 +14,7 @@ import { computed, onBeforeMount, onMounted, ref, watch } from 'vue';
 import SideModal from '@/Components/SideModal.vue';
 import { Splide, SplideSlide } from '@splidejs/vue-splide';
 import { useWindowSize } from '@/Composables/window_size';
+import { useSwal } from '@/Composables/swal';
 
 const props = defineProps({
     classes: {
@@ -105,6 +106,8 @@ const showModal = (data) => {
     data.start_date = DateTime.fromISO(data.start_date, {zone: props.business_seetings?.timezone});
     data.end_date = DateTime.fromISO(data.end_date, {zone: props.business_seetings?.timezone});
     classDetails.value = {...data};
+    let user_id = usePage().props?.user?.id;
+    classDetails.value.is_waiting = typeof classDetails.value.waitlists?.filter(item => item.user_id === user_id)[0] !== 'undefined';
 }
 
 const closeModal = () => {
@@ -137,6 +140,45 @@ const cancelBooking = () => {
         }
     });
 }
+
+const waitlistForm = useForm({ class_id: ''});
+
+const addToWaitList = () => {
+    waitlistForm.class_id = classDetails.value.id;
+
+    const swal = useSwal();
+
+    swal.messageBox({
+        title: 'This class is full',
+        text: 'You can still book to waitlist. We will inform you if space becomes available.',
+    }).then((result) => {
+
+        waitlistForm.post(route('ss.member.bookings.add-to-waitlist', {subdomain: props.business_seetings.subdomain}), {
+            onSuccess: (res) => {
+                if(res.props.flash.type === 'success') {
+                    let classData = res.props.classes[classDetails.value.start_date.toSQLDate()];
+                    classData = classData?.length ? classData.filter(item => item.id === classDetails.value.id)[0] : undefined;
+                    showModal(classData);
+                }
+            }
+        });
+    });
+
+};
+
+const removeFromWaitList = () => {
+    waitlistForm.class_id = classDetails.value.id;
+
+    waitlistForm.post(route('ss.member.bookings.remove-from-waitlist', {subdomain: props.business_seetings.subdomain}), {
+        onSuccess: (res) => {
+            if(res.props.flash.type === 'success') {
+                let classData = res.props.classes[classDetails.value.start_date.toSQLDate()];
+                classData = classData?.length ? classData.filter(item => item.id === classDetails.value.id)[0] : undefined;
+                showModal(classData);
+            }
+        }
+    });
+};
 
 const { screen } = useWindowSize();
 
@@ -362,8 +404,14 @@ const handleMoved = (splide, index, prevIndex) => {
             </div>
             <div class="flex flex-col">
                 <div class="flex text-3xl font-bold mb-4 items-center">
-                    <span class="inline-flex mr-4">{{ classDetails.title }}</span>
-                    <span class="inline-flex text-sm font-normal rounded-lg bg-green-500 text-white p-2">Free</span>
+                    <div class="flex mr-4">{{ classDetails.title }}</div>
+                    <div class="flex flex-col shrink-0">
+                        <div class="inline-flex text-sm font-normal rounded-lg bg-green-500 text-white p-2 justify-center mb-2">Free</div>
+                        <div
+                            class="inline-flex text-sm font-normal rounded-lg text-white p-2 justify-center"
+                            :class="{'bg-danger-600': !classDetails.spaces_left, 'bg-gray-500': classDetails.spaces_left}"
+                        >{{ classDetails.spaces_left > 0 ? 'Not Full' : 'Full' }}</div>
+                    </div>
                 </div>
 
                 <div class="flex flex-row mb-4">
@@ -413,13 +461,27 @@ const handleMoved = (splide, index, prevIndex) => {
                         {{ classDetails.start_date?.toFormat(business_seetings.date_format?.format_js) }}
                     </div>
                 </div>
+
+                <div v-if="classDetails.waitlists?.length" class="flex flex-row mb-3">
+                    <div class="w-1/2 flex mr-2 items-center">
+                        Waiting list:
+                    </div>
+                    <div class="flex w-1/2 justify-end font-bold">
+                        {{ classDetails.waitlists?.length }}
+                    </div>
+                </div>
             </div>
         </template>
         <template #footer>
             <ButtonLink class="mr-2" styling="default" size="default" @click="closeModal">Close</ButtonLink>
-            <ButtonLink v-if="classDetails.is_booked" styling="secondary" size="default" @click="cancelBooking">Cancel Booking</ButtonLink>
-            <ButtonLink v-else-if="$page.props.user" styling="secondary" size="default" @click="handleBooking" :class="{ 'opacity-25': bookingForm.processing }" :disabled="bookingForm.processing">Book</ButtonLink>
-            <ButtonLink v-else styling="secondary" size="default" @click="handleBooking" :class="{ 'opacity-25': bookingForm.processing }" :disabled="bookingForm.processing">Sign in to Book</ButtonLink>
+
+            <ButtonLink v-if="!$page.props.user" styling="secondary" size="default" @click="handleBooking" :disabled="bookingForm.processing">Sign in to Book</ButtonLink>
+            <ButtonLink v-else-if="classDetails.is_booked" styling="secondary" size="default" @click="cancelBooking" :disabled="bookingForm.processing">Cancel Booking</ButtonLink>
+            <div v-else-if="!classDetails.spaces_left" class="inline-flex">
+                <ButtonLink v-if="classDetails.is_waiting" styling="secondary" size="default" @click="removeFromWaitList" :disabled="waitlistForm.processing">Remove from waitlist</ButtonLink>
+                <ButtonLink v-else styling="secondary" size="default" @click="addToWaitList" :disabled="waitlistForm.processing">Add to waitlist</ButtonLink>
+            </div>
+            <ButtonLink v-else styling="secondary" size="default" @click="handleBooking" :disabled="bookingForm.processing">Book</ButtonLink>
         </template>
     </SideModal>
 </template>
