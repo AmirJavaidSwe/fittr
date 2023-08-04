@@ -68,7 +68,7 @@ class ClassLesson extends Model
 
     public function bookings(): HasMany
     {
-        return $this->hasMany(Booking::class, 'class_id', 'id');
+        return $this->hasMany(Booking::class, 'class_id', 'id')->where('status', '!=', BookingStatus::get('waitlisted'));
     }
 
     public function waitlists(): HasMany
@@ -105,7 +105,7 @@ class ClassLesson extends Model
             // $this->load(['bookings' => function (Builder $query) {
             //     $query->active();
             // }]);
-        return $this->bookings->count();
+        return $this->bookings->where('status', BookingStatus::get('active'))->count();
     }
 
     public function getSpacesLeftAttribute(): int
@@ -120,6 +120,6 @@ class ClassLesson extends Model
             // $this->load(['bookings' => function (Builder $query) {
             //     $query->active();
             // }]);
-        return $this->bookings->contains('user_id', auth()->user()?->id);
+        return $this->bookings->where('active', BookingStatus::get('active'))->contains('user_id', auth()->user()?->id);
     }
 }

@@ -500,6 +500,7 @@ const showPassword = ref(false);
 const inputPasswordType = computed(() =>
     showPassword.value ? "text" : "password"
 );
+
 </script>
 <template>
     <data-table-layout
@@ -591,6 +592,25 @@ const inputPasswordType = computed(() =>
                 :currentSort="form.order_by === 'status_label'"
             />
             <table-head
+                title="Capacity Status"
+                @click="setOrdering('capacity_status')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'capacity_status'"
+            />
+            <table-head
+                title="Waiting List"
+                @click="setOrdering('waiting_list')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'waiting_list'"
+            />
+            <table-head
+                title="Waitlist Started At"
+                @click="setOrdering('waitlist_started_at')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'waitlist_started_at'"
+            />
+
+            <table-head
                 title="Date"
                 @click="setOrdering('start_date')"
                 :arrowSide="form.order_dir"
@@ -681,6 +701,37 @@ const inputPasswordType = computed(() =>
                 </table-data>
                 <table-data class="text-center">
                     <StatusLabel :status="class_lesson.status_label" />
+                </table-data>
+                <table-data class="text-center">
+                    <div
+                        class="inline-flex text-sm font-normal rounded-full text-white p-2 px-3 justify-center"
+                        :class="{'bg-danger-600': !class_lesson.spaces_left, 'bg-gray-500': class_lesson.spaces_left}"
+                    >
+                    {{ !class_lesson.spaces_left ? 'Full' : 'Not Full'}}
+                    </div>
+                </table-data>
+                <table-data class="text-center">
+                    <ButtonLink
+                        :href="route('partner.classes.show', class_lesson.id) + '#waitlists'"
+                        size="default"
+                        v-tooltip="'Click to see users in waitlist.'"
+                    >
+                        {{ class_lesson.waitlists?.length +' '+ (class_lesson.waitlists?.length > 1 ? 'Members' : 'Member') }}
+                    </ButtonLink>
+                </table-data>
+                <table-data class="text-center">
+                    <DateValue
+                        v-if="class_lesson.waitlists?.length"
+                        class="inline-flex"
+                        :date="
+                            DateTime.fromISO(class_lesson.waitlists[0].created_at)
+                                .setZone(business_seetings.timezone)
+                                .toFormat(
+                                    business_seetings.date_format?.format_js
+                                )
+                        "
+                    />
+                    <span v-else>Not Started</span>
                 </table-data>
                 <table-data>
                     <DateValue
@@ -1019,5 +1070,5 @@ const inputPasswordType = computed(() =>
         @close-instructor-create-form="closeInstructorCreateForm"
         @close-class-type-create-form="closeClassTypeCreateForm"
         @close-studio-create-form="closeStudioCreateForm"
-        />
+    />
 </template>

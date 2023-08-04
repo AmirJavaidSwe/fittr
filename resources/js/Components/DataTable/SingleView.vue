@@ -12,6 +12,9 @@
                 <slot name="item"></slot>
             </dl>
         </div>
+        <div v-if="$slots.list" class="border-t border-gray-200">
+            <slot name="list"></slot>
+        </div>
     </div>
 </template>
 
