@@ -2,11 +2,6 @@
 import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 
 const props = defineProps({
-    rowIndex: {
-        type: Number,
-        default: 0,
-        required: false,
-    },
     align: {
         type: String,
         default: "right",
@@ -26,11 +21,48 @@ let open = ref(false);
 
 const emit = defineEmits(["toggled"]);
 watch(open, (new_val) => {
-    emit("toggled", {
-        open: new_val,
-        rowIndex: props.rowIndex
-    });
+    emit("toggled", new_val);
+
+    setRowHeight(new_val);
 });
+
+const setRowHeight = (new_val) => {
+    setTimeout(() => {
+        // We can use the native DOM API and querySelectorAll.
+        const dataTableLayout = document.querySelectorAll(".data-table-layout");
+
+        // elementsWithClass is already a NodeList, so there is no need to check for .length.
+        if (dataTableLayout.length) {
+            // we can directly access the elements from the NodeList.
+            const dataTableLayoutTr = dataTableLayout[0].querySelectorAll("tr");
+
+            if (dataTableLayoutTr.length <= 2) {
+                // we can use the same elementsWithClass1 variable.
+                const openedDropdownInnerLinks =
+                    dataTableLayoutTr[0].querySelectorAll(
+                        ".main-dropdown-opened .dropdown-inner-link"
+                    );
+
+                // Use parseInt with a radix of 10 to avoid unexpected behavior with leading zeros.
+
+                if (openedDropdownInnerLinks.length > 0) {
+                    const height =
+                        parseInt(66) *
+                            parseInt(openedDropdownInnerLinks.length) +
+                        "px";
+                    // Remove !important from the style object, as it's not necessary.
+                    dataTableLayoutTr.forEach((element) => {
+                        element.style.height = height;
+                    });
+                } else {
+                    dataTableLayoutTr.forEach((element) => {
+                        element.removeAttribute("style");
+                    });
+                }
+            }
+        }
+    }, 100);
+};
 
 const closeOnEscape = (e) => {
     if (open.value && e.key === "Escape") {
@@ -97,6 +129,7 @@ const alignmentVerticalClasses = computed(() => {
                     widthClass,
                     alignmentVerticalClasses,
                     alignmentClasses,
+                    open ? 'main-dropdown-opened' : '',
                 ]"
                 style="display: none"
                 @click="open = false"

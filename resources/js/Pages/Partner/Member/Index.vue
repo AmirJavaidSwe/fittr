@@ -18,6 +18,7 @@ import DeleteIcon from "@/Icons/Delete.vue";
 import { faUserLock, faCog, faPlus } from "@fortawesome/free-solid-svg-icons";
 import DateValue from "@/Components/DataTable/DateValue.vue";
 import ActionsIcon from "@/Icons/ActionsIcon.vue";
+import CloseModal from "@/Components/CloseModal.vue";
 
 const props = defineProps({
     disableSearch: {
@@ -253,7 +254,7 @@ const deleteItem = () => {
                                     <EditIcon
                                         class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
                                     />
-                                    <span> Edit (Modal) </span>
+                                    <span> Edit </span>
                                 </DropdownLink>
                                 <DropdownLink
                                     as="button"
@@ -290,6 +291,10 @@ const deleteItem = () => {
     <SideModal :show="showCreateModal" @close="closeCreateModal">
         <template #title> Create new member </template>
 
+        <template #close>
+            <CloseModal @click="closeCreateModal" />
+        </template>
+
         <template #content>
             <Form :form="form_class" :submitted="storeMember" modal />
         </template>
@@ -298,6 +303,10 @@ const deleteItem = () => {
     <!-- Update member Modal -->
     <SideModal :show="showEditModal" @close="closeEditModal">
         <template #title> Update member </template>
+
+        <template #close>
+            <CloseModal @click="closeEditModal" />
+        </template>
 
         <template #content>
             <Form :form="form_edit" :submitted="updateMember" modal />

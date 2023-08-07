@@ -100,8 +100,11 @@ const classTypeList = computed(() => {
 });
 
 const studioList = computed(() => {
-    let newStudioList = { ...props.studios }; // Create a shallow copy of the object
-    newStudioList.create_new_studio = "Add New"; // Add a new property
+    let newStudioList = studiosOptions.value;
+    newStudioList.push({
+        'label': "Add New",
+        'value': "create_new_studio"
+    })
     return newStudioList;
 });
 </script>
@@ -252,7 +255,7 @@ const studioList = computed(() => {
                 <InputLabel for="studios" value="Studio" />
                 <Multiselect
                     v-model="form.studio_id"
-                    :options="studiosOptions"
+                    :options="studioList"
                     :searchable="true"
                     :close-on-select="true"
                     :show-labels="true"
