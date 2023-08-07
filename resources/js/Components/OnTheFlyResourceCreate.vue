@@ -168,6 +168,10 @@ const showLocationCreateForm = ref(showLocationCreateFormPropRef.value);
 watchEffect(() => {
     showLocationCreateForm.value = showLocationCreateFormPropRef.value
 });
+const showLocationCreateFormFn = () => {
+    createLocationFrom.reset().clearErrors();
+    showLocationCreateForm.value = true
+};
 const closeLocationCreateForm = () => {
     showLocationCreateForm.value = false;
     createLocationFrom.reset().clearErrors();
@@ -231,6 +235,10 @@ const showGmCreateForm = ref(showGmCreateFormPropRef.value);
 watchEffect(() => {
     showGmCreateForm.value = showGmCreateFormPropRef.value
 });
+const showGmCreateFormFn = () => {
+    createGmFrom.reset().clearErrors();
+    showGmCreateForm.value = true
+};
 
 const closeGMCreateForm = () => {
     createGmFrom.reset().clearErrors();
@@ -302,6 +310,11 @@ const showAmenityCreateForm = ref(showAmenityCreateFormPropRef.value);
 watchEffect(() => {
     showAmenityCreateForm.value = showAmenityCreateFormPropRef.value
 });
+
+const showAmenityCreateFormFn = () => {
+    createAmenityFrom.reset().clearErrors();
+    showAmenityCreateForm.value = true;
+};
 
 const closeAmenityCreateForm = () => {
     createAmenityFrom.reset().clearErrors();
@@ -385,8 +398,8 @@ const storeStudio = () => {
                 :countries="countries"
                 :studios="[]"
                 :editMode="false"
-                @create_new_gm="showGmCreateForm = true"
-                @create_new_amenity="showAmenityCreateForm = true"
+                @create_new_gm="showGmCreateFormFn"
+                @create_new_amenity="showAmenityCreateFormFn"
                 modal
             />
         </template>
@@ -465,7 +478,7 @@ const storeStudio = () => {
             <StudioCreateForm
                 :form="createStudioForm"
                 :locations="locationList"
-                @create-new-location="showLocationCreateForm = true"
+                @create-new-location="showLocationCreateFormFn"
                 :submitted="storeStudio"
                 modal
             />

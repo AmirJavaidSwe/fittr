@@ -58,7 +58,7 @@
                                 <slot name="tableHead"></slot>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="data-table-layout">
                             <!-- <tr> -->
                             <slot name="tableData"></slot>
                             <!-- </tr> -->

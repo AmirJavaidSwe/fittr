@@ -77,6 +77,19 @@ const classTypeList = computed(() => {
     newClassTypeList.create_new_class_type = "Add New"; // Add a new property
     return newClassTypeList;
 });
+
+const studiosOptions = computed(() => {
+    return props.studios.map(item => ({value: item.id, label: item.title}));
+});
+
+const studioList = computed(() => {
+    let newStudioList = studiosOptions.value;
+    newStudioList.push({
+        'label': "Add New",
+        'value': "create_new_studio"
+    })
+    return newStudioList;
+});
 </script>
 
 <template>
@@ -147,7 +160,7 @@ const classTypeList = computed(() => {
                 <InputLabel for="classtype" value="Class Type" />
                 <Multiselect
                     v-model="form.class_type_id"
-                    :options="newClassTypeList"
+                    :options="classTypeList"
                     :searchable="true"
                     :close-on-select="true"
                     :show-labels="true"
@@ -172,7 +185,7 @@ const classTypeList = computed(() => {
                 <InputLabel for="studios" value="Studio" />
                 <Multiselect
                     v-model="form.studio_id"
-                    :options="studios"
+                    :options="studioList"
                     :searchable="true"
                     :close-on-select="true"
                     :show-labels="true"

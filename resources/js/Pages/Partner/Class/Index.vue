@@ -342,6 +342,8 @@ const closeInstructorCreateForm = () => {
     formEdit.instructor_id = filtered
     filtered = formBulkEdit.instructor_id.filter((item) => item != 'create_new_instructor')
     formBulkEdit.instructor_id = filtered
+    filtered = duplicateClassForm.instructor_id.filter((item) => item != 'create_new_instructor')
+    duplicateClassForm.instructor_id = filtered
 };
 
 const showClassTypeCreateForm = ref(false);
@@ -350,6 +352,7 @@ const closeClassTypeCreateForm = () => {
     form_class.class_type_id = null
     formEdit.class_type_id = null
     formBulkEdit.class_type_id = null
+    duplicateClassForm.class_type_id = null
 };
 
 const showStudioCreateForm = ref(false);
@@ -358,6 +361,7 @@ const closeStudioCreateForm = () => {
     form_class.studio_id = null
     formEdit.studio_id = null
     formBulkEdit.studio_id = null
+    duplicateClassForm.studio_id = null
 };
 const createStudioFrom = useForm({
     title: null,
@@ -769,7 +773,6 @@ const inputPasswordType = computed(() =>
                         width="48"
                         :top="index > classes.data.length - 3"
                         :content-classes="['bg-white']"
-                        :row-index="index"
                     >
                         <template #trigger>
                             <button class="text-dark text-lg">
@@ -920,7 +923,7 @@ const inputPasswordType = computed(() =>
     >
         <template #title> Duplicate Class </template>
         <template #close>
-            <CloseModal @click="closeEditModal" />
+            <CloseModal @click="closeDuplicateClassModal" />
         </template>
 
         <template #content>
@@ -932,6 +935,9 @@ const inputPasswordType = computed(() =>
                 :classtypes="classtypes"
                 :business_seetings="business_seetings"
                 :submitted="storeDuplicateClass"
+                @create-new-instructor="showInstructorCreateForm = true"
+                @create-new-class-type="showClassTypeCreateForm = true"
+                @create-new-studio="showStudioCreateForm = true"
                 modal
                 :isDuplicate="true"
             />
