@@ -29,6 +29,15 @@ html {
 select {
     @apply rounded-md flex items-center lg:text-base border border-gray-300 focus:border-[1.5px] focus:border-primary-500 focus:outline-none focus:shadow-none focus:ring-0;
 }
+.multiselect-tag{
+    @apply bg-primary-500 !important;
+}
+.multiselect-option.is-selected{
+    @apply bg-primary-500 !important;
+}
+.multiselect-tag-remove-icon{
+    @apply opacity-60 w-4 h-4 bg-[#d6dfd9] hover:bg-[#de331d] hover:opacity-100 !important;
+}
 .dp__theme_light input {
     @apply lg:text-base border border-gray-300 focus:border-primary-500 rounded-md focus:ring-0 !important;
 }
@@ -59,18 +68,20 @@ select {
 }
 /* Tabs Styles */
 .tabs-wrapper {
-    @apply inline-flex items-center bg-white rounded-xl font-medium text-base mb-3;
+    @apply inline-flex flex-wrap items-center bg-white rounded-xl font-medium text-base mb-3;
 }
-.tabs-wrapper li a {
+.tabs-wrapper li a, .vertical-tabs li a {
     @apply py-3 px-4 block rounded-xl !no-underline flex items-center;
 }
 .tabs-wrapper li a svg {
     @apply mr-2;
 }
-.tabs-wrapper li a.active {
+.tabs-wrapper li a.active, .vertical-tabs li a.active {
     @apply bg-primary-500 text-white;
 }
-
+.start-radius-none{
+    @apply rounded-s-none !important;
+}
 /* App Layout */
 .headerIcon {
     @apply bg-primary-100 rounded-md flex items-center justify-center text-lg text-primary-500 mr-1 w-8 h-8 lg:w-11 lg:h-11 lg:text-xl;
@@ -78,6 +89,23 @@ select {
 
 .settingicons_bg{
     background-color: rgb(214 223 217 / var(--tw-bg-opacity));
+}
+
+div.iti__selected-flag {
+    @apply pl-3 pr-5 border-r;
+}
+
+div.iti .input-field {
+    @apply pl-20 !important
+}
+
+.main-sidebar a:hover svg path, .main-sidebar a:hover svg rect {
+    @apply stroke-black;
+}
+.main-sidebar .active svg rect,
+.main-sidebar .active svg path
+{
+    @apply stroke-black;
 }
 
 /* Store Front Classes */

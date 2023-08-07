@@ -21,7 +21,6 @@ class ExportClassLesson extends Exporter
         'start_date',
         'end_date',
         'studio_id',
-        'instructor_id',
         'created_at',
         'updated_at'
     ];
@@ -53,7 +52,7 @@ class ExportClassLesson extends Exporter
     {
         return [
             'studio:id,title',
-            'instructor:id,name,email,role'
+            // 'instructor:id,name,email,role'
         ];
     }
 
@@ -67,7 +66,6 @@ class ExportClassLesson extends Exporter
         }
 
         $query->with($this->relationShips());
-
         return $query->select($this->fields);
     }
 
@@ -107,8 +105,8 @@ class ExportClassLesson extends Exporter
             $row->end_date->format('Y-m-d h:i A'),
             $row->studio->title,
             $row->studio_id,
-            $row?->instructor?->email,
-            $row?->instructor_id,
+            ($row->instructor()->count()) ? implode(', ' , $row->instructor()->pluck('email')->toArray()) : '',
+            ($row->instructor()->count()) ? implode(', ' , $row->instructor()->pluck('id')->toArray()) : '',
             $row->updated_at
         ];
     }

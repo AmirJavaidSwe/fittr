@@ -45,7 +45,6 @@ const menuClasses = computed(() => {
 
 const showLogin = () => {
     //add modal
-    console.log('showLogin');
 };
 const logout = () => {
     router.post(route('logout'));

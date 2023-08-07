@@ -21,7 +21,7 @@ return new class extends Migration
             $table->boolean('is_off_peak')->default(false);
             $table->timestamp('start_date')->nullable();
             $table->timestamp('end_date')->nullable();
-            $table->integer('instructor_id')->unsigned();
+            $table->json('original_instructors')->nullable();
             $table->integer('class_type_id')->unsigned();
             $table->integer('studio_id')->unsigned();
             $table->string('file_path')->nullable();

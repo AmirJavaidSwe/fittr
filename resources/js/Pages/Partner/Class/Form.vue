@@ -35,6 +35,11 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+    isDuplicate: {
+        type: Boolean,
+        default: false,
+        required: false,
+    },
 });
 
 const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -54,7 +59,7 @@ const formatDate = computed(() => {
     );
 });
 const instructorChanged = () => {
-    if(props.form.instructor_id == 'create_new_instructor') {
+    if(props.form.instructor_id.includes('create_new_instructor')) {
         emit('createNewInstructor')
     }
 }
@@ -69,17 +74,22 @@ const studioChanged = () => {
     }
 }
 
-const studiosOptions = computed(() => {
-    return props.studios.map(item => ({value: item.id, label: item.title}));
+const instructorsList = computed(() => {
+    let newInstructorsList = { ...props.instructors }; // Create a shallow copy of the object
+    newInstructorsList.create_new_instructor = "Add New"; // Add a new property
+    return newInstructorsList;
 });
 
-const defaultCapacity = computed(() => {
-    const studio = props.studios.filter(item => props.form.studio_id == item.id)[0];
-    if(studio) {
-        const classTypeStudio = studio.class_type_studios.filter(item => props.form.class_type_id == item.class_type_id)[0];
-        return classTypeStudio?.spaces;
-    }
-    return '';
+const classTypeList = computed(() => {
+    let newClassTypeList = { ...props.classtypes }; // Create a shallow copy of the object
+    newClassTypeList.create_new_class_type = "Add New"; // Add a new property
+    return newClassTypeList;
+});
+
+const studioList = computed(() => {
+    let newStudioList = { ...props.studios }; // Create a shallow copy of the object
+    newStudioList.create_new_studio = "Add New"; // Add a new property
+    return newStudioList;
 });
 </script>
 
@@ -173,14 +183,15 @@ const defaultCapacity = computed(() => {
 
             <!-- Instructors -->
             <div class="">
-                <InputLabel for="instructors" value="Instructor" />
+                <InputLabel for="instructors" value="Instructors" />
                 <Multiselect
+                    :mode="'tags'"
                     v-model="form.instructor_id"
-                    :options="instructors"
+                    :options="instructorsList"
                     :searchable="true"
                     :close-on-select="true"
                     :show-labels="true"
-                    placeholder="Select Instructor"
+                    placeholder="Select Instructors"
                     @select="instructorChanged"
                 >
                     <template v-slot:singlelabel="{ value }">
@@ -203,7 +214,7 @@ const defaultCapacity = computed(() => {
                 <InputLabel for="classtype" value="Class Type" />
                 <Multiselect
                     v-model="form.class_type_id"
-                    :options="classtypes"
+                    :options="classTypeList"
                     :searchable="true"
                     :close-on-select="true"
                     :show-labels="true"
@@ -228,7 +239,7 @@ const defaultCapacity = computed(() => {
                 <InputLabel for="studios" value="Studio" />
                 <Multiselect
                     v-model="form.studio_id"
-                    :options="studiosOptions"
+                    :options="studioList"
                     :searchable="true"
                     :close-on-select="true"
                     :show-labels="true"
@@ -260,7 +271,7 @@ const defaultCapacity = computed(() => {
             </div>
 
             <!-- repeat -->
-            <div v-if="isNew">
+            <div v-if="isNew || isDuplicate">
                 <Switcher
                     v-model="form.does_repeat"
                     title="Repeat"
@@ -323,7 +334,7 @@ const defaultCapacity = computed(() => {
 
                 <div class="flex mt-1 items-center">
                     <div v-if="form.use_defaults" class="mr-2">Default:</div>
-                    <div v-if="form.use_defaults" class="flex flex-grow mr-2">{{ defaultCapacity }}</div>
+                    <div v-if="form.use_defaults" class="flex flex-grow mr-2">{{ form.default_spaces }}</div>
                     <TextInput
                         v-else
                         id="title"
@@ -353,6 +364,7 @@ const defaultCapacity = computed(() => {
                 type="submit"
             >
                 <span v-if="isNew">Create</span>
+                <span v-else-if="isDuplicate">Duplicate</span>
                 <span v-else>Save changes</span>
             </ButtonLink>
         </template>

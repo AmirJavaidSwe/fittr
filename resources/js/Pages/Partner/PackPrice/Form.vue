@@ -122,7 +122,7 @@ const showFap = computed(() => {
 const showFapValue = computed(() => {
   return showFap.value && formPrice.is_fap;
 });
-const showRenewable = computed(() => {
+const showIntro = computed(() => {
   return !isRecurring.value && props.pack_type != 'corporate';
 });
 </script>
@@ -227,7 +227,7 @@ const showRenewable = computed(() => {
                 <Switcher
                     v-model="formPrice.is_expiring"
                     title="Session credits expiration"
-                    :description="'Pack sessions ' + (formPrice.is_expiring ? 'will' : 'never') + ' expire (since day of creation)'"/>
+                    :description="'Session credits ' + (formPrice.is_expiring ? 'will' : 'never') + ' expire (since day of creation)'"/>
                 <InputError :message="formPrice.errors.is_expiring" class="mt-2"/>
             </div>
 
@@ -255,7 +255,7 @@ const showRenewable = computed(() => {
                             </RadioGroupOption>
                         </RadioGroup>
                 </div>
-                <div v-if="isRecurring && isCorporateType" class="text-gray-500 text-xs">Once code has been redeemed for session credit, it will expire after period of time specified above.</div>
+                <div v-if="isCorporateType" class="text-gray-500 text-xs">Once code has been redeemed for session credit, it will expire after period of time specified above.</div>
                 <div v-else-if="isRecurring" class="text-gray-500 text-xs">You can match session credits to be inline with your billing cycle or make them expire before/after next billing cycle.</div>
                 <div v-else class="text-gray-500 text-xs">Session credits will expire on next day of selected period. The lifecycle of session credit starts on the checkout day.</div>
                 <InputError :message="formPrice.errors.expiration" class="mt-2"/>
@@ -317,7 +317,7 @@ const showRenewable = computed(() => {
             </div>
 
             <!-- is_renewable -->
-            <div v-if="showRenewable">
+            <div v-if="!isRecurring">
                 <Switcher
                     v-model="formPrice.is_renewable"
                     @update:modelValue="checkIntro('is_renewable', formPrice.is_renewable)"
@@ -327,7 +327,7 @@ const showRenewable = computed(() => {
             </div>
 
             <!-- is_intro -->
-            <div v-if="showRenewable">
+            <div v-if="showIntro">
                 <Switcher
                     v-model="formPrice.is_intro"
                     @update:modelValue="checkIntro('is_intro', formPrice.is_intro)"
@@ -349,7 +349,7 @@ const showRenewable = computed(() => {
                     placeholder="Select locations"
                     >
                     <template v-slot:option="{ option }">
-                        <ColoredValue :color="option.status ? 'grey' : 'green'" :title="option.label" />
+                        <ColoredValue :color="option.status ? 'green' : 'grey'" :title="option.label" />
                     </template>
                 </Multiselect>
                 <div class="text-gray-500 text-xs">Leave blank to make this option available for all locations or select locations to restrict option availability.</div>

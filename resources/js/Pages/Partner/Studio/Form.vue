@@ -93,7 +93,7 @@ const isEdit = computed(() => {
                         <InputLabel value="Class Type" />
                         <Multiselect
                             v-model="class_type_studio.class_type_id"
-                            :options="class_types.filter((item) => {
+                            :options="class_types?.filter((item) => {
                                 return form.class_type_studios
                                     .map((cts) => cts.class_type_id)
                                     .indexOf(item.value) < 0 || item.value == class_type_studio.class_type_id;

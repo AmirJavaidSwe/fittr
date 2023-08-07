@@ -14,7 +14,7 @@ const classes = computed(() => {
         common +
         " " +
         (props.active
-            ? "bg-[rgba(255,255,255,0.8)] text-dark transition font-semibold"
+            ? "active bg-[rgba(255,255,255,0.8)] text-dark transition font-semibold"
             : "hover:bg-[rgba(255,255,255,0.8)] text-white hover:text-dark font-medium transition")
     );
 });

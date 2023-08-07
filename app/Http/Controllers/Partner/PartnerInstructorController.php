@@ -23,7 +23,7 @@ class PartnerInstructorController extends Controller
         $this->search = $request->query('search', null);
         $this->per_page = $request->query('per_page', 10);
         $this->order_by = $request->query('order_by', 'id');
-        $this->order_dir = $request->query('order_dir', 'desc');
+        $this->order_dir = $request->query('order_dir', 'asc');
 
         return Inertia::render('Partner/Instructor/Index', [
             'instructors' => User::instructor()

@@ -17,6 +17,7 @@ import EditIcon from "@/Icons/Edit.vue";
 import DeleteIcon from "@/Icons/Delete.vue";
 import { faUserLock, faCog, faPlus } from "@fortawesome/free-solid-svg-icons";
 import DateValue from "@/Components/DataTable/DateValue.vue";
+import ActionsIcon from "@/Icons/ActionsIcon.vue";
 
 const props = defineProps({
     disableSearch: {
@@ -114,21 +115,28 @@ const confirmDeletion = (id) => {
     itemDeleting.value = true;
 };
 const deleteItem = () => {
-    form.delete(route("partner.members.destroy", { id: itemIdDeleting.value }), {
-        preserveScroll: true,
-        preserveState: true,
-        onSuccess: () => {
-            itemDeleting.value = false;
-            itemIdDeleting.value = null;
-        },
-    });
+    form.delete(
+        route("partner.members.destroy", { id: itemIdDeleting.value }),
+        {
+            preserveScroll: true,
+            preserveState: true,
+            onSuccess: () => {
+                itemDeleting.value = false;
+                itemIdDeleting.value = null;
+            },
+        }
+    );
 };
 </script>
 
 <template>
     <data-table-layout :disable-search="disableSearch" :disableButton="true">
         <template #button>
-            <ButtonLink styling="secondary" size="default" @click="showCreateModal = true">
+            <ButtonLink
+                styling="secondary"
+                size="default"
+                @click="showCreateModal = true"
+            >
                 Create a new member
                 <font-awesome-icon class="ml-2" :icon="faPlus" />
             </ButtonLink>
@@ -143,68 +151,120 @@ const deleteItem = () => {
         </template>
 
         <template #search>
-            <Search v-model="form.search" :disable-search="disableSearch" @reset="form.search = null" noFilter />
+            <Search
+                v-model="form.search"
+                :disable-search="disableSearch"
+                @reset="form.search = null"
+                noFilter
+            />
         </template>
 
         <template #tableHead>
-            <table-head title="Id" @click="setOrdering('id')" :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'id'" />
-            <table-head title="Name" @click="setOrdering('name')" :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'name'" />
-            <table-head title="Email" @click="setOrdering('email')" :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'email'" />
-            <table-head title="Created At" @click="setOrdering('created_at')" :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'created_at'" />
-            <table-head title="Updated At" @click="setOrdering('updated_at')" :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'updated_at'" />
+            <!-- <table-head title="Id" @click="setOrdering('id')" :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'id'" /> -->
+            <table-head
+                title="Name"
+                @click="setOrdering('name')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'name'"
+            />
+            <table-head
+                title="Email"
+                @click="setOrdering('email')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'email'"
+            />
+            <table-head
+                title="Created At"
+                @click="setOrdering('created_at')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'created_at'"
+            />
+            <table-head
+                title="Updated At"
+                @click="setOrdering('updated_at')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'updated_at'"
+            />
             <table-head title="Action" class="flex justify-end" />
         </template>
 
         <template #tableData>
             <tr v-for="(member, index) in members.data" :key="index">
-                <table-data :title="member.id" />
+                <!-- <table-data :title="member.id" /> -->
                 <table-data>
-                    <Link class="font-medium text-indigo-600 hover:text-indigo-500"
-                        :href="route('partner.members.show', member)">
-                    {{ member.name }}
+                    <Link
+                        class="font-medium text-indigo-600 hover:text-indigo-500"
+                        :href="route('partner.members.show', member)"
+                    >
+                        {{ member.name }}
                     </Link>
                 </table-data>
                 <table-data :title="member.email" />
                 <table-data>
-                    <DateValue :date="DateTime.fromISO(member.created_at)
-                            .setZone(business_seetings.timezone)
-                            .toFormat(business_seetings.date_format.format_js)
-                        " />
+                    <DateValue
+                        :date="
+                            DateTime.fromISO(member.created_at)
+                                .setZone(business_seetings.timezone)
+                                .toFormat(
+                                    business_seetings.date_format.format_js
+                                )
+                        "
+                    />
                 </table-data>
                 <table-data>
-                    <DateValue :date="DateTime.fromISO(member.updated_at).toRelative()" />
+                    <DateValue
+                        :date="DateTime.fromISO(member.updated_at).toRelative()"
+                    />
                 </table-data>
                 <table-data class="text-right">
                     <div class="flex justify-end">
-                        <Link :href="route('partner.login-as')" :data="{ id: member.id }" method="post" as="button"
-                            type="button" class="mr-2" title="Login as">
-                        <font-awesome-icon class="mr-2" :icon="faUserLock" />
+                        <Link
+                            :href="route('partner.login-as')"
+                            :data="{ id: member.id }"
+                            method="post"
+                            as="button"
+                            type="button"
+                            class="mr-2"
+                            title="Login as"
+                        >
+                            <font-awesome-icon
+                                class="mr-2"
+                                :icon="faUserLock"
+                            />
                         </Link>
-                        <Dropdown align="right" width="48" :top="index > members.data.length - 3"
-                            :content-classes="['bg-white']">
+                        <Dropdown
+                            align="right"
+                            width="48"
+                            :top="index > members.data.length - 3"
+                            :content-classes="['bg-white']"
+                        >
                             <template #trigger>
                                 <button class="text-dark text-lg">
-                                    <font-awesome-icon :icon="faCog" />
+                                    <ActionsIcon />
                                 </button>
                             </template>
 
                             <template #content>
-                                <DropdownLink :href="route('partner.members.edit', member)">
-                                    <EditIcon class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2" />
-                                    Edit
-                                </DropdownLink>
-                                <DropdownLink as="button" @click="handleUpdateForm(member)">
-                                    <EditIcon class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2" />
+                                <DropdownLink
+                                    as="button"
+                                    @click="handleUpdateForm(member)"
+                                >
+                                    <EditIcon
+                                        class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
+                                    />
                                     <span> Edit (Modal) </span>
                                 </DropdownLink>
-                                <DropdownLink as="button" @click="confirmDeletion(member.id)">
-                                    <span class="text-danger-500 flex items-center">
-                                        <DeleteIcon class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2" />
+                                <DropdownLink
+                                    as="button"
+                                    @click="confirmDeletion(member.id)"
+                                >
+                                    <span
+                                        class="text-danger-500 flex items-center"
+                                    >
+                                        <DeleteIcon
+                                            class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
+                                        />
                                         <span> Delete </span>
                                     </span>
                                 </DropdownLink>
@@ -216,8 +276,13 @@ const deleteItem = () => {
         </template>
 
         <template #pagination>
-            <pagination :links="members.links" :to="members.to" :from="members.from" :total="members.total"
-                @pp_changed="setPerPage" />
+            <pagination
+                :links="members.links"
+                :to="members.to"
+                :from="members.from"
+                :total="members.total"
+                @pp_changed="setPerPage"
+            />
         </template>
     </data-table-layout>
 
@@ -243,15 +308,27 @@ const deleteItem = () => {
     <ConfirmationModal :show="itemDeleting" @close="itemDeleting = false">
         <template #title> Confirmation required </template>
 
-        <template #content> Are you sure you would like to delete this? </template>
+        <template #content>
+            Are you sure you would like to delete this?
+        </template>
 
         <template #footer>
-            <ButtonLink size="default" styling="default" @click="itemDeleting = null">
+            <ButtonLink
+                size="default"
+                styling="default"
+                @click="itemDeleting = null"
+            >
                 Cancel
             </ButtonLink>
 
-            <ButtonLink size="default" styling="danger" class="ml-3" :class="{ 'opacity-25': form.processing }"
-                :disabled="form.processing" @click="deleteItem">
+            <ButtonLink
+                size="default"
+                styling="danger"
+                class="ml-3"
+                :class="{ 'opacity-25': form.processing }"
+                :disabled="form.processing"
+                @click="deleteItem"
+            >
                 Delete
             </ButtonLink>
         </template>

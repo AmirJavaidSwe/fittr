@@ -16,7 +16,6 @@ import ColoredValue from "@/Components/DataTable/ColoredValue.vue";
 import MapMarker from "@/Icons/MapMarker.vue";
 import "@vueform/multiselect/themes/tailwind.css";
 
-
 const props = defineProps({
     form: {
         type: Object,
@@ -24,23 +23,21 @@ const props = defineProps({
     },
     submitted: {
         type: Function,
-        required: true
+        required: true,
     },
     roles: {
         type: Array,
-        required: true
+        required: true,
     }
 });
 
 const emit = defineEmits(["createNewRole"]);
 
-
 const roleChanged = () => {
-    if (props.form.roles.includes('create_new_role')) {
-        emit('createNewRole');
+    if (props.form.roles.includes("create_new_role")) {
+        emit("createNewRole");
     }
-}
-
+};
 
 const rolesList = computed(() => {
     let roles = [];
@@ -67,22 +64,45 @@ const inputPasswordType = computed(() =>
             <!-- Name -->
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="name" value="Name" />
-                <TextInput id="name" v-model="form.name" type="text" class="mt-1 block w-full" autocomplete="name" />
+                <TextInput
+                    id="name"
+                    v-model="form.name"
+                    type="text"
+                    class="mt-1 block w-full"
+                    autocomplete="name"
+                />
                 <InputError :message="form.errors.name" class="mt-2" />
             </div>
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="email" value="Email" />
-                <TextInput id="email" v-model="form.email" type="text" class="mt-1 block w-full" autocomplete="email" />
+                <TextInput
+                    id="email"
+                    v-model="form.email"
+                    type="text"
+                    class="mt-1 block w-full"
+                    autocomplete="email"
+                />
                 <InputError :message="form.errors.email" class="mt-2" />
             </div>
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="password" value="Password" />
                 <div class="relative">
-                    <TextInput id="password" v-model="form.password" :type="inputPasswordType" class="mt-1 block w-full" />
-                    <button type="button" @click="showPassword = !showPassword"
-                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 focus:outline-none">
+                    <TextInput
+                        id="password"
+                        v-model="form.password"
+                        :type="inputPasswordType"
+                        class="mt-1 block w-full"
+                    />
+                    <button
+                        type="button"
+                        @click="showPassword = !showPassword"
+                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 focus:outline-none"
+                    >
                         <template v-if="showPassword">
-                            <font-awesome-icon :icon="faEye" class="text-green-600" />
+                            <font-awesome-icon
+                                :icon="faEye"
+                                class="text-green-600"
+                            />
                         </template>
                         <template v-else>
                             <font-awesome-icon :icon="faEyeSlash" />
@@ -92,23 +112,41 @@ const inputPasswordType = computed(() =>
                 <InputError :message="form.errors.password" class="mt-2" />
             </div>
             <div class="flex flex-row items-center justify-start">
-                <Checkbox id="is_super_admin" v-model="form.is_super" :checked="form.is_super" class="mt-3 mr-2 mb-3">
+                <Checkbox
+                    id="is_super_admin"
+                    v-model="form.is_super"
+                    :checked="form.is_super"
+                    class="mt-3 mr-2 mb-3"
+                >
                 </Checkbox>
-                <InputLabel for="is_super_admin" value="Is Super Admin?" class="mr-3 w-full" />
+                <InputLabel
+                    for="is_super_admin"
+                    value="Is Super Admin?"
+                    class="mr-3 w-full"
+                />
             </div>
             <div class="col-span-6 sm:col-span-4" v-if="!form.is_super">
                 <InputLabel for="roles" value="Select Roles" />
-                <Multiselect mode="tags" v-model="form.roles" :options="rolesList" @select="roleChanged" />
+                <Multiselect
+                    mode="tags"
+                    v-model="form.roles"
+                    :options="rolesList"
+                    @select="roleChanged"
+                />
                 <InputError :message="form.errors.roles" class="mt-2" />
             </div>
         </template>
         <template #actions>
             <ActionMessage :on="form.recentlySuccessful" class="mr-3">
-                Add.
+                Saved.
             </ActionMessage>
-            <ButtonLink styling="secondary" size="default" :class="{ 'opacity-25': form.processing }"
-                :disabled="form.processing">
-                Add
+            <ButtonLink
+                styling="secondary"
+                size="default"
+                :class="{ 'opacity-25': form.processing }"
+                :disabled="form.processing"
+            >
+                Save
             </ButtonLink>
         </template>
     </FormSection>

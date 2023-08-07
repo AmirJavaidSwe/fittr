@@ -2,13 +2,16 @@
 
 namespace App\Models\Partner;
 
+use App\Enums\BookingStatus;
 use App\Enums\ClassStatus;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class ClassLesson extends Model
 {
@@ -24,6 +27,7 @@ class ClassLesson extends Model
         'start_date' => 'datetime',
         'end_date' => 'datetime',
         'deleted_at' => 'datetime',
+        'original_instructors' => 'array',
     ];
 
     /**
@@ -34,6 +38,10 @@ class ClassLesson extends Model
     protected $appends = [
         'status_label',
         'duration',
+        'default_spaces',
+        'spaces_booked',
+        'spaces_left',
+        'is_booked',
     ];
 
     //Local scopes
@@ -48,9 +56,9 @@ class ClassLesson extends Model
         return $this->belongsTo(Studio::class);
     }
 
-    public function instructor(): BelongsTo
+    public function instructor(): BelongsToMany
     {
-        return $this->belongsTo(Instructor::class);
+        return $this->belongsToMany(Instructor::class, 'class_instructor', 'class_id', 'instructor_id');
     }
 
     public function classType(): BelongsTo
@@ -60,7 +68,12 @@ class ClassLesson extends Model
 
     public function bookings(): HasMany
     {
-        return $this->hasMany(Booking::class, 'class_id', 'id');
+        return $this->hasMany(Booking::class, 'class_id', 'id')->where('status', '!=', BookingStatus::get('waitlisted'));
+    }
+
+    public function waitlists(): HasMany
+    {
+        return $this->hasMany(Booking::class, 'class_id', 'id')->waitlisted();
     }
 
     // Accessors
@@ -79,5 +92,34 @@ class ClassLesson extends Model
     {
         // 2nd param false, returns negative value when end_date on is greater than the compared start_date
         return $this->start_date->diffInMinutes($this->end_date, false);
+    }
+
+    public function getDefaultSpacesAttribute(): ?int
+    {
+        return $this->studio?->class_type_studios?->where('class_type_id', $this->class_type_id)?->first()?->spaces;
+    }
+
+    public function getSpacesBookedAttribute(): int
+    {
+        if(!$this->relationLoaded('bookings')) return 0;
+            // $this->load(['bookings' => function (Builder $query) {
+            //     $query->active();
+            // }]);
+        return $this->bookings->where('status', BookingStatus::get('active'))->count();
+    }
+
+    public function getSpacesLeftAttribute(): int
+    {
+        $defaultSpaces = $this->getAttribute('default_spaces') ?? 0;
+        return ($this->spaces ?? $defaultSpaces) - $this->getAttribute('spaces_booked');
+    }
+
+    public function getIsBookedAttribute(): bool
+    {
+        if(!$this->relationLoaded('bookings')) return false;
+            // $this->load(['bookings' => function (Builder $query) {
+            //     $query->active();
+            // }]);
+        return $this->bookings->where('active', BookingStatus::get('active'))->contains('user_id', auth()->user()?->id);
     }
 }

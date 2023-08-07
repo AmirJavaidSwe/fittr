@@ -18,6 +18,7 @@ import DeleteIcon from "@/Icons/Delete.vue";
 import { faCog, faPlus } from "@fortawesome/free-solid-svg-icons";
 import StatusLabel from "../../../Components/StatusLabel.vue";
 import DateValue from "../../../Components/DataTable/DateValue.vue";
+import ActionsIcon from '@/Icons/ActionsIcon.vue';
 
 const props = defineProps({
     disableSearch: {
@@ -66,10 +67,6 @@ watch(() => form.search, runSearch);
 // Create/Edit Class
 let form_class = useForm({
     title: "",
-    icon: "",
-    contents: "",
-    ordering: "",
-    studio_id: "",
     status: false,
 });
 
@@ -92,15 +89,10 @@ const closeEditModal = () => {
 };
 
 const handleUpdateForm = (data) => {
-    console.log(data);
     showEditModal.value = true;
     form_edit["id"] = data.id;
     form_edit["title"] = data.title;
-    form_edit["icon"] = data.icon;
-    form_edit["ordering"] = data.ordering;
     form_edit["status"] = data.status;
-    form_edit["studio_id"] = data.studio_id;
-    form_edit["contents"] = data.contents;
 };
 
 const updateAmenities = () => {
@@ -142,14 +134,6 @@ const deleteItem = () => {
                 Create a new amenity
                 <font-awesome-icon class="ml-2" :icon="faPlus" />
             </ButtonLink>
-            <!-- <ButtonLink
-                styling="secondary"
-                size="default"
-                :href="route('partner.amenity.create')"
-                type="primary"
-            >
-                Create a new amenity (direct)
-            </ButtonLink> -->
         </template>
 
         <template #search>
@@ -163,24 +147,17 @@ const deleteItem = () => {
         </template>
 
         <template #tableHead>
-            <table-head
+            <!-- <table-head
                 title="Id"
                 @click="setOrdering('id')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'id'"
-            />
-            <table-head title="Icon" />
+            /> -->
             <table-head
                 title="Title"
                 @click="setOrdering('title')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'title'"
-            />
-            <table-head
-                title="Ordering"
-                @click="setOrdering('ordering')"
-                :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'ordering'"
             />
             <table-head
                 title="Status"
@@ -205,15 +182,7 @@ const deleteItem = () => {
 
         <template #tableData>
             <tr v-for="(amenity, index) in amenities.data" :key="index">
-                <table-data :title="amenity.id" />
-                <table-data>
-                    <img
-                        v-if="amenity.image_url"
-                        :src="amenity.image_url"
-                        alt="icon"
-                        class="w-10 h-10"
-                    />
-                </table-data>
+                <!-- <table-data :title="amenity.id" /> -->
                 <table-data>
                     <Link
                         class="font-medium text-indigo-600 hover:text-indigo-500"
@@ -222,7 +191,6 @@ const deleteItem = () => {
                         {{ amenity.title }}
                     </Link>
                 </table-data>
-                <table-data :title="amenity.ordering" />
                 <table-data>
                     <StatusLabel
                         :status="amenity.status ? 'Active' : 'Inactive'"
@@ -247,19 +215,11 @@ const deleteItem = () => {
                     >
                         <template #trigger>
                             <button class="text-dark text-lg">
-                                <font-awesome-icon :icon="faCog" />
+                                <ActionsIcon />
                             </button>
                         </template>
 
                         <template #content>
-                            <DropdownLink
-                                :href="route('partner.amenity.edit', amenity)"
-                            >
-                                <EditIcon
-                                    class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
-                                />
-                                Edit
-                            </DropdownLink>
                             <DropdownLink
                                 as="button"
                                 @click="handleUpdateForm(amenity)"
@@ -267,7 +227,7 @@ const deleteItem = () => {
                                 <EditIcon
                                     class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
                                 />
-                                <span> Edit (Modal) </span>
+                                <span> Edit </span>
                             </DropdownLink>
                             <DropdownLink
                                 as="button"

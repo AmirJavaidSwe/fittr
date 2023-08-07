@@ -28,12 +28,19 @@ enum StripePriceType
         );
     }
 
-    //may be make this a model accessor?
     public static function mode(string $case)
     {
         return match(true) {
             $case == 'one_time' => 'payment',
             $case == 'recurring' => 'subscription',
+        };
+    }
+
+    public static function button(string $case)
+    {
+        return match(true) {
+            $case == 'one_time' => __('Buy'),
+            $case == 'recurring' => __('Subscribe'),
         };
     }
 }

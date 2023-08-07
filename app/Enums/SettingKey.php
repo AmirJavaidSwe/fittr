@@ -41,7 +41,7 @@ enum SettingKey: string
 
     // GROUP_FAP
     case fap_status = 'fap_status';
-    
+
     //Online Store
     // GROUP_SERVICE_STORE_GENERAL
     case subdomain = 'subdomain';
@@ -68,7 +68,7 @@ enum SettingKey: string
     case google_gtag = 'google_gtag';
     case google_adsense = 'google_adsense';
     case fb_pixel = 'fb_pixel';
-    
+
     //Waivers
     // GROUP_SERVICE_STORE_WAIVERS
     case waiver_text = 'waiver_text';
@@ -157,7 +157,7 @@ enum SettingKey: string
             static::custom_domain => ['nullable', 'max:255', 'regex:"^[a-z0-9-.]+$"'],
 
             // Header & Footer
-            static::logo => ['nullable', 'mimes:jpg,jpeg,png,svg', 'max:2048'], //2MB
+            static::logo => ['nullable', 'mimes:jpg,jpeg,png,webp,svg', 'max:2048'], //2MB
             static::logo_url => ['nullable', 'in:/,/classes,/instructors,/locations,/memberships'],
             static::favicon => ['nullable', 'mimes:png,ico,svg', 'max:1024'], //1MB
             static::show_address => ['nullable', 'boolean'],

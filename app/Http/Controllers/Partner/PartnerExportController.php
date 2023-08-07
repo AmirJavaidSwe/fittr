@@ -20,6 +20,12 @@ use Inertia\Response;
 
 class PartnerExportController extends Controller
 {
+
+    public $search;
+    public $per_page;
+    public $order_by;
+    public $order_dir;
+
     use ExportDownloader;
     /**
      * Display a listing of the resource.
@@ -31,14 +37,14 @@ class PartnerExportController extends Controller
         $this->search = $request->query('search', null);
         $this->per_page = $request->query('per_page', 10);
         $this->order_by = $request->query('order_by', 'id');
-        $this->order_dir = $request->query('order_dir', 'desc');
+        $this->order_dir = $request->query('order_dir', 'asc');
 
         return Inertia::render('Partner/Datacenter/Export', [
             'exportings' => Export::orderBy($this->order_by, $this->order_dir)
                 ->when($this->search, function ($query) {
-                    $query->where(function($query) {
+                    $query->where(function ($query) {
                         $query->orWhere('id', intval($this->search))
-                              ->orWhere('file_name', 'LIKE', '%'.$this->search.'%');
+                            ->orWhere('file_name', 'LIKE', '%' . $this->search . '%');
                     });
                 })
                 ->with('user:id,name')
@@ -124,7 +130,7 @@ class PartnerExportController extends Controller
         return $this->redirectBackSuccess(__('Export deleted successfully'), 'partner.exports.index');
     }
 
-    
+
     public function requestToDownload(Export $export)
     {
         if ($export->status != ExportStatus::completed->name) {

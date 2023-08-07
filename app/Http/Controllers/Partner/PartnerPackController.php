@@ -37,7 +37,7 @@ class PartnerPackController extends Controller
         if($name == 'business_seetings') {
             return !empty($this->business_seetings) ? $this->business_seetings : $this->business_seetings();
         }
-        
+
         return null;
     }
 
@@ -51,7 +51,7 @@ class PartnerPackController extends Controller
         $this->search = $request->query('search', null);
         $this->per_page = $request->query('per_page', 10);
         $this->order_by = $request->query('order_by', 'id');
-        $this->order_dir = $request->query('order_dir', 'desc');
+        $this->order_dir = $request->query('order_dir', 'asc');
 
         return Inertia::render('Partner/Pack/Index', [
             'packs' => Pack::orderBy($this->order_by, $this->order_dir)
@@ -61,7 +61,7 @@ class PartnerPackController extends Controller
                               ->orWhere('title', 'LIKE', '%'.$this->search.'%');
                     });
                 })
-                ->with(['prices'])
+                ->with(['prices.locations'])
                 ->paginate($this->per_page)
                 ->withQueryString(),
             'search' => $this->search,

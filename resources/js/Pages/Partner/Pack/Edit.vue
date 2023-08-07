@@ -20,7 +20,7 @@ const form = useForm({
     type: props.pack.type,
     title: props.pack.title,
     sub_title: props.pack.sub_title,
-    description: props.pack.sub_title,
+    description: props.pack.description,
     is_active: props.pack.is_active,
     is_restricted: props.pack.is_restricted,
     is_private: props.pack.is_private,

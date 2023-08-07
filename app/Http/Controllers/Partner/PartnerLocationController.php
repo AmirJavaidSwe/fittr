@@ -2,18 +2,20 @@
 
 namespace App\Http\Controllers\Partner;
 
+use App\Models\Role;
+use App\Models\User;
+use Inertia\Inertia;
+use Inertia\Response;
+use App\Models\Country;
+use App\Models\SystemModule;
+use Illuminate\Http\Request;
+use App\Models\Partner\Studio;
+use App\Traits\ImageableTrait;
+use App\Models\Partner\Amenity;
+use App\Models\Partner\Location;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Partner\LocationFormRequest;
-use App\Models\Country;
-use App\Models\Partner\Amenity;
-use Inertia\Response;
-use App\Models\Partner\Location;
-use App\Models\Partner\Studio;
-use App\Models\User;
-use App\Traits\ImageableTrait;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Inertia\Inertia;
 
 class PartnerLocationController extends Controller
 {
@@ -34,7 +36,7 @@ class PartnerLocationController extends Controller
         $this->search = $request->query('search', null);
         $this->per_page = $request->query('per_page', 10);
         $this->order_by = $request->query('order_by', 'id');
-        $this->order_dir = $request->query('order_dir', 'desc');
+        $this->order_dir = $request->query('order_dir', 'asc');
 
         return Inertia::render('Partner/Location/Index', [
             'locations' => Location::with('studios', 'manager', 'amenities', 'images')
@@ -51,6 +53,8 @@ class PartnerLocationController extends Controller
             'countries' => Country::select('id', 'name')->whereStatus(1)->get(),
             'amenities' => Amenity::select('id', 'title')->get()->map(fn($item) => ['label' => $item->title, 'value' => $item->id]),
             'studios' => Studio::select('id', 'title')->get()->map(fn($item) => ['label' => $item->title, 'value' => $item->id]),
+            'roles' => Role::select('id', 'title')->where('source', auth()->user()->source)->where('business_id', auth()->user()->business_id)->get(),
+            'systemModules' => SystemModule::with('permissions')->where('is_for', auth()->user()->source)->get(),
             'search' => $this->search,
             'per_page' => intval($this->per_page),
             'order_by' => $this->order_by,
@@ -257,7 +261,7 @@ class PartnerLocationController extends Controller
 
             return $this->redirectBackSuccess(__('Location updated successfully'), 'partner.locations.index');
 
-        } catch(Exception $e) {
+        } catch(\Exception $e) {
             return $this->redirectBackError(__('Something went wrong!'), 'partner.locations.index');
         }
     }

@@ -17,6 +17,7 @@ import EditIcon from "@/Icons/Edit.vue";
 import DeleteIcon from "@/Icons/Delete.vue";
 import { faCog, faPlus } from "@fortawesome/free-solid-svg-icons";
 import DateValue from "../../../Components/DataTable/DateValue.vue";
+import ActionsIcon from '@/Icons/ActionsIcon.vue';
 
 const props = defineProps({
     disableSearch: {
@@ -156,12 +157,12 @@ const deleteItem = () => {
         </template>
 
         <template #tableHead>
-            <table-head
+            <!-- <table-head
                 title="Id"
                 @click="setOrdering('id')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'id'"
-            />
+            /> -->
             <table-head
                 title="Title"
                 @click="setOrdering('title')"
@@ -191,7 +192,7 @@ const deleteItem = () => {
 
         <template #tableData>
             <tr v-for="(classtype, index) in classtypes.data" :key="index">
-                <table-data :title="classtype.id" />
+                <!-- <table-data :title="classtype.id" /> -->
                 <table-data>
                     <Link
                         class="font-medium text-indigo-600 hover:text-indigo-500"
@@ -220,21 +221,11 @@ const deleteItem = () => {
                     >
                         <template #trigger>
                             <button class="text-dark text-lg">
-                                <font-awesome-icon :icon="faCog" />
+                                <ActionsIcon />
                             </button>
                         </template>
 
                         <template #content>
-                            <DropdownLink
-                                :href="
-                                    route('partner.classtypes.edit', classtype)
-                                "
-                            >
-                                <EditIcon
-                                    class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
-                                />
-                                Edit
-                            </DropdownLink>
                             <DropdownLink
                                 as="button"
                                 @click="handleUpdateForm(classtype)"
@@ -242,7 +233,7 @@ const deleteItem = () => {
                                 <EditIcon
                                     class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
                                 />
-                                <span> Edit (Modal) </span>
+                                <span> Edit </span>
                             </DropdownLink>
                             <DropdownLink
                                 as="button"

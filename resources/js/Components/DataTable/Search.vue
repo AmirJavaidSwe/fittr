@@ -32,9 +32,9 @@ const props = defineProps({
 });
 </script>
 <template v-if="!disableSearch">
-    <div class="flex flex-grow justify-end w-full sm:w-auto mb-5 lg:mb-0">
+    <div class="flex flex-grow justify-start w-full sm:w-auto mb-5 lg:mb-0">
         <div
-            class="relative rounded-md shadow-sm flex-grow sm:min-w-56 lg:min-w-min lg:max-w-sm h-11 min-h-full"
+            class="relative rounded-md flex-grow sm:min-w-56 lg:min-w-min lg:max-w-sm h-11 min-h-full"
         >
             <div
                 class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
@@ -47,7 +47,7 @@ const props = defineProps({
                 id="search"
                 :value="modelValue"
                 @input="onInput"
-                class="block w-full rounded-md pl-10 pr-5 input-field"
+                class="block w-full rounded-md pl-10 pr-5 input-field min-h-full"
                 placeholder="Search"
             />
 

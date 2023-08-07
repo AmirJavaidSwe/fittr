@@ -37,28 +37,6 @@ defineProps({
                 :value="amenity.title"
             />
 
-            <single-view-row :even="false" label="Icon">
-                <template #value>
-                    <img
-                        :src="amenity.image_url"
-                        alt="icon"
-                        class="w-10 h-10"
-                    />
-                </template>
-            </single-view-row>
-
-            <single-view-row
-                :even="true"
-                label="Contents"
-                :value="amenity.contents"
-            />
-
-            <single-view-row
-                :even="false"
-                label="Ordering"
-                :value="amenity.ordering"
-            />
-
             <single-view-row
                 :even="true"
                 label="Status"

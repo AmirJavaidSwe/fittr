@@ -21,7 +21,7 @@ const props = defineProps({
     },
 });
 
-const emit = defineEmits(["reset", "submitted"]);
+const emit = defineEmits(["reset", "submitted","close"]);
 </script>
 
 <template>
@@ -168,13 +168,12 @@ const emit = defineEmits(["reset", "submitted"]);
             </div>
 
             <ButtonLink
-                type="submit"
-                :class="{ 'opacity-25': form.processing }"
-                :disabled="form.processing"
+                type="button"
                 styling="secondary"
                 size="default"
+                @click="emit('close')"
             >
-                <span>Apply Filters</span>
+                <span>Close</span>
             </ButtonLink>
         </template>
     </FormSection>

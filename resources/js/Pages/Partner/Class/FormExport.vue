@@ -97,14 +97,15 @@ const emit = defineEmits(["reset", "submitted"]);
 
             <!-- Instructors -->
             <div class="">
-                <InputLabel for="instructors" value="Instructor" />
+                <InputLabel for="instructors" value="Instructors" />
                 <Multiselect
+                    mode="tags"
                     v-model="form.instructor_id"
                     :options="instructors"
                     :searchable="true"
                     :close-on-select="true"
                     :show-labels="true"
-                    placeholder="Select Instructor"
+                    placeholder="Select Instructors"
                 >
                 </Multiselect>
             </div>

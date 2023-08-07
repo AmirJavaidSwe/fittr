@@ -89,17 +89,17 @@ const { toast } = useSwal({flash, errors});
                 <div class="flex h-full relative">
                     <!-- Sidebar -->
                     <div
-                        class="transition-all duration-500 fixed md:relative z-[99] top-0 left-0 h-full hidden md:block"
+                        class="transition-all main-sidebar duration-500 fixed md:relative z-[99] top-0 left-0 h-full hidden md:block"
                         :class="{
                             'md:w-0': sidebarCollapsed,
-                            'md:w-56 xl:w-[220px] 2xl:w-[260px]':
+                            'md:w-56 xl:w-[260px] 2xl:w-[280px]':
                                 !sidebarCollapsed,
-                            '-translate-x-full md:-translate-x-56 xl:-translate-x-[220px] 2xl:-translate-x-[260px]':
+                            '-translate-x-full md:-translate-x-56 xl:-translate-x-[260px] 2xl:-translate-x-[280px]':
                                 sidebarCollapsed,
                             'translate-x-0': !sidebarCollapsed,
                         }"
                     >
-                        <div class="w-full md:w-56 xl:w-[220px] 2xl:w-[260px] h-full bg-primary-500">
+                        <div class="w-full md:w-56 xl:w-[260px] 2xl:w-[280px] h-full bg-primary-500">
                             <div class="flex items-center flex-shrink-0">
                                 <!-- Logo -->
                                 <div class="relative w-full px-6 py-4 xl:py-6 2xl:py-8">

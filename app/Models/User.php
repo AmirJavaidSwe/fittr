@@ -194,7 +194,6 @@ class User extends Authenticatable implements MustVerifyEmail
                 $permissions = $role->permissions->where('system_module_id', $sysModule->id)->pluck('slug')->toArray();
                 $rolesWithPermissions[$role->slug] = $permissions;
             }
-            
             $permissionsArray[$sysModule->slug] = $rolesWithPermissions;
         }
         return $permissionsArray;

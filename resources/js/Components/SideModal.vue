@@ -1,4 +1,5 @@
 <script setup>
+import { onMounted, ref, watchEffect, computed } from "vue";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { useSlots } from "vue";
 
@@ -11,6 +12,27 @@ const props = defineProps({
 
 const slots = useSlots();
 const emit = defineEmits(["close"]);
+
+onMounted(() => {
+    document.addEventListener("keydown", closeOnEscape);
+});
+
+const sideModalZIndex = computed(() => {
+    const elementsWithClass = document.querySelectorAll(".sideModalOpened");
+    const lengthOfClassElements = elementsWithClass.length;
+    return "z-index: " + (parseInt(1035) + parseInt(lengthOfClassElements));
+});
+const sideModalOverLayZIndex = computed(() => {
+    const elementsWithClass = document.querySelectorAll(".sideModalOpened");
+    const lengthOfClassElements = elementsWithClass.length;
+    return "z-index: " + (parseInt(1000) + parseInt(lengthOfClassElements));
+})
+
+const closeOnEscape = (e) => {
+    if (e.key === "Escape" && props.show) {
+        close();
+    }
+};
 
 const close = () => {
     emit("close");
@@ -28,8 +50,8 @@ const close = () => {
             leave-to-class="opacity-0"
         >
             <div
-                v-show="show"
-                class="fixed inset-0 transform transition-all z-[1000]"
+                v-if="show"
+                class="fixed inset-0 transform transition-all" :style="sideModalOverLayZIndex"
                 @click="close"
             >
                 <div class="absolute inset-0 bg-gray-500 opacity-75" />
@@ -45,7 +67,8 @@ const close = () => {
         >
             <nav
                 v-if="show"
-                class="fixed right-0 top-0 z-[1035] overflow-y-auto h-full w-full md:w-1/2 xl:w-1/3 overflow-hidden bg-white shadow-[0_4px_12px_0_rgba(0,0,0,0.07),_0_2px_4px_rgba(0,0,0,0.05)] p-5 flex flex-col"
+                class="sideModalOpened fixed right-0 top-0 overflow-y-auto h-full w-full md:w-1/2 xl:w-1/3 overflow-hidden bg-white shadow-[0_4px_12px_0_rgba(0,0,0,0.07),_0_2px_4px_rgba(0,0,0,0.05)] p-5 flex flex-col"
+                :style="sideModalZIndex"
             >
                 <div class="text-xl font-bold flex" v-if="slots.title">
                     <!-- <button class="md:hidden mr-5" @click="close">
@@ -59,7 +82,10 @@ const close = () => {
                     <slot name="content" />
                 </div>
 
-                <div class="flex mt-4 mb-3 flex-1 justify-end" v-if="slots.footer">
+                <div
+                    class="flex mt-4 mb-3 flex-1 justify-end"
+                    v-if="slots.footer"
+                >
                     <slot name="footer" />
                 </div>
             </nav>

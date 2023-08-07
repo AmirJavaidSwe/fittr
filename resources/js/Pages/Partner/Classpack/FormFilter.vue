@@ -307,7 +307,7 @@ const checkToggles = (el, v) => {
                         id="classtypes"
                         :options="classtypes"
                         :searchable="true"
-                        :close-on-select="false"
+                        :close-on-select="true"
                         :hide-selected="false"
                         placeholder="Select types"
                     >

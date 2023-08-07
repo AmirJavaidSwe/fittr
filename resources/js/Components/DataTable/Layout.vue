@@ -1,6 +1,5 @@
-
 <template>
-    <div class="flex flex-col lg:flex-row items-end lg:items-center">
+    <div v-if="$slots.search || $slots.button || $slots.extraActions" class="flex flex-col lg:flex-row items-end lg:items-center">
         <slot name="search"></slot>
         <div class="sm:flex sm:items-center">
             <div
@@ -22,12 +21,37 @@
                 </ButtonLink>
             </div>
         </div>
+
+        <div class="sm:flex sm:items-center" v-if="extraActions">
+            <div
+                class="mt-0 fixed top-0 left-0 w-full bg-white py-5 z-10 flex flex-wrap justify-center gap-2"
+            >
+                <slot name="extraActions"></slot>
+                <p class="mt-2">{{ extraActions }} Rows Selected</p>
+                <ButtonLink
+                    styling="secondary"
+                    size="small"
+                    @click="$emit('bulkEdit')"
+                >
+                    <font-awesome-icon class="ml-2" :icon="faEdit" /> &nbsp;
+                    Edit
+                </ButtonLink>
+                <ButtonLink
+                    styling="danger"
+                    size="small"
+                    @click="$emit('bulkDelete')"
+                >
+                    <font-awesome-icon class="ml-2" :icon="faTrash" /> &nbsp;
+                    Delete
+                </ButtonLink>
+            </div>
+        </div>
     </div>
 
-    <div class="mt-0 lg:mt-8 flex flex-col">
-        <div :class="[!ddToggled && 'overflow-x-auto overflow-y-hidden']">
+    <div class="mt-0 flex flex-col" :class="$slots.search || $slots.button || $slots.extraActions ? 'lg-mt-8' : ''">
+        <div class="overflow-x-auto overflow-y-hidden">
             <div class="inline-block min-w-full py-2 align-middle">
-                <div class="md:rounded-lg" :class="[!ddToggled && 'overflow-hidden']">
+                <div class="md:rounded-lg overflow-hidden">
                     <table class="min-w-full border-spacing-0 border-separate">
                         <thead>
                             <tr>
@@ -53,9 +77,11 @@
 <script setup>
 import { Link } from "@inertiajs/vue3";
 import ButtonLink from "@/Components/ButtonLink.vue";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { useSlots } from "vue";
 
-defineProps({
+const emit = defineEmits(['bulkEdit', 'bulkDelete'])
+const props = defineProps({
     disableButton: {
         type: Boolean,
         default: false,
@@ -74,12 +100,10 @@ defineProps({
         type: String,
         required: false,
     },
-    
-    ddToggled: {
+    extraActions: {
         default: false,
-        type: Boolean,
+        type: [Boolean, Number],
         required: false,
     },
-    
 });
 </script>

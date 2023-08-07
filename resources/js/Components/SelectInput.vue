@@ -10,7 +10,6 @@ defineEmits(["update:modelValue"]);
 
 <template>
     <select
-        class="input-field"
         :value="modelValue"
         @change="$emit('update:modelValue', $event.target.value)"
     >

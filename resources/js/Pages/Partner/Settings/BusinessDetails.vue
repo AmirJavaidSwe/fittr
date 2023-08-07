@@ -1,9 +1,11 @@
 <script setup>
-import { computed, ref, onMounted } from "vue";
+import { watch, watchEffect, computed, ref, onMounted } from "vue";
 import { useForm } from "@inertiajs/vue3";
 import { DateTime } from "luxon";
 import GeneralSettingsMenu from "@/Pages/Partner/Settings/GeneralSettingsMenu.vue";
+import GeneralSettingsVerticalTabs from "@/Pages/Partner/Settings/GeneralSettingsVerticalTabs.vue";
 import FormSection from "@/Components/FormSection.vue";
+import FormSectionVertical from "@/Components/FormSectionVertical.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
 import SelectInput from "@/Components/SelectInput.vue";
@@ -13,6 +15,11 @@ import ButtonLink from "@/Components/ButtonLink.vue";
 import Switcher from "@/Components/Switcher.vue";
 import Multiselect from "@vueform/multiselect";
 import "@vueform/multiselect/themes/tailwind.css";
+import CalendarIcon from "@/Icons/CalendarIcon.vue";
+import TimeIcon from "@/Icons/TimeIcon.vue";
+import intlTelInput from "intl-tel-input";
+import "intl-tel-input/build/css/intlTelInput.css";
+import { parsePhoneNumber, AsYouType } from "libphonenumber-js";
 
 const props = defineProps({
     countries: Array,
@@ -21,12 +28,8 @@ const props = defineProps({
     business_seetings: Object,
 });
 
-const business_phone = ref(props.form_data.business_phone);
-const testPhone = (e) => {
-    setTimeout(() => {
-        business_phone.value = e.target.value.replace(/\D+/, "");
-    }, 1);
-};
+const business_phone = ref(null);
+business_phone.value = '+' + props.form_data.business_phone
 
 const form = useForm({
     business_name: props.form_data.business_name,
@@ -44,8 +47,8 @@ const mask = ref("");
 const dial_code = ref("");
 const clearSelectedCountry = () => {
     form.country_id = null;
-    countryChanged()
-}
+    countryChanged();
+};
 const countryChanged = () => {
     let country = props.countries.find(({ id }) => id == form.country_id);
     currency.value = country?.currency;
@@ -54,9 +57,40 @@ const countryChanged = () => {
     mask.value = country?.mask;
     dial_code.value = country?.dial_code;
 };
-onMounted(() => {
-    countryChanged();
+
+watch(business_phone, (newVal, oldVal) => {
+    formatPhoneInput();
 });
+onMounted(async () => {
+    countryChanged();
+    const input = document.querySelector("#business_phone");
+    intlTelInput(input, {
+        utilsScript: await import("intl-tel-input/build/js/utils.js"),
+        autoInsertDialCode: true,
+        formatOnDisplay: true,
+        nationalMode: false,
+        customContainer: "w-full",
+    });
+    formatPhoneInput();
+});
+const formatPhoneInput = () => {
+    setTimeout(() => {
+        business_phone.value = business_phone.value.replace(/\D+/, "");
+        if (!business_phone.value || !business_phone.value.startsWith("+")) {
+            business_phone.value = "+" + business_phone.value;
+        }
+        let letFormattedNumber = "";
+        try {
+            const newNumber = parsePhoneNumber(business_phone.value);
+            letFormattedNumber = new AsYouType().input(business_phone.value);
+            business_phone.value = letFormattedNumber
+                ? letFormattedNumber
+                : business_phone.value;
+            } catch (error) {
+                business_phone.value = business_phone.value.replace(/\D+/, "");
+            }
+    }, 100);
+};
 
 const localtime = computed(() => {
     let local = DateTime.now().setZone(form.timezone);
@@ -73,6 +107,8 @@ const submitForm = () => {
     form.transform((data) => ({
         ...data,
         business_phone: business_phone.value
+            .replace(/\s/g, "")
+            .replace(/\+/g, ""),
     })).put(route("partner.settings.general-details"), {
         preserveScroll: true,
     });
@@ -86,7 +122,7 @@ const countriesOptions = computed(() => {
         data[value.id] = value.name;
     }
     return data;
-})
+});
 const timezoneOptions = computed(() => {
     const options = props.timezones;
     const data = {};
@@ -96,18 +132,19 @@ const timezoneOptions = computed(() => {
     }
     return data;
 });
-
 </script>
 
 <template>
-    <FormSection @submitted="submitForm">
-        <template #description>
-            <GeneralSettingsMenu />
+    <GeneralSettingsMenu class="lg:hidden" />
+    <FormSectionVertical @submitted="submitForm">
+        <template #tabsList>
+            <GeneralSettingsVerticalTabs />
         </template>
-
+        <template #heading>
+            <h3 class="text-2xl pt-3 pb-3 font-bold">Business Details</h3>
+        </template>
         <template #form>
-            <!-- Name -->
-            <div class="col-span-6 sm:col-span-4">
+            <div class="col-span-12 mt-4">
                 <InputLabel for="business_name" value="Business Name" />
                 <TextInput
                     id="business_name"
@@ -119,7 +156,7 @@ const timezoneOptions = computed(() => {
             </div>
 
             <!-- Email -->
-            <div class="col-span-6 sm:col-span-4">
+            <div class="col-span-12 mt-4">
                 <InputLabel for="business_email" value="Business Email" />
                 <TextInput
                     id="business_name"
@@ -132,9 +169,7 @@ const timezoneOptions = computed(() => {
                     class="mt-2"
                 />
             </div>
-
-            <!-- Country -->
-            <div class="col-span-6 sm:col-span-4">
+            <div class="col-span-12 mt-4">
                 <InputLabel for="country" value="Country" />
                 <Multiselect
                     id="country"
@@ -147,8 +182,7 @@ const timezoneOptions = computed(() => {
                 />
                 <InputError :message="form.errors.country_id" class="mt-2" />
             </div>
-
-            <div class="col-span-6 sm:col-span-4">
+            <div class="col-span-12 mt-4">
                 <div
                     class="bg-gray-100 flex font-medium gap-4 items-center mt-1 text-gray-700 text-sm"
                 >
@@ -163,35 +197,25 @@ const timezoneOptions = computed(() => {
                     <div>Default currency: <b v-text="currency"></b></div>
                 </div>
             </div>
-
             <!-- Phone Number -->
-            <div class="col-span-6 sm:col-span-4">
+            <div class="col-span-12 mt-4">
                 <InputLabel for="business_phone" value="Phone Number" />
-                <div class="flex gap-2 items-center">
-                    <div class="input-field mt-1 px-2 w-14 h-9" v-text="dial_code"></div>
-                    <TextInput
-                        id="business_phone"
-                        v-model="business_phone"
-                        type="text"
-                        class="mt-1 block w-full"
-                        @input="testPhone"
-                        maxlength="12"
-                        :placeholder="mask"
-                    />
-                </div>
+                <TextInput
+                    id="business_phone"
+                    v-model="business_phone"
+                    type="text"
+                    maxlength="16"
+                    class="mt-1 block w-full"
+                />
                 <InputError
                     :message="form.errors.business_phone"
                     class="mt-2"
                 />
             </div>
-
             <!-- Timezone -->
-            <div class="col-span-6 sm:col-span-4">
+            <div class="col-span-12 mt-4">
                 <InputLabel for="timezone" value="Timezone" />
-                <div class="mt-1">
-                    Note: Change of timezone will affect your store schedules
-                    and all resources using dates.    
-                </div>
+
                 <Multiselect
                     id="timezone"
                     v-model="form.timezone"
@@ -200,35 +224,41 @@ const timezoneOptions = computed(() => {
                     class="mt-1 block w-full"
                 />
                 <InputError :message="form.errors.timezone" class="mt-2" />
-                <div v-if="localtime" class="mt-1">
-                    Local time: {{ localtime }}
-                </div>
+                <span class="col-span-1 mt-1">
+                    Note:
+                    <span class="font-semibold"
+                        >Change of timezone will affect your store schedules and
+                        all resources using dates.</span
+                    >
+                </span>
             </div>
-
-            <!-- Show timezone in store -->
-            <div class="col-span-6 sm:col-span-4">
+            <div class="bg-mainBg col-span-12 mt-4 p-5 rounded mt-6">
                 <Switcher
                     v-model="form.show_timezone"
                     title="Timezone in Service Store"
                     description="Enable this option to inform visitors about business time zone."
+                    description-left-border
                 />
                 <InputError :message="form.errors.show_timezone" class="mt-2" />
             </div>
         </template>
-
         <template #actions>
-            <ActionMessage :on="form.recentlySuccessful" class="mr-3">
-                Saved.
-            </ActionMessage>
-
-            <ButtonLink
-                styling="secondary"
-                size="default"
-                :class="{ 'opacity-25': form.processing }"
-                :disabled="form.processing"
-            >
-                Save
-            </ButtonLink>
+            <div class="flex mt-5">
+                <ActionMessage
+                    :on="form.recentlySuccessful"
+                    class="font-semibold mr-3 mt-3"
+                >
+                    Saved.
+                </ActionMessage>
+                <ButtonLink
+                    styling="secondary"
+                    size="default"
+                    :class="{ 'opacity-25': form.processing }"
+                    :disabled="form.processing"
+                >
+                    Save
+                </ButtonLink>
+            </div>
         </template>
-    </FormSection>
+    </FormSectionVertical>
 </template>
