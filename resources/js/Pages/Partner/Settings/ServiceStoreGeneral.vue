@@ -61,9 +61,7 @@ const submitForm = () => {
                 </div>
                 <p class="mt-2" v-if="form.subdomain">
                     Your service store URL will be:
-                    <b>https://{{ form.subdomain }}.{{
-                        $page.props.app_domain
-                    }}</b>
+                    <b>https://{{ form.subdomain }}.{{$page.props.app_domain}}</b>
                 </p>
             </div>
             <!-- Custom Domain -->

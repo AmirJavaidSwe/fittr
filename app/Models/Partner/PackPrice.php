@@ -44,6 +44,7 @@ class PackPrice extends Model
      * @var array
      */
     protected $appends = [
+        'taxonomy_sessions',
         'interval_human',
         'price_floor',
         'price_floor_formatted',
@@ -65,6 +66,12 @@ class PackPrice extends Model
     }
 
     // Accessors
+    public function getTaxonomySessionsAttribute(): ?string
+    {
+        //TODO add Taxonomy (terms) settings for partner to set: (Hardwired to class)
+        return Str::plural(__('class'), $this->sessions);
+    }
+
     public function getIntervalHumanAttribute(): ?string
     {
         if(empty($this->interval_count)){

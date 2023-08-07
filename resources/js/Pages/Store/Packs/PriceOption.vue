@@ -1,4 +1,5 @@
 <script setup>
+import { computed } from 'vue';
 import { faCircle, faCircleCheck } from '@fortawesome/free-regular-svg-icons';
 
 const props = defineProps({
@@ -20,30 +21,50 @@ const props = defineProps({
     },
 });
 
+const isUnlimited = computed(() => {
+  return props.price.is_unlimited && props.price.type == 'recurring';
+});
+
 defineEmits(['priceSelected']);
 
 </script>
 <template>
     <div 
-        class="flex justify-between items-center mb-4 last:mb-0 border-b-2"
+        class="flex flex-wrap justify-between items-center mb-4 last:mb-0 border-b-2"
         :class="{'text-primary-400': state_buttons[pack.id] ? state_buttons[pack.id].selected_price_id == price.id : false}"
         v-show="price.locations.length === 0 || price.locations.find(el => el.id == location)"
         >
-        <div class="flex gap-2 pb-1">
-            <div class="flex font-bold">
-                <span>{{price.currency_symbol}}</span>
-                <span class="text-3xl">{{price.price_floor_formatted}}</span>
-                <span v-if="price.price_decimals > 0">.{{price.price_decimals}}</span>
+        <div class="flex flex-wrap gap-2 pb-1">
+            <div>
+                <div class="flex font-bold">
+                    <span>{{price.currency_symbol}}</span>
+                    <span class="text-3xl">{{price.price_floor_formatted}}</span>
+                    <span v-if="price.price_decimals > 0">.{{price.price_decimals}}</span>
+                </div>
+                <div v-if="price.interval_count">{{price.interval_human}}</div>
             </div>
             <span class="border"></span>
-            <span class="font-bold text-3xl">{{price.sessions}}</span>
+            
+            <span class="font-bold text-3xl" v-if="isUnlimited">&infin;</span>
+            <span class="font-bold text-3xl" v-else>{{price.sessions}}</span>
             <div class="leading-4">
-                <div class="self-end text-grey">classes</div>
+                <div class="text-grey">{{price.taxonomy_sessions}}</div>
                 <div v-if="price.is_renewable" class="border-b border-dashed dashed text-grey">
                     <VDropdown :popperTriggers="['hover']">
                         <button>auto top-up</button>
                         <template #popper>
                             <p class="p-2 w-80">When your session credit balance reaches zero, we will automatically top up your balance by purchasing this option for you.</p>
+                        </template>
+                    </VDropdown>
+                </div>
+                <div v-if="isUnlimited" class="border-b border-dashed dashed text-grey">
+                    <VDropdown v-if="price.is_fap" :popperTriggers="['hover']">
+                        <button>Fair Use Policy</button>
+                        <template #popper>
+                            <div class="p-2 w-80">
+                                Unlimited option is a subject for [Fair Use Policy].<br>
+                                Maximum number of classes running same day you can book is: {{price.fap_value}}
+                            </div>
                         </template>
                     </VDropdown>
                 </div>

@@ -35,7 +35,7 @@ class PackFormRequest extends FormRequest
             'is_restricted' => 'boolean',
             'is_private' => 'boolean',
             'restrictions' => 'exclude_if:is_restricted,false|array:offpeak,classtypes',
-            'private_url' => 'required_if:is_private,true|nullable|regex:"^[a-z0-9-]+$"|unique:mysql_partner.classpacks,private_url,'.$this->classpack?->id,
+            'private_url' => 'required_if:is_private,true|nullable|regex:"^[a-z0-9-]+$"|unique:mysql_partner.packs,private_url,'.$this->pack?->id,
             'active_from' => 'nullable|date',
             'active_to' => 'nullable|date|after:active_from',
         ];

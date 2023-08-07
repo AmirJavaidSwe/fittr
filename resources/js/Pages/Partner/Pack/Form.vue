@@ -1,6 +1,6 @@
 <script setup>
 import { reactive, computed, ref } from 'vue';
-import {useForm} from "@inertiajs/vue3";
+import { useForm, usePage } from '@inertiajs/vue3';
 import FormSection from "@/Components/FormSection.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
@@ -57,6 +57,12 @@ const showRestrictions = computed(() => {
 });
 const showClassRestrictions = computed(() => {
   return props.form.is_restricted && ['class_lesson', 'hybrid'].includes(props.form.type);
+});
+
+const subDomain = computed(() => usePage().props.business_settings?.subdomain);
+const privateLinkUrl = computed(() => {
+    if(!props.form.private_url || !subDomain) return;
+    return route('ss.memberships.private', { subdomain: subDomain.value, url: props.form.private_url });
 });
 
 //edit existing price start//
@@ -232,7 +238,7 @@ const showEditPrice = (price) => {
                     class="mt-1 block w-full"
                     />
                 <InputError :message="form.errors.private_url" class="mt-2"/>
-                <p>Private link will be: <b>https://{{$page.props.app_domain}}.{{$page.props.business_settings.subdomain}}/some-route/{{form.private_url}}</b></p>
+                <p v-if="privateLinkUrl">Private link will be: <b>{{privateLinkUrl}}</b></p>
             </div>
 
             <!-- active dates -->

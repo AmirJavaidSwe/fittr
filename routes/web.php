@@ -197,6 +197,7 @@ Route::domain('{subdomain}.'.config('app.domain'))->middleware(['auth.subdomain'
     Route::get('/instructors', [StoreInstructorController::class, 'index'])->name('instructors.index');
     Route::get('/locations', [StoreLocationController::class, 'index'])->name('locations.index');
     Route::get('/memberships', [StorePackController::class, 'index'])->name('memberships.index');
+    Route::get('/membership-private/{url}', [StorePackController::class, 'showPrivate'])->name('memberships.private');
 
     Route::post('/buy/{price}', [StorePaymentController::class, 'index'])->name('payments.index');
     Route::get('/success', [StorePaymentController::class, 'success'])->name('payments.success');

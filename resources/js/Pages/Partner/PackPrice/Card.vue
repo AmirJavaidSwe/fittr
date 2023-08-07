@@ -33,6 +33,9 @@ const showIntro = computed(() => {
 const showExpiration = computed(() => {
   return props.price.is_expiring;
 });
+const isUnlimited = computed(() => {
+  return props.price.is_unlimited && props.price.type == 'recurring';
+});
 
 defineEmits(['toggle', 'edit', 'delete']);
 
@@ -89,9 +92,12 @@ defineEmits(['toggle', 'edit', 'delete']);
                 <span class="font-bold" :title="price.currency.toUpperCase()">{{price.price_formatted}}</span>
                 <span v-if="price.interval_count">&nbsp;{{price.interval_human}}</span>
             </div>
-            <div> 
+            <div v-if="isUnlimited"> 
+                <span class="font-bold text-2xl">Unlimited {{price.taxonomy_sessions}}</span>
+            </div>
+            <div v-else> 
                 <span class="font-bold text-2xl" :title="price.sessions">{{price.sessions}}</span>
-                <span class="ml-1">session credits</span>
+                <span class="ml-1">{{price.taxonomy_sessions}}</span>
             </div>
             <div v-if="price.location_ids.length" class="flex flex-wrap items-center gap-2" v-tooltip="locationRestrictionsTooltip">
                 <font-awesome-icon :icon="faLocationPinLock" />
