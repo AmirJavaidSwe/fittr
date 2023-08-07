@@ -9,14 +9,14 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Artisan;
 
-class ParnerMigrate extends Command
+class PartnerMigrate extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'app:parner-migrate';
+    protected $signature = 'app:partner-migrate';
 
     /**
      * The console command description.
