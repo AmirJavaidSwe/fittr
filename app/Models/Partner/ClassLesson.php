@@ -120,6 +120,6 @@ class ClassLesson extends Model
             // $this->load(['bookings' => function (Builder $query) {
             //     $query->active();
             // }]);
-        return $this->bookings->where('active', BookingStatus::get('active'))->contains('user_id', auth()->user()?->id);
+        return $this->bookings->where('status', BookingStatus::get('active'))->contains('user_id', auth()->user()?->id);
     }
 }
