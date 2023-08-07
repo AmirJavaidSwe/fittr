@@ -25,7 +25,7 @@ const props = defineProps({
         type: Object,
         required: true,
     },
-    business_seetings: Object,
+    business_settings: Object,
     per_page: Number,
     type: String,
 });
@@ -140,11 +140,11 @@ const runSearch = (form) => {
                 :even="false"
                 :value="
                     DateTime.fromISO(class_lesson.start_date)
-                        .setZone(business_seetings.timezone)
+                        .setZone(business_settings.timezone)
                         .toFormat(
-                            business_seetings.date_format.format_js +
+                            business_settings.date_format.format_js +
                                 ' ' +
-                                business_seetings.time_format.format_js
+                                business_settings.time_format.format_js
                         )
                 "
             />
@@ -154,11 +154,11 @@ const runSearch = (form) => {
                 :even="true"
                 :value="
                     DateTime.fromISO(class_lesson.end_date)
-                        .setZone(business_seetings.timezone)
+                        .setZone(business_settings.timezone)
                         .toFormat(
-                            business_seetings.date_format.format_js +
+                            business_settings.date_format.format_js +
                                 ' ' +
-                                business_seetings.time_format.format_js
+                                business_settings.time_format.format_js
                         )
                 "
             />
@@ -174,8 +174,8 @@ const runSearch = (form) => {
                 :even="true"
                 :value="
                     DateTime.fromISO(class_lesson.created_at)
-                        .setZone(business_seetings.timezone)
-                        .toFormat(business_seetings.date_format.format_js)
+                        .setZone(business_settings.timezone)
+                        .toFormat(business_settings.date_format.format_js)
                 "
             />
 
@@ -193,7 +193,7 @@ const runSearch = (form) => {
                 <BookingList
                     :form="bookingForm"
                     :data="bookings"
-                    :business_seetings="business_seetings"
+                    :business_settings="business_settings"
                     @setPerPage="(n) => setPerPage(n, 'bookings')"
                 />
             </div>
@@ -206,7 +206,7 @@ const runSearch = (form) => {
                     type="waitlist"
                     :form="waitlistForm"
                     :data="waitlists"
-                    :business_seetings="business_seetings"
+                    :business_settings="business_settings"
                     @setPerPage="(n) => setPerPage(n, 'waitlists')"
                 />
             </div>
@@ -219,7 +219,7 @@ const runSearch = (form) => {
                     type="cancellation"
                     :form="cancellationForm"
                     :data="cancellations"
-                    :business_seetings="business_seetings"
+                    :business_settings="business_settings"
                     @setPerPage="(n) => setPerPage(n, 'cancellations')"
                 />
             </div>

@@ -12,7 +12,7 @@ import ConfirmationModal from '@/Components/ConfirmationModal.vue';
 
 const props = defineProps({
     form_data: Object,
-    business_seetings: Object,
+    business_settings: Object,
     fap_packs: Array,
 });
 

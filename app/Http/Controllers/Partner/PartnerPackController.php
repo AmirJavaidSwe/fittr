@@ -34,8 +34,8 @@ class PartnerPackController extends Controller
         if($name == 'connected_account_id') {
             return !empty($this->connected_account_id) ? $this->connected_account_id : $this->business()->stripe_account_id;
         }
-        if($name == 'business_seetings') {
-            return !empty($this->business_seetings) ? $this->business_seetings : $this->business_seetings();
+        if($name == 'business_settings') {
+            return !empty($this->business_settings) ? $this->business_settings : $this->business_settings();
         }
 
         return null;
@@ -310,8 +310,8 @@ class PartnerPackController extends Controller
         $params = array(
             'pack' => $pack,
             'validated_data' => $request->validated(),
-            'currency' => $this->business_seetings['default_currency'] ?? null,
-            'currency_symbol' => $this->business_seetings['default_currency_symbol'] ?? null,
+            'currency' => $this->business_settings['default_currency'] ?? null,
+            'currency_symbol' => $this->business_settings['default_currency_symbol'] ?? null,
             'connected_account_id' => $this->connected_account_id,
         );
         $result = $this->stripe_product_service->createPackPrice($params);

@@ -15,7 +15,7 @@ class BusinessReady
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(!session()->has('business_seetings.default_currency')){
+        if(!session()->has('business_settings.default_currency')){
             $country = $this->checkCountry();
             if(!$country){
                 return redirect()->route('partner.settings.general-details')
@@ -23,8 +23,8 @@ class BusinessReady
                     ->with('flash_message', __('Please select default country and currency'))
                     ->with('flash_timestamp', time());
             }
-            session()->put('business_seetings.default_currency', strtolower($country->currency));
-            session()->put('business_seetings.default_currency_symbol', strtolower($country->currency_symbol));
+            session()->put('business_settings.default_currency', strtolower($country->currency));
+            session()->put('business_settings.default_currency_symbol', strtolower($country->currency_symbol));
         }
 
         // Business must have connected account
@@ -41,12 +41,12 @@ class BusinessReady
     public function checkCountry()
     {
         //we need to make sure business is setup and has currency, below is temporary setup
-        $country_id = session('business_seetings.country_id');
+        $country_id = session('business_settings.country_id');
         // *technically, partner can create prices with any currency stripe supports and dashboard loads default currency for the country used to register connected business
         // when we use API, price being created must have currency provided.
         // We can pull connected country from:
         // #1 call api \app\Services\Shared\StripeConnectService->retrieveAccount() and get country ISO, then lookup country by ISO and get currency
-        // #2 get country_id from business_seetings session, get country_id and then lookup country and currency
+        // #2 get country_id from business_settings session, get country_id and then lookup country and currency
 
         //#2:
         return \App\Models\Country::find($country_id);

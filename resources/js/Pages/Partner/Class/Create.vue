@@ -14,7 +14,7 @@ const props = defineProps({
     studios: Object,
     instructors: Object,
     classtypes: Object,
-    business_seetings: Object,
+    business_settings: Object,
 });
 
 let form = useForm({
@@ -43,7 +43,7 @@ let form = useForm({
         :studios="studios"
         :instructors="instructors"
         :classtypes="classtypes"
-        :business_seetings="business_seetings"
+        :business_settings="business_settings"
         :submitted="storeClass"
           />
 </template>

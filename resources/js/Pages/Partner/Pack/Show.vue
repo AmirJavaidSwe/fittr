@@ -13,7 +13,7 @@ const props = defineProps({
     pack_types: Object,
     periods: Object,
     price_types: Object,
-    business_seetings: Object,
+    business_settings: Object,
 })
 const isDefaultType = computed(() => {
   return props.pack.type == 'default';
@@ -70,9 +70,9 @@ const isDefaultType = computed(() => {
             <single-view-row :even="true" label="Has restrictions" :value="pack.is_restricted ? 'Yes':'No'"/>
             <single-view-row :even="false" label="Private pack" :value="pack.is_private ? 'Yes':'No'"/>
             <single-view-row :even="true" label="Private URL" :value="pack.private_url"/>
-            <single-view-row :even="false" label="Pack active from" :value="pack.active_from ? DateTime.fromISO(pack.active_from).setZone(business_seetings.timezone).toFormat(business_seetings.date_format.format_js) : null"/>
-            <single-view-row :even="true" label="Pack active to" :value="pack.active_to ? DateTime.fromISO(pack.active_to).setZone(business_seetings.timezone).toFormat(business_seetings.date_format.format_js) : null"/>
-            <single-view-row :even="false" label="Created At" :value="DateTime.fromISO(pack.created_at).setZone(business_seetings.timezone).toFormat(business_seetings.date_format.format_js)"/>
+            <single-view-row :even="false" label="Pack active from" :value="pack.active_from ? DateTime.fromISO(pack.active_from).setZone(business_settings.timezone).toFormat(business_settings.date_format.format_js) : null"/>
+            <single-view-row :even="true" label="Pack active to" :value="pack.active_to ? DateTime.fromISO(pack.active_to).setZone(business_settings.timezone).toFormat(business_settings.date_format.format_js) : null"/>
+            <single-view-row :even="false" label="Created At" :value="DateTime.fromISO(pack.created_at).setZone(business_settings.timezone).toFormat(business_settings.date_format.format_js)"/>
             <single-view-row :even="true" label="Updated At" :value="DateTime.fromISO(pack.updated_at).toRelative()"/>
         </template>
     </single-view>

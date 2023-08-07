@@ -57,9 +57,9 @@ class StoreBookingController extends Controller
         ->active()
         ->find($request->class_id);
 
-        $maxDaysBooking = session('business_seetings.days_max_booking');
+        $maxDaysBooking = session('business_settings.days_max_booking');
 
-        $maxBookingStart = now(session('business_seetings.timezone'))->startOfDay();
+        $maxBookingStart = now(session('business_settings.timezone'))->startOfDay();
         $maxBookingEnd = $maxBookingStart->copy()
         ->when($maxDaysBooking, fn($date) => $date->addDays($maxDaysBooking-1))
         ->endOfDay()
@@ -152,9 +152,9 @@ class StoreBookingController extends Controller
         ->active()
         ->find($request->class_id);
 
-        $maxDaysBooking = session('business_seetings.days_max_booking');
+        $maxDaysBooking = session('business_settings.days_max_booking');
 
-        $maxBookingStart = now(session('business_seetings.timezone'))->startOfDay();
+        $maxBookingStart = now(session('business_settings.timezone'))->startOfDay();
         $maxBookingEnd = $maxBookingStart->copy()
         ->when($maxDaysBooking, fn($date) => $date->addDays($maxDaysBooking-1))
         ->endOfDay()

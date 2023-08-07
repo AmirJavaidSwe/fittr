@@ -12,7 +12,7 @@ class PartnerListener
      *
      * @var Array
      */
-    public $business_seetings;
+    public $business_settings;
 
     /**
      * Set mysql_partner connection.
@@ -21,7 +21,7 @@ class PartnerListener
      */
     public function setPartnerConnection($event): void
     {
-        $this->business_seetings = $event->business_seetings;
+        $this->business_settings = $event->business_settings;
 
         Config::set('database.connections.mysql_partner', [
             'driver' => 'mysql',

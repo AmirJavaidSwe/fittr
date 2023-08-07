@@ -28,7 +28,7 @@ const props = defineProps({
     per_page: Number,
     order_by: String,
     order_dir: String,
-    business_seetings: Object,
+    business_settings: Object,
 });
 
 const form = useForm({
@@ -129,16 +129,16 @@ watch(() => form.search, runSearch);
                 <!-- <table-data>{{ role.id }}</table-data> -->
                 <table-data>{{ role.title }}</table-data>
                 <table-data>
-                    <div v-if="business_seetings">
+                    <div v-if="business_settings">
                         <DateValue
                             :date="
                                 DateTime.fromISO(role.created_at)
-                                    .setZone(business_seetings.timezone)
+                                    .setZone(business_settings.timezone)
                                     .toFormat(
-                                        business_seetings.date_format
+                                        business_settings.date_format
                                             .format_js +
                                             ' ' +
-                                            business_seetings.time_format
+                                            business_settings.time_format
                                                 ?.format_js
                                     )
                             "

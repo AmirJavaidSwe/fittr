@@ -24,7 +24,7 @@ const props = defineProps({
     instructors: Object,
     classtypes: Object,
     studios: Object,
-    business_seetings: Object,
+    business_settings: Object,
     form: {
         type: Object,
         required: true,

@@ -4,7 +4,7 @@ import Form from "./Form.vue";
 import {useForm} from "@inertiajs/vue3";
 
 const props = defineProps({
-    business_seetings: Object,
+    business_settings: Object,
     pack_types: Object,
     periods: Object,
     classtypes: Object,
@@ -39,6 +39,6 @@ const storeItem = () => {
           :pack_types="pack_types"
           :periods="periods"
           :classtypes="classtypes"
-          :default_currency="business_seetings.default_currency"
+          :default_currency="business_settings.default_currency"
           :submitted="storeItem"/>
 </template>

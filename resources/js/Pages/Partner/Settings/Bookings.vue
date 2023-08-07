@@ -11,7 +11,7 @@ import Switcher from "@/Components/Switcher.vue";
 
 const props = defineProps({
     form_data: Object,
-    business_seetings: Object,
+    business_settings: Object,
 });
 
 const form = useForm({

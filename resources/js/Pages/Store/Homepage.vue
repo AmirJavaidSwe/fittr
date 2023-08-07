@@ -24,7 +24,7 @@ const props = defineProps({
 <template>
     <Section bg="bg-transparent">
         <div class="text-xl">
-            Hello, this is service store of <b>https://{{$page.props.business_seetings.subdomain}}.{{$page.props.app_domain}}</b>
+            Hello, this is service store of <b>https://{{$page.props.business_settings.subdomain}}.{{$page.props.app_domain}}</b>
         </div>
         <hr class="mb-4">
         <div></div>

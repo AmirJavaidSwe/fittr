@@ -21,7 +21,7 @@ const props = defineProps({
         type: Object,
         required: true,
     },
-    business_seetings: {
+    business_settings: {
         Object,
         required: true,
     },
@@ -53,7 +53,7 @@ const onDateChange = (date) => {
 
 const onSearch = () => {
     form.transform((data) => ({class_type: data.class_type, instructor: data.instructor}))
-    .get(route('ss.classes.index', { subdomain: props.business_seetings.subdomain }), {
+    .get(route('ss.classes.index', { subdomain: props.business_settings.subdomain }), {
         preserveScroll: true,
         preserveState: true,
         replace: true,
@@ -72,9 +72,9 @@ onBeforeMount(() => {
     // if(queryParams.get('time'))
     //     form.time = queryParams.get('time');
 
-    let start = DateTime.now().setZone(props.business_seetings.timezone);
-    let end = DateTime.now().setZone(props.business_seetings.timezone);
-    let noOfDays = parseInt(props.business_seetings.days_max_timetable ?? start.daysInMonth) - 1; // Note: need to discuss the approach about showing unlimited dates here.
+    let start = DateTime.now().setZone(props.business_settings.timezone);
+    let end = DateTime.now().setZone(props.business_settings.timezone);
+    let noOfDays = parseInt(props.business_settings.days_max_timetable ?? start.daysInMonth) - 1; // Note: need to discuss the approach about showing unlimited dates here.
     end = end.plus(Duration.fromObject({days: noOfDays}));
 
     let intervalObj = Interval.fromDateTimes(start, end);
@@ -103,8 +103,8 @@ const classDetails = ref({});
 
 const showModal = (data) => {
     modal.value = true;
-    data.start_date = DateTime.fromISO(data.start_date, {zone: props.business_seetings?.timezone});
-    data.end_date = DateTime.fromISO(data.end_date, {zone: props.business_seetings?.timezone});
+    data.start_date = DateTime.fromISO(data.start_date, {zone: props.business_settings?.timezone});
+    data.end_date = DateTime.fromISO(data.end_date, {zone: props.business_settings?.timezone});
     classDetails.value = {...data};
     let user_id = usePage().props?.user?.id;
     classDetails.value.is_waiting = typeof classDetails.value.waitlists?.filter(item => item.user_id === user_id)[0] !== 'undefined';
@@ -120,7 +120,7 @@ const bookingForm = useForm({ class_id: ''});
 const handleBooking = () => {
     bookingForm.class_id = classDetails.value.id;
 
-    bookingForm.post(route('ss.member.bookings.store', {subdomain: props.business_seetings.subdomain}), {
+    bookingForm.post(route('ss.member.bookings.store', {subdomain: props.business_settings.subdomain}), {
         onSuccess: (res) => {
             if(res.props.flash.type === 'success') {
                 closeModal();
@@ -132,7 +132,7 @@ const handleBooking = () => {
 const cancelBooking = () => {
     bookingForm.class_id = classDetails.value.id;
 
-    bookingForm.post(route('ss.member.bookings.cancel', {subdomain: props.business_seetings.subdomain}), {
+    bookingForm.post(route('ss.member.bookings.cancel', {subdomain: props.business_settings.subdomain}), {
         onSuccess: (res) => {
             if(res.props.flash.type === 'success') {
                 closeModal();
@@ -153,7 +153,7 @@ const addToWaitList = () => {
         text: 'You can still book to waitlist. We will inform you if space becomes available.',
     }).then((result) => {
 
-        waitlistForm.post(route('ss.member.bookings.add-to-waitlist', {subdomain: props.business_seetings.subdomain}), {
+        waitlistForm.post(route('ss.member.bookings.add-to-waitlist', {subdomain: props.business_settings.subdomain}), {
             onSuccess: (res) => {
                 if(res.props.flash.type === 'success') {
                     let classData = res.props.classes[classDetails.value.start_date.toSQLDate()];
@@ -169,7 +169,7 @@ const addToWaitList = () => {
 const removeFromWaitList = () => {
     waitlistForm.class_id = classDetails.value.id;
 
-    waitlistForm.post(route('ss.member.bookings.remove-from-waitlist', {subdomain: props.business_seetings.subdomain}), {
+    waitlistForm.post(route('ss.member.bookings.remove-from-waitlist', {subdomain: props.business_settings.subdomain}), {
         onSuccess: (res) => {
             if(res.props.flash.type === 'success') {
                 let classData = res.props.classes[classDetails.value.start_date.toSQLDate()];
@@ -362,8 +362,8 @@ const handleMoved = (splide, index, prevIndex) => {
                             Booked
                         </div>
                         <div class="flex justify-between mb-4">
-                            <div class="text-xl font-medium self-center" v-tooltip="DateTime.fromISO(item.start_date).setZone(business_seetings.timezone).toFormat(business_seetings.date_format.format_js +' '+ business_seetings.time_format.format_js)">
-                                {{ DateTime.fromISO(item.start_date).setZone(business_seetings.timezone).toFormat(business_seetings.time_format.format_js) }}
+                            <div class="text-xl font-medium self-center" v-tooltip="DateTime.fromISO(item.start_date).setZone(business_settings.timezone).toFormat(business_settings.date_format.format_js +' '+ business_settings.time_format.format_js)">
+                                {{ DateTime.fromISO(item.start_date).setZone(business_settings.timezone).toFormat(business_settings.time_format.format_js) }}
                             </div>
                             <div class="flex flex-row rounded-lg text-green-800 px-2 py-1 h-8 items-center" style="background: rgba(66, 112, 95, 0.2)">
                                 <div class="mr-1"><ClockIcon /></div>
@@ -458,7 +458,7 @@ const handleMoved = (splide, index, prevIndex) => {
                         Date:
                     </div>
                     <div class="flex w-1/2 justify-end font-bold">
-                        {{ classDetails.start_date?.toFormat(business_seetings.date_format?.format_js) }}
+                        {{ classDetails.start_date?.toFormat(business_settings.date_format?.format_js) }}
                     </div>
                 </div>
 

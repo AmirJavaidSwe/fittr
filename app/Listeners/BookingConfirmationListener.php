@@ -27,12 +27,12 @@ class BookingConfirmationListener extends PartnerListener implements ShouldQueue
      */
     public function handle(BookingConfirmation $event)
     {
-        //parent method will set 1 public prop on this class: array $business_seetings
+        //parent method will set 1 public prop on this class: array $business_settings
         $this->setPartnerConnection($event);
         $booking = $event->booking;
-        $business_seetings = $this->business_seetings;
+        $business_settings = $this->business_settings;
 
-        Mail::send('emails.booking_confirmation', ['booking' => $booking, 'settings' => $business_seetings], function($message) use ($booking) {
+        Mail::send('emails.booking_confirmation', ['booking' => $booking, 'settings' => $business_settings], function($message) use ($booking) {
             $message->to($booking->user->email);
             $message->subject('Booking Confirmation');
         });

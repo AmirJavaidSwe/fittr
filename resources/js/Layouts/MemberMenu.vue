@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faHome, faFileInvoiceDollar, faGaugeHigh, faGears, faReceipt } from '@fortawesome/free-solid-svg-icons';
 
 const user = usePage().props.user;
-const subdomain = ref(usePage().props.business_seetings.subdomain);
+const subdomain = ref(usePage().props.business_settings.subdomain);
 
 const active_route = reactive({
     name: route().current(),
@@ -32,7 +32,7 @@ router.on('navigate', (event) => {
       <font-awesome-icon :icon="faFileInvoiceDollar" class="w-4" />
       <div>Orders history</div>
     </NavLink>
-    <NavLink :href="route('ss.member.bookings.index', {subdomain: usePage().props?.business_seetings?.subdomain})">
+    <NavLink :href="route('ss.member.bookings.index', {subdomain: usePage().props?.business_settings?.subdomain})">
       <font-awesome-icon :icon="faGears" class="w-4" />
       <div>My bookings</div>
     </NavLink>

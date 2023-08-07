@@ -21,7 +21,7 @@ import { useSwal } from '@/Composables/swal';
 const { windowWidth, screen } = useWindowSize();
 
 const props = defineProps({
-    business_seetings: {
+    business_settings: {
         type: Object,
         required: true,
     },
@@ -68,23 +68,23 @@ const header = computed(() => {
 });
 
 const logo_image_url = computed(() => {
-    return props.business_seetings.logo ? usePage().props.asset_url + props.business_seetings.logo : null;
+    return props.business_settings.logo ? usePage().props.asset_url + props.business_settings.logo : null;
 });
 
 const favicon_type = ref('image/x-icon');
 const favicon_image_url = computed(() => {
-    if(!props.business_seetings.favicon){
+    if(!props.business_settings.favicon){
         return null;
     }
     switch (true) {
-        case props.business_seetings.favicon.endsWith('.png'):
+        case props.business_settings.favicon.endsWith('.png'):
             favicon_type.value="image/png";
             break;
-        case props.business_seetings.favicon.endsWith('.svg'):
+        case props.business_settings.favicon.endsWith('.svg'):
             favicon_type.value="image/svg+xml";
             break;
     }
-    return usePage().props.asset_url + props.business_seetings.favicon;
+    return usePage().props.asset_url + props.business_settings.favicon;
 });
 
 const headerIsArray = computed(() => {
@@ -112,12 +112,12 @@ const { toast } = useSwal({flash, errors});
             <div class="mx-auto max-w-7xl md:px-6 lg:px-8">
                 <div class="flex items-center justify-between flex-wrap">
                     <!-- Logo -->
-                    <Link :href="business_seetings.logo_url ?? '/'" class="max-w-[140px]">
-                        <div v-if="business_seetings.logo" class="h-14">
-                            <img :src="logo_image_url" :alt="business_seetings.business_name" class="h-full p-1">
+                    <Link :href="business_settings.logo_url ?? '/'" class="max-w-[140px]">
+                        <div v-if="business_settings.logo" class="h-14">
+                            <img :src="logo_image_url" :alt="business_settings.business_name" class="h-full p-1">
                         </div>
                         <div v-else class="px-6 py-4 font-bold">
-                            {{business_seetings.business_name ?? 'LOGO'}}
+                            {{business_settings.business_name ?? 'LOGO'}}
                         </div>
                     </Link>
 

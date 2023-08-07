@@ -18,7 +18,7 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
-    business_seetings: Object,
+    business_settings: Object,
     classtypes: Object,
     pack_types: Object,
     periods: Object,
@@ -168,8 +168,8 @@ const duplicateItem = () => {
                 <table-data
                     :title="
                         DateTime.fromISO(pack.created_at)
-                            .setZone(business_seetings.timezone)
-                            .toFormat(business_seetings.date_format.format_js)
+                            .setZone(business_settings.timezone)
+                            .toFormat(business_settings.date_format.format_js)
                     "
                 />
                 <table-data

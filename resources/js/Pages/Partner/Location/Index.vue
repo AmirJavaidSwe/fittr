@@ -29,7 +29,7 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
-    business_seetings: Object,
+    business_settings: Object,
     locations: Object,
     search: String,
     per_page: Number,
@@ -315,9 +315,9 @@ const closeAmenityCreateForm = () => {
                     <DateValue
                         :date="
                             DateTime.fromISO(location.created_at)
-                                .setZone(business_seetings.timezone)
+                                .setZone(business_settings.timezone)
                                 .toFormat(
-                                    business_seetings.date_format.format_js
+                                    business_settings.date_format.format_js
                                 )
                         "
                     />

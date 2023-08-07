@@ -45,14 +45,14 @@ class AuthenticateSubdomain
         }
 
         // check if business settings have been recently updated
-        $settings_updated = $this->cache->get('business_seetings_updated.'.$business->id);
+        $settings_updated = $this->cache->get('business_settings_updated.'.$business->id);
 
-        // store visitor may already have business_seetings stored in session, we need to update it when changes been made by admin
-        if($request->session()->has('business_seetings.settings_updated') && !empty($settings_updated)){
-            $needs_refresh = session('business_seetings.settings_updated') < $settings_updated;
+        // store visitor may already have business_settings stored in session, we need to update it when changes been made by admin
+        if($request->session()->has('business_settings.settings_updated') && !empty($settings_updated)){
+            $needs_refresh = session('business_settings.settings_updated') < $settings_updated;
         }
 
-        if ($request->session()->missing('business_seetings') || ($needs_refresh ?? false)) {
+        if ($request->session()->missing('business_settings') || ($needs_refresh ?? false)) {
             $groups = array(
                 SettingGroup::general_details,
                 SettingGroup::general_address,
@@ -65,10 +65,10 @@ class AuthenticateSubdomain
             );
             $settings = $this->business_settings_service->getByGroups(array_column($groups, 'name'));
             $settings['settings_updated'] = now()->timestamp;
-            $request->session()->put('business_seetings', $settings);
+            $request->session()->put('business_settings', $settings);
         }
 
-        Config::set('app.name', session('business_seetings.business_name') ?? __('Service store'));
+        Config::set('app.name', session('business_settings.business_name') ?? __('Service store'));
 
         return $next($request);
     }

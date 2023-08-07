@@ -22,7 +22,7 @@ const props = defineProps({
     instructors: Object,
     classtypes: Object,
     studios: Object,
-    business_seetings: Object,
+    business_settings: Object,
     form: {
         type: Object,
         required: true,
@@ -53,9 +53,9 @@ const updateWeekDays = (index) => {
 };
 const formatDate = computed(() => {
     return (
-        props.business_seetings?.date_format?.format_js +
+        props.business_settings?.date_format?.format_js +
         " " +
-        props.business_seetings?.time_format?.format_js
+        props.business_settings?.time_format?.format_js
     );
 });
 const instructorChanged = () => {
@@ -122,7 +122,7 @@ const studioList = computed(() => {
                             :enable-time-picker="true"
                             :flow="['calendar', 'time']"
                             :format="formatDate"
-                            :timezone="business_seetings?.timezone"
+                            :timezone="business_settings?.timezone"
                             position="left"
                             placeholder="Start Date"
                             minutes-increment="1"
@@ -147,7 +147,7 @@ const studioList = computed(() => {
                         :enable-time-picker="true"
                         :flow="['calendar', 'time']"
                         :format="formatDate"
-                        :timezone="business_seetings?.timezone"
+                        :timezone="business_settings?.timezone"
                         position="left"
                         placeholder="End Date"
                         minutes-increment="1"

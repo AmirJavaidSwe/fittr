@@ -16,9 +16,9 @@ class StoreClassController extends Controller
     public function index(Request $request)
     {
 
-        $maxDaysTimetable = (session('business_seetings.days_max_timetable') ?? 30) - 1;
+        $maxDaysTimetable = (session('business_settings.days_max_timetable') ?? 30) - 1;
 
-        $startDate = now(session('business_seetings.timezone'))->startOfDay();
+        $startDate = now(session('business_settings.timezone'))->startOfDay();
         $endDate = $startDate->copy()->addDays($maxDaysTimetable)->endOfDay()->utc();
         $startDate = $startDate->utc();
 
@@ -39,7 +39,7 @@ class StoreClassController extends Controller
                 // ->when($request->time, function($query) use($request, $startDate) {
 
                 //     $app_tz = now(config('app.timezone'))->timezone->toOffsetName();
-                //     $user_tz = now(session('business_seetings.timezone'))->timezone->toOffsetName();
+                //     $user_tz = now(session('business_settings.timezone'))->timezone->toOffsetName();
                 //     // dd($app_tz, $user_tz);
 
                 //     $raw = "DATE_FORMAT(CONVERT_TZ(start_date,'$app_tz','$user_tz'), '%p') = '".strtoupper($request->time)."'";
@@ -60,7 +60,7 @@ class StoreClassController extends Controller
                 ->get()
                 ->groupBy(function($item) {
                     return $item->start_date
-                    ->tz(session('business_seetings.timezone'))
+                    ->tz(session('business_settings.timezone'))
                     ->format('Y-m-d');
                 }),
             'class_types' => ClassType::select('id as value', 'title as label')->get(),

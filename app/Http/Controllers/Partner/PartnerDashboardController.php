@@ -42,7 +42,7 @@ class PartnerDashboardController extends Controller
     {
         $user = User::findOrFail($request->id);
         $controller = app()->make(UserProfileController::class);
-        $bs = $this->business_seetings();
+        $bs = $this->business_settings();
         $subdomain = $bs['subdomain'] ?? null;
         if(empty($subdomain)){
             return $this->redirectBackError(__('Service store domain is not set'));

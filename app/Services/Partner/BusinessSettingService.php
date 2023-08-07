@@ -116,10 +116,10 @@ class BusinessSettingService
             SettingGroup::bookings,
         );
         $settings = $this->getByGroups(array_column($groups, 'name'));
-        $request->session()->put('business_seetings', $settings);
+        $request->session()->put('business_settings', $settings);
 
         //save to cache when settings were last updated timestamp (\App\Http\Middleware\AuthenticateSubdomain::class will update settings in session)
-        $this->cache->put('business_seetings_updated.'.$business_id, now()->timestamp);
+        $this->cache->put('business_settings_updated.'.$business_id, now()->timestamp);
 
         BusinessSettingUpdated::dispatch($business_id);
     }

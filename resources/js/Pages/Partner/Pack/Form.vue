@@ -232,7 +232,7 @@ const showEditPrice = (price) => {
                     class="mt-1 block w-full"
                     />
                 <InputError :message="form.errors.private_url" class="mt-2"/>
-                <p>Private link will be: <b>https://{{$page.props.app_domain}}.{{$page.props.business_seetings.subdomain}}/some-route/{{form.private_url}}</b></p>
+                <p>Private link will be: <b>https://{{$page.props.app_domain}}.{{$page.props.business_settings.subdomain}}/some-route/{{form.private_url}}</b></p>
             </div>
 
             <!-- active dates -->
@@ -246,7 +246,7 @@ const showEditPrice = (price) => {
                                 focus:bg-white focus:ring-0"
                         v-model="form.active_from"
                         :enable-time-picker="false"
-                        :format="$page.props.business_seetings.date_format.format_js"
+                        :format="$page.props.business_settings.date_format.format_js"
                         placeholder="Leave blank to ignore"
                         text-input
                         auto-apply
@@ -263,7 +263,7 @@ const showEditPrice = (price) => {
                                 focus:bg-white focus:ring-0"
                         v-model="form.active_to"
                         :enable-time-picker="false"
-                        :format="$page.props.business_seetings.date_format.format_js"
+                        :format="$page.props.business_settings.date_format.format_js"
                         placeholder="Leave blank to ignore"
                         text-input
                         auto-apply

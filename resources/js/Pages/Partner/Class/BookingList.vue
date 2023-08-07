@@ -16,7 +16,7 @@ defineProps({
         required: true,
         type: Object,
     },
-    business_seetings: {
+    business_settings: {
         required: true,
         type: Object
     },
@@ -66,8 +66,8 @@ defineEmits(['setPerPage']);
                     <DateValue
                         :date="
                             DateTime.fromISO(dt.created_at)
-                                .setZone(business_seetings.timezone)
-                                .toFormat(business_seetings.date_format?.format_js)
+                                .setZone(business_settings.timezone)
+                                .toFormat(business_settings.date_format?.format_js)
                         "
                     />
                 </table-data>

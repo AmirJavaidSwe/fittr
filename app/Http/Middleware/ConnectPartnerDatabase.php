@@ -40,7 +40,7 @@ class ConnectPartnerDatabase
         if ($request->session()->missing('business')) {
             $request->session()->put('business', $business);
         }
-        if ($request->session()->missing('business_seetings')) {
+        if ($request->session()->missing('business_settings')) {
             $groups = array(
                 SettingGroup::general_details,
                 SettingGroup::general_address,
@@ -52,7 +52,7 @@ class ConnectPartnerDatabase
                 SettingGroup::bookings,
             );
             $settings = $this->business_settings_service->getByGroups(array_column($groups, 'name'));
-            $request->session()->put('business_seetings', $settings);
+            $request->session()->put('business_settings', $settings);
         }
 
         //Set connection to database: (run time)

@@ -21,7 +21,7 @@ const props = defineProps({
         type: Boolean,
         default: false
     },
-    business_seetings: Object,
+    business_settings: Object,
     bookings: Object,
     search: String,
     per_page: Number,
@@ -38,7 +38,7 @@ const form = useForm({
 });
 
 const runSearch = () => {
-    form.get(route('ss.member.bookings.index', { subdomain: props.business_seetings.subdomain }), {
+    form.get(route('ss.member.bookings.index', { subdomain: props.business_settings.subdomain }), {
         preserveScroll: true,
         preserveState: true,
         replace: true,
@@ -69,7 +69,7 @@ const bookingForm = useForm({
 const cancelBooking = (class_id) => {
     bookingForm.class_id = class_id;
 
-    bookingForm.post(route('ss.member.bookings.cancel', {subdomain: props.business_seetings.subdomain}), {
+    bookingForm.post(route('ss.member.bookings.cancel', {subdomain: props.business_settings.subdomain}), {
         onSuccess: (res) => {
             // if(res.props.flash.type === 'success') {
             //     closeModal();
@@ -137,13 +137,13 @@ const cancelBooking = (class_id) => {
                         <ColoredValue :title="booking.class?.class_type?.title" color="#ccc" />
                     </table-data>
                     <table-data>
-                        <DateValue :date="DateTime.fromISO(booking.class?.start_date).setZone(business_seetings.timezone).toFormat(business_seetings.date_format.format_js)" />
+                        <DateValue :date="DateTime.fromISO(booking.class?.start_date).setZone(business_settings.timezone).toFormat(business_settings.date_format.format_js)" />
                     </table-data>
                     <table-data>
-                        <DateValue :date="DateTime.fromISO(booking.class?.start_date).setZone(business_seetings.timezone).toFormat(business_seetings.time_format.format_js)" />
+                        <DateValue :date="DateTime.fromISO(booking.class?.start_date).setZone(business_settings.timezone).toFormat(business_settings.time_format.format_js)" />
                     </table-data>
                     <table-data>
-                        <DateValue :date="DateTime.fromISO(booking.class?.end_date).setZone(business_seetings.timezone).toFormat(business_seetings.time_format.format_js)" />
+                        <DateValue :date="DateTime.fromISO(booking.class?.end_date).setZone(business_settings.timezone).toFormat(business_settings.time_format.format_js)" />
                     </table-data>
                     <table-data> {{ booking.class?.duration }} </table-data>
                     <table-data>

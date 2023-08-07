@@ -26,7 +26,7 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
-    business_seetings: Object,
+    business_settings: Object,
     studios: Object,
     locations: Array,
     class_types: Array,
@@ -234,9 +234,9 @@ const locationList = computed(() => {
                     <DateValue
                         :date="
                             DateTime.fromISO(studio.created_at)
-                                .setZone(business_seetings.timezone)
+                                .setZone(business_settings.timezone)
                                 .toFormat(
-                                    business_seetings.date_format.format_js
+                                    business_settings.date_format.format_js
                                 )
                         "
                     />

@@ -20,7 +20,7 @@ class PartnerEvent
      *
      * @var Array
      */
-    public $business_seetings;
+    public $business_settings;
 
     public function __construct()
     {
@@ -31,6 +31,6 @@ class PartnerEvent
             'username' => session('business.db_user'),
             'password' => session('business.db_password'),
         );
-        $this->business_seetings = session('business_seetings');
+        $this->business_settings = session('business_settings');
     }
 }

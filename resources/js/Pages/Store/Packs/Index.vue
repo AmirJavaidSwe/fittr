@@ -25,7 +25,7 @@ const props = defineProps({
         required: true,
     },
 });
-const subdomain = ref(usePage().props.business_seetings.subdomain);
+const subdomain = ref(usePage().props.business_settings.subdomain);
 const isLocked = ref(false);
 const buy = (pack_id) => {
     isLocked.value = true;

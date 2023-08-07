@@ -31,7 +31,7 @@ const props = defineProps({
     per_page: Number,
     order_by: String,
     order_dir: String,
-    business_seetings: Object,
+    business_settings: Object,
 });
 
 const form = useForm({
@@ -200,9 +200,9 @@ const deleteItem = () => {
                 </table-data>
                 <table-data>
                     <DateValue :date="DateTime.fromISO(amenity.created_at)
-                                .setZone(business_seetings.timezone)
+                                .setZone(business_settings.timezone)
                                 .toFormat(
-                                    business_seetings.date_format?.format_js
+                                    business_settings.date_format?.format_js
                                 )" />
                 </table-data>
                 <table-data>

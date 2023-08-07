@@ -43,7 +43,7 @@ class HandleInertiaRequests extends Middleware
             'app_name' => config('app.name'),
             'app_domain' => config('app.domain'),
             'asset_url' => config('app.asset_public_url'),
-            'business_seetings' =>  $request->session()->get('business_seetings'),
+            'business_settings' =>  $request->session()->get('business_settings'),
             'route_name' => Route::currentRouteName(),
             'flash' => [
                 'type' => $request->session()->get('flash_type'),

@@ -11,7 +11,7 @@ const props = defineProps({
         type: Object,
         required: true,
     },
-    business_seetings: {
+    business_settings: {
         Object,
         required: true,
     },
@@ -22,13 +22,13 @@ const bookingForm = useForm({ class_id: ''});
 const handleBooking = () => {
     bookingForm.class_id = props.classDetail.id;
 
-    bookingForm.post(route('ss.member.bookings.store', {subdomain: props.business_seetings.subdomain}));
+    bookingForm.post(route('ss.member.bookings.store', {subdomain: props.business_settings.subdomain}));
 }
 
 const cancelBooking = () => {
     bookingForm.class_id = props.classDetail.id;
 
-    bookingForm.post(route('ss.member.bookings.cancel', {subdomain: props.business_seetings.subdomain}));
+    bookingForm.post(route('ss.member.bookings.cancel', {subdomain: props.business_settings.subdomain}));
 }
 
 </script>
@@ -82,7 +82,7 @@ const cancelBooking = () => {
                             Time:
                         </div>
                         <div class="flex w-1/2 justify-end font-bold">
-                            {{ DateTime.fromISO(classDetail.start_date, {zone: props.business_seetings?.timezone}).toFormat('hh:mm a') }} - {{ DateTime.fromISO(classDetail.end_date, {zone: props.business_seetings?.timezone}).toFormat('hh:mm a') }}
+                            {{ DateTime.fromISO(classDetail.start_date, {zone: props.business_settings?.timezone}).toFormat('hh:mm a') }} - {{ DateTime.fromISO(classDetail.end_date, {zone: props.business_settings?.timezone}).toFormat('hh:mm a') }}
                         </div>
                     </div>
 
@@ -100,7 +100,7 @@ const cancelBooking = () => {
                             Date:
                         </div>
                         <div class="flex w-1/2 justify-end font-bold">
-                            {{ DateTime.fromISO(classDetail.start_date, {zone: props.business_seetings?.timezone}).toFormat(business_seetings.date_format?.format_js) }}
+                            {{ DateTime.fromISO(classDetail.start_date, {zone: props.business_settings?.timezone}).toFormat(business_settings.date_format?.format_js) }}
                         </div>
                     </div>
                     <div class="flex justify-end mt-3">

@@ -42,7 +42,7 @@ const props = defineProps({
     order_dir: String,
     roles: Array,
     systemModules: Array,
-    business_seetings: Object,
+    business_settings: Object,
 });
 const form = useForm({
     search: props.search,

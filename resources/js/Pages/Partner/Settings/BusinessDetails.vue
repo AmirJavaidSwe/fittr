@@ -25,7 +25,7 @@ const props = defineProps({
     countries: Array,
     timezones: Array,
     form_data: Object,
-    business_seetings: Object,
+    business_settings: Object,
 });
 
 const business_phone = ref(null);
@@ -95,9 +95,9 @@ const formatPhoneInput = () => {
 const localtime = computed(() => {
     let local = DateTime.now().setZone(form.timezone);
     return (
-        local.toFormat(props.business_seetings.date_format.format_js) +
+        local.toFormat(props.business_settings.date_format.format_js) +
         " " +
-        local.toFormat(props.business_seetings.time_format.format_js) +
+        local.toFormat(props.business_settings.time_format.format_js) +
         " UTC " +
         local.toFormat("ZZ")
     );

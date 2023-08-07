@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faHome } from '@fortawesome/free-solid-svg-icons';
 
 const user = usePage().props.user;
-const subdomain = ref(usePage().props.business_seetings.subdomain);
+const subdomain = ref(usePage().props.business_settings.subdomain);
 
 const active_route = reactive({
     name: route().current(),

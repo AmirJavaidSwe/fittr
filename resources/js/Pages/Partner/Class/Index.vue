@@ -58,7 +58,7 @@ const props = defineProps({
     order_by: String,
     order_dir: String,
 
-    business_seetings: Object,
+    business_settings: Object,
 
     statuses: Object,
     studios: Object,
@@ -398,10 +398,10 @@ const createLocationFrom = useForm({
 });
 
 const addIdsToSelection = () => {
-    const now = DateTime.now().setZone(props.business_seetings.timezone);
+    const now = DateTime.now().setZone(props.business_settings.timezone);
     const upcomingItems = props.classes.data.filter((item) => {
         const itemDate = DateTime.fromISO(item.start_date).setZone(
-            props.business_seetings.timezone
+            props.business_settings.timezone
         );
         return itemDate > now;
     });
@@ -414,10 +414,10 @@ const addIdsToSelection = () => {
     }
 };
 const selectableRowsCount = computed(() => {
-    const now = DateTime.now().setZone(props.business_seetings.timezone);
+    const now = DateTime.now().setZone(props.business_settings.timezone);
     const upcomingItems = props.classes.data.filter((item) => {
         const itemDate = DateTime.fromISO(item.start_date).setZone(
-            props.business_seetings.timezone
+            props.business_settings.timezone
         );
         return itemDate > now;
     });
@@ -425,13 +425,13 @@ const selectableRowsCount = computed(() => {
 });
 
 const notUpcommingItem = (id) => {
-    const now = DateTime.now().setZone(props.business_seetings.timezone);
+    const now = DateTime.now().setZone(props.business_settings.timezone);
     const item = find(props.classes.data, function (o) {
         return o.id == id;
     });
     const itemDate = item
         ? DateTime.fromISO(item.start_date).setZone(
-              props.business_seetings.timezone
+              props.business_settings.timezone
           )
         : null;
     return itemDate > now ? true : false;
@@ -729,9 +729,9 @@ const inputPasswordType = computed(() =>
                         class="inline-flex"
                         :date="
                             DateTime.fromISO(class_lesson.waitlists[0].created_at)
-                                .setZone(business_seetings.timezone)
+                                .setZone(business_settings.timezone)
                                 .toFormat(
-                                    business_seetings.date_format?.format_js
+                                    business_settings.date_format?.format_js
                                 )
                         "
                     />
@@ -741,9 +741,9 @@ const inputPasswordType = computed(() =>
                     <DateValue
                         :date="
                             DateTime.fromISO(class_lesson.start_date)
-                                .setZone(business_seetings.timezone)
+                                .setZone(business_settings.timezone)
                                 .toFormat(
-                                    business_seetings.date_format?.format_js
+                                    business_settings.date_format?.format_js
                                 )
                         "
                     />
@@ -753,9 +753,9 @@ const inputPasswordType = computed(() =>
                         isTime
                         :date="
                             DateTime.fromISO(class_lesson.start_date)
-                                .setZone(business_seetings.timezone)
+                                .setZone(business_settings.timezone)
                                 .toFormat(
-                                    business_seetings.time_format?.format_js
+                                    business_settings.time_format?.format_js
                                 )
                         "
                     />
@@ -882,7 +882,7 @@ const inputPasswordType = computed(() =>
                 :studios="studios"
                 :instructors="instructors"
                 :classtypes="classtypes"
-                :business_seetings="business_seetings"
+                :business_settings="business_settings"
                 :submitted="storeClass"
                 @create-new-instructor="showInstructorCreateForm = true"
                 @create-new-class-type="showClassTypeCreateForm = true"
@@ -906,7 +906,7 @@ const inputPasswordType = computed(() =>
                 :studios="studios"
                 :instructors="instructors"
                 :classtypes="classtypes"
-                :business_seetings="business_seetings"
+                :business_settings="business_settings"
                 :submitted="updateClass"
                 @create-new-instructor="showInstructorCreateForm = true"
                 @create-new-class-type="showClassTypeCreateForm = true"
@@ -933,7 +933,7 @@ const inputPasswordType = computed(() =>
                 :studios="studios"
                 :instructors="instructors"
                 :classtypes="classtypes"
-                :business_seetings="business_seetings"
+                :business_settings="business_settings"
                 :submitted="storeDuplicateClass"
                 @create-new-instructor="showInstructorCreateForm = true"
                 @create-new-class-type="showClassTypeCreateForm = true"
@@ -987,7 +987,7 @@ const inputPasswordType = computed(() =>
                 :studios="studioList"
                 :instructors="instructors"
                 :classtypes="classtypes"
-                :business_seetings="business_seetings"
+                :business_settings="business_settings"
                 :submitted="updateBulkEdit"
                 @create-new-instructor="showInstructorCreateForm = true"
                 @create-new-class-type="showClassTypeCreateForm = true"

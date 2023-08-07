@@ -7,7 +7,7 @@ const active_route = reactive({
     name: route().current(),
 });
 
-const subdomain = ref(usePage().props.business_seetings.subdomain);
+const subdomain = ref(usePage().props.business_settings.subdomain);
 const styleLink = [
   'p-4',
   'md:p-2',

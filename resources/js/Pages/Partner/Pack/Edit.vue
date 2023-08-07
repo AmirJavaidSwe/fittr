@@ -4,7 +4,7 @@ import Form from "./Form.vue";
 import {useForm} from "@inertiajs/vue3";
 
 const props = defineProps({
-    business_seetings: Object,
+    business_settings: Object,
     pack_types: Array,
     periods: Array,
     price_types: Array,
@@ -53,7 +53,7 @@ const toggleOrDeletePrice = (action, id) => {
           :price_types="price_types"
           :locations="locations"
           :classtypes="classtypes"
-          :default_currency="business_seetings.default_currency"
+          :default_currency="business_settings.default_currency"
           :prices="pack.prices"
           :submitted="updateItem"
           :toggleOrDeletePrice="toggleOrDeletePrice"
