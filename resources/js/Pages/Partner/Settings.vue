@@ -96,18 +96,17 @@ import GeneralIcon from "@/Icons/GeneralIcon.vue";
                     Bookings & Payments
                 </div>
 
-                <CardIcon card-link="#">
+                <CardIcon :card-link="route('partner.settings.bookings')">
                     <template #icon>
-                        <!-- <BookingIcon /> -->
                         <BookingIcon />
                     </template>
 
                     <template #title>
-                        Booking
+                        Bookings & Timetable
                     </template>
 
                     <template #default>
-                        Manage Preferences
+                        Manage Limits
                     </template>
                 </CardIcon>
 
