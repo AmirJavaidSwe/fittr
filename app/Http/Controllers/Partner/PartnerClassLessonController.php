@@ -131,7 +131,7 @@ class PartnerClassLessonController extends Controller
             'statuses' => ClassStatus::labels(),
             'instructors' => Instructor::pluck('name', 'id'),
             'classtypes' => ClassType::pluck('title', 'id'),
-            'studios' => Studio::with('class_type_studios')->latest('id')->get(['id', 'title']),
+            'studios' => Studio::with('class_type_studios')->select('id', 'title')->orderBy('title', 'asc')->get(),
             'roles' => Role::select('id', 'title')->where('source', auth()->user()->source)->where('business_id', auth()->user()->business_id)->get(),
             'users' => User::select('id', 'name', 'email')->partner()->where('business_id', auth()->user()->business_id)->get(),
             'locations' => Location::select('id', 'title')->get(),
@@ -174,7 +174,7 @@ class PartnerClassLessonController extends Controller
             'locations' => Location::latest('id')->pluck('title', 'id'),
             'roles' => Role::latest('id')->pluck('title', 'id')->where('source', auth()->user()->source)->where('business_id', auth()->user()->business_id)->pluck('title', 'id'),
             'users' => User::select('id', 'name', 'email')->partner()->where('business_id', auth()->user()->business_id)->get(),
-            'studios' => Studio::latest('id')->pluck('title', 'id'),
+            'studios' => Studio::with('class_type_studios')->select('id', 'title')->orderBy('title', 'asc')->get(),
         ]);
     }
 
@@ -313,7 +313,7 @@ class PartnerClassLessonController extends Controller
             'statuses' => ClassStatus::labels(),
             'instructors' => Instructor::orderBy('id', 'desc')->pluck('name', 'id'),
             'classtypes' => ClassType::orderBy('id', 'desc')->pluck('title', 'id'),
-            'studios' => Studio::orderBy('id', 'desc')->pluck('title', 'id'),
+            'studios' => Studio::with('class_type_studios')->select('id', 'title')->orderBy('title', 'asc')->get(),
         ]);
     }
 
