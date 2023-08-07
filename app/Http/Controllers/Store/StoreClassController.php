@@ -26,14 +26,14 @@ class StoreClassController extends Controller
             'page_title' => __('Classes'),
             'header' => __('Classes'),
             'classes' => ClassLesson::active()
-                ->with(['studio.location.images', 'instructor', 'classType', 'bookings' => function (Builder $query) {
+                ->with(['studio.location.images', 'studio.class_type_studios', 'instructor', 'classType', 'waitlists', 'bookings' => function (Builder $query) {
                     $query->active();
                 }])
                 ->when(count($request->class_type ?? []), function($query) use($request) {
                     $query->whereIn('class_type_id', $request->class_type);
                 })
                 ->when(count($request->instructor ?? []), function($query) use($request) {
-                    $query->whereIn('instructor_id', $request->instructor);
+                    $query->whereIn('instructor_id', $request->instructor); // Requires adjustments as per new changes of multiple class instructors.
                 })
                 // Left commented for discussion
                 // ->when($request->time, function($query) use($request, $startDate) {
@@ -58,15 +58,6 @@ class StoreClassController extends Controller
                 ->where('end_date', '<=', $endDate)
                 ->orderBy('start_date', 'asc')
                 ->get()
-                ->map(function ($item) {
-                    //inject spaces left
-                    $item->spaces_booked = $item->bookings->count();
-                    $item->spaces_left = $item->spaces - $item->spaces_booked;
-                    //inject is_booked, always false for not auth user, true/false if logged in user active booking is found
-                    $item->is_booked = $item->bookings->contains('user_id', auth()->user()?->id);
-
-                    return $item;
-                })
                 ->groupBy(function($item) {
                     return $item->start_date
                     ->tz(session('business_seetings.timezone'))

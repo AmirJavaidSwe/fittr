@@ -321,6 +321,7 @@ const locationList = computed(() => {
                 :form="form_edit"
                 :submitted="updateStudios"
                 :locations="locations"
+                :class_types="class_types"
                 @create-new-location="showLocationCreateForm = true"
                 modal
             />

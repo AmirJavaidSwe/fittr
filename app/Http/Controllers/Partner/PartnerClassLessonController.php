@@ -38,6 +38,7 @@ class PartnerClassLessonController extends Controller
     public $per_page;
     public $order_by;
     public $order_dir;
+    public $type;
     public $runFilter;
     /**
      * Display a listing of the resource.
@@ -52,7 +53,8 @@ class PartnerClassLessonController extends Controller
         $this->order_dir = $request->query('order_dir', 'asc');
         $this->runFilter = $request->input('runFilter');
 
-        $classes = ClassLesson::with('studio', 'classType', 'instructor')->orderBy($this->order_by, $this->order_dir)
+        $classes = ClassLesson::with(['studio.class_type_studios', 'classType', 'instructor', 'waitlists.user', 'bookings' => fn($query) => $query->active()])
+            ->orderBy($this->order_by, $this->order_dir)
             ->when($this->search, function ($query) {
                 $query->where(function ($query) {
                     $query->orWhere('id', intval($this->search))
@@ -137,7 +139,7 @@ class PartnerClassLessonController extends Controller
             'statuses' => ClassStatus::labels(),
             'instructors' => Instructor::pluck('name', 'id'),
             'classtypes' => ClassType::pluck('title', 'id'),
-            'studios' => Studio::with('class_type_studios')->latest('id')->get(['id', 'title']),
+            'studios' => Studio::with('class_type_studios')->select('id', 'title')->orderBy('title', 'asc')->get(),
             'roles' => Role::select('id', 'title')->where('source', auth()->user()->source)->where('business_id', auth()->user()->business_id)->get(),
             'users' => User::select('id', 'name', 'email')->partner()->where('business_id', auth()->user()->business_id)->get(),
             'locations' => Location::select('id', 'title')->get(),
@@ -180,7 +182,7 @@ class PartnerClassLessonController extends Controller
             'locations' => Location::latest('id')->pluck('title', 'id'),
             'roles' => Role::latest('id')->pluck('title', 'id')->where('source', auth()->user()->source)->where('business_id', auth()->user()->business_id)->pluck('title', 'id'),
             'users' => User::select('id', 'name', 'email')->partner()->where('business_id', auth()->user()->business_id)->get(),
-            'studios' => Studio::latest('id')->pluck('title', 'id'),
+            'studios' => Studio::with('class_type_studios')->select('id', 'title')->orderBy('title', 'asc')->get(),
         ]);
     }
 
@@ -273,8 +275,25 @@ class PartnerClassLessonController extends Controller
      * @param ClassLesson $class
      * @return Response
      */
-    public function show(ClassLesson $class)
+    public function show(ClassLesson $class, Request $request)
     {
+        $this->per_page = $request->query('per_page', 5);
+        $this->type = $request->query('type', 'bookings');
+
+        $bookings = $class->bookings()
+            ->with('user')
+            ->active()
+            ->paginate($this->type == 'bookings' ? $this->per_page : 5);
+
+        $waitlists = $class->waitlists()
+            ->with('user')
+            ->paginate($this->type == 'waitlists' ? $this->per_page : 5);
+
+        $cancellations = $class->bookings()
+            ->with('user')
+            ->cancelled()
+            ->paginate($this->type == 'bookings' ? $this->per_page : 5);
+
         return Inertia::render('Partner/Class/Show', [
             'page_title' => __('Class details'),
             'header' => array(
@@ -291,7 +310,12 @@ class PartnerClassLessonController extends Controller
                     'link' => null,
                 ],
             ),
-            'class_lesson' => $class->load(['studio', 'instructor', 'classType']),
+            'class_lesson' => $class->load(['studio.class_type_studios', 'classType', 'instructor', 'waitlists.user', 'bookings.user']),
+            'bookings' => $bookings,
+            'waitlists' => $waitlists,
+            'cancellations' => $cancellations,
+            'per_page' => intval($this->per_page),
+            'type' => $this->type,
         ]);
     }
 
@@ -323,7 +347,7 @@ class PartnerClassLessonController extends Controller
             'statuses' => ClassStatus::labels(),
             'instructors' => Instructor::orderBy('id', 'desc')->pluck('name', 'id'),
             'classtypes' => ClassType::orderBy('id', 'desc')->pluck('title', 'id'),
-            'studios' => Studio::orderBy('id', 'desc')->pluck('title', 'id'),
+            'studios' => Studio::with('class_type_studios')->select('id', 'title')->orderBy('title', 'asc')->get(),
         ]);
     }
 
@@ -337,7 +361,8 @@ class PartnerClassLessonController extends Controller
     public function update(ClassFormRequest $request, ClassLesson $class)
     {
         $validated = $request->validated();
-        $class->update($validated);
+        $class->fill($validated);
+        $class->save();
 
         if (!empty($validated['instructor_id'])) {
             $class->instructor()->sync($validated['instructor_id']);

@@ -26,6 +26,7 @@ let props = defineProps({
 });
 
 let form = useForm({
+    id: props.studio.id,
     title: props.studio.title,
     location_id: props.studio.location_id,
 });

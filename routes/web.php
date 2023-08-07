@@ -213,6 +213,8 @@ Route::domain('{subdomain}.'.config('app.domain'))->middleware(['auth.subdomain'
             Route::get('/bookings', [StoreBookingController::class, 'index'])->name('bookings.index');
             Route::post('/bookings', [StoreBookingController::class, 'store'])->name('bookings.store');
             Route::post('/bookings/cancel', [StoreBookingController::class, 'cancel'])->name('bookings.cancel');
+            Route::post('/bookings/add-to-waitlist', [StoreBookingController::class, 'addToWaitlist'])->name('bookings.add-to-waitlist');
+            Route::post('/bookings/remove-from-waitlist', [StoreBookingController::class, 'removeFromWaitList'])->name('bookings.remove-from-waitlist');
         });
 
         //INSTRUCTOR

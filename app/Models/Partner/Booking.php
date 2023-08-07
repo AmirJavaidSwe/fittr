@@ -7,11 +7,12 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
 class Booking extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'bookings';
     protected $connection = 'mysql_partner';
@@ -43,6 +44,11 @@ class Booking extends Model
     public function scopeCancelled($query)
     {
         $query->where('status', BookingStatus::get('cancelled'));
+    }
+
+    public function scopeWaitlisted($query)
+    {
+        $query->where('status', BookingStatus::get('waitlisted'));
     }
 
     // Accessors & Mutators

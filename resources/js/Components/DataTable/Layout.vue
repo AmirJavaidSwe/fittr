@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col lg:flex-row items-end lg:items-center">
+    <div v-if="$slots.search || $slots.button || $slots.extraActions" class="flex flex-col lg:flex-row items-end lg:items-center">
         <slot name="search"></slot>
         <div class="sm:flex sm:items-center">
             <div
@@ -48,7 +48,7 @@
         </div>
     </div>
 
-    <div class="mt-0 lg:mt-8 flex flex-col">
+    <div class="mt-0 flex flex-col" :class="$slots.search || $slots.button || $slots.extraActions ? 'lg-mt-8' : ''">
         <div class="overflow-x-auto overflow-y-hidden">
             <div class="inline-block min-w-full py-2 align-middle">
                 <div class="md:rounded-lg overflow-hidden">
@@ -78,6 +78,7 @@
 import { Link } from "@inertiajs/vue3";
 import ButtonLink from "@/Components/ButtonLink.vue";
 import { faPlus, faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { useSlots } from "vue";
 
 const emit = defineEmits(['bulkEdit', 'bulkDelete'])
 const props = defineProps({

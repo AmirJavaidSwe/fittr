@@ -67,7 +67,20 @@ module.exports = {
                 dark: "#292d32",
                 grey: "#939393", // darker grey
                 mainbg: "#e8eae9", // soft grey
-                blue: "#1269fb",
+                blue: {
+                    DEFAULT: "#1269FB",
+                    50: "#eef7ff",
+                    100: "#d8ecff",
+                    200: "#badeff",
+                    300: "#8accff",
+                    400: "#54aeff",
+                    500: "#2c8bff",
+                    600: "#1269fb",
+                    700: "#0e54e7",
+                    800: "#1244bb",
+                    900: "#153e93",
+                    950: "#122659",
+                }, // #1269FB
                 fileinputbg: "#eaf1f8",
             },
             fontFamily: {

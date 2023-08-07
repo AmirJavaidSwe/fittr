@@ -130,6 +130,78 @@ class StoreBookingController extends Controller
 
         event(new BookingCancellation($booking));
 
+        $waitlist = Booking::with('user', 'class.classType', 'class.instructor', 'class.studio.location')->where('class_id', $request->class_id)->waitlisted()->first();
+
+        if($waitlist) {
+            $waitlist->update([
+                'status' => BookingStatus::get('active'),
+            ]);
+
+            event(new BookingConfirmation($waitlist));
+        }
+
+
         return $this->redirectBackSuccess('The booking has been cancelled.');
+    }
+
+    public function addToWaitlist(Request $request)
+    {
+        $class = ClassLesson::with(['waitlists' => function ($query) {
+            $query->where('user_id', auth()->user()?->id);
+        }])
+        ->active()
+        ->find($request->class_id);
+
+        $maxDaysBooking = session('business_seetings.days_max_booking');
+
+        $maxBookingStart = now(session('business_seetings.timezone'))->startOfDay();
+        $maxBookingEnd = $maxBookingStart->copy()
+        ->when($maxDaysBooking, fn($date) => $date->addDays($maxDaysBooking-1))
+        ->endOfDay()
+        ->utc();
+        $maxBookingStart = $maxBookingStart->utc();
+
+        if(!$class) {
+            return $this->redirectBackError(__('The class does not exist.'));
+        }
+
+        if(
+            $maxDaysBooking
+            && !(
+                $maxBookingStart->lte($class->start_date)
+                && $maxBookingEnd->gte($class->end_date)
+            )
+        ) {
+            return $this->redirectBackError(__('The class cannot be added to waitlist.'));
+        }
+
+        if($class->waitlists->count()) {
+            return $this->redirectBackError(__('The class cannot be added to waitlist again.'));
+        }
+
+        if (now()->lte($class->start_date->subDay())) {
+            return $this->redirectBackError(__('This class can no longer be added to waitlist.'));
+        }
+
+        Booking::create([
+            'class_id' => $request->class_id,
+            'user_id' => $request->user()->id,
+            'status' => BookingStatus::get('waitlisted'),
+        ]);
+
+        return $this->redirectBackSuccess('The class has been added to waitlist.');
+    }
+
+    public function removeFromWaitList(Request $request)
+    {
+        $booking = Booking::where('class_id', $request->class_id)->where('user_id', auth()->user()?->id)->waitlisted()->first();
+
+        if(!$booking) {
+            return $this->redirectBackError('The booking not found.');
+        }
+
+        $booking->delete();
+
+        return $this->redirectBackSuccess('The class has been removed from waitlist.');
     }
 }
