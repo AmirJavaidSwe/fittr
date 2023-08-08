@@ -100,6 +100,9 @@ class StoreBookingController extends Controller
             'user_id' => $request->user()->id,
         ]);
 
+        $booking->family_booking = $request->familyBooking;
+        $booking->save();
+
         $booking->load(['user', 'class.classType', 'class.instructor', 'class.studio.location']);
 
         event(new BookingConfirmation($booking));
@@ -153,7 +156,6 @@ class StoreBookingController extends Controller
         ->find($request->class_id);
 
         $maxDaysBooking = session('business_settings.days_max_booking');
-
         $maxBookingStart = now(session('business_settings.timezone'))->startOfDay();
         $maxBookingEnd = $maxBookingStart->copy()
         ->when($maxDaysBooking, fn($date) => $date->addDays($maxDaysBooking-1))
@@ -179,7 +181,7 @@ class StoreBookingController extends Controller
             return $this->redirectBackError(__('The class cannot be added to waitlist again.'));
         }
 
-        if (now()->lte($class->start_date->subDay())) {
+        if (now() > $class->start_date->subDay()) {
             return $this->redirectBackError(__('This class can no longer be added to waitlist.'));
         }
 

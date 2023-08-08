@@ -28,8 +28,8 @@ const time_notes = computed(() => {
 });
 
 const form = useForm({
-    date_format: props.form_data.date_format.id,
-    time_format: props.form_data.time_format.id,
+    date_format: props.form_data?.date_format?.id,
+    time_format: props.form_data?.time_format?.id,
 });
 
 const submitForm = () => {
@@ -57,7 +57,7 @@ const submitForm = () => {
                 </span>
                 <InputLabel for="date_format" value="Date Format" />
                 <SelectInput id="date_format" v-model="form.date_format" :options="props.formats_date"
-                    option_value="id" option_text="example" class="p-12 mt-1 block w-full">
+                    option_value="id" option_text="example" class="pl-12 mt-1 block w-full">
                 </SelectInput>
             </div>
             <InputError :message="form.errors.date_format" class="mt-2" />
@@ -72,7 +72,7 @@ const submitForm = () => {
                 </span>
                 <InputLabel for="time_format" value="Time Format" />
                 <SelectInput id="time_format" v-model="form.time_format" :options="props.formats_time"
-                    option_value="id" option_text="example" class="p-12 mt-1 block w-full">
+                    option_value="id" option_text="example" class="pl-12 mt-1 block w-full">
                 </SelectInput>
             </div>
             <InputError :message="form.errors.time_format" class="mt-2" />

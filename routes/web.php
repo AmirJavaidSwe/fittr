@@ -19,6 +19,7 @@ use App\Http\Controllers\Store\StoreClassController;
 use App\Http\Controllers\Store\StorePublicController;
 use App\Http\Controllers\Partner\PartnerTaxController;
 use App\Http\Controllers\Shared\UserProfileController;
+use App\Http\Controllers\Store\MemberFamilyController;
 use App\Http\Controllers\Store\StoreBookingController;
 use App\Http\Controllers\Store\StorePaymentController;
 use App\Http\Controllers\Partner\PartnerPackController;
@@ -31,9 +32,9 @@ use App\Http\Controllers\Partner\PartnerMemberController;
 use App\Http\Controllers\Partner\PartnerOnTheFlyResource;
 use App\Http\Controllers\Partner\PartnerStudioController;
 use App\Http\Controllers\Store\MemberDashboardController;
-use App\Http\Controllers\Store\StoreInstructorController;
 
 // Service store area, partner subdomains:
+use App\Http\Controllers\Store\StoreInstructorController;
 use App\Http\Controllers\Partner\PartnerAmenityController;
 use App\Http\Controllers\Partner\PartnerOnboardController;
 use App\Http\Controllers\Partner\BusinessSettingController;
@@ -216,6 +217,7 @@ Route::domain('{subdomain}.'.config('app.domain'))->middleware(['auth.subdomain'
             Route::post('/bookings/cancel', [StoreBookingController::class, 'cancel'])->name('bookings.cancel');
             Route::post('/bookings/add-to-waitlist', [StoreBookingController::class, 'addToWaitlist'])->name('bookings.add-to-waitlist');
             Route::post('/bookings/remove-from-waitlist', [StoreBookingController::class, 'removeFromWaitList'])->name('bookings.remove-from-waitlist');
+            Route::resource('family', MemberFamilyController::class);
         });
 
         //INSTRUCTOR

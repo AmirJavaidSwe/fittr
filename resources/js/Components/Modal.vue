@@ -14,6 +14,10 @@ const props = defineProps({
         type: Boolean,
         default: true,
     },
+    sideModalOpened: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 const emit = defineEmits(['close']);
@@ -61,12 +65,15 @@ const maxWidthClass = computed(() => {
         'fit': 'sm:max-w-fit', // fit-content;
     }[props.maxWidth];
 });
+const zIndexing = computed(() => {
+    return  props.sideModalOpened ? 'z-index: 9999;' : 'z-index: 100;';
+});
 </script>
 
 <template>
     <teleport to="body">
         <transition leave-active-class="duration-200">
-            <div v-if="show" class="fixed inset-0 overflow-y-auto px-4 py-6 sm:px-0 z-[100]" scroll-region>
+            <div v-if="show" class="fixed inset-0 overflow-y-auto px-4 py-6 sm:px-0" scroll-region :style="zIndexing">
                 <transition
                     enter-active-class="ease-out duration-300"
                     enter-from-class="opacity-0"

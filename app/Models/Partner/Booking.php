@@ -18,6 +18,15 @@ class Booking extends Model
     protected $connection = 'mysql_partner';
     protected $guarded = ['id'];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'family_booking' => 'array'
+    ];
+
     protected $appends = ['status_text'];
 
     public function class(): BelongsTo

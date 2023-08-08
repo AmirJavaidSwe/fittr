@@ -86,6 +86,10 @@ const classTypeList = computed(() => {
     return newClassTypeList;
 });
 
+const studiosOptions = computed(() => {
+    return props.studios.map(item => ({value: item.id, label: item.title}));
+});
+
 const studioList = computed(() => {
     let newStudioList = studiosOptions.value;
     newStudioList.push({

@@ -79,6 +79,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'initials',
         'profile_photo_url',
         'dashboard_route',
+        'family',
     ];
 
     // Accessors
@@ -117,5 +118,16 @@ class User extends Authenticatable implements MustVerifyEmail
     public function scopeInstructor($query)
     {
         $query->where('role', PartnerUserRole::INSTRUCTOR->value);
+    }
+
+    // Relation
+    public function memberFamily()
+    {
+        return $this->hasMany(MemberFamily::class);
+    }
+
+    public function getFamilyAttribute(): array
+    {
+        return $this->memberFamily()->get()->toArray();
     }
 }
