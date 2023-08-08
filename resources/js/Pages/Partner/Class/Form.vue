@@ -89,6 +89,14 @@ const classTypeList = computed(() => {
 const studiosOptions = computed(() => {
     return props.studios.map(item => ({value: item.id, label: item.title}));
 });
+const defaultCapacity = computed(() => {
+    const studio = props.studios.filter(item => props.form.studio_id == item.id)[0];
+    if(studio) {
+        const classTypeStudio = studio.class_type_studios.filter(item => props.form.class_type_id == item.class_type_id)[0];
+        return classTypeStudio?.spaces;
+    }
+    return '';
+});
 
 const studioList = computed(() => {
     let newStudioList = studiosOptions.value;
