@@ -304,6 +304,7 @@ const showEditPrice = (price) => {
                         v-for="price in prices"
                         :key="price.id"
                         :price="price"
+                        :pack_type="form.type"
                         :label="price_types.find(element => element.value == price.type).label"
                         @toggle="toggleOrDeletePrice('toggle', price.id)"
                         @edit="showEditPrice(price)"

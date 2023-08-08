@@ -27,7 +27,7 @@ const props = defineProps({
     is_new_price: Boolean,
 });
 
-const emit =defineEmits(['created', 'updated']);
+const emit = defineEmits(['created', 'updated']);
 
 const formPrice = useForm(props.price);
 
@@ -42,10 +42,14 @@ const upsertPrice = () => {
         // #1 default (Membership Type), one_time
         //  is_renewable (is_renewable or is_intro but not both on)
         //  is_intro
+        //  expiration (multiplier) 
+        //  expiration_period (day, week, month, year) 
 
         // #1.1 default (Membership Type), recurring
         //  is_ongoing
         //  fixed_count
+        //  expiration (multiplier) 
+        //  expiration_period (day, week, month, year) 
 
         // #2 [class_lesson, service, hybrid],  (Membership Type), one_time
         //  sessions (number of)
@@ -105,7 +109,7 @@ const checkIntro = (el, v) => {
 };
 
 const showExpiration = computed(() => {
-  return !isDefaultType.value && formPrice.is_expiring;
+  return formPrice.is_expiring;
 });
 const isRecurring = computed(() => {
   return formPrice.type == 'recurring';
@@ -121,6 +125,9 @@ const showFap = computed(() => {
 });
 const showFapValue = computed(() => {
   return showFap.value && formPrice.is_fap;
+});
+const showRenewable = computed(() => {
+  return !isRecurring.value && !isDefaultType.value;
 });
 const showIntro = computed(() => {
   return !isRecurring.value && props.pack_type != 'corporate';
@@ -223,11 +230,11 @@ const showIntro = computed(() => {
             </div>
 
             <!-- is_expiring (session credits) -->
-            <div v-if="!isDefaultType">
+            <div>
                 <Switcher
                     v-model="formPrice.is_expiring"
-                    title="Session credits expiration"
-                    :description="'Session credits ' + (formPrice.is_expiring ? 'will' : 'never') + ' expire (since day of creation)'"/>
+                    :title="(isDefaultType ? 'Membership' : 'Session credits') + ' expiration'"
+                    :description="(isDefaultType ? 'Membership' : 'Session credits') +' '+ (formPrice.is_expiring ? 'will' : 'never') + ' expire (since day of creation)'"/>
                 <InputError :message="formPrice.errors.is_expiring" class="mt-2"/>
             </div>
 
@@ -256,7 +263,10 @@ const showIntro = computed(() => {
                         </RadioGroup>
                 </div>
                 <div v-if="isCorporateType" class="text-gray-500 text-xs">Once code has been redeemed for session credit, it will expire after period of time specified above.</div>
-                <div v-else-if="isRecurring" class="text-gray-500 text-xs">You can match session credits to be inline with your billing cycle or make them expire before/after next billing cycle.</div>
+                <div v-else-if="isRecurring" class="text-gray-500 text-xs">
+                    You can match {{isDefaultType ? 'membership' : 'session credits'}} to be inline with your billing cycle or make them expire before/after next billing cycle.
+                </div>
+                <div v-else-if="isDefaultType" class="text-gray-500 text-xs">Set the period for membership expiration.</div>
                 <div v-else class="text-gray-500 text-xs">Session credits will expire on next day of selected period. The lifecycle of session credit starts on the checkout day.</div>
                 <InputError :message="formPrice.errors.expiration" class="mt-2"/>
                 <InputError :message="formPrice.errors.expiration_period" class="mt-2"/>
@@ -317,7 +327,7 @@ const showIntro = computed(() => {
             </div>
 
             <!-- is_renewable -->
-            <div v-if="!isRecurring">
+            <div v-if="showRenewable">
                 <Switcher
                     v-model="formPrice.is_renewable"
                     @update:modelValue="checkIntro('is_renewable', formPrice.is_renewable)"

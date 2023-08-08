@@ -43,7 +43,7 @@ class PriceFormRequest extends FormRequest
             ],
             'is_expiring' => [
                 'boolean',
-                Rule::excludeIf($this->pack->type == PackType::default->name),
+                // Rule::excludeIf($this->pack->type == PackType::default->name),
             ],
             'expiration' => 'required_if:is_expiring,true|exclude_without:is_expiring|exclude_if:is_expiring,false|integer|min:1',
             'expiration_period' => ['required_if:is_expiring,true', 'exclude_without:is_expiring', 'exclude_if:is_expiring,false', Rule::in(StripePeriod::all())],
@@ -62,7 +62,7 @@ class PriceFormRequest extends FormRequest
             'fixed_count' => 'required_if:is_ongoing,false|exclude_if:is_ongoing,true|exclude_without:is_ongoing|integer|min:1',
             'is_renewable' => [
                 'boolean',
-                Rule::excludeIf($this->type != StripePriceType::one_time->name),
+                Rule::excludeIf($this->type != StripePriceType::one_time->name || $this->pack->type == PackType::default->name),
                 'declined_if:is_intro,true',
             ],
             'is_intro' => [

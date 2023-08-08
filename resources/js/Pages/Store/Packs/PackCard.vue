@@ -1,4 +1,5 @@
 <script setup>
+import { computed } from 'vue';
 import ButtonLink from '@/Components/ButtonLink.vue';
 import PriceOption from './PriceOption.vue';
 
@@ -19,6 +20,14 @@ const props = defineProps({
         type: Boolean,
         required: false,
     },
+    classtypes: Array,
+});
+
+const restrictedClasses = computed(() => {
+    return props.classtypes
+        .filter(item => props.pack.restrictions.classtypes.some(e => e == item.id))
+        .map(x => x.title)
+        .join(', ');
 });
 
 defineEmits(['priceSelected', 'buy']);
@@ -47,6 +56,16 @@ defineEmits(['priceSelected', 'buy']);
             </PriceOption>
         </div>
         <div v-if="pack.description">{{pack.description}}</div>
+        <div v-if="pack.is_restricted" class="mt-2 border-t-2 text-grey">
+            <div class="font-bold">Restrictions:</div>
+            <div v-if="pack.restrictions?.offpeak" v-tooltip="'Class or service credit can be used for activities running during off-peak hours'" class="border-b border-dashed text-grey">Off-Peak Only</div>
+            <div v-if="pack.restrictions?.classtypes">
+                Valid for {{restrictedClasses}} classes only.
+            </div>
+            <!-- <div v-if="pack.restrictions?.servicetypes">
+                Valid for .... services only.
+            </div> -->
+        </div>
         <div class="flex flex-grow items-end">
             <ButtonLink 
                 type="button"

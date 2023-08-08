@@ -25,6 +25,10 @@ const isUnlimited = computed(() => {
   return props.price.is_unlimited && props.price.type == 'recurring';
 });
 
+const isDefaultType = computed(() => {
+    return props.pack.type == 'default';
+});
+
 defineEmits(['priceSelected']);
 
 </script>
@@ -44,12 +48,21 @@ defineEmits(['priceSelected']);
                 <div v-if="price.interval_count">{{price.interval_human}}</div>
             </div>
             <span class="border"></span>
-            
+
+            <!-- pack.type == 'default' -->
+            <template v-if="isDefaultType">
+            <!-- Show expiration period -->
+            <span class="font-bold" v-if="price.is_expiring">
+                {{price.expiration}} {{price.expiration_period}} pass
+            </span>
+            </template>
+
+            <template v-else>
             <span class="font-bold text-3xl" v-if="isUnlimited">&infin;</span>
             <span class="font-bold text-3xl" v-else>{{price.sessions}}</span>
             <div class="leading-4">
                 <div class="text-grey">{{price.taxonomy_sessions}}</div>
-                <div v-if="price.is_renewable" class="border-b border-dashed dashed text-grey">
+                <div v-if="price.is_renewable" class="border-b border-dashed text-grey">
                     <VDropdown :popperTriggers="['hover']">
                         <button>auto top-up</button>
                         <template #popper>
@@ -57,7 +70,7 @@ defineEmits(['priceSelected']);
                         </template>
                     </VDropdown>
                 </div>
-                <div v-if="isUnlimited" class="border-b border-dashed dashed text-grey">
+                <div v-if="isUnlimited" class="border-b border-dashed text-grey">
                     <VDropdown v-if="price.is_fap" :popperTriggers="['hover']">
                         <button>Fair Use Policy</button>
                         <template #popper>
@@ -69,6 +82,7 @@ defineEmits(['priceSelected']);
                     </VDropdown>
                 </div>
             </div>
+            </template>
         </div>
         <div v-if="pack.prices.length > 1" class="cursor-pointer p-2" @click="$emit('priceSelected', pack.id, price.id)">
             <font-awesome-icon v-if="state_buttons[pack.id].selected_price_id == price.id" :icon="faCircleCheck" />

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Store;
 
 use App\Http\Controllers\Controller;
+use App\Models\Partner\ClassType;
 use App\Models\Partner\Pack;
 use App\Models\Partner\Location;
 use App\Services\Store\StorePackService;
@@ -29,6 +30,7 @@ class StorePackController extends Controller
             'price_buttons' => $price_buttons,
             'price_buttons_text' => $this->store_pack_service->buttonsText(),
             'locations' => Location::active()->select('id', 'title')->get(),
+            'classtypes' => ClassType::orderBy('id', 'desc')->select('title', 'id')->get(),
         ]);
     }
 
@@ -50,6 +52,7 @@ class StorePackController extends Controller
             'price_buttons' => $price_buttons,
             'price_buttons_text' => $this->store_pack_service->buttonsText(),
             'locations' => Location::active()->select('id', 'title')->get(),
+            'classtypes' => ClassType::orderBy('id', 'desc')->select('title', 'id')->get(),
         ]);
     }
 }
