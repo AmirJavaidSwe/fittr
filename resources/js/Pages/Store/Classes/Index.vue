@@ -568,7 +568,7 @@ const closeAddFamilyModal = (param) => {
                     </div>
                 </div>
             </div>
-            <div class="text-right" v-if="user.family.length">
+            <div class="text-right" v-if="user?.family?.length">
                 <div class="relative inline-flex text-right items-center">
                     Booking for
                     <select class="ml-5 border-0 focus:border-0 cursor-pointer mr-0 pr-7 text-primary-500"
@@ -578,7 +578,7 @@ const closeAddFamilyModal = (param) => {
                     </select>
                 </div>
             </div>
-            <div class="mt-5 bg-mainbg border-rounded text-right border-gray p-4" v-if="user.family.length">
+            <div class="mt-5 bg-mainbg border-rounded text-right border-gray p-4" v-if="user?.family?.length">
                 <template v-if="is_family_booking == 2 && selectedFamilyMembers.family_member.ids.length">
                     {{ parseInt(selectedFamilyMembers.family_member.ids.length) + 1 + " x Attendee(s) Selected" }}
                 </template>

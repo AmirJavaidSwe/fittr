@@ -349,7 +349,7 @@ const studioList = computed(() => {
 
                 <div class="flex mt-1 items-center">
                     <div v-if="form.use_defaults" class="mr-2">Default:</div>
-                    <div v-if="form.use_defaults" class="flex flex-grow mr-2">{{ form.default_spaces }}</div>
+                    <div v-if="form.use_defaults" class="flex flex-grow mr-2">{{ defaultCapacity }}</div>
                     <TextInput
                         v-else
                         id="title"
