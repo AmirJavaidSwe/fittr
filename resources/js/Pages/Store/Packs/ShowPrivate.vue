@@ -24,6 +24,10 @@ const props = defineProps({
         type: Array,
         required: true,
     },
+    classtypes: {
+        type: Array,
+        required: true,
+    },
 });
 const subdomain = ref(usePage().props.business_settings.subdomain);
 const isLocked = ref(false);
@@ -99,6 +103,7 @@ const priceSelected = (pack_id, price_id) => {
             :state_buttons="state_buttons"
             :location="location"
             :isLocked="isLocked"
+            :classtypes="classtypes"
             class="bg-white rounded-md border-t-8 p-2 w-80 flex flex-col"
             @priceSelected="(pack_id, price_id) => priceSelected(pack_id, price_id)"
             @buy="buy(pack.id)"

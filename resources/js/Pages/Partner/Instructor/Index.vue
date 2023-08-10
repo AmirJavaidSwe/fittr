@@ -27,6 +27,7 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+    business_settings: Object,
     instructors: Object,
     search: String,
     per_page: Number,
@@ -195,7 +196,7 @@ const deleteItem = () => {
                 <!-- <table-data :title="instructor.id" /> -->
                 <table-data>
                     <Link
-                        class="font-medium text-indigo-600 hover:text-indigo-500"
+                        class="font-semibold text-primary-500 hover:text-primary-900"
                         :href="route('partner.instructors.show', instructor)"
                     >
                         {{ instructor.name }}
@@ -203,13 +204,10 @@ const deleteItem = () => {
                 </table-data>
                 <table-data :title="instructor.email" />
                 <table-data>
-                    <DateValue
-                        :date="
-                            DateTime.fromISO(
-                                instructor.created_at
-                            ).toLocaleString()
-                        "
-                    />
+                    <!-- <DateValue :date="DateTime.fromISO(instructor.created_at).toLocaleString()"/> -->
+                    <DateValue :date="DateTime.fromISO(instructor.created_at)
+                    .setZone(business_settings.timezone)
+                    .toFormat(business_settings.date_format.format_js + ' ' + business_settings.time_format.format_js)" />
                 </table-data>
                 <table-data>
                     <DateValue

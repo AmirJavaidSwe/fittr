@@ -175,12 +175,18 @@ const deleteItem = () => {
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'email'"
             />
-            <table-head
-                title="Created At"
+            <TableHead
                 @click="setOrdering('created_at')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'created_at'"
-            />
+            >
+                <div>
+                    Created
+                    <span v-tooltip="DateTime.now().setZone(business_settings.timezone).toFormat('z')">
+                        ({{ DateTime.now().setZone(business_settings.timezone).toFormat('ZZZZ')}})
+                    </span>
+                </div>
+            </TableHead>
             <table-head
                 title="Updated At"
                 @click="setOrdering('updated_at')"
@@ -195,7 +201,7 @@ const deleteItem = () => {
                 <!-- <table-data :title="member.id" /> -->
                 <table-data>
                     <Link
-                        class="font-medium text-indigo-600 hover:text-indigo-500"
+                        class="font-semibold text-primary-500 hover:text-primary-900"
                         :href="route('partner.members.show', member)"
                     >
                         {{ member.name }}
@@ -203,15 +209,9 @@ const deleteItem = () => {
                 </table-data>
                 <table-data :title="member.email" />
                 <table-data>
-                    <DateValue
-                        :date="
-                            DateTime.fromISO(member.created_at)
-                                .setZone(business_settings.timezone)
-                                .toFormat(
-                                    business_settings.date_format.format_js
-                                )
-                        "
-                    />
+                    <DateValue :date="DateTime.fromISO(member.created_at)
+                    .setZone(business_settings.timezone)
+                    .toFormat(business_settings.date_format.format_js + ' ' + business_settings.time_format.format_js)" />
                 </table-data>
                 <table-data>
                     <DateValue

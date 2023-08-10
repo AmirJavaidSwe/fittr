@@ -1,3 +1,60 @@
+<script setup>
+import { ref } from 'vue';
+import { Link } from "@inertiajs/vue3";
+import ButtonLink from "@/Components/ButtonLink.vue";
+import { faPlus, faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { useSlots } from "vue";
+
+const emit = defineEmits(['bulkEdit', 'bulkDelete'])
+const props = defineProps({
+    disableButton: {
+        type: Boolean,
+        default: false,
+    },
+    disableSearch: {
+        type: Boolean,
+        default: false,
+    },
+    buttonTitle: {
+        default: "Add data",
+        type: String,
+        required: false,
+    },
+    buttonLink: {
+        default: "#",
+        type: String,
+        required: false,
+    },
+    extraActions: {
+        default: false,
+        type: [Boolean, Number],
+        required: false,
+    },
+});
+
+const mousedown = ref(false);
+const initialTableLeft = ref(0);
+const initialGrabPosition = ref(0);
+const wrap = ref(null); //dom
+const grabTable = (e) => {
+    mousedown.value = true;
+    initialGrabPosition.value = e.pageX;
+    wrap.value.style.cursor = 'grab';
+    initialTableLeft.value = wrap.value.scrollLeft;
+};
+const releaseTable = () => {
+    mousedown.value = false;
+    wrap.value.style.cursor = 'initial';
+    wrap.value.style.userSelect = '';
+};
+const moveTable = (e) => {
+    if(mousedown.value == false) return;
+    wrap.value.style.cursor = 'grabbing';
+    wrap.value.style.userSelect = 'none';
+    wrap.value.scrollLeft = initialTableLeft.value + (initialGrabPosition.value - e.pageX);
+};
+</script>
+
 <template>
     <div v-if="$slots.search || $slots.button || $slots.extraActions" class="flex flex-col lg:flex-row items-end lg:items-center">
         <slot name="search"></slot>
@@ -48,62 +105,22 @@
         </div>
     </div>
 
-    <div class="mt-0 flex flex-col" :class="$slots.search || $slots.button || $slots.extraActions ? 'lg-mt-8' : ''">
-        <div class="overflow-x-auto overflow-y-hidden">
-            <div class="inline-block min-w-full py-2 align-middle">
-                <div class="md:rounded-lg overflow-hidden">
-                    <table class="min-w-full border-spacing-0 border-separate">
-                        <thead>
-                            <tr>
-                                <slot name="tableHead"></slot>
-                            </tr>
-                        </thead>
-                        <tbody class="data-table-layout">
-                            <!-- <tr> -->
-                            <slot name="tableData"></slot>
-                            <!-- </tr> -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+    <div class="overflow-x-auto" :class="$slots.search || $slots.button || $slots.extraActions ? 'mt-4' : 'mt-0'" ref="wrap">
+        <table class="w-full h-full border-spacing-x-px border-spacing-y-0 border-separate ">
+            <thead>
+                <tr>
+                    <slot name="tableHead"></slot>
+                </tr>
+            </thead>
+            <tbody class="" @mousedown="grabTable" @mouseup="releaseTable" @mousemove="moveTable">
+                <!-- <tr> -->
+                <slot name="tableData"></slot>
+                <!-- </tr> -->
+            </tbody>
+        </table>
+    </div>
 
-        <div class="mt-3">
-            <slot name="pagination" />
-        </div>
+    <div class="mt-3">
+        <slot name="pagination" />
     </div>
 </template>
-
-<script setup>
-import { Link } from "@inertiajs/vue3";
-import ButtonLink from "@/Components/ButtonLink.vue";
-import { faPlus, faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { useSlots } from "vue";
-
-const emit = defineEmits(['bulkEdit', 'bulkDelete'])
-const props = defineProps({
-    disableButton: {
-        type: Boolean,
-        default: false,
-    },
-    disableSearch: {
-        type: Boolean,
-        default: false,
-    },
-    buttonTitle: {
-        default: "Add data",
-        type: String,
-        required: false,
-    },
-    buttonLink: {
-        default: "#",
-        type: String,
-        required: false,
-    },
-    extraActions: {
-        default: false,
-        type: [Boolean, Number],
-        required: false,
-    },
-});
-</script>
