@@ -11,6 +11,7 @@ use App\Http\Requests\Partner\PriceFormRequest;
 use App\Http\Requests\Partner\PriceUpdateRequest;
 use App\Models\Partner\Pack;
 use App\Models\Partner\ClassType;
+use App\Models\Partner\ServiceType;
 use App\Models\Partner\Location;
 use App\Models\Partner\PackPrice;
 use App\Services\Partner\PackService;
@@ -83,10 +84,8 @@ class PartnerPackController extends Controller
                     'link' => route('partner.packs.index'),
                 ],
             ),
-            'classtypes' => ClassType::orderBy('id', 'desc')->pluck('title', 'id'),
             'pack_types' => PackType::labels(),
             'price_types' => StripePriceType::labels(),
-            'periods' => StripePeriod::labels(),
         ]);
     }
 
@@ -124,8 +123,7 @@ class PartnerPackController extends Controller
             'pack_types' => PackType::labels(),
             'periods' => StripePeriod::labels(),
             'classtypes' => ClassType::orderBy('id', 'desc')->pluck('title', 'id'), //used for restrictions, with type Class+Hybrid
-            //FUTURE USE: 'servicetypes' => ServiceType::orderBy('id', 'desc')->pluck('title', 'id'), //used for restrictions, with type Service+Hybrid
-
+            'servicetypes' => ServiceType::orderBy('id', 'desc')->pluck('title', 'id'),//used for restrictions, with type Service+Hybrid
         ]);
     }
 
@@ -225,6 +223,7 @@ class PartnerPackController extends Controller
             'price_types' => StripePriceType::labels(),
             'periods' => StripePeriod::labels(),
             'classtypes' => ClassType::orderBy('id', 'desc')->pluck('title', 'id'),
+            'servicetypes' => ServiceType::orderBy('id', 'desc')->pluck('title', 'id'),
             'locations' => Location::select('id', 'status', 'title')->get()->map(function ($item) {
                 return array(
                     'label' => $item->title,

@@ -9,6 +9,10 @@ const props = defineProps({
         type: Object,
         required: true,
     },
+    pack_type: {
+        type: String,
+        required: true,
+    },
     label: {
         type: String,
         required: true,
@@ -22,19 +26,22 @@ const locationRestrictionsTooltip = computed(() => {
     return 'This option restricted to ' + count + ' location' + (count > 1 ? 's':'');
 });
 const isRecurring = computed(() => {
-  return props.price.type == 'recurring';
+    return props.price.type == 'recurring';
 });
 const showRenewable = computed(() => {
-  return props.price.is_renewable;
+    return props.price.is_renewable;
 });
 const showIntro = computed(() => {
-  return props.price.is_intro;
+    return props.price.is_intro;
 });
 const showExpiration = computed(() => {
-  return props.price.is_expiring;
+    return props.price.is_expiring;
 });
 const isUnlimited = computed(() => {
-  return props.price.is_unlimited && props.price.type == 'recurring';
+    return props.price.is_unlimited && props.price.type == 'recurring';
+});
+const isDefaultType = computed(() => {
+    return props.pack_type == 'default';
 });
 
 defineEmits(['toggle', 'edit', 'delete']);
@@ -92,6 +99,7 @@ defineEmits(['toggle', 'edit', 'delete']);
                 <span class="font-bold" :title="price.currency.toUpperCase()">{{price.price_formatted}}</span>
                 <span v-if="price.interval_count">&nbsp;{{price.interval_human}}</span>
             </div>
+            <template v-if="!isDefaultType">
             <div v-if="isUnlimited"> 
                 <span class="font-bold text-2xl">Unlimited {{price.taxonomy_sessions}}</span>
             </div>
@@ -99,6 +107,7 @@ defineEmits(['toggle', 'edit', 'delete']);
                 <span class="font-bold text-2xl" :title="price.sessions">{{price.sessions}}</span>
                 <span class="ml-1">{{price.taxonomy_sessions}}</span>
             </div>
+            </template>
             <div v-if="price.location_ids.length" class="flex flex-wrap items-center gap-2" v-tooltip="locationRestrictionsTooltip">
                 <font-awesome-icon :icon="faLocationPinLock" />
                 <span v-for="location in restricted_locations" :key="location.id" class="bg-red-100 font-semibold px-2 py-2 rounded-md text-red-800 text-xs">
@@ -107,9 +116,24 @@ defineEmits(['toggle', 'edit', 'delete']);
             </div>
         </div>
         <div class="bg-gray-100 flex flex-wrap gap-2">
-            <font-awesome-icon v-if="showRenewable" :icon="faRecycle" class="w-4 h-4 m-2 p-1 bg-white rounded" v-tooltip="'Auto renewable option'" />
-            <font-awesome-icon v-if="showIntro" :icon="faUserPlus" class="w-4 h-4 m-2 p-1 bg-white rounded" v-tooltip="'Intro option. Available to new or existing members who have never made a purchase in the past'" />
-            <font-awesome-icon v-if="showExpiration" :icon="faHourglassEnd" class="w-4 h-4 m-2 p-1 bg-white rounded" v-tooltip="'Produced session credits will expire. Expiration period: '+price.expiration+' '+price.expiration_period" />
+            <font-awesome-icon
+                v-if="showRenewable"
+                :icon="faRecycle"
+                class="w-4 h-4 m-2 p-1 bg-white rounded"
+                v-tooltip="'Auto renewable option'" 
+                />
+            <font-awesome-icon
+                v-if="showIntro"
+                :icon="faUserPlus"
+                class="w-4 h-4 m-2 p-1 bg-white rounded"
+                v-tooltip="'Intro option. Available to new or existing members who have never made a purchase in the past'" 
+                />
+            <font-awesome-icon 
+                v-if="showExpiration"
+                :icon="faHourglassEnd"
+                class="w-4 h-4 m-2 p-1 bg-white rounded"
+                v-tooltip="(isDefaultType ? 'Membership' : 'Session credits') + ' will expire. Expiration period: '+price.expiration+' '+price.expiration_period" 
+                />
         </div>
     </div>
 </template>

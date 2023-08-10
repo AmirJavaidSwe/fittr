@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ClassType extends Model
+class ServiceType extends Model
 {
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = 'class_types';
+    protected $table = 'service_types';
     protected $connection = 'mysql_partner';
     protected $guarded = ['id'];
 

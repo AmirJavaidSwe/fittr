@@ -25,6 +25,7 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+    business_settings: Object,
     classtypes: Object,
     search: String,
     per_page: Number,
@@ -128,7 +129,7 @@ const deleteItem = () => {
 };
 </script>
 <template>
-    <data-table-layout :disable-search="disableSearch" :disableButton="true">
+    <DataTableLayout :disable-search="disableSearch" :disableButton="true">
         <template #button>
             <ButtonLink
                 styling="secondary"
@@ -164,31 +165,37 @@ const deleteItem = () => {
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'id'"
             /> -->
-            <table-head
+            <TableHead
                 title="Title"
                 @click="setOrdering('title')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'title'"
             />
-            <table-head
+            <TableHead
                 title="Description"
                 @click="setOrdering('description')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'description'"
             />
-            <table-head
-                title="Created At"
+            <TableHead
                 @click="setOrdering('created_at')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'created_at'"
-            />
-            <table-head
+            >
+                <div>
+                    Created
+                    <span v-tooltip="DateTime.now().setZone(business_settings.timezone).toFormat('z')">
+                        ({{ DateTime.now().setZone(business_settings.timezone).toFormat('ZZZZ')}})
+                    </span>
+                </div>
+            </TableHead>
+            <TableHead
                 title="Updated At"
                 @click="setOrdering('updated_at')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'updated_at'"
             />
-            <table-head title="Action" class="flex justify-end" />
+            <TableHead title="Action" class="flex justify-end" />
         </template>
 
         <template #tableData>
@@ -196,7 +203,7 @@ const deleteItem = () => {
                 <!-- <table-data :title="classtype.id" /> -->
                 <table-data>
                     <Link
-                        class="font-medium text-indigo-600 hover:text-indigo-500"
+                        class="font-semibold text-primary-500 hover:text-primary-900"
                         :href="route('partner.classtypes.show', classtype)"
                     >
                         {{ classtype.title }}
@@ -204,14 +211,12 @@ const deleteItem = () => {
                 </table-data>
                 <table-data :title="classtype.description" />
                 <table-data>
-                    <DateValue :date="DateTime.fromISO(classtype.created_at)" />
+                    <DateValue :date="DateTime.fromISO(classtype.created_at)
+                    .setZone(business_settings.timezone)
+                    .toFormat(business_settings.date_format.format_js + ' ' + business_settings.time_format.format_js)" />
                 </table-data>
                 <table-data>
-                    <DateValue
-                        :date="
-                            DateTime.fromISO(classtype.updated_at).toRelative()
-                        "
-                    />
+                    <DateValue :date="DateTime.fromISO(classtype.updated_at).toRelative()"/>
                 </table-data>
                 <table-data class="text-right">
                     <Dropdown
@@ -262,7 +267,7 @@ const deleteItem = () => {
                 @pp_changed="setPerPage"
             />
         </template>
-    </data-table-layout>
+    </DataTableLayout>
 
     <!-- Create new classtype Modal -->
     <SideModal :show="showCreateModal" @close="closeCreateModal">

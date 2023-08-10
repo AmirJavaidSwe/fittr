@@ -14,7 +14,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <div class="font-bold text-primary-500 flex items-center">
+    <div class="font-bold flex items-center">
         <span v-if="!isTime" class="text-grey mr-2">
             <template v-if="showCalenderIcon">
                 <Calendar />
