@@ -18,6 +18,7 @@ import {
     // faGamepad,
     // faWandMagicSparkles,
     faLocationPinLock,
+    faBellConcierge,
 } from '@fortawesome/free-solid-svg-icons';
 import Section from '@/Components/Section.vue';
 import CardIcon from '@/Components/CardIcon.vue';
@@ -230,7 +231,25 @@ import GeneralIcon from "@/Icons/GeneralIcon.vue";
                     </template>
 
                     <template #default>
-                        Manage studio class types
+                        Manage class types
+                    </template>
+                </CardIcon>
+
+                <CardIcon
+                    :card-link="route('partner.servicetypes.index')"
+                    >
+                    <!-- TODO: -->
+                    <!-- v-can="{ module: 'studio-service-type', roles: $page.props.user.user_roles, permission: 'viewAny', 'user': $page.props.user }" -->
+                    <template #icon>
+                        <font-awesome-icon :icon="faBellConcierge" class="text-primary-500 h-8 w-8" />
+                    </template>
+
+                    <template #title>
+                        Service Types
+                    </template>
+
+                    <template #default>
+                        Manage service types
                     </template>
                 </CardIcon>
 
