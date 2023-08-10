@@ -26,6 +26,7 @@ const props = defineProps({
     price_types: Array,
     locations: Array,
     classtypes: Object,
+    servicetypes: Object,
     prices: Array,
     default_currency: String,
     form: {
@@ -47,6 +48,7 @@ const props = defineProps({
 props.form.restrictions = reactive({
      offpeak: props.form.restrictions?.offpeak ?? false,
      classtypes: props.form.restrictions?.classtypes ?? [],
+     servicetypes: props.form.restrictions?.servicetypes ?? [],
 });
 
 const isDefaultType = computed(() => {
@@ -57,6 +59,9 @@ const showRestrictions = computed(() => {
 });
 const showClassRestrictions = computed(() => {
   return props.form.is_restricted && ['class_lesson', 'hybrid'].includes(props.form.type);
+});
+const showServiceRestrictions = computed(() => {
+  return props.form.is_restricted && ['service', 'hybrid'].includes(props.form.type);
 });
 
 const subDomain = computed(() => usePage().props.business_settings?.subdomain);
@@ -215,7 +220,27 @@ const showEditPrice = (price) => {
                         placeholder="Select types"
                         >
                     </Multiselect>
+                </div>
+                <div v-if="showServiceRestrictions">
                     <!-- restrictions.servicetypes => ONLY WHEN TYPE IS IN ['service', 'hybrid'] -->
+                    <InputLabel for="servicetypes" value="Service type restrictions"/>
+                    <Multiselect
+                        v-model="props.form.restrictions.servicetypes"
+                        mode="tags"
+                        id="servicetypes"
+                        :groups="true"
+                        :options="[{
+                            label: (props.form.restrictions.servicetypes.length == Object.values(servicetypes).length) ? 'Deselect All' : 'Select All',
+                            options: servicetypes,
+                        }]"
+
+                        :searchable="true"
+                        :close-on-select="true"
+                        :show-labels="true"
+                        :hide-selected="true"
+                        placeholder="Select types"
+                        >
+                    </Multiselect>
                 </div>
             </div>
 

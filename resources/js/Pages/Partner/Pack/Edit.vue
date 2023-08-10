@@ -10,6 +10,7 @@ const props = defineProps({
     price_types: Array,
     locations: Array,
     classtypes: Object,
+    servicetypes: Object,
     pack: {
         type: Object,
         required: true
@@ -53,6 +54,7 @@ const toggleOrDeletePrice = (action, id) => {
           :price_types="price_types"
           :locations="locations"
           :classtypes="classtypes"
+          :servicetypes="servicetypes"
           :default_currency="business_settings.default_currency"
           :prices="pack.prices"
           :submitted="updateItem"

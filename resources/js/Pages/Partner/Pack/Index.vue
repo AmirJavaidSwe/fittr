@@ -8,6 +8,7 @@ import Pagination from "@/Components/Pagination.vue";
 import TableHead from "@/Components/DataTable/TableHead.vue";
 import TableData from "@/Components/DataTable/TableData.vue";
 import DataTableLayout from "@/Components/DataTable/Layout.vue";
+import DateValue from "@/Components/DataTable/DateValue.vue";
 import DialogModal from '@/Components/DialogModal.vue';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue';
 import ButtonLink from '@/Components/ButtonLink.vue';
@@ -19,9 +20,7 @@ const props = defineProps({
         default: false,
     },
     business_settings: Object,
-    classtypes: Object,
     pack_types: Object,
-    periods: Object,
     price_types: Object,
     packs: Object,
     search: String,
@@ -116,20 +115,29 @@ const duplicateItem = () => {
         </template>
 
         <template #tableHead>
-            <!-- <table-head title="Id"/> -->
-            <table-head title="Title" />
-            <table-head title="Prices" />
-            <table-head title="Type" />
-            <table-head title="Status" />
-            <table-head title="Created At" />
-            <table-head title="Updated At" />
-            <table-head title="Action" />
+            <TableHead title="Title" />
+            <TableHead title="Prices" />
+            <TableHead title="Type" />
+            <TableHead title="Status" />
+            <TableHead
+                @click="setOrdering('created_at')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'created_at'"
+            >
+                <div>
+                    Created
+                    <span v-tooltip="DateTime.now().setZone(business_settings.timezone).toFormat('z')">
+                        ({{ DateTime.now().setZone(business_settings.timezone).toFormat('ZZZZ')}})
+                    </span>
+                </div>
+            </TableHead>
+            <TableHead title="Updated At" />
+            <TableHead title="Action" />
         </template>
 
         <template #tableData>
             <tr v-for="pack in packs.data">
-                <!-- <table-data :title="pack.id"/> -->
-                <table-data>
+                <TableData>
                     <ButtonLink :href="route('partner.packs.show', pack)">
                         {{
                             pack.title.length > 50
@@ -137,8 +145,8 @@ const duplicateItem = () => {
                                 : pack.title
                         }}
                     </ButtonLink>
-                </table-data>
-                <table-data>
+                </TableData>
+                <TableData>
                     <div v-if="pack.prices">
                         <div v-for="price in pack.prices" class="space-x-1">
                             <span class="font-bold" :title="price.currency.toUpperCase()">{{price.price_formatted}}</span>
@@ -157,25 +165,16 @@ const duplicateItem = () => {
                             </span>
                         </div>
                     </div>
-                </table-data>
-                <table-data
-                    :title="
-                        pack_types.find(({ value }) => value === pack.type)
-                            ?.label
-                    "
-                />
-                <table-data :title="pack.is_active ? 'ON' : 'OFF'" />
-                <table-data
-                    :title="
-                        DateTime.fromISO(pack.created_at)
-                            .setZone(business_settings.timezone)
-                            .toFormat(business_settings.date_format.format_js)
-                    "
-                />
-                <table-data
-                    :title="DateTime.fromISO(pack.updated_at).toRelative()"
-                />
-                <table-data>
+                </TableData>
+                <TableData :title="pack_types.find(({ value }) => value === pack.type)?.label" />
+                <TableData :title="pack.is_active ? 'ON' : 'OFF'" />
+                <TableData>
+                    <DateValue :date="DateTime.fromISO(pack.created_at)
+                        .setZone(business_settings.timezone)
+                        .toFormat(business_settings.date_format.format_js + ' ' + business_settings.time_format.format_js)" />
+                </TableData>
+                <TableData :title="DateTime.fromISO(pack.updated_at).toRelative()"/>
+                <TableData>
                     <div class="flex gap-4">
                         <ButtonLink :href="route('partner.packs.edit', pack)">
                             Edit
@@ -191,7 +190,7 @@ const duplicateItem = () => {
                             Delete
                         </ButtonLink>
                     </div>
-                </table-data>
+                </TableData>
             </tr>
         </template>
 

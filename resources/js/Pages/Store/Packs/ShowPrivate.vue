@@ -28,6 +28,10 @@ const props = defineProps({
         type: Array,
         required: true,
     },
+    servicetypes: {
+        type: Array,
+        required: true,
+    },
 });
 const subdomain = ref(usePage().props.business_settings.subdomain);
 const isLocked = ref(false);
@@ -104,6 +108,7 @@ const priceSelected = (pack_id, price_id) => {
             :location="location"
             :isLocked="isLocked"
             :classtypes="classtypes"
+            :servicetypes="servicetypes"
             class="bg-white rounded-md border-t-8 p-2 w-80 flex flex-col"
             @priceSelected="(pack_id, price_id) => priceSelected(pack_id, price_id)"
             @buy="buy(pack.id)"

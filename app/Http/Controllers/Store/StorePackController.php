@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Store;
 
 use App\Http\Controllers\Controller;
 use App\Models\Partner\ClassType;
+use App\Models\Partner\ServiceType;
 use App\Models\Partner\Pack;
 use App\Models\Partner\Location;
 use App\Services\Store\StorePackService;
@@ -31,12 +32,14 @@ class StorePackController extends Controller
             'price_buttons_text' => $this->store_pack_service->buttonsText(),
             'locations' => Location::active()->select('id', 'title')->get(),
             'classtypes' => ClassType::orderBy('id', 'desc')->select('title', 'id')->get(),
+            'servicetypes' => ServiceType::orderBy('id', 'desc')->select('title', 'id')->get(),
         ]);
     }
 
     public function showPrivate(Request $request)
     {
-        $pack = Pack::active()->with(['prices' => function (Builder $query) {
+        $pack = Pack::active()->private()
+        ->with(['prices' => function (Builder $query) {
                 $query->where('is_active', true);
             }, 'prices.locations:id,title,status'
         ])
@@ -53,6 +56,7 @@ class StorePackController extends Controller
             'price_buttons_text' => $this->store_pack_service->buttonsText(),
             'locations' => Location::active()->select('id', 'title')->get(),
             'classtypes' => ClassType::orderBy('id', 'desc')->select('title', 'id')->get(),
+            'servicetypes' => ServiceType::orderBy('id', 'desc')->select('title', 'id')->get(),
         ]);
     }
 }
