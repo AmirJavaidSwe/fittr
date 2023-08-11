@@ -53,7 +53,13 @@ class PartnerClassLessonController extends Controller
         $this->order_dir = $request->query('order_dir', 'asc');
         $this->runFilter = $request->input('runFilter');
 
-        $classes = ClassLesson::with(['studio.class_type_studios', 'classType', 'instructor', 'waitlists.user', 'bookings' => fn($query) => $query->active()])
+        $classes = ClassLesson::with([
+            'studio.class_type_studios',
+            'studio.location',
+            'classType',
+            'instructor',
+            'waitlists',
+            'bookings' => fn($query) => $query->active()])
             ->orderBy($this->order_by, $this->order_dir)
             ->when($this->search, function ($query) {
                 $query->where(function ($query) {

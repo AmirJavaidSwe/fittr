@@ -21,7 +21,9 @@ defineProps({
 <template>
     <th
         scope="col"
-        class="text-center whitespace-nowrap p-2 text-md font-semibold text-gray-900 cursor-pointer bg-gray-200 ">
+        class="text-center whitespace-nowrap p-2 text-md font-semibold text-gray-900 bg-gray-200 "
+        :class="{'cursor-pointer': currentSort || arrowSide}"
+        >
         <!-- :class="[ title ? 'px-3 2xl:px-5' : 'pl-3.5 pr-5']" -->
         <div class="flex items-center justify-between">
             <template v-if="title">
