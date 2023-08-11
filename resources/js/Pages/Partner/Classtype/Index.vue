@@ -19,6 +19,7 @@ import { faCog, faPlus } from "@fortawesome/free-solid-svg-icons";
 import DateValue from "../../../Components/DataTable/DateValue.vue";
 import ActionsIcon from '@/Icons/ActionsIcon.vue';
 import CloseModal from "@/Components/CloseModal.vue";
+import StatusLabel from "@/Components/StatusLabel.vue";
 
 const props = defineProps({
     disableSearch: {
@@ -27,6 +28,7 @@ const props = defineProps({
     },
     business_settings: Object,
     classtypes: Object,
+    statuses: Array,
     search: String,
     per_page: Number,
     order_by: String,
@@ -66,7 +68,8 @@ const setPerPage = (n) => {
 watch(() => form.search, runSearch);
 
 // Create/Edit classtypes Queries
-let form_class = useForm({
+let form_new = useForm({
+    status: false,
     title: null,
     description: null,
 });
@@ -77,14 +80,15 @@ const closeCreateModal = () => {
 };
 
 const storeItem = () => {
-    form_class.post(route("partner.classtypes.store"), {
+    form_new.post(route("partner.classtypes.store"), {
         preserveScroll: true,
-        onSuccess: () => form_class.reset(),
+        onSuccess: () => form_new.reset(),
     });
 };
 
 let form_edit = useForm({
     id: "",
+    status: false,
     title: null,
     description: null,
 });
@@ -97,6 +101,7 @@ const closeEditModal = () => {
 const handleUpdateForm = (data) => {
     showEditModal.value = true;
     form_edit.id = data.id;
+    form_edit.status = data.status;
     form_edit.title = data.title;
     form_edit.description = data.description;
 };
@@ -159,12 +164,12 @@ const deleteItem = () => {
         </template>
 
         <template #tableHead>
-            <!-- <table-head
-                title="Id"
-                @click="setOrdering('id')"
+            <TableHead
+                title="Status"
+                @click="setOrdering('status')"
                 :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'id'"
-            /> -->
+                :currentSort="form.order_by === 'status'"
+            />
             <TableHead
                 title="Title"
                 @click="setOrdering('title')"
@@ -200,7 +205,9 @@ const deleteItem = () => {
 
         <template #tableData>
             <tr v-for="(classtype, index) in classtypes.data" :key="index">
-                <!-- <table-data :title="classtype.id" /> -->
+                <table-data class="text-center">
+                    <StatusLabel :status="props.statuses.find(el => el.value == classtype.status).label" />
+                </table-data>
                 <table-data>
                     <Link
                         class="font-semibold text-primary-500 hover:text-primary-900"
@@ -278,7 +285,7 @@ const deleteItem = () => {
         </template>
 
         <template #content>
-            <Form :form="form_class" :submitted="storeItem" modal />
+            <Form :form="form_new" :submitted="storeItem" modal :statuses="statuses" />
         </template>
     </SideModal>
 
@@ -291,7 +298,7 @@ const deleteItem = () => {
         </template>
 
         <template #content>
-            <Form :form="form_edit" :submitted="updateItem" modal />
+            <Form :form="form_edit" :submitted="updateItem" modal :statuses="statuses" />
         </template>
     </SideModal>
 

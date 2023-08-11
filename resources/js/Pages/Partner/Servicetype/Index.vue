@@ -292,7 +292,7 @@ const deleteItem = () => {
         </template>
 
         <template #content>
-            <Form :form="form_new" :submitted="storeItem" :statuses="statuses" />
+            <Form :form="form_new" :submitted="storeItem" modal :statuses="statuses" />
         </template>
     </SideModal>
 
@@ -305,7 +305,7 @@ const deleteItem = () => {
         </template>
 
         <template #content>
-            <Form :form="form_edit" :submitted="updateItem" :statuses="statuses" />
+            <Form :form="form_edit" :submitted="updateItem" modal :statuses="statuses" />
         </template>
     </SideModal>
 
