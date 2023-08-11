@@ -7,10 +7,15 @@ const props = defineProps({
     servicetype: {
         type: Object,
         required: true
-    }
+    },
+    statuses: {
+        type: Array,
+        required: true,
+    },
 });
 
 const form = useForm({
+    status: props.servicetype.status,
     title: props.servicetype.title,
     description: props.servicetype.description
 });
@@ -25,5 +30,7 @@ const storeItem = () => {
 
 <template>
     <Form :form="form"
-          :submitted="storeItem"/>
+          :submitted="storeItem"
+          :statuses="statuses"
+          />
 </template>

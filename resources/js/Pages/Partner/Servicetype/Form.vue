@@ -6,6 +6,9 @@ import TextArea from "@/Components/TextArea.vue";
 import InputError from "@/Components/InputError.vue";
 import ActionMessage from "@/Components/ActionMessage.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
+import ColoredValue from "@/Components/DataTable/ColoredValue.vue";
+import Multiselect from "@vueform/multiselect";
+import "@vueform/multiselect/themes/tailwind.css";
 
 defineProps({
     form: {
@@ -16,13 +19,17 @@ defineProps({
         type: Function,
         required: true,
     },
+    statuses: {
+        type: Array,
+        required: true,
+    },
 });
 </script>
 
 <template>
     <FormSection @submitted="submitted">
         <template #form>
-            <div class="col-span-6 sm:col-span-4">
+            <div>
                 <InputLabel for="title" value="Title" />
                 <TextInput
                     id="title"
@@ -33,7 +40,7 @@ defineProps({
                 <InputError :message="form.errors.title" class="mt-2" />
             </div>
 
-            <div class="col-span-6 sm:col-span-4">
+            <div>
                 <InputLabel for="description" value="Description" />
                 <TextArea
                     id="description"
@@ -42,6 +49,28 @@ defineProps({
                     class="mt-1 block w-full"
                 />
                 <InputError :message="form.errors.description" class="mt-2" />
+            </div>
+
+            <div>
+                <InputLabel for="status" value="Status" />
+                <Multiselect
+                    id="status"
+                    v-model="form.status"
+                    :options="statuses"
+                    :close-on-select="true"
+                    show-labels="true"
+                    placeholder="Status"
+                    >
+                    <template v-slot:singlelabel="{ value }">
+                        <div class="multiselect-single-label">
+                            <ColoredValue :color="value.color" :title="value.label" />
+                        </div>
+                    </template>
+                    <template v-slot:option="{ option }">
+                        <ColoredValue :color="option.color" :title="option.label" />
+                    </template>
+                </Multiselect>
+                <InputError :message="form.errors.status" class="mt-2" />
             </div>
         </template>
 

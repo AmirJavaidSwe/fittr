@@ -2,6 +2,12 @@
 
 import Form from "./Form.vue";
 import {useForm} from "@inertiajs/vue3";
+defineProps({
+    statuses: {
+        type: Array,
+        required: true,
+    },
+});
 
 const storeItem = () => {
     form.post(route('partner.servicetypes.store'), {
@@ -11,6 +17,7 @@ const storeItem = () => {
 };
 
 const form = useForm({
+    status: false,
     title: null,
     description: null
 });
@@ -19,5 +26,7 @@ const form = useForm({
 
 <template>
     <Form :form="form"
-          :submitted="storeItem"/>
+          :submitted="storeItem"
+          :statuses="statuses"
+          />
 </template>
