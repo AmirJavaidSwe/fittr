@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             AmenitySeeder::class,
             ClasstypeSeeder::class,
+            ServicetypeSeeder::class,
             ClassesSeeder::class,
             LocationSeeder::class,
             StudioSeeder::class,

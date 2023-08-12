@@ -28,6 +28,10 @@ const props = defineProps({
         type: Array,
         required: true,
     },
+    servicetypes: {
+        type: Array,
+        required: true,
+    },
 });
 const subdomain = ref(usePage().props.business_settings.subdomain);
 const isLocked = ref(false);
@@ -146,7 +150,7 @@ const priceSelected = (pack_id, price_id) => {
         <div class="text-xl font-bold">
             {{locationTitle}} service packs
         </div>
-        <div>Grab a service pack for after the class or activity use. Service session is good for [Muscle Recover], [Massage], [Protein bar],... </div>
+        <div>Grab a service pack for after the class activity use.</div>
         <div class="flex flex-wrap gap-4 mt-4 mb-16">
             <PackCard 
                 v-for="pack in packs.filter(el => el.type == 'service')"
@@ -155,7 +159,7 @@ const priceSelected = (pack_id, price_id) => {
                 :state_buttons="state_buttons"
                 :location="location"
                 :isLocked="isLocked"
-                :classtypes="classtypes"
+                :servicetypes="servicetypes"
                 class="bg-white rounded-md border-t-8 p-2 w-80 flex flex-col"
                 @priceSelected="(pack_id, price_id) => priceSelected(pack_id, price_id)"
                 @buy="buy(pack.id)"
@@ -163,11 +167,11 @@ const priceSelected = (pack_id, price_id) => {
             </PackCard>
         </div>
 
-        <!-- CLASSES+SERVICES (hybrid)  -->
+        <!-- CLASSES+SERVICES (hybrid) -->
         <div class="text-xl font-bold">
             {{locationTitle}} hybrid (class and service) packs
         </div>
-        <div>Ultimate flexibility. Grab a pack for classes you love as one time purchase or subscribe. The more you buy, the lower the price per class.</div>
+        <div>Ultimate flexibility. Use credits for classes and services. *Some packs may be limited to certain class or service types.</div>
         <div class="flex flex-wrap gap-4 mt-4 mb-16">
             <PackCard 
                 v-for="pack in packs.filter(el => el.type == 'hybrid')"
@@ -177,6 +181,7 @@ const priceSelected = (pack_id, price_id) => {
                 :location="location"
                 :isLocked="isLocked"
                 :classtypes="classtypes"
+                :servicetypes="servicetypes"
                 class="bg-white rounded-md border-t-8 p-2 w-80 flex flex-col"
                 @priceSelected="(pack_id, price_id) => priceSelected(pack_id, price_id)"
                 @buy="buy(pack.id)"
@@ -188,7 +193,7 @@ const priceSelected = (pack_id, price_id) => {
         <div class="text-xl font-bold">
             {{locationTitle}} Corporate Memberships
         </div>
-        <div>Support your teams fitness with a corporate membership to be shared amongst your colleagues. Classes are "use it or lose it". The pack will give you unique redemption code, your employees can use to redeem class credits.</div>
+        <div>Support your teams fitness with a corporate membership to be shared amongst your colleagues. Classes are "use it or lose it". The pack will give you unique redemption code, your employees can use to redeem class credits. One redemption will deposit one session credit to redeemer account.</div>
 
         <div class="flex flex-wrap gap-4 mt-4">
             <PackCard 

@@ -4,7 +4,7 @@ import Form from "./Form.vue";
 import {useForm} from "@inertiajs/vue3";
 
 const props = defineProps({
-    classtype: {
+    servicetype: {
         type: Object,
         required: true
     },
@@ -15,13 +15,13 @@ const props = defineProps({
 });
 
 const form = useForm({
-    status: props.classtype.status,
-    title: props.classtype.title,
-    description: props.classtype.description
+    status: props.servicetype.status,
+    title: props.servicetype.title,
+    description: props.servicetype.description
 });
 
 const storeItem = () => {
-    form.put(route('partner.classtypes.update', props.classtype), {
+    form.put(route('partner.servicetypes.update', props.servicetype), {
         preserveScroll: true,
     });
 };

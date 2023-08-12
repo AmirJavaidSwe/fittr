@@ -29,7 +29,7 @@ defineProps({
 <template>
     <FormSection @submitted="submitted">
         <template #form>
-            <div class="col-span-6 sm:col-span-4">
+            <div>
                 <InputLabel for="title" value="Title" />
                 <TextInput
                     id="title"
@@ -40,7 +40,7 @@ defineProps({
                 <InputError :message="form.errors.title" class="mt-2" />
             </div>
 
-            <div class="col-span-6 sm:col-span-4">
+            <div>
                 <InputLabel for="description" value="Description" />
                 <TextArea
                     id="description"

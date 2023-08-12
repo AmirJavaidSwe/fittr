@@ -63,4 +63,9 @@ class Pack extends Model
                       ->orWhereDate('active_to', '>=', today());
             });
     }
+
+    public function scopePrivate(Builder $query): void
+    {
+        $query->where('is_private', true)->whereNotNull('private_url');
+    }
 }

@@ -4,19 +4,18 @@ namespace App\Http\Controllers\Partner;
 
 use App\Enums\StateType;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Partner\ClasstypeFormRequest;
-use App\Models\Partner\ClassType;
+use App\Http\Requests\Partner\ServiceTypeFormRequest;
+use App\Models\Partner\ServiceType;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class PartnerClassTypeController extends Controller
+class PartnerServiceTypeController extends Controller
 {
-
-    public $search ;
-    public $per_page ;
-    public $order_by ;
-    public $order_dir ;
+    public $search;
+    public $per_page;
+    public $order_by;
+    public $order_dir;
     /**
      * Display a listing of the resource.
      *
@@ -29,8 +28,8 @@ class PartnerClassTypeController extends Controller
         $this->order_by = $request->query('order_by', 'id');
         $this->order_dir = $request->query('order_dir', 'asc');
 
-        return Inertia::render('Partner/Classtype/Index', [
-            'classtypes' => ClassType::orderBy($this->order_by, $this->order_dir)
+        return Inertia::render('Partner/Servicetype/Index', [
+            'servicetypes' => ServiceType::orderBy($this->order_by, $this->order_dir)
                 ->when($this->search, function ($query) {
                     $query->where(function($query) {
                         $query->orWhere('id', intval($this->search))
@@ -44,7 +43,7 @@ class PartnerClassTypeController extends Controller
             'per_page' => intval($this->per_page),
             'order_by' => $this->order_by,
             'order_dir' => $this->order_dir,
-            'page_title' => __('Settings - Class Types'),
+            'page_title' => __('Settings - Service Types'),
             'header' => array(
                 [
                     'title' => __('Settings'),
@@ -55,8 +54,8 @@ class PartnerClassTypeController extends Controller
                     'link' => null,
                 ],
                 [
-                    'title' => __('Class Types'),
-                    'link' => route('partner.classtypes.index'),
+                    'title' => __('Service Types'),
+                    'link' => route('partner.servicetypes.index'),
                 ],
             ),
             'statuses' => StateType::labels(),
@@ -70,8 +69,8 @@ class PartnerClassTypeController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Partner/Classtype/Create', [
-            'page_title' => __('Create Class Type'),
+        return Inertia::render('Partner/Servicetype/Create', [
+            'page_title' => __('Create Service Type'),
             'header' => array(
                 [
                     'title' => __('Settings'),
@@ -82,8 +81,8 @@ class PartnerClassTypeController extends Controller
                     'link' => null,
                 ],
                 [
-                    'title' => __('Class Types'),
-                    'link' => route('partner.classtypes.index'),
+                    'title' => __('Service Types'),
+                    'link' => route('partner.servicetypes.index'),
                 ],
                 [
                     'title' => '/',
@@ -101,30 +100,30 @@ class PartnerClassTypeController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\Partner\ClasstypeFormRequest  $request
+     * @param  \App\Http\Requests\Partner\ServiceTypeFormRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ClasstypeFormRequest $request)
+    public function store(ServiceTypeFormRequest $request)
     {
-        ClassType::create($request->validated());
+        ServiceType::create($request->validated());
 
         if(request()->has('returnTo')) {
             return redirect()->route(request()->returnTo);
         }
 
-        return $this->redirectBackSuccess(__('Class Type created successfully'), 'partner.classtypes.index');
+        return $this->redirectBackSuccess(__('Service type created successfully'), 'partner.servicetypes.index');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Partner\ClassType  $classtype
+     * @param  \App\Models\Partner\ServiceType  $servicetype
      * @return Response
      */
-    public function show(ClassType $classtype)
+    public function show(ServiceType $servicetype)
     {
-        return Inertia::render('Partner/Classtype/Show', [
-            'page_title' => __('Class Type details'),
+        return Inertia::render('Partner/Servicetype/Show', [
+            'page_title' => __('Service Type details'),
             'header' => array(
                 [
                     'title' => __('Settings'),
@@ -135,8 +134,8 @@ class PartnerClassTypeController extends Controller
                     'link' => null,
                 ],
                 [
-                    'title' => __('Class Types'),
-                    'link' => route('partner.classtypes.index'),
+                    'title' => __('Service Types'),
+                    'link' => route('partner.servicetypes.index'),
                 ],
                 [
                     'title' => '/',
@@ -147,7 +146,7 @@ class PartnerClassTypeController extends Controller
                     'link' => null,
                 ],
             ),
-            'classtype' => $classtype,
+            'servicetype' => $servicetype,
             'statuses' => StateType::labels(),
         ]);
     }
@@ -155,13 +154,13 @@ class PartnerClassTypeController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Partner\ClassType  $classtype
+     * @param  \App\Models\Partner\ServiceType  $servicetype
      * @return Response
      */
-    public function edit(ClassType $classtype)
+    public function edit(ServiceType $servicetype)
     {
-        return Inertia::render('Partner/Classtype/Edit', [
-            'page_title' => __('Edit Class Type'),
+        return Inertia::render('Partner/Servicetype/Edit', [
+            'page_title' => __('Edit Service Type'),
             'header' => array(
                 [
                     'title' => __('Settings'),
@@ -172,19 +171,19 @@ class PartnerClassTypeController extends Controller
                     'link' => null,
                 ],
                 [
-                    'title' => __('Class Types'),
-                    'link' => route('partner.classtypes.index'),
+                    'title' => __('Service Types'),
+                    'link' => route('partner.servicetypes.index'),
                 ],
                 [
                     'title' => '/',
                     'link' => null,
                 ],
                 [
-                    'title' => __('Edit'),
+                    'title' => __('Edit Service Type'),
                     'link' => null,
                 ],
             ),
-            'classtype' => $classtype,
+            'servicetype' => $servicetype,
             'statuses' => StateType::labels(),
         ]);
     }
@@ -192,27 +191,27 @@ class PartnerClassTypeController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\Partner\ClasstypeFormRequest  $request
-     * @param  \App\Models\Partner\ClassType  $classtype
+     * @param  \App\Http\Requests\Partner\ServiceTypeFormRequest  $request
+     * @param  \App\Models\Partner\ServiceType  $servicetype
      * @return Response
      */
-    public function update(ClasstypeFormRequest $request, ClassType $classtype)
+    public function update(ServiceTypeFormRequest $request, ServiceType $servicetype)
     {
-        $classtype->update($request->validated());
+        $servicetype->update($request->validated());
 
-        return $this->redirectBackSuccess(__('Class Type updated successfully'));
+        return $this->redirectBackSuccess(__('Service type updated successfully'));
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Partner\ClassType  $classtype
+     * @param  \App\Models\Partner\ServiceType  $servicetype
      * @return Response
      */
-    public function destroy(ClassType $classtype)
+    public function destroy(ServiceType $servicetype)
     {
-        $classtype->delete();
+        $servicetype->delete();
 
-        return $this->redirectBackSuccess(__('Class Type deleted successfully'), 'partner.classtypes.index');
+        return $this->redirectBackSuccess(__('Service type deleted successfully'), 'partner.servicetypes.index');
     }
 }

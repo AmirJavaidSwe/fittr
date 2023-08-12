@@ -556,7 +556,7 @@ const inputPasswordType = computed(() =>
         </template>
 
         <template #tableHead>
-            <table-head>
+            <TableHead>
                 <template #checkbox>
                     <Checkbox
                         :checked="rowSelected.length == selectableRowsCount && selectableRowsCount > 0"
@@ -564,81 +564,66 @@ const inputPasswordType = computed(() =>
                         @click="addIdsToSelection"
                     />
                 </template>
-            </table-head>
-            <table-head
+            </TableHead>
+            <TableHead
                 title="Title"
                 @click="setOrdering('title')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'title'"
             />
-            <table-head
+            <!-- TEMP DISABLED SORTING -->
+            <TableHead title="Location" />
+            <TableHead
                 title="Studio"
                 @click="setOrdering('studio_id')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'studio_id'"
             />
-            <table-head
+            <TableHead
                 title="Class Type"
                 @click="setOrdering('class_type_id')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'class_type_id'"
             />
-            <table-head
-                title="Instructor"
-                @click="setOrdering('instructor_id')"
-                :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'instructor_id'"
-            />
-            <table-head
+            <!-- TEMP DISABLED SORTING -->
+            <TableHead title="Instructor" />
+            <TableHead
                 title="Status"
-                @click="setOrdering('status_label')"
+                @click="setOrdering('status')"
                 :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'status_label'"
+                :currentSort="form.order_by === 'status'"
             />
-            <table-head
-                title="Capacity Status"
-                @click="setOrdering('capacity_status')"
-                :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'capacity_status'"
-            />
-            <table-head
-                title="Waiting List"
-                @click="setOrdering('waiting_list')"
-                :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'waiting_list'"
-            />
-            <table-head
-                title="Waitlist Started At"
-                @click="setOrdering('waitlist_started_at')"
-                :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'waitlist_started_at'"
-            />
-
-            <table-head
-                title="Date"
+            <!-- TEMP DISABLED SORTING -->
+            <TableHead title="Filled" />
+            <!-- TEMP DISABLED SORTING -->
+            <TableHead title="Waiting List" />
+            <TableHead
                 @click="setOrdering('start_date')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'start_date'"
-            />
-            <table-head
+            >
+                <div>
+                    Date
+                    <span v-tooltip="DateTime.now().setZone(business_settings.timezone).toFormat('z')">
+                        ({{ DateTime.now().setZone(business_settings.timezone).toFormat('ZZZZ')}})
+                    </span>
+                </div>
+            </TableHead>
+            <TableHead
                 title="Time"
                 @click="setOrdering('start_date')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'start_date'"
             />
-            <table-head
-                title="Duration"
-                @click="setOrdering('duration')"
-                :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'duration'"
-            />
-            <table-head
-                title="Updated At"
+            <!-- TEMP DISABLED SORTING -->
+            <TableHead title="Duration" />
+            <TableHead
+                title="Updated"
                 @click="setOrdering('updated_at')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'updated_at'"
             />
-            <table-head title="Action" class="flex justify-end" />
+            <TableHead title="Action" class="flex justify-end" />
         </template>
 
         <template #tableData>
@@ -646,7 +631,7 @@ const inputPasswordType = computed(() =>
                 v-for="(class_lesson, index) in classes.data"
                 :key="class_lesson.id"
             >
-                <table-data>
+                <TableData>
                     <div v-if="notUpcommingItem(class_lesson.id)">
                         <label class="flex items-center">
                             <Checkbox
@@ -656,8 +641,10 @@ const inputPasswordType = computed(() =>
                             />
                         </label>
                     </div>
-                </table-data>
-                <table-data>
+                </TableData>
+
+                <!-- title -->
+                <TableData>
                     <ButtonLink
                         :href="route('partner.classes.show', class_lesson)"
                     >
@@ -671,20 +658,24 @@ const inputPasswordType = computed(() =>
                             {{ class_lesson.title }}
                         </span>
                     </ButtonLink>
-                </table-data>
-                <table-data
-                    :title="
-                        class_lesson?.studio?.title ?? class_lesson?.studio?.id
-                    "
-                />
-                <!-- <table-data :title="class_lesson.class_type_id" /> -->
-                <table-data>
+                </TableData>
+
+                <!-- location -->
+                <TableData :title="class_lesson.studio.location.title" />
+
+                <!-- studio -->
+                <TableData :title="class_lesson?.studio?.title ?? class_lesson?.studio?.id"/>
+
+                <!-- class_type -->
+                <TableData>
                     <ColoredValue
                         color="#F47560"
                         :title="class_lesson?.class_type?.title ?? 'Test'"
                     />
-                </table-data>
-                <table-data class="text-center">
+                </TableData>
+
+                <!-- instructors -->
+                <TableData class="text-center">
                     <template v-if="class_lesson?.instructor.length">
                         <template
                             v-for="(
@@ -702,72 +693,61 @@ const inputPasswordType = computed(() =>
                     <template v-else>
                         <AvatarValue :title="'Demo Ins'" />
                     </template>
-                </table-data>
-                <table-data class="text-center">
+                </TableData>
+
+                <!-- status -->
+                <TableData class="text-center">
                     <StatusLabel :status="class_lesson.status_label" />
-                </table-data>
-                <table-data class="text-center">
+                </TableData>
+
+                <!-- spaces_booked -->
+                <TableData class="text-center">
                     <div
-                        class="inline-flex text-sm font-normal rounded-full text-white p-2 px-3 justify-center"
+                        class="inline-flex text-sm font-normal rounded-full text-white p-1 px-2 justify-center"
                         :class="{'bg-danger-600': !class_lesson.spaces_left, 'bg-gray-500': class_lesson.spaces_left}"
+                        v-tooltip="class_lesson.spaces_booked + ' booked ouf of ' + class_lesson.spaces + ' total spaces'"
                     >
-                    {{ !class_lesson.spaces_left ? 'Full' : 'Not Full'}}
+                    {{ class_lesson.spaces_booked }} / {{ class_lesson.spaces }} 
                     </div>
-                </table-data>
-                <table-data class="text-center">
+                </TableData>
+
+                <!-- waitlists -->
+                <TableData class="text-center">
                     <ButtonLink
-                        :href="route('partner.classes.show', class_lesson.id) + '#waitlists'"
+                        :href="route('partner.classes.show', class_lesson.id)"
                         size="default"
                         v-tooltip="'Click to see users in waitlist.'"
                     >
                         {{ class_lesson.waitlists?.length +' '+ (class_lesson.waitlists?.length > 1 ? 'Members' : 'Member') }}
                     </ButtonLink>
-                </table-data>
-                <table-data class="text-center">
-                    <DateValue
-                        v-if="class_lesson.waitlists?.length"
-                        class="inline-flex"
-                        :date="
-                            DateTime.fromISO(class_lesson.waitlists[0].created_at)
-                                .setZone(business_settings.timezone)
-                                .toFormat(
-                                    business_settings.date_format?.format_js
-                                )
-                        "
-                    />
-                    <span v-else>Not Started</span>
-                </table-data>
-                <table-data>
-                    <DateValue
-                        :date="
-                            DateTime.fromISO(class_lesson.start_date)
-                                .setZone(business_settings.timezone)
-                                .toFormat(
-                                    business_settings.date_format?.format_js
-                                )
-                        "
-                    />
-                </table-data>
-                <table-data>
-                    <DateValue
-                        isTime
-                        :date="
-                            DateTime.fromISO(class_lesson.start_date)
-                                .setZone(business_settings.timezone)
-                                .toFormat(
-                                    business_settings.time_format?.format_js
-                                )
-                        "
-                    />
-                </table-data>
+                </TableData>
 
-                <table-data :title="class_lesson.duration + ' minutes'" />
-                <table-data
-                    :title="
-                        DateTime.fromISO(class_lesson.updated_at).toRelative()
-                    "
-                />
-                <table-data class="text-right">
+                <!-- start_date -->
+                <TableData>
+                    <DateValue :date="DateTime
+                        .fromISO(class_lesson.start_date)
+                        .setZone(business_settings.timezone)
+                        .toFormat(business_settings.date_format?.format_js)"
+                    />
+                </TableData>
+
+                <!-- start_date / TIME -->
+                <TableData>
+                    <DateValue isTime :date="DateTime
+                        .fromISO(class_lesson.start_date)
+                        .setZone(business_settings.timezone)
+                        .toFormat(business_settings.time_format?.format_js)"
+                    />
+                </TableData>
+
+                <!-- duration -->
+                <TableData :title="class_lesson.duration + ' minutes'" />
+
+                <!-- updated_at -->
+                <TableData :title="DateTime.fromISO(class_lesson.updated_at).toRelative()" />
+
+                <!-- Actions -->
+                <TableData class="text-right">
                     <Dropdown
                         align="right"
                         width="48"
@@ -812,7 +792,7 @@ const inputPasswordType = computed(() =>
                             </DropdownLink>
                         </template>
                     </Dropdown>
-                </table-data>
+                </TableData>
             </tr>
         </template>
         <template #pagination>

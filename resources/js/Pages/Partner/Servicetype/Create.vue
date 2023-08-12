@@ -2,29 +2,25 @@
 
 import Form from "./Form.vue";
 import {useForm} from "@inertiajs/vue3";
-
-const props = defineProps({
-    classtype: {
-        type: Object,
-        required: true
-    },
+defineProps({
     statuses: {
         type: Array,
         required: true,
     },
 });
 
-const form = useForm({
-    status: props.classtype.status,
-    title: props.classtype.title,
-    description: props.classtype.description
-});
-
 const storeItem = () => {
-    form.put(route('partner.classtypes.update', props.classtype), {
+    form.post(route('partner.servicetypes.store'), {
         preserveScroll: true,
+        onSuccess: () => form.reset()
     });
 };
+
+const form = useForm({
+    status: false,
+    title: null,
+    description: null
+});
 
 </script>
 

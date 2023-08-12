@@ -7,7 +7,7 @@ import ButtonLink from "@/Components/ButtonLink.vue";
 import ColoredValue from "@/Components/DataTable/ColoredValue.vue";
 
 defineProps({
-    classtype: {
+    servicetype: {
         type: Object,
         required: true,
     },
@@ -25,7 +25,7 @@ defineProps({
                 <ButtonLink
                     styling="primary"
                     size="default"
-                    :href="route('partner.classtypes.edit', classtype)"
+                    :href="route('partner.servicetypes.edit', servicetype)"
                 >
                     Edit
                 </ButtonLink>
@@ -35,39 +35,39 @@ defineProps({
             <single-view-row 
                 :even="false"
                 label="ID"
-                :value="classtype.id" />
+                :value="servicetype.id" />
 
             <single-view-row
                 :even="true"
                 label="Status"
             >
                 <template #value>
-                    <ColoredValue :color="statuses.find(el => el.value == classtype.status).color" :title="statuses.find(el => el.value == classtype.status).label " />
+                    <ColoredValue :color="statuses.find(el => el.value == servicetype.status).color" :title="statuses.find(el => el.value == servicetype.status).label " />
                 </template>
             </single-view-row>
 
             <single-view-row
                 :even="false"
                 label="Title"
-                :value="classtype.title"
+                :value="servicetype.title"
             />
 
             <single-view-row
                 :even="true"
                 label="Description"
-                :value="classtype.description"
+                :value="servicetype.description"
             />
 
             <single-view-row
                 :even="false"
                 label="Created At"
-                :value="DateTime.fromISO(classtype.created_at).toLocaleString(DateTime.DATETIME_HUGE)"
+                :value="DateTime.fromISO(servicetype.created_at).toLocaleString(DateTime.DATETIME_HUGE)"
             />
 
             <single-view-row
                 :even="true"
                 label="Updated At"
-                :value="DateTime.fromISO(classtype.updated_at).toRelative()"
+                :value="DateTime.fromISO(servicetype.updated_at).toRelative()"
             />
         </template>
     </single-view>

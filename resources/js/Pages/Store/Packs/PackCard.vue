@@ -21,11 +21,18 @@ const props = defineProps({
         required: false,
     },
     classtypes: Array,
+    servicetypes: Array,
 });
 
 const restrictedClasses = computed(() => {
     return props.classtypes
         .filter(item => props.pack.restrictions.classtypes.some(e => e == item.id))
+        .map(x => x.title)
+        .join(', ');
+});
+const restrictedServices = computed(() => {
+    return props.servicetypes
+        .filter(item => props.pack.restrictions.servicetypes.some(e => e == item.id))
         .map(x => x.title)
         .join(', ');
 });
@@ -55,16 +62,16 @@ defineEmits(['priceSelected', 'buy']);
                 >
             </PriceOption>
         </div>
-        <div v-if="pack.description">{{pack.description}}</div>
-        <div v-if="pack.is_restricted" class="mt-2 border-t-2 text-grey">
+        <div v-if="pack.description" class="border-b-2 text-grey">{{pack.description}}</div>
+        <div v-if="pack.is_restricted" class="mt-2 text-grey">
             <div class="font-bold">Restrictions:</div>
             <div v-if="pack.restrictions?.offpeak" v-tooltip="'Class or service credit can be used for activities running during off-peak hours'" class="border-b border-dashed text-grey">Off-Peak Only</div>
             <div v-if="pack.restrictions?.classtypes">
-                Valid for {{restrictedClasses}} classes only.
+                Valid for {{restrictedClasses}} <b>classes</b> only.
             </div>
-            <!-- <div v-if="pack.restrictions?.servicetypes">
-                Valid for .... services only.
-            </div> -->
+            <div v-if="pack.restrictions?.servicetypes">
+                Valid for {{restrictedServices}} <b>services</b> only.
+            </div>
         </div>
         <div class="flex flex-grow items-end">
             <ButtonLink 

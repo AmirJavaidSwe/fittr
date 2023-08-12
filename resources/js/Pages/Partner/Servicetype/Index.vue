@@ -27,7 +27,7 @@ const props = defineProps({
         default: false,
     },
     business_settings: Object,
-    classtypes: Object,
+    servicetypes: Object,
     statuses: Array,
     search: String,
     per_page: Number,
@@ -43,7 +43,7 @@ const form = useForm({
 });
 
 const runSearch = () => {
-    form.get(route("partner.classtypes.index"), {
+    form.get(route("partner.servicetypes.index"), {
         preserveScroll: true,
         preserveState: true,
         replace: true,
@@ -67,7 +67,7 @@ const setPerPage = (n) => {
 // form.search getter only;
 watch(() => form.search, runSearch);
 
-// Create/Edit classtypes Queries
+// Create/Edit servicetypes Queries
 let form_new = useForm({
     status: false,
     title: null,
@@ -80,7 +80,7 @@ const closeCreateModal = () => {
 };
 
 const storeItem = () => {
-    form_new.post(route("partner.classtypes.store"), {
+    form_new.post(route("partner.servicetypes.store"), {
         preserveScroll: true,
         onSuccess: () => form_new.reset(),
     });
@@ -107,8 +107,9 @@ const handleUpdateForm = (data) => {
 };
 
 const updateItem = () => {
-    form_edit.put(route("partner.classtypes.update", form_edit), {
+    form_edit.put(route("partner.servicetypes.update", form_edit), {
         preserveScroll: true,
+        onSuccess: () => (showEditModal.value = false),
     });
 };
 
@@ -121,7 +122,7 @@ const confirmDeletion = (id) => {
 };
 const deleteItem = () => {
     form.delete(
-        route("partner.classtypes.destroy", { id: itemIdDeleting.value }),
+        route("partner.servicetypes.destroy", { id: itemIdDeleting.value }),
         {
             preserveScroll: true,
             preserveState: true,
@@ -141,16 +142,16 @@ const deleteItem = () => {
                 size="default"
                 @click="showCreateModal = true"
             >
-                Create a new classtype
+                Create new
                 <font-awesome-icon class="ml-2" :icon="faPlus" />
             </ButtonLink>
             <!-- <ButtonLink
                 styling="secondary"
                 size="default"
-                :href="route('partner.classtypes.create')"
+                :href="route('partner.servicetypes.create')"
                 type="primary"
             >
-                Create a new classtype (direct)
+                Create new (direct)
             </ButtonLink> -->
         </template>
         <template #search>
@@ -164,6 +165,12 @@ const deleteItem = () => {
         </template>
 
         <template #tableHead>
+            <!-- <table-head
+                title="Id"
+                @click="setOrdering('id')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'id'"
+            /> -->
             <TableHead
                 title="Status"
                 @click="setOrdering('status')"
@@ -204,32 +211,32 @@ const deleteItem = () => {
         </template>
 
         <template #tableData>
-            <tr v-for="(classtype, index) in classtypes.data" :key="index">
+            <tr v-for="(servicetype, index) in servicetypes.data" :key="index">
                 <table-data class="text-center">
-                    <StatusLabel :status="props.statuses.find(el => el.value == classtype.status).label" />
+                    <StatusLabel :status="props.statuses.find(el => el.value == servicetype.status).label" />
                 </table-data>
                 <table-data>
                     <Link
                         class="font-semibold text-primary-500 hover:text-primary-900"
-                        :href="route('partner.classtypes.show', classtype)"
+                        :href="route('partner.servicetypes.show', servicetype)"
                     >
-                        {{ classtype.title }}
+                        {{ servicetype.title }}
                     </Link>
                 </table-data>
-                <table-data :title="classtype.description" />
+                <table-data :title="servicetype.description" />
                 <table-data>
-                    <DateValue :date="DateTime.fromISO(classtype.created_at)
+                    <DateValue :date="DateTime.fromISO(servicetype.created_at)
                     .setZone(business_settings.timezone)
                     .toFormat(business_settings.date_format.format_js + ' ' + business_settings.time_format.format_js)" />
                 </table-data>
                 <table-data>
-                    <DateValue :date="DateTime.fromISO(classtype.updated_at).toRelative()"/>
+                    <DateValue :date="DateTime.fromISO(servicetype.updated_at).toRelative()"/>
                 </table-data>
                 <table-data class="text-right">
                     <Dropdown
                         align="right"
                         width="48"
-                        :top="index > classtypes.data.length - 3"
+                        :top="index > servicetypes.data.length - 3"
                         :content-classes="['bg-white']"
                     >
                         <template #trigger>
@@ -241,7 +248,7 @@ const deleteItem = () => {
                         <template #content>
                             <DropdownLink
                                 as="button"
-                                @click="handleUpdateForm(classtype)"
+                                @click="handleUpdateForm(servicetype)"
                             >
                                 <EditIcon
                                     class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
@@ -250,7 +257,7 @@ const deleteItem = () => {
                             </DropdownLink>
                             <DropdownLink
                                 as="button"
-                                @click="confirmDeletion(classtype.id)"
+                                @click="confirmDeletion(servicetype.id)"
                             >
                                 <span class="text-danger-500 flex items-center">
                                     <DeleteIcon
@@ -267,18 +274,18 @@ const deleteItem = () => {
 
         <template #pagination>
             <pagination
-                :links="classtypes.links"
-                :to="classtypes.to"
-                :from="classtypes.from"
-                :total="classtypes.total"
+                :links="servicetypes.links"
+                :to="servicetypes.to"
+                :from="servicetypes.from"
+                :total="servicetypes.total"
                 @pp_changed="setPerPage"
             />
         </template>
     </DataTableLayout>
 
-    <!-- Create new classtype Modal -->
+    <!-- Create new servicetype Modal -->
     <SideModal :show="showCreateModal" @close="closeCreateModal">
-        <template #title> Create new classtype </template>
+        <template #title> Create new service type </template>
 
         <template #close>
             <CloseModal @click="closeCreateModal" />
@@ -289,9 +296,9 @@ const deleteItem = () => {
         </template>
     </SideModal>
 
-    <!-- Update classtype Modal -->
+    <!-- Update servicetype Modal -->
     <SideModal :show="showEditModal" @close="closeEditModal">
-        <template #title> Update classtype </template>
+        <template #title> Update servicetype </template>
 
         <template #close>
             <CloseModal @click="closeEditModal" />

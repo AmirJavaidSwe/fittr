@@ -8,7 +8,7 @@ const props = defineProps({
     pack_types: Object,
     periods: Object,
     classtypes: Object,
-    // servicetypes: Object,
+    servicetypes: Object,
 });
 
 const form = useForm({
@@ -39,6 +39,7 @@ const storeItem = () => {
           :pack_types="pack_types"
           :periods="periods"
           :classtypes="classtypes"
+          :servicetypes="servicetypes"
           :default_currency="business_settings.default_currency"
           :submitted="storeItem"/>
 </template>
