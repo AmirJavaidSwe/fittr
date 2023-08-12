@@ -16,7 +16,7 @@ import ColoredValue from "@/Components/DataTable/ColoredValue.vue";
 import MapMarker from "@/Icons/MapMarker.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
 
-const emit = defineEmits(["createNewInstructor", "createNewClassType", "createNewStudio"]);
+const emit = defineEmits(["createNewInstructor", "createNewClassType", "createNewStudio", "onPreview"]);
 const props = defineProps({
     statuses: Object,
     instructors: Object,
@@ -370,6 +370,17 @@ const studioList = computed(() => {
             <ActionMessage :on="form.recentlySuccessful" class="mr-3">
                 Saved.
             </ActionMessage>
+
+            <ButtonLink
+                v-if="isNew"
+                styling="default"
+                size="default"
+                type="button"
+                class="mr-3"
+                @click="$emit('onPreview')"
+            >
+                Preview
+            </ButtonLink>
 
             <ButtonLink
                 :class="{ 'opacity-25': form.processing }"

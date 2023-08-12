@@ -96,15 +96,19 @@ class ClassLesson extends Model
 
     public function getDefaultSpacesAttribute(): ?int
     {
+        if(!$this->relationLoaded('studio')
+            || ($this->relationLoaded('studio')
+                && !$this->studio->relationLoaded('class_type_studios')
+            )
+        ) return 0;
+
         return $this->studio?->class_type_studios?->where('class_type_id', $this->class_type_id)?->first()?->spaces;
     }
 
     public function getSpacesBookedAttribute(): int
     {
         if(!$this->relationLoaded('bookings')) return 0;
-            // $this->load(['bookings' => function (Builder $query) {
-            //     $query->active();
-            // }]);
+
         return $this->bookings->where('status', BookingStatus::get('active'))->count();
     }
 
@@ -117,9 +121,7 @@ class ClassLesson extends Model
     public function getIsBookedAttribute(): bool
     {
         if(!$this->relationLoaded('bookings')) return false;
-            // $this->load(['bookings' => function (Builder $query) {
-            //     $query->active();
-            // }]);
+
         return $this->bookings->where('status', BookingStatus::get('active'))->contains('user_id', auth()->user()?->id);
     }
 }

@@ -14,7 +14,7 @@ class ClassLessonObserver
     private function updateOriginalInstructors($classLesson) {
 
         $old_instructor_ids = $classLesson->instructor()->pluck('id')->toArray();
-        $new_instructor_ids = request()->instructor_id;
+        $new_instructor_ids = request()->instructor_id ?? [];
         $diff = array_diff(array_values($old_instructor_ids), array_values($new_instructor_ids));
         if(count($diff)) {
             $instructors = $classLesson->instructor()->pluck('name', 'id')->toArray();

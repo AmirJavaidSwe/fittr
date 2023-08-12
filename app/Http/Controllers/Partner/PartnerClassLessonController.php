@@ -235,7 +235,12 @@ class PartnerClassLessonController extends Controller
                     $class_data = $validated;
                     $class_data['start_date'] = $start_date;
                     $class_data['end_date'] = $start_date->copy()->addMinutes($class_duration);
-                    ClassLesson::create($class_data);
+
+                    $class = ClassLesson::create($class_data);
+
+                    if (!empty($class_data['instructor_id'])) {
+                        $class->instructor()->sync($class_data['instructor_id']);
+                    }
                 }
                 return $this->redirectBackSuccess(__('Classes created successfully'), 'partner.classes.index');
             }
@@ -479,5 +484,90 @@ class PartnerClassLessonController extends Controller
         }
 
         return $this->redirectBackSuccess(__('Classes deleted successfully'), 'partner.classes.index');
+    }
+
+    public function bulkCopy(Request $request)
+    {
+        $classes = [];
+
+        if ($request->start_date && $request->end_date && $request->class_type_id && $request->studio_id) {
+            $timezone = session('business_settings.timezone');
+            $start_date = $request->start_date ? Carbon::parse($request->start_date, $timezone)->startOfDay()->utc() : [];
+            $end_date = $request->end_date ? Carbon::parse($request->end_date, $timezone)->endOfDay()->utc() : [];
+
+            $classes = ClassLesson::with('classType', 'studio.location', 'instructor')
+                ->where('start_date', '>=', $start_date)
+                ->where('end_date', '<=', $end_date)
+                ->where('class_type_id', $request->class_type_id)
+                ->where('studio_id', $request->studio_id)
+                ->get();
+        }
+
+        return Inertia::render('Partner/Class/BulkCopy', [
+            'page_title' => __('Bulk Copy'),
+            'header' => array(
+                [
+                    'title' => __('Classes'),
+                    'link' => route('partner.classes.index'),
+                ],
+                [
+                    'title' => '/',
+                    'link' => null,
+                ],
+                [
+                    'title' => __('Bulk Copy'),
+                    'link' => null,
+                ],
+            ),
+            'classtypes' => ClassType::pluck('title', 'id'),
+            'studios' => Studio::with('class_type_studios')->select('id', 'title')->orderBy('title', 'asc')->get(),
+            'classes' => $classes,
+        ]);
+    }
+
+    public function storeBulkCopy(Request $request)
+    {
+        $request->validate([
+            'shift_period' => 'required|numeric|min:1',
+            'shift_clone' => 'required|numeric|min:1',
+        ],
+        [],
+        [
+            'shift_period' => 'Shift Period (In Days)',
+            'shift_clone' => 'Shift Clone (No. of classes)',
+        ]);
+
+        $classes = [];
+
+        $timezone = session('business_settings.timezone');
+        $start_date = $request->start_date ? Carbon::parse($request->start_date, $timezone)->startOfDay()->utc() : [];
+        $end_date = $request->end_date ? Carbon::parse($request->end_date, $timezone)->endOfDay()->utc() : [];
+
+        $classes = ClassLesson::with(['instructor' => fn($query) => $query->select('id')])->where('start_date', '>=', $start_date)
+            ->where('end_date', '<=', $end_date)
+            ->where('class_type_id', $request->class_type_id)
+            ->where('studio_id', $request->studio_id)
+            ->limit($request->shift_clone)
+            ->get();
+
+        foreach ($classes as $class) {
+            $instructors = $class->instructor->pluck('id');
+            $class = $class->toArray();
+            $class['created_at'] = now();
+            $class['updated_at'] = now();
+
+            $class['start_date'] = Carbon::parse($class['start_date'])->addDays($request->shift_period);
+            $class['end_date'] = Carbon::parse($class['end_date'])->addDays($request->shift_period);
+
+
+            $classModel = ClassLesson::create($class);
+
+            if (!empty($instructors)) {
+                $classModel->instructor()->sync($instructors);
+            }
+        }
+
+        $this->redirectBackSuccess(__('The classes have been created.'), 'partner.classes.index');
+
     }
 }

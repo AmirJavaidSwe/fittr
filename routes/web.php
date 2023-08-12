@@ -156,6 +156,8 @@ Route::domain('app.'.config('app.domain'))->group(function () {
             Route::resource('amenity', PartnerAmenityController::class);
             Route::put('classes/bulk-edit', [PartnerClassLessonController::class, 'bulkEdit'])->name('classes.bulk-edit');
             Route::delete('classes/bulk-delete', [PartnerClassLessonController::class, 'bulkDelete'])->name('classes.bulk-delete');
+            Route::get('classes/bulk-copy', [PartnerClassLessonController::class, 'bulkCopy'])->name('classes.bulk-copy');
+            Route::post('classes/bulk-copy', [PartnerClassLessonController::class, 'storeBulkCopy'])->name('classes.store-bulk-copy');
             Route::resource('classes', PartnerClassLessonController::class);
             Route::resource('classtypes', PartnerClassTypeController::class);
             Route::resource('servicetypes', PartnerServiceTypeController::class);

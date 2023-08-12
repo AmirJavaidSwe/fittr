@@ -500,7 +500,7 @@ const closeAddFamilyModal = (param) => {
             </div>
             <div class="flex flex-col">
                 <div class="flex text-3xl font-bold mb-4 items-center">
-                    <div class="flex mr-4">{{ classDetails.title }}</div>
+                    <div class="flex flex-grow mr-4">{{ classDetails.title }}</div>
                     <div class="flex flex-col shrink-0">
                         <div
                             class="inline-flex text-sm font-normal rounded-lg bg-green-500 text-white p-2 justify-center mb-2">
