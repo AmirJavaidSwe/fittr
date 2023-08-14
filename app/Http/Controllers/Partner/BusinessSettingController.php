@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Partner;
 
 use App\Services\Partner\BusinessSettingService;
-use App\Services\Shared\StripeConnectService;
+use App\Services\Shared\Stripe\ConnectService;
 use App\Enums\FormatType;
 use App\Enums\SettingKey;
 use App\Enums\SettingGroup;
@@ -36,7 +36,7 @@ class BusinessSettingController extends Controller
     public $service;
     public $stripe_connect_service;
     
-    public function __construct(BusinessSettingService $service, StripeConnectService $stripe_connect_service)
+    public function __construct(BusinessSettingService $service, ConnectService $stripe_connect_service)
     {
         $this->service = $service;
         $this->stripe_connect_service = $stripe_connect_service;

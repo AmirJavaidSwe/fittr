@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Services\Shared;
+namespace App\Services\Shared\Stripe;
 
-class StripePaymentService extends StripeService
+class PaymentService extends StripeService
 {
     // Method to create new Stripe\Checkout\Session for connected account
     public function createCheckoutSession($connected_account_id, $data) : object
