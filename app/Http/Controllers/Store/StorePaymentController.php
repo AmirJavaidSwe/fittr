@@ -5,14 +5,14 @@ namespace App\Http\Controllers\Store;
 use App\Enums\StripePriceType;
 use App\Http\Controllers\Controller;
 use App\Models\Partner\PackPrice;
-use App\Services\Shared\StripePaymentService;
+use App\Services\Shared\Stripe\PaymentService;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 
 class StorePaymentController extends Controller
 {
-    public function __construct(StripePaymentService $stripe_payment_service)
+    public function __construct(PaymentService $stripe_payment_service)
     {
         $this->stripe_payment_service = $stripe_payment_service;
     }

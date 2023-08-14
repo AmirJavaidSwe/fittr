@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Shared;
+namespace App\Services\Shared\Stripe;
 
 use App\Enums\StripePriceType;
 
@@ -23,7 +23,7 @@ use App\Enums\StripePriceType;
 
     *When ->call() used within class that extends StripeService, $this->response object will be available as well as returned result from this method otherwise.
 */
-class StripeProductService extends StripeService
+class ProductService extends StripeService
 {
     //PACK methods:
 

@@ -44,6 +44,15 @@ const runSearch = () => {
     });
 };
 
+const setOrdering = (col) => {
+    //reverse same col order
+    if (form.order_by == col) {
+        form.order_dir = form.order_dir == "asc" ? "desc" : "asc";
+    }
+    form.order_by = col;
+    runSearch();
+};
+
 const setPerPage = (n) => {
     form.per_page = n;
     runSearch();
@@ -115,10 +124,22 @@ const duplicateItem = () => {
         </template>
 
         <template #tableHead>
-            <TableHead title="Title" />
+            <TableHead title="Title"
+                @click="setOrdering('title')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'title'"
+            />
             <TableHead title="Prices" />
-            <TableHead title="Type" />
-            <TableHead title="Status" />
+            <TableHead title="Type"
+                @click="setOrdering('type')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'type'"
+            />
+            <TableHead title="Status"  
+                @click="setOrdering('is_active')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'is_active'"
+            />
             <TableHead
                 @click="setOrdering('created_at')"
                 :arrowSide="form.order_dir"
@@ -131,7 +152,11 @@ const duplicateItem = () => {
                     </span>
                 </div>
             </TableHead>
-            <TableHead title="Updated At" />
+            <TableHead title="Updated At"
+                @click="setOrdering('updated_at')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'updated_at'"
+            />
             <TableHead title="Action" />
         </template>
 

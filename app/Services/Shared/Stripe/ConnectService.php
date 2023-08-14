@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Shared;
+namespace App\Services\Shared\Stripe;
 
 use App\Models\Country;
 use Inertia\Inertia;
@@ -27,7 +27,7 @@ use Illuminate\Http\RedirectResponse;
 
     *When ->call() used within class that extends StripeService, $this->response object will be available as well as returned result from this method otherwise.
 */
-class StripeConnectService extends StripeService
+class ConnectService extends StripeService
 {
     use GenericHelper;
 

@@ -45,7 +45,7 @@ class BusinessReady
         // *technically, partner can create prices with any currency stripe supports and dashboard loads default currency for the country used to register connected business
         // when we use API, price being created must have currency provided.
         // We can pull connected country from:
-        // #1 call api \app\Services\Shared\StripeConnectService->retrieveAccount() and get country ISO, then lookup country by ISO and get currency
+        // #1 call api \app\Services\Shared\Stripe\ConnectService->retrieveAccount() and get country ISO, then lookup country by ISO and get currency
         // #2 get country_id from business_settings session, get country_id and then lookup country and currency
 
         //#2:
