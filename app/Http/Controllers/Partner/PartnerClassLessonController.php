@@ -490,17 +490,53 @@ class PartnerClassLessonController extends Controller
     {
         $classes = [];
 
-        if ($request->start_date && $request->end_date && $request->class_type_id && $request->studio_id) {
+
+        if ($request->start_date && $request->end_date && $request->shift_period && $request->shift_repeat) {
+            $request->validate([
+                'start_date' => 'required|date',
+                'end_date' => 'required|date',
+                'shift_period' => 'required|numeric|min:1',
+                'shift_repeat' => 'required|numeric|min:1',
+                'class_type_id' => 'nullable|numeric|min:1',
+                'studio_id' => 'nullable|numeric|min:1',
+            ],
+            [],
+            [
+                'start_date' => 'Start Date',
+                'end_date' => 'End Date',
+                'shift_period' => 'Shift Period (In Days)',
+                'shift_repeat' => 'Shift Repeat',
+                'class_type_id' => 'Class Type',
+                'studio_id' => 'Studio',
+            ]);
+
             $timezone = session('business_settings.timezone');
-            $start_date = $request->start_date ? Carbon::parse($request->start_date, $timezone)->startOfDay()->utc() : [];
-            $end_date = $request->end_date ? Carbon::parse($request->end_date, $timezone)->endOfDay()->utc() : [];
+            $start_date = Carbon::parse($request->start_date, $timezone)->startOfDay()->utc();
+            $end_date = Carbon::parse($request->end_date, $timezone)->endOfDay()->utc();
 
             $classes = ClassLesson::with('classType', 'studio.location', 'instructor')
                 ->where('start_date', '>=', $start_date)
                 ->where('end_date', '<=', $end_date)
-                ->where('class_type_id', $request->class_type_id)
-                ->where('studio_id', $request->studio_id)
-                ->get();
+                ->when($request->class_type_id, fn($query) => $query->where('class_type_id', $request->class_type_id))
+                ->when($request->studio_id, fn($query) => $query->where('studio_id', $request->studio_id))
+                ->get()
+                ->map(function ($item) use($request) {
+                    $item->shift_period = $request->shift_period;
+
+                    if($request->shift_repeat && $request->shift_repeat >= 1) {
+                        $lastDatetime = $item->start_date;
+                        $newDateTimes = [];
+
+                        foreach (range(1, $request->shift_repeat) as $repeat) {
+                            array_push($newDateTimes, $lastDatetime->copy()
+                                ->addDays($request->shift_period * $repeat)
+                            );
+                        }
+                        $item->new_date_time = $newDateTimes;
+                    }
+
+                    return $item;
+                });
         }
 
         return Inertia::render('Partner/Class/BulkCopy', [
@@ -527,45 +563,61 @@ class PartnerClassLessonController extends Controller
 
     public function storeBulkCopy(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
+            'start_date' => 'required|date',
+            'end_date' => 'required|date',
             'shift_period' => 'required|numeric|min:1',
-            'shift_clone' => 'required|numeric|min:1',
+            'shift_repeat' => 'required|numeric|min:1',
+            'class_type_id' => 'nullable|numeric|min:1',
+            'studio_id' => 'nullable|numeric|min:1',
+            'ids' => 'required|array',
         ],
-        [],
         [
+            'ids.required' => 'Class selection is required',
+            'ids.array' => 'Invalid class selection.',
+        ],
+        [
+            'start_date' => 'Start Date',
+            'end_date' => 'End Date',
             'shift_period' => 'Shift Period (In Days)',
-            'shift_clone' => 'Shift Clone (No. of classes)',
+            'shift_repeat' => 'Shift Repeat',
+            'class_type_id' => 'Class Type',
+            'studio_id' => 'Studio',
         ]);
 
-        $classes = [];
+        if ($validator->fails()) {
+            $errorMsg = "";
+            foreach ($validator->getMessageBag()->getMessages() as $message) {
+                $message = $message[0];
+                $errorMsg .= $message ? $message."\n" : "";
+            }
 
-        $timezone = session('business_settings.timezone');
-        $start_date = $request->start_date ? Carbon::parse($request->start_date, $timezone)->startOfDay()->utc() : [];
-        $end_date = $request->end_date ? Carbon::parse($request->end_date, $timezone)->endOfDay()->utc() : [];
+            return $this->redirectBackError($errorMsg);
+        }
 
-        $classes = ClassLesson::with(['instructor' => fn($query) => $query->select('id')])->where('start_date', '>=', $start_date)
-            ->where('end_date', '<=', $end_date)
-            ->where('class_type_id', $request->class_type_id)
-            ->where('studio_id', $request->studio_id)
-            ->limit($request->shift_clone)
+        $classes = ClassLesson::with(['instructor' => fn($query) => $query->select('id')])
+            ->whereIn('id', $request->ids)
             ->get();
 
-        foreach ($classes as $class) {
-            $instructors = $class->instructor->pluck('id');
-            $class = $class->toArray();
-            $class['created_at'] = now();
-            $class['updated_at'] = now();
+            foreach ($classes as $class) {
+                foreach (range(1, $request->shift_repeat) as $repeat) {
+                    $instructors = $class->instructor->pluck('id');
+                    $classData = $class->toArray();
+                    $classData['created_at'] = now();
+                    $classData['updated_at'] = now();
 
-            $class['start_date'] = Carbon::parse($class['start_date'])->addDays($request->shift_period);
-            $class['end_date'] = Carbon::parse($class['end_date'])->addDays($request->shift_period);
+                    $classData['start_date'] = Carbon::parse($classData['start_date'])->addDays($request->shift_period * $repeat);
+                    $classData['end_date'] = Carbon::parse($classData['end_date'])->addDays($request->shift_period * $repeat);
 
 
-            $classModel = ClassLesson::create($class);
+                    $classModel = ClassLesson::create($classData);
 
-            if (!empty($instructors)) {
-                $classModel->instructor()->sync($instructors);
+                    if (!empty($instructors)) {
+                        $classModel->instructor()->sync($instructors);
+                    }
+                }
             }
-        }
+
 
         $this->redirectBackSuccess(__('The classes have been created.'), 'partner.classes.index');
 

@@ -22,6 +22,7 @@ import ColoredValue from "@/Components/DataTable/ColoredValue.vue";
 import StatusLabel from "@/Components/StatusLabel.vue";
 import AvatarValue from "@/Components/DataTable/AvatarValue.vue";
 import TextInput from "@/Components/TextInput.vue";
+import Checkbox from "@/Components/Checkbox.vue";
 
 const props = defineProps({
     classtypes: Object,
@@ -33,41 +34,53 @@ const props = defineProps({
 const swal = useSwal();
 
 const form = useForm({
-    start_date: null,
-    end_date: null,
+    start_date: DateTime.now().toISODate(),
+    end_date: DateTime.now().plus({ days: 7}).toISODate(),
+    shift_period: 7,
+    shift_repeat: 1,
     class_type_id: null,
     studio_id: null,
+    ids: []
 });
 
 const studiosOptions = computed(() => {
     return props.studios.map(item => ({value: item.id, label: item.title}));
 });
 
-const steps = ref(['search-form', 'class-list', 'bulk-copy']);
+const steps = ref(['search-form', 'bulk-copy']);
 const currentStep = ref(steps.value[0]);
 
 const handleNext = () => {
     const nextStepIndex = steps.value.indexOf(currentStep.value) + 1;
     if(nextStepIndex >= steps.value.length) return;
 
-    if(steps.value[nextStepIndex] == 'class-list') {
-        if (!form.isDirty && (
-            !form.start_date || !form.end_date || !form.class_type_id || !form.studio_id
-        )) {
-            swal.toast({
-                icon: 'error',
-                title: 'Error!',
-                text: 'Please fill the complete form to proceed.',
-            });
-            return;
-        }
+    if(steps.value[nextStepIndex] == 'bulk-copy') {
+        // if (!form.isDirty && (
+        //     !form.start_date || !form.end_date || !form.class_type_id || !form.studio_id
+        // )) {
+        //     swal.toast({
+        //         icon: 'error',
+        //         title: 'Error!',
+        //         text: 'Please fill the complete form to proceed.',
+        //     });
+        //     return;
+        // }
+
         form.get(route('partner.classes.bulk-copy'), {
             preserveState: true,
             replace: true,
             only: ['classes'],
-            onSuccess: () => {
+            onSuccess: (res) => {
+
+                if (!res.props?.classes?.length) {
+                    swal.toast({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'No classes found in this criteria!',
+                    });
+                    return;
+                }
                 currentStep.value = steps.value[nextStepIndex];
-                bulkCopyForm.shift_clone = props.classes?.length;
             },
             onError: () => {
                 swal.toast({
@@ -90,27 +103,28 @@ const handleBack = () => {
     currentStep.value = steps.value[previousStepIndex];
 };
 
-const bulkCopyForm = useForm({
-    shift_period: 7,
-    shift_clone: 0,
-});
+// const bulkCopyForm = useForm({
+//     shift_period: 7,
+//     shift_clone: 0,
+// });
 
 const handleFinish = () => {
-    if (!props.classes?.length) {
+    if (!form.ids?.length) {
         swal.toast({
             icon: 'error',
             title: 'Error!',
-            text: 'Invalid selection criteria',
+            text: 'Please select classes to proceed.',
         });
         return;
     }
 
-    bulkCopyForm.transform((data) => ({
-        ...data,
-        ...form.data(),
-    }))
-    .post(route('partner.classes.store-bulk-copy'));
+    form.post(route('partner.classes.store-bulk-copy'));
 }
+
+const selectAllCheckboxes = () => {
+    const ids = props.classes.map(item => item.id);
+    form.ids = form.ids.length ? [] : ids;
+};
 
 </script>
 
@@ -124,7 +138,7 @@ const handleFinish = () => {
                 </div>
 
                 <div class="mb-4">
-                    <InputLabel for="start_date" value="Start Date" />
+                    <InputLabel for="start_date" value="Start Date" required />
                     <Datepicker
                         class="mt-1 block w-full bg-gray-100 border-transparent rounded-md shadow-sm focus:border-gray-300 focus:bg-white focus:ring-0"
                         v-model="form.start_date"
@@ -138,7 +152,7 @@ const handleFinish = () => {
                 </div>
 
                 <div class="mb-4">
-                    <InputLabel for="end_date" value="End Date" />
+                    <InputLabel for="end_date" value="End Date" required />
                     <Datepicker
                         class="mt-1 block w-full bg-gray-100 border-transparent rounded-md shadow-sm focus:border-gray-300 focus:bg-white focus:ring-0"
                         v-model="form.end_date"
@@ -149,6 +163,32 @@ const handleFinish = () => {
                         auto-apply
                         week-numbers
                     />
+                </div>
+
+                <div class="mb-4">
+                    <InputLabel for="shift_period" value="Shift Period (In Days)" required />
+                    <TextInput
+                        id="shift_period"
+                        v-model="form.shift_period"
+                        type="number"
+                        class="mt-1 block w-full"
+                        placeholder="Shift Period (In Days)"
+                        min="1"
+                    />
+                    <InputError :message="form.errors.shift_period" class="mt-2" />
+                </div>
+
+                <div class="mb-4">
+                    <InputLabel for="shift_repeat" value="Shift Repeat" required />
+                    <TextInput
+                        id="shift_repeat"
+                        v-model="form.shift_repeat"
+                        type="number"
+                        class="mt-1 block w-full"
+                        placeholder="Shift Repeat"
+                        min="1"
+                    />
+                    <InputError :message="form.errors.shift_repeat" class="mt-2" />
                 </div>
 
                 <!-- Class Type -->
@@ -172,6 +212,7 @@ const handleFinish = () => {
                             <span class="ml-5">{{ option.label }}</span>
                         </template>
                     </Multiselect>
+                    <InputError :message="form.errors.class_type_id" class="mt-2" />
                 </div>
 
                 <!-- Studios -->
@@ -197,18 +238,28 @@ const handleFinish = () => {
                             <span class="ml-2">{{ option.label }}</span>
                         </template>
                     </Multiselect>
+                    <InputError :message="form.errors.studio_id" class="mt-2" />
                 </div>
             </div>
 
             <!-- Class List -->
-            <div v-if="currentStep == 'class-list'">
+            <div v-if="currentStep == 'bulk-copy'">
                 <div class="mb-8 text-xl font-bold">
-                    Selected Classes
+                    Select Classes
                 </div>
                 <data-table-layout
                     :disableButton="true"
                 >
                     <template #tableHead>
+                        <table-head>
+                            <template #checkbox>
+                                <Checkbox
+                                    :checked="form.ids.length > 0"
+                                    class="p-2.5"
+                                    @click="selectAllCheckboxes"
+                                />
+                            </template>
+                        </table-head>
                         <table-head
                             title="Title"
                         />
@@ -236,6 +287,12 @@ const handleFinish = () => {
                         <table-head
                             title="Duration"
                         />
+                        <table-head
+                            title="Shift, Days"
+                        />
+                        <table-head
+                            title="New Date & Time"
+                        />
                     </template>
                     <template #tableData>
                         <tr
@@ -244,8 +301,28 @@ const handleFinish = () => {
                             class="h-9"
                         >
 
+                            <table-data>
+                                <label class="flex items-center">
+                                    <Checkbox
+                                        v-model:checked="form.ids"
+                                        :checked="form.ids.includes(data.id)"
+                                        :value="data.id"
+                                    />
+                                </label>
+                            </table-data>
+
                             <!-- Title -->
-                            <table-data :title="data.title" />
+                            <table-data>
+                                <span
+                                    v-if="data.title.length > 25"
+                                    v-tooltip="data.title"
+                                >
+                                    {{ data.title.substring(0, 25) }}...
+                                </span>
+                                <span v-else>
+                                    {{ data.title }}
+                                </span>
+                            </table-data>
 
                             <!-- Location -->
                             <table-data :title="data.studio?.location?.title" />
@@ -309,44 +386,23 @@ const handleFinish = () => {
 
                             <!-- Duration -->
                             <table-data :title="data.duration + ' minutes'" />
+
+                            <!-- Shift, Days -->
+                            <table-data :title="data.shift_period + ' days'" />
+
+                            <!-- New Date & Time -->
+                            <table-data>
+                                <div v-for="new_date_time in data.new_date_time">{{
+                                    DateTime
+                                        .fromISO(new_date_time)
+                                        .setZone(business_settings.timezone)
+                                        .toFormat(business_settings.date_format?.format_js +' '+ business_settings.time_format?.format_js)
+                                }}</div>
+                            </table-data>
                         </tr>
                     </template>
                 </data-table-layout>
             </div>
-
-            <!-- Alter Selected Classes -->
-            <div v-if="currentStep == 'bulk-copy'">
-                <div class="mb-8 text-xl font-bold">
-                    Alter Selected Classes
-                </div>
-
-                <div class="mb-4">
-                    <InputLabel for="shift_period" value="Shift Period (In Days)" />
-                    <TextInput
-                        id="shift_period"
-                        v-model="bulkCopyForm.shift_period"
-                        type="number"
-                        class="mt-1 block w-full"
-                        placeholder="Shift Period (In Days)"
-                        min="1"
-                    />
-                    <InputError :message="bulkCopyForm.errors.shift_period" class="mt-2" />
-                </div>
-
-                <div class="mb-4">
-                    <InputLabel for="shift_clone" value="Shift Clone (No. of classes)" />
-                    <TextInput
-                        id="shift_clone"
-                        v-model="bulkCopyForm.shift_clone"
-                        type="number"
-                        class="mt-1 block w-full"
-                        placeholder="Shift Clone (No. of classes)"
-                        min="1"
-                    />
-                    <InputError :message="bulkCopyForm.errors.shift_clone" class="mt-2" />
-                </div>
-            </div>
-
         </template>
         <template #actions>
             <!-- <ActionMessage :on="form.recentlySuccessful" class="mr-3">
@@ -377,7 +433,7 @@ const handleFinish = () => {
             </ButtonLink>
             <ButtonLink
                 v-else
-                :disabled="currentStep == 'class-list' && !classes.length"
+                :disabled="form.processing"
                 styling="secondary"
                 size="default"
                 type="button"
