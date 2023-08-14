@@ -35,9 +35,9 @@ class Location extends Model
         'deleted_at' => 'datetime',
     ];
 
-    public function amenities()
+    public function amenities(): belongsToMany
     {
-        return $this->belongsToMany(Amenity::class, 'location_amenities', 'location_id', 'amenity_id');
+        return $this->belongsToMany(Amenity::class, 'amenity_location', 'location_id', 'amenity_id');
     }
 
     public function studios(): HasMany
