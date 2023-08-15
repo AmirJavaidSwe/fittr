@@ -16,7 +16,7 @@ import ColoredValue from "@/Components/DataTable/ColoredValue.vue";
 import MapMarker from "@/Icons/MapMarker.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
 
-const emit = defineEmits(["createNewInstructor", "createNewClassType", "createNewStudio"]);
+const emit = defineEmits(["createNewInstructor", "createNewClassType", "createNewStudio", "onPreview"]);
 const props = defineProps({
     statuses: Object,
     instructors: Object,
@@ -349,7 +349,7 @@ const studioList = computed(() => {
 
                 <div class="flex mt-1 items-center">
                     <div v-if="form.use_defaults" class="mr-2">Default:</div>
-                    <div v-if="form.use_defaults" class="flex flex-grow mr-2">{{ form.default_spaces }}</div>
+                    <div v-if="form.use_defaults" class="flex flex-grow mr-2">{{ defaultCapacity }}</div>
                     <TextInput
                         v-else
                         id="title"
@@ -370,6 +370,17 @@ const studioList = computed(() => {
             <ActionMessage :on="form.recentlySuccessful" class="mr-3">
                 Saved.
             </ActionMessage>
+
+            <ButtonLink
+                v-if="isNew"
+                styling="default"
+                size="default"
+                type="button"
+                class="mr-3"
+                @click="$emit('onPreview')"
+            >
+                Preview
+            </ButtonLink>
 
             <ButtonLink
                 :class="{ 'opacity-25': form.processing }"

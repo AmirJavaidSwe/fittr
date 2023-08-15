@@ -1,9 +1,7 @@
-use Class;
 <script setup>
 import { ref, watch, computed } from "vue";
-import { Link, useForm, usePage, router } from "@inertiajs/vue3";
+import { useForm, usePage, router } from "@inertiajs/vue3";
 import { DateTime } from "luxon";
-import uniqBy from "lodash/uniqBy";
 import map from "lodash/map";
 import uniq from "lodash/uniq";
 import find from "lodash/find";
@@ -25,16 +23,9 @@ import DuplicateIcon from "@/Icons/Duplicate.vue";
 import DeleteIcon from "@/Icons/Delete.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
-import InstructorCreateForm from "@/Pages/Partner/Instructor/Form.vue";
-import ClassTypeCreateForm from "@/Pages/Partner/Classtype/Form.vue";
-import StudioCreateForm from "@/Pages/Partner/Studio/Form.vue";
-import LocationCreateForm from "@/Pages/Partner/Location/Form.vue";
-import GMCreateForm from "@/Pages/Partner/Users/Form.vue";
-import RoleCreateForm from "@/Pages/Roles/Form.vue";
-import AmenityCreateForm from "@/Pages/Partner/Amenity/Form.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
 import CloseModal from "@/Components/CloseModal.vue";
-import { faCog, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import StatusLabel from "@/Components/StatusLabel.vue";
 import ColoredValue from "@/Components/DataTable/ColoredValue.vue";
 import AvatarValue from "@/Components/DataTable/AvatarValue.vue";
@@ -46,6 +37,10 @@ import InputError from "@/Components/InputError.vue";
 import TextInput from "@/Components/TextInput.vue";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import OnTheFlyResourceCreate from "@/Components/OnTheFlyResourceCreate.vue";
+import PreviewModal from "./PreviewModal.vue";
+import { useSwal } from "@/Composables/swal";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { faCopy } from "@fortawesome/free-regular-svg-icons";
 
 const props = defineProps({
     disableSearch: {
@@ -65,6 +60,8 @@ const props = defineProps({
     instructors: Object,
     classtypes: Object
 });
+
+const swal = useSwal();
 
 const form = useForm({
     search: props.search,
@@ -505,6 +502,48 @@ const inputPasswordType = computed(() =>
     showPassword.value ? "text" : "password"
 );
 
+const showPreviewModal = ref(false);
+const previewClassDetails = ref({});
+const onPreviewModal = () => {
+    previewClassDetails.value = form_class.data();
+
+    if(
+        !previewClassDetails.value.title
+        || !previewClassDetails.value.start_date
+        || !previewClassDetails.value.end_date
+        || !previewClassDetails.value.instructor_id.length
+        || !previewClassDetails.value.class_type_id
+    ) {
+        let textContent = "<ul class='font-semibold'><li>" + ["Title", "Start Date", "End Date", "Instructors", "Class Type", "Studio"].join("</li><li>") + "</li></ul>"
+        swal.toast({
+            icon: "warning",
+            title: "Invalid preview data",
+            html: "<div class='mb-1'>The following fields must be filled: </div>" + textContent
+        });
+        return;
+    }
+
+    if (previewClassDetails.value.start_date)
+        previewClassDetails.value.start_date = DateTime.fromISO(previewClassDetails.value.start_date.toISOString(), { zone: props.business_settings?.timezone });
+
+    if (previewClassDetails.value.end_date)
+        previewClassDetails.value.end_date = DateTime.fromISO(previewClassDetails.value.end_date.toISOString(), { zone: props.business_settings?.timezone });
+
+    previewClassDetails.value.instructor = previewClassDetails.value?.instructor_id?.map((item) => {
+        return props.instructors[item] ? { name: props.instructors[item] } : {};
+    });
+
+    const selectedClassType = props.classtypes[previewClassDetails.value?.class_type_id];
+    previewClassDetails.value.class_type = selectedClassType ? { title: selectedClassType } : {};
+
+    showPreviewModal.value = true;
+}
+const closePreviewModal = () => {
+    showPreviewModal.value = false;
+    previewClassDetails.value = {};
+};
+
+
 </script>
 <template>
     <data-table-layout
@@ -514,6 +553,10 @@ const inputPasswordType = computed(() =>
         @bulk-delete="bulkDelete"
     >
         <template #button>
+            <ButtonLink :href="route('partner.classes.bulk-copy')" styling="default" size="default">
+                <FontAwesomeIcon class="w-4 h-4 2xl:w-6 2xl:h-6 mr-0 md:mr-2" :icon="faCopy" />
+                <span class="hidden md:block">Bulk Copy</span>
+            </ButtonLink>
             <ButtonLink styling="default" size="default" @click="null">
                 <ImportIcon class="w-4 h-4 2xl:w-6 2xl:h-6 mr-0 md:mr-2" />
                 <span class="hidden md:block">Import</span>
@@ -705,9 +748,9 @@ const inputPasswordType = computed(() =>
                     <div
                         class="inline-flex text-sm font-normal rounded-full text-white p-1 px-2 justify-center"
                         :class="{'bg-danger-600': !class_lesson.spaces_left, 'bg-gray-500': class_lesson.spaces_left}"
-                        v-tooltip="class_lesson.spaces_booked + ' booked ouf of ' + class_lesson.spaces + ' total spaces'"
+                        v-tooltip="class_lesson.spaces_booked + ' booked out of ' + class_lesson.spaces + ' total spaces'"
                     >
-                    {{ class_lesson.spaces_booked }} / {{ class_lesson.spaces }} 
+                    {{ class_lesson.spaces_booked }} / {{ class_lesson.spaces }}
                     </div>
                 </TableData>
 
@@ -867,6 +910,7 @@ const inputPasswordType = computed(() =>
                 @create-new-instructor="showInstructorCreateForm = true"
                 @create-new-class-type="showClassTypeCreateForm = true"
                 @create-new-studio="showStudioCreateForm = true"
+                @onPreview="onPreviewModal"
                 modal
             />
         </template>
@@ -1057,4 +1101,12 @@ const inputPasswordType = computed(() =>
         @close-class-type-create-form="closeClassTypeCreateForm"
         @close-studio-create-form="closeStudioCreateForm"
     />
+
+    <PreviewModal
+        :show="showPreviewModal"
+        :classDetails="previewClassDetails"
+        :business_settings="business_settings"
+        @close="closePreviewModal"
+    />
+
 </template>

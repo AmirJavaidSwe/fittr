@@ -2,31 +2,32 @@
 
 namespace App\Http\Controllers\Partner;
 
-use App\Models\Role;
-use App\Models\User;
 // use App\Http\Requests\ImportFile;
+use App\Enums\ClassStatus;
+use App\Http\Controllers\Controller;
+use App\Models\Country;
+use App\Models\Role;
+use App\Models\SystemModule;
+use App\Models\User;
+use App\Models\Partner\Amenity;
+use App\Models\Partner\ClassLesson;
+use App\Models\Partner\ClassType;
+use App\Models\Partner\Instructor;
+use App\Models\Partner\Location;
+use App\Models\Partner\Studio;
+use App\Http\Requests\Partner\ClassFormRequest;
+use App\Rules\ArrayFieldExistsInDatabase;
+use App\Rules\UserPasswordMatch;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rules\Enum;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use Inertia\Response;
-use App\Models\Country;
-use App\Enums\ClassStatus;
-use App\Models\SystemModule;
-use Illuminate\Http\Request;
-use App\Models\Partner\Studio;
-use Illuminate\Support\Carbon;
-use App\Models\Partner\Amenity;
-use App\Rules\UserPasswordMatch;
-use App\Models\Partner\Location;
-use App\Models\Partner\ClassType;
-use Illuminate\Http\JsonResponse;
-use App\Models\Partner\Instructor;
-use Illuminate\Support\Facades\DB;
-use App\Models\Partner\ClassLesson;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Validation\Rules\Enum;
-use App\Rules\ArrayFieldExistsInDatabase;
-use Illuminate\Support\Facades\Validator;
-use App\Http\Requests\Partner\ClassFormRequest;
 
 // use Spatie\SimpleExcel\SimpleExcelReader;
 // use Spatie\SimpleExcel\SimpleExcelWriter;
@@ -235,7 +236,12 @@ class PartnerClassLessonController extends Controller
                     $class_data = $validated;
                     $class_data['start_date'] = $start_date;
                     $class_data['end_date'] = $start_date->copy()->addMinutes($class_duration);
-                    ClassLesson::create($class_data);
+
+                    $class = ClassLesson::create($class_data);
+
+                    if (!empty($class_data['instructor_id'])) {
+                        $class->instructor()->sync($class_data['instructor_id']);
+                    }
                 }
                 return $this->redirectBackSuccess(__('Classes created successfully'), 'partner.classes.index');
             }
@@ -479,5 +485,134 @@ class PartnerClassLessonController extends Controller
         }
 
         return $this->redirectBackSuccess(__('Classes deleted successfully'), 'partner.classes.index');
+    }
+
+    public function bulkCopy(Request $request)
+    {
+        $classes = [];
+
+
+        if ($request->start_date && $request->end_date && $request->shift_period && $request->shift_repeat) {
+            $request->validate([
+                'start_date' => 'required|date',
+                'end_date' => 'required|date',
+                'shift_period' => 'required|numeric|min:1',
+                'shift_repeat' => 'required|numeric|min:1',
+                'class_type_id' => 'nullable|numeric|min:1',
+                'studio_id' => 'nullable|numeric|min:1',
+            ],
+            [],
+            [
+                'start_date' => 'Start Date',
+                'end_date' => 'End Date',
+                'shift_period' => 'Shift Period (In Days)',
+                'shift_repeat' => 'Shift Repeat',
+                'class_type_id' => 'Class Type',
+                'studio_id' => 'Studio',
+            ]);
+
+            $timezone = session('business_settings.timezone');
+            $start_date = Carbon::parse($request->start_date, $timezone)->startOfDay()->utc();
+            $end_date = Carbon::parse($request->end_date, $timezone)->endOfDay()->utc();
+
+            $classes = ClassLesson::with('classType', 'studio.location', 'instructor')
+                ->where('start_date', '>=', $start_date)
+                ->where('end_date', '<=', $end_date)
+                ->when($request->class_type_id, fn($query) => $query->where('class_type_id', $request->class_type_id))
+                ->when($request->studio_id, fn($query) => $query->where('studio_id', $request->studio_id))
+                ->get()
+                ->map(function ($item) use($request) {
+                    $item->shift_period = $request->shift_period;
+
+                    if($request->shift_repeat && $request->shift_repeat >= 1) {
+                        $lastDatetime = $item->start_date;
+                        $newDateTimes = [];
+
+                        foreach (range(1, $request->shift_repeat) as $repeat) {
+                            array_push($newDateTimes, $lastDatetime->copy()
+                                ->addDays($request->shift_period * $repeat)
+                            );
+                        }
+                        $item->new_date_time = $newDateTimes;
+                    }
+
+                    return $item;
+                });
+        }
+
+        return Inertia::render('Partner/Class/BulkCopy', [
+            'page_title' => __('Bulk Copy'),
+            'header' => array(
+                [
+                    'title' => __('Classes'),
+                    'link' => route('partner.classes.index'),
+                ],
+                [
+                    'title' => '/',
+                    'link' => null,
+                ],
+                [
+                    'title' => __('Bulk Copy'),
+                    'link' => null,
+                ],
+            ),
+            'classtypes' => ClassType::pluck('title', 'id'),
+            'studios' => Studio::with('class_type_studios')->select('id', 'title')->orderBy('title', 'asc')->get(),
+            'classes' => $classes,
+        ]);
+    }
+
+    public function storeBulkCopy(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'start_date' => 'required|date',
+            'end_date' => 'required|date',
+            'shift_period' => 'required|numeric|min:1',
+            'shift_repeat' => 'required|numeric|min:1',
+            'class_type_id' => 'nullable|numeric|min:1',
+            'studio_id' => 'nullable|numeric|min:1',
+            'ids' => 'required|array',
+        ],
+        [
+            'ids.required' => __('Class selection is required'),
+            'ids.array' => __('Invalid class selection.'),
+        ],
+        [
+            'start_date' => 'Start Date',
+            'end_date' => 'End Date',
+            'shift_period' => 'Shift Period (In Days)',
+            'shift_repeat' => 'Shift Repeat',
+            'class_type_id' => 'Class Type',
+            'studio_id' => 'Studio',
+        ]);
+
+        if ($validator->fails()) {
+            $errorMsg = "";
+            foreach ($validator->getMessageBag()->getMessages() as $message) {
+                $message = $message[0];
+                $errorMsg .= $message ? $message."\n" : "";
+            }
+
+            return $this->redirectBackError($errorMsg);
+        }
+
+        $this->copied_classes_count = 0;
+        ClassLesson::with(['instructor' => fn($query) => $query->select('id')])
+            ->whereIn('id', $request->ids)
+            ->each(function($class) use ($request) {
+                foreach (range(1, $request->shift_repeat) as $repeat) {
+                    $classModel = $class->replicate();
+                    $classModel->start_date = $classModel->start_date->addDays($request->shift_period * $repeat);
+                    $classModel->end_date = $classModel->end_date->addDays($request->shift_period * $repeat);
+                    $classModel->save();
+                    $classModel->instructor()->sync($class->instructor->pluck('id'));
+
+                    $this->copied_classes_count++;
+                }
+            });
+
+        $noun = Str::of('class')->plural($this->copied_classes_count);
+
+        return $this->redirectBackSuccess(__(':count new :noun have been created.', ['count' => $this->copied_classes_count, 'noun' => $noun ]), 'partner.classes.index');
     }
 }

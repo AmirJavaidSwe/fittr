@@ -500,7 +500,7 @@ const closeAddFamilyModal = (param) => {
             </div>
             <div class="flex flex-col">
                 <div class="flex text-3xl font-bold mb-4 items-center">
-                    <div class="flex mr-4">{{ classDetails.title }}</div>
+                    <div class="flex flex-grow mr-4">{{ classDetails.title }}</div>
                     <div class="flex flex-col shrink-0">
                         <div
                             class="inline-flex text-sm font-normal rounded-lg bg-green-500 text-white p-2 justify-center mb-2">
@@ -568,7 +568,7 @@ const closeAddFamilyModal = (param) => {
                     </div>
                 </div>
             </div>
-            <div class="text-right" v-if="user.family.length">
+            <div class="text-right" v-if="user?.family?.length">
                 <div class="relative inline-flex text-right items-center">
                     Booking for
                     <select class="ml-5 border-0 focus:border-0 cursor-pointer mr-0 pr-7 text-primary-500"
@@ -578,7 +578,7 @@ const closeAddFamilyModal = (param) => {
                     </select>
                 </div>
             </div>
-            <div class="mt-5 bg-mainbg border-rounded text-right border-gray p-4" v-if="user.family.length">
+            <div class="mt-5 bg-mainbg border-rounded text-right border-gray p-4" v-if="user?.family?.length">
                 <template v-if="is_family_booking == 2 && selectedFamilyMembers.family_member.ids.length">
                     {{ parseInt(selectedFamilyMembers.family_member.ids.length) + 1 + " x Attendee(s) Selected" }}
                 </template>
