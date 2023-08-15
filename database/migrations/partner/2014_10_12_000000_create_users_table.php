@@ -17,6 +17,7 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->enum('role', PartnerUserRole::roles())->default(PartnerUserRole::get('member'));
+            $table->string('stripe_id', 255)->nullable();
             $table->string('name');
             $table->string('email');
             $table->string('password');
