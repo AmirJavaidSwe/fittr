@@ -2,21 +2,21 @@
 
 namespace App\Http\Middleware;
 
-use DB;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Crypt;
 use Symfony\Component\HttpFoundation\Response;
 use App\Enums\StateType;
 use App\Services\Shared\CacheMasterService;
+use App\Services\Partner\DatabaseConnectionService;
 
 class InitSubdomain
 {
-    public function __construct( CacheMasterService $cache)
+    public function __construct(DatabaseConnectionService $db_service, CacheMasterService $cache)
     {
         $this->cache = $cache;
+        $this->db_service = $db_service;
     }
 
     /**
@@ -55,18 +55,7 @@ class InitSubdomain
         Auth::setDefaultDriver('store');
 
         //set the connection to partner database
-        Config::set('database.connections.mysql_partner', [
-            'driver' => 'mysql',
-            'host' => $business->db_host,
-            'port' => $business->db_port,
-            'database' => $business->db_name,
-            'username' => $business->db_user,
-            'password' => Crypt::decryptString($business->db_password),
-            'charset'   => 'utf8mb4',
-            'collation' => 'utf8mb4_unicode_ci',
-            'prefix'    => '',
-            'strict'    => true,
-        ]);
+        $this->db_service->connect($business);
 
         // set subdomain to runtime config, used by 'auth.subdomain' middleware
         Config::set('subdomain', [
