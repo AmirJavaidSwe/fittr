@@ -6,7 +6,7 @@ use Illuminate\Validation\Rules\File;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class MemberFamilyRequest extends FormRequest
+class FamilyMemberRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

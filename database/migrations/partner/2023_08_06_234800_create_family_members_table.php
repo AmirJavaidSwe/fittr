@@ -11,8 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('family_booking_details', function (Blueprint $table) {
+        Schema::create('family_members', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->string('name')->nullable();
+            $table->date('date_of_birth')->nullable();
+            $table->string('profile_photo_path')->nullable();
             $table->timestamps();
         });
     }
@@ -22,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('family_booking_details');
+        Schema::dropIfExists('family_members');
     }
 };

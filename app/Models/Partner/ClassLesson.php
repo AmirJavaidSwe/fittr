@@ -42,6 +42,7 @@ class ClassLesson extends Model
         'spaces_booked',
         'spaces_left',
         'is_booked',
+        'user_bookings',
     ];
 
     //Local scopes
@@ -121,5 +122,13 @@ class ClassLesson extends Model
             //     $query->active();
             // }]);
         return $this->bookings->where('status', BookingStatus::get('active'))->contains('user_id', auth()->user()?->id);
+    }
+    public function getUserBookingsAttribute()
+    {
+        if(!$this->relationLoaded('bookings')) return [];
+            // $this->load(['bookings' => function (Builder $query) {
+            //     $query->active();
+            // }]);
+        return $this->bookings()->with('user')->where('status', BookingStatus::get('active'))->where('user_id', auth()->user()?->id)->get();
     }
 }

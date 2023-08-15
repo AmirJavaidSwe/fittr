@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('bookings', function (Blueprint $table) {
-            $table->json('family_booking')->nullable()->after('user_id')->comment('For Family Members Booking');
+            $table->boolean('is_family_booking')->nullable()->after('user_id')->comment('For Family Members Booking');
+            $table->unsignedBigInteger('family_member_id')->nullable()->after('is_family_booking')->comment('For Family Members Booking');
         });
     }
 
@@ -22,8 +23,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('bookings', function (Blueprint $table) {
-            $table->dropColumn('family_booking');
             //
+            $table->dropColumn('is_family_booking');
+            $table->dropColumn('family_member_id');
         });
     }
 };

@@ -707,7 +707,7 @@ const inputPasswordType = computed(() =>
                         :class="{'bg-danger-600': !class_lesson.spaces_left, 'bg-gray-500': class_lesson.spaces_left}"
                         v-tooltip="class_lesson.spaces_booked + ' booked ouf of ' + class_lesson.spaces + ' total spaces'"
                     >
-                    {{ class_lesson.spaces_booked }} / {{ class_lesson.spaces }} 
+                    {{ class_lesson.spaces_booked }} / {{ class_lesson.spaces }}
                     </div>
                 </TableData>
 
@@ -964,7 +964,7 @@ const inputPasswordType = computed(() =>
             <BulkEditForm
                 :form="formBulkEdit"
                 :statuses="statuses"
-                :studios="studioList"
+                :studios="studios"
                 :instructors="instructors"
                 :classtypes="classtypes"
                 :business_settings="business_settings"

@@ -140,6 +140,7 @@ const handleBooking = () => {
     bookingForm.transform((data) => ({
         ...data,
         familyBooking: selectedFamilyMembers.value,
+        is_family_booking: (is_family_booking.value == 2) ? true : false,
     })).post(
         route("ss.member.bookings.store", {
             subdomain: props.business_settings.subdomain,
@@ -154,10 +155,43 @@ const handleBooking = () => {
     );
 };
 
-const cancelBooking = () => {
-    bookingForm.class_id = classDetails.value.id;
 
-    bookingForm.post(
+const showCacnelBookingModal = ref(false)
+const cancelBookingAll = () => {
+
+    bookingForm.transform((data) => ({
+        class_id: classDetails.value.id,
+        ids_cancellation: idsCancellation.value,
+    })).post(
+        route("ss.member.bookings.cancel-all", {
+            subdomain: props.business_settings.subdomain,
+        }),
+        {
+            onSuccess: (res) => {
+                if (res.props.flash.type === "success") {
+                    idsCancellation.value = null
+                    bookForOtherClass.value = null
+                    showCacnelBookingModal.value = false
+                    modal.value = false
+                }
+            },
+        }
+    );
+}
+const cancelBooking = () => {
+    let filtered;
+    if(classDetails.value.user_bookings.length) {
+        filtered = classDetails.value.user_bookings.filter(item => (item.user_id == user.value.id && item.is_family_booking == 1 && item.family_member_id != null))
+    }
+    if(filtered.length) {
+        idsCancellation.value = null
+        bookForOtherClass.value = classDetails.value
+        showCacnelBookingModal.value = true
+        return;
+    }
+    // bookingForm.class_id = classDetails.value.id;
+
+    /* bookingForm.post(
         route("ss.member.bookings.cancel", {
             subdomain: props.business_settings.subdomain,
         }),
@@ -168,7 +202,7 @@ const cancelBooking = () => {
                 }
             },
         }
-    );
+    ); */
 };
 
 const waitlistForm = useForm({ class_id: '' });
@@ -259,6 +293,8 @@ const isFamilyBooking = () => {
         showFamilyBookingModal.value = true;
     } else {
         showFamilyBookingModal.value = false;
+        selectedFamilyMembers.value.user_id = user?.value?.id
+        selectedFamilyMembers.value.family_member.ids = []
     }
 };
 
@@ -292,6 +328,49 @@ const checkSelectedFamilyMembers = (id) => {
     return filtered.length ? true : false
 }
 
+const isCancelAbleBooking = (classDetails) => {
+    if(classDetails.is_booked && user?.value?.id && (/* !classDetails.spaces_left || */ (classDetails.user_bookings.length == (user.value?.family?.length + 1)))) {
+        return true
+    }
+    return false
+}
+
+const showbookForOtherFamilyMembersModal = ref(false)
+const bookForOtherClass = ref(null)
+const otherFamilyMemberBookingIds = ref(null)
+const bookForOtherFamilyMembers = (classDetails) => {
+    showbookForOtherFamilyMembersModal.value = true
+    bookForOtherClass.value = classDetails
+}
+const closeBookForOtherFamilyMembersModal = (param) => {
+    if(!param) {
+        showbookForOtherFamilyMembersModal.value = false
+        bookForOtherClass.value = null
+        otherFamilyMemberBookingIds.value = null
+    } else {
+        confirmBookingOtherFamilyMemberBooking(bookForOtherClass.value, otherFamilyMemberBookingIds.value)
+    }
+}
+
+const confirmBookingOtherFamilyMemberBooking = (classDetail, members) => {
+    bookingForm.transform((data) => ({
+        class_id: classDetail.id,
+        members: members,
+        is_new_family_booking: true,
+    })).post(
+        route("ss.member.bookings.other-famly", {
+            subdomain: props.business_settings.subdomain,
+        }),
+        {
+            onSuccess: (res) => {
+                if (res.props.flash.type === "success") {
+                    closeBookForOtherFamilyMembersModal(false);
+                    modal.value = false
+                }
+            },
+        }
+    );
+}
 const closeAddFamilyModal = (param) => {
     if (param === false) {
         selectedFamilyMembers.value.family_member.ids = []
@@ -303,6 +382,100 @@ const closeAddFamilyModal = (param) => {
         }
     }
     showFamilyBookingModal.value = false
+};
+const idsCancellation = ref(null)
+const addRemoveMemberForCancellation = (isParent, id) => {
+    if(idsCancellation.value == null) {
+        idsCancellation.value = []
+    }
+    if(isParent) {
+        const filtered = idsCancellation.value.filter((item) => {
+            return item.is_parent && item.id == id
+        })
+        if (filtered.length) {
+            const filtered = idsCancellation.value.filter((item) => {
+                return item.is_parent && (item.id != id)
+            })
+            idsCancellation.value = filtered
+        } else {
+            idsCancellation.value.push({
+                id: id,
+                is_parent: true
+            })
+        }
+    } else {
+        const filtered = idsCancellation.value.filter((item) => {
+            return !item.is_parent && (item.id == id)
+        })
+        if (filtered.length) {
+            const filtered = idsCancellation.value.filter((item) => {
+                return !item.is_parent && (item.id != id)
+            })
+            idsCancellation.value = filtered
+        } else {
+            idsCancellation.value.push({
+                id: id,
+                is_parent: false
+            })
+        }
+    }
+    if(!idsCancellation.value.length) {
+        idsCancellation.value = null
+    }
+}
+const addRemoveFamilyMemberForOtherBookings = (isParent, id) => {
+    if(otherFamilyMemberBookingIds.value == null) {
+        otherFamilyMemberBookingIds.value = []
+    }
+    if(isParent) {
+        const filtered = otherFamilyMemberBookingIds.value.filter((item) => {
+            return item.is_parent && item.id == id
+        })
+        if (filtered.length) {
+            const filtered = otherFamilyMemberBookingIds.value.filter((item) => {
+                return item.is_parent && (item.id != id)
+            })
+            otherFamilyMemberBookingIds.value = filtered
+        } else {
+            otherFamilyMemberBookingIds.value.push({
+                id: id,
+                is_parent: true
+            })
+        }
+    } else {
+        const filtered = otherFamilyMemberBookingIds.value.filter((item) => {
+            return !item.is_parent && (item.id == id)
+        })
+        if (filtered.length) {
+            const filtered = otherFamilyMemberBookingIds.value.filter((item) => {
+                return !item.is_parent && (item.id != id)
+            })
+            otherFamilyMemberBookingIds.value = filtered
+        } else {
+            otherFamilyMemberBookingIds.value.push({
+                id: id,
+                is_parent: false
+            })
+        }
+    }
+    if(!otherFamilyMemberBookingIds.value.length) {
+        otherFamilyMemberBookingIds.value = null
+    }
+}
+const alreadyBooked = (isParent, id) => {
+    if (isParent) {
+        const classDetail = bookForOtherClass.value
+        const filtered = classDetail.user_bookings.filter((item) => {
+            return item.user_id == id && item.family_member_id == null
+        })
+        return filtered.length ? true : false
+    } else if (!isParent) {
+        const classDetail = bookForOtherClass.value
+        const filtered = classDetail.user_bookings.filter((item) => {
+            return item.user_id == user.value.id && item.family_member_id == id
+        })
+        return filtered.length ? true : false
+    }
 }
 </script>
 
@@ -569,7 +742,7 @@ const closeAddFamilyModal = (param) => {
                 </div>
             </div>
             <div class="text-right" v-if="user?.family?.length">
-                <div class="relative inline-flex text-right items-center">
+                <div class="relative inline-flex text-right items-center" v-if="!classDetails.is_booked">
                     Booking for
                     <select class="ml-5 border-0 focus:border-0 cursor-pointer mr-0 pr-7 text-primary-500"
                         v-model="is_family_booking" @change="isFamilyBooking">
@@ -578,7 +751,7 @@ const closeAddFamilyModal = (param) => {
                     </select>
                 </div>
             </div>
-            <div class="mt-5 bg-mainbg border-rounded text-right border-gray p-4" v-if="user?.family?.length">
+            <div class="mt-5 bg-mainbg border-rounded text-right border-gray p-4" v-if="user?.family?.length && !classDetails.is_booked">
                 <template v-if="is_family_booking == 2 && selectedFamilyMembers.family_member.ids.length">
                     {{ parseInt(selectedFamilyMembers.family_member.ids.length) + 1 + " x Attendee(s) Selected" }}
                 </template>
@@ -586,13 +759,16 @@ const closeAddFamilyModal = (param) => {
                     {{ 1 + " x Attendee(s) Selected" }}
                 </template>
             </div>
+            <div class="mt-5 bg-mainbg border-rounded text-right border-gray p-4" v-if="user?.family?.length && classDetails.is_booked && (classDetails.user_bookings.length != (user.family.length + 1))">
+                {{ parseInt(classDetails.user_bookings.length) + " out of " + (user.family.length + 1) + " Attendee(s) Selected" }}
+            </div>
         </template>
         <template #footer>
             <ButtonLink class="mr-2" styling="default" size="default" @click="closeModal">Close</ButtonLink>
 
             <ButtonLink v-if="!$page.props.user" styling="secondary" size="default" @click="handleBooking"
                 :disabled="bookingForm.processing">Sign in to Book</ButtonLink>
-            <ButtonLink v-else-if="classDetails.is_booked" styling="secondary" size="default" @click="cancelBooking"
+            <ButtonLink v-else-if="isCancelAbleBooking(classDetails)" styling="secondary" size="default" @click="cancelBooking"
                 :disabled="bookingForm.processing">Cancel Booking</ButtonLink>
             <div v-else-if="!classDetails.spaces_left" class="inline-flex">
                 <ButtonLink v-if="classDetails.is_waiting" styling="secondary" size="default" @click="removeFromWaitList"
@@ -600,8 +776,10 @@ const closeAddFamilyModal = (param) => {
                 <ButtonLink v-else styling="secondary" size="default" @click="addToWaitList"
                     :disabled="waitlistForm.processing">Add to waitlist</ButtonLink>
             </div>
-            <ButtonLink v-else styling="secondary" size="default" @click="handleBooking" :disabled="bookingForm.processing">
+            <ButtonLink v-else-if="!classDetails.is_booked" styling="secondary" size="default" @click="handleBooking" :disabled="bookingForm.processing">
                 Book</ButtonLink>
+            <ButtonLink v-else-if="!isCancelAbleBooking(classDetails)" styling="secondary" size="default" @click="bookForOtherFamilyMembers(classDetails)" :disabled="bookingForm.processing">
+                Book For Other Family Members</ButtonLink>
         </template>
     </SideModal>
 
@@ -655,6 +833,122 @@ const closeAddFamilyModal = (param) => {
                     <ButtonLink class="mr-2" styling="default" size="default" @click="closeAddFamilyModal(false)">Cancel &
                         Close</ButtonLink>
                     <ButtonLink styling="secondary" size="default" @click="closeAddFamilyModal(true)">Confirm & Close
+                    </ButtonLink>
+                </div>
+            </template>
+
+        </CardBasic>
+    </Modal>
+    <Modal :show="showbookForOtherFamilyMembersModal" :sideModalOpened="modal">
+        <CardBasic>
+            <template #header>
+                <div class="flex justify-between items-center">
+                    <div class="text-md mx-auto">Select Attendees</div>
+                    <div>
+                        <CloseModal @click="closeBookForOtherFamilyMembersModal(false)" v-tooltip="'Cancel and Close'" />
+                    </div>
+                </div>
+            </template>
+            <template #default>
+                <div class="flex items-center justify-between my-4 mx-4">
+                    <div class="flex items-center">
+                        <img :src="user.profile_photo_url" :alt="user.name" class="rounded-full h-10 w-10 object-cover" />
+                        <div class="pl-2">
+                            <div class="block pl-2 font-semibold mb-2">
+                                {{ user.name }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inline-flex items-center justify-start mr-20">
+                        <p class="mr-5 opacity-60 text-sm">
+                            {{ alreadyBooked(true, user.id) ? 'already booked' : '' }}
+                        </p>
+                        <input type="checkbox" :class="[alreadyBooked(true, user.id) && 'opacity-70']" @change="addRemoveFamilyMemberForOtherBookings(true, user.id)"
+                            :checked="alreadyBooked(true, user.id)" :disabled="alreadyBooked(true, user.id)">
+                    </div>
+                </div>
+                <hr />
+                <template v-for="(familyMember, index) in user.family">
+                    <div class="flex items-center justify-between my-4 mx-4">
+                        <div class="flex items-center">
+                            <img :src="familyMember.profile_photo_url" :alt="familyMember.name"
+                                class="rounded-full h-10 w-10 object-cover" />
+                            <div class="pl-2">
+                                <div class="block pl-2 font-semibold mb-2">
+                                    {{ familyMember.name }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="inline-flex items-center justify-start mr-20">
+                            <p class="mr-5 opacity-60 text-sm">
+                                {{ alreadyBooked(false, familyMember.id) ? 'already booked' : '' }}
+                            </p>
+                            <input type="checkbox" :class="[alreadyBooked(false, familyMember.id) && 'opacity-70']"  @change="addRemoveFamilyMemberForOtherBookings(false, familyMember.id)"
+                            :checked="alreadyBooked(false, familyMember.id)" :disabled="alreadyBooked(false, familyMember.id)">
+                        </div>
+                    </div>
+                    <hr />
+                </template>
+            </template>
+            <template #footer>
+                <div class="text-right">
+                    <ButtonLink class="mr-2" styling="default" size="default" @click="closeBookForOtherFamilyMembersModal(false)">Cancel &
+                        Close</ButtonLink>
+                    <ButtonLink :disabled="otherFamilyMemberBookingIds == null || bookingForm.processing" styling="secondary" size="default" @click="closeBookForOtherFamilyMembersModal(true)">Confirm & Book
+                    </ButtonLink>
+                </div>
+            </template>
+
+        </CardBasic>
+    </Modal>
+    <Modal :show="showCacnelBookingModal" :sideModalOpened="modal">
+        <CardBasic>
+            <template #header>
+                <div class="flex justify-between items-center">
+                    <div class="text-md mx-auto">Select Attendees for Cancellation</div>
+                    <div>
+                        <CloseModal @click="showCacnelBookingModal = false" v-tooltip="'Cancel and Close'" />
+                    </div>
+                </div>
+            </template>
+            <template #default>
+                <div class="flex items-center justify-between my-4 mx-4">
+                    <div class="flex items-center">
+                        <img :src="user.profile_photo_url" :alt="user.name" class="rounded-full h-10 w-10 object-cover" />
+                        <div class="pl-2">
+                            <div class="block pl-2 font-semibold mb-2">
+                                {{ user.name }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inline-flex items-center justify-start mr-20">
+                        <input type="checkbox" @change="addRemoveMemberForCancellation(true, user.id)">
+                    </div>
+                </div>
+                <hr />
+                <template v-for="(familyMember, index) in user.family">
+                    <div class="flex items-center justify-between my-4 mx-4">
+                        <div class="flex items-center">
+                            <img :src="familyMember.profile_photo_url" :alt="familyMember.name"
+                                class="rounded-full h-10 w-10 object-cover" />
+                            <div class="pl-2">
+                                <div class="block pl-2 font-semibold mb-2">
+                                    {{ familyMember.name }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="inline-flex items-center justify-start mr-20">
+                            <input type="checkbox" @change="addRemoveMemberForCancellation(false, familyMember.id)">
+                        </div>
+                    </div>
+                    <hr />
+                </template>
+            </template>
+            <template #footer>
+                <div class="text-right">
+                    <ButtonLink class="mr-2" styling="default" size="default" @click="showCacnelBookingModal = false">Cancel &
+                        Close</ButtonLink>
+                    <ButtonLink :disabled="idsCancellation == null || bookingForm.processing" styling="secondary" size="default" @click="cancelBookingAll">Confirm & Cancel
                     </ButtonLink>
                 </div>
             </template>

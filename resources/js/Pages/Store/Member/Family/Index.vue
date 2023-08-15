@@ -138,7 +138,7 @@ const deleteItem = () => {
     </div>
     <div class="mt-[75px]">
         <template v-for="(familyMember, index) in family_members">
-            <CardBasic>
+            <CardBasic class="mb-4">
                 <template #default>
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">

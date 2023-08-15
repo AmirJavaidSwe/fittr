@@ -38,7 +38,7 @@ use App\Http\Controllers\Partner\PartnerUserController;
 // Service store area, partner subdomains:
 use App\Http\Controllers\Store\InstructorDashboardController;
 use App\Http\Controllers\Store\MemberDashboardController;
-use App\Http\Controllers\Store\MemberFamilyController;
+use App\Http\Controllers\Store\FamilyMemberController;
 use App\Http\Controllers\Store\StoreBookingController;
 use App\Http\Controllers\Store\StoreClassController;
 use App\Http\Controllers\Store\StoreInstructorController;
@@ -219,7 +219,9 @@ Route::domain('{subdomain}.'.config('app.domain'))->middleware(['auth.subdomain'
             Route::post('/bookings/cancel', [StoreBookingController::class, 'cancel'])->name('bookings.cancel');
             Route::post('/bookings/add-to-waitlist', [StoreBookingController::class, 'addToWaitlist'])->name('bookings.add-to-waitlist');
             Route::post('/bookings/remove-from-waitlist', [StoreBookingController::class, 'removeFromWaitList'])->name('bookings.remove-from-waitlist');
-            Route::resource('family', MemberFamilyController::class);
+            Route::resource('family', FamilyMemberController::class);
+            Route::post('/bookings/other-famly', [StoreBookingController::class, 'bookForOtherFamly'])->name('bookings.other-famly');
+            Route::post('/bookings/cancel-all', [StoreBookingController::class, 'cancelForAllOrSelected'])->name('bookings.cancel-all');
         });
 
         //INSTRUCTOR

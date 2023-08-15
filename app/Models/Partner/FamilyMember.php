@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use App\Services\Shared\CacheMasterService;
 use App\Enums\SettingKey;
 
-class MemberFamily extends Model
+class FamilyMember extends Model
 {
     use HasProfilePhoto;
 
@@ -20,7 +20,7 @@ class MemberFamily extends Model
      * @var string
      */
     protected $connection = 'mysql_partner';
-    protected $table = 'member_family';
+    protected $table = 'family_members';
 
     /**
      * The attributes that are mass assignable.
