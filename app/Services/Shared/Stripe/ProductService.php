@@ -40,7 +40,7 @@ class ProductService extends StripeService
         }
 
         //update existing product only if below fields have changed
-        $was_changed = $pack->wasChanged(['is_active', 'title']);
+        $was_changed = $pack->wasChanged(['is_active', 'title', 'description']);
         if($was_changed){
             $attempt = $this->updateProduct($connected_account_id, $pack->stripe_product_id, $product_data);
 
@@ -56,6 +56,7 @@ class ProductService extends StripeService
     {
         return array(
             'name' => $pack->title,
+            'description' => $pack->description,
             'active' => $pack->is_active,
             'shippable' => false,
             'metadata' => [
