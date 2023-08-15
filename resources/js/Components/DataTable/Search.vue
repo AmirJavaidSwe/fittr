@@ -15,7 +15,6 @@ const emit = defineEmits([
     "update:modelValue",
     "reset",
     "onFilter",
-    "pp_changed",
 ]);
 const onInput = debounce((event) => {
     emit("update:modelValue", event.target.value);

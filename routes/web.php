@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\InstanceController;
 use App\Http\Controllers\Admin\PackageController;
 use App\Http\Controllers\Admin\PartnerController;
 use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\StripeEventController;
 
 use App\Http\Controllers\Shared\RoleController;
 use App\Http\Controllers\Shared\StripeWebhookController;
@@ -107,6 +108,10 @@ Route::domain('app.'.config('app.domain'))->group(function () {
                 Route::delete('/packages/{package}', 'destroy')->name('destroy');
             });
             Route::resource('roles', RoleController::class);
+            Route::controller(StripeEventController::class)->name('se.')->group(function () {
+                Route::get('/se', 'index')->name('index');
+                Route::get('/se/{id}', 'show')->name('show');
+            });
         });
 
         //PARTNER
