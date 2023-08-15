@@ -2,31 +2,32 @@
 
 namespace App\Http\Controllers\Partner;
 
-use App\Models\Role;
-use App\Models\User;
 // use App\Http\Requests\ImportFile;
+use App\Enums\ClassStatus;
+use App\Http\Controllers\Controller;
+use App\Models\Country;
+use App\Models\Role;
+use App\Models\SystemModule;
+use App\Models\User;
+use App\Models\Partner\Amenity;
+use App\Models\Partner\ClassLesson;
+use App\Models\Partner\ClassType;
+use App\Models\Partner\Instructor;
+use App\Models\Partner\Location;
+use App\Models\Partner\Studio;
+use App\Http\Requests\Partner\ClassFormRequest;
+use App\Rules\ArrayFieldExistsInDatabase;
+use App\Rules\UserPasswordMatch;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rules\Enum;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use Inertia\Response;
-use App\Models\Country;
-use App\Enums\ClassStatus;
-use App\Models\SystemModule;
-use Illuminate\Http\Request;
-use App\Models\Partner\Studio;
-use Illuminate\Support\Carbon;
-use App\Models\Partner\Amenity;
-use App\Rules\UserPasswordMatch;
-use App\Models\Partner\Location;
-use App\Models\Partner\ClassType;
-use Illuminate\Http\JsonResponse;
-use App\Models\Partner\Instructor;
-use Illuminate\Support\Facades\DB;
-use App\Models\Partner\ClassLesson;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Validation\Rules\Enum;
-use App\Rules\ArrayFieldExistsInDatabase;
-use Illuminate\Support\Facades\Validator;
-use App\Http\Requests\Partner\ClassFormRequest;
 
 // use Spatie\SimpleExcel\SimpleExcelReader;
 // use Spatie\SimpleExcel\SimpleExcelWriter;
@@ -573,8 +574,8 @@ class PartnerClassLessonController extends Controller
             'ids' => 'required|array',
         ],
         [
-            'ids.required' => 'Class selection is required',
-            'ids.array' => 'Invalid class selection.',
+            'ids.required' => __('Class selection is required'),
+            'ids.array' => __('Invalid class selection.'),
         ],
         [
             'start_date' => 'Start Date',
@@ -595,31 +596,23 @@ class PartnerClassLessonController extends Controller
             return $this->redirectBackError($errorMsg);
         }
 
-        $classes = ClassLesson::with(['instructor' => fn($query) => $query->select('id')])
+        $this->copied_classes_count = 0;
+        ClassLesson::with(['instructor' => fn($query) => $query->select('id')])
             ->whereIn('id', $request->ids)
-            ->get();
-
-            foreach ($classes as $class) {
+            ->each(function($class) use ($request) {
                 foreach (range(1, $request->shift_repeat) as $repeat) {
-                    $instructors = $class->instructor->pluck('id');
-                    $classData = $class->toArray();
-                    $classData['created_at'] = now();
-                    $classData['updated_at'] = now();
+                    $classModel = $class->replicate();
+                    $classModel->start_date = $classModel->start_date->addDays($request->shift_period * $repeat);
+                    $classModel->end_date = $classModel->end_date->addDays($request->shift_period * $repeat);
+                    $classModel->save();
+                    $classModel->instructor()->sync($class->instructor->pluck('id'));
 
-                    $classData['start_date'] = Carbon::parse($classData['start_date'])->addDays($request->shift_period * $repeat);
-                    $classData['end_date'] = Carbon::parse($classData['end_date'])->addDays($request->shift_period * $repeat);
-
-
-                    $classModel = ClassLesson::create($classData);
-
-                    if (!empty($instructors)) {
-                        $classModel->instructor()->sync($instructors);
-                    }
+                    $this->copied_classes_count++;
                 }
-            }
+            });
 
+        $noun = Str::of('class')->plural($this->copied_classes_count);
 
-        $this->redirectBackSuccess(__('The classes have been created.'), 'partner.classes.index');
-
+        return $this->redirectBackSuccess(__(':count new :noun have been created.', ['count' => $this->copied_classes_count, 'noun' => $noun ]), 'partner.classes.index');
     }
 }
