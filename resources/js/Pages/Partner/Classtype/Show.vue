@@ -4,10 +4,15 @@ import { DateTime } from "luxon";
 import SingleView from "@/Components/DataTable/SingleView.vue";
 import SingleViewRow from "@/Components/DataTable/SingleViewRow.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
+import ColoredValue from "@/Components/DataTable/ColoredValue.vue";
 
 defineProps({
     classtype: {
         type: Object,
+        required: true,
+    },
+    statuses: {
+        type: Array,
         required: true,
     },
 });
@@ -27,7 +32,19 @@ defineProps({
             </div>
         </template>
         <template #item>
-            <single-view-row label="ID" :value="classtype.id" />
+            <single-view-row 
+                :even="false"
+                label="ID"
+                :value="classtype.id" />
+
+            <single-view-row
+                :even="true"
+                label="Status"
+            >
+                <template #value>
+                    <ColoredValue :color="statuses.find(el => el.value == classtype.status).color" :title="statuses.find(el => el.value == classtype.status).label " />
+                </template>
+            </single-view-row>
 
             <single-view-row
                 :even="false"
@@ -44,7 +61,7 @@ defineProps({
             <single-view-row
                 :even="false"
                 label="Created At"
-                :value="DateTime.fromISO(classtype.created_at)"
+                :value="DateTime.fromISO(classtype.created_at).toLocaleString(DateTime.DATETIME_HUGE)"
             />
 
             <single-view-row

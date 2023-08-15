@@ -15,7 +15,7 @@ use App\Models\Partner\ServiceType;
 use App\Models\Partner\Location;
 use App\Models\Partner\PackPrice;
 use App\Services\Partner\PackService;
-use App\Services\Shared\StripeProductService;
+use App\Services\Shared\Stripe\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -23,7 +23,7 @@ use Inertia\Inertia;
 class PartnerPackController extends Controller
 {
 
-    public function __construct(PackService $pack_service, StripeProductService $stripe_product_service)
+    public function __construct(PackService $pack_service, ProductService $stripe_product_service)
     {
         $this->middleware('business.ready');
         $this->pack_service = $pack_service;
@@ -51,7 +51,7 @@ class PartnerPackController extends Controller
     {
         $this->search = $request->query('search', null);
         $this->per_page = $request->query('per_page', 10);
-        $this->order_by = $request->query('order_by', 'id');
+        $this->order_by = $request->query('order_by', 'type');
         $this->order_dir = $request->query('order_dir', 'asc');
 
         return Inertia::render('Partner/Pack/Index', [

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Shared;
 
 use App\Http\Controllers\Controller;
 use App\Models\StripeEvent;
-use App\Services\Shared\StripeWebhookService;
+use App\Services\Shared\Stripe\WebhookService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
@@ -16,7 +16,7 @@ class StripeWebhookController extends Controller
 {
     private $event_for;
 
-    public function __construct(StripeWebhookService $service)
+    public function __construct(WebhookService $service)
     {
         $this->stripe = new StripeClient(config('services.stripe.secret_key'));
         $this->service = $service;

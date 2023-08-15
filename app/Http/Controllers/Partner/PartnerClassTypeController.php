@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Partner;
 
+use App\Enums\StateType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Partner\ClasstypeFormRequest;
 use App\Models\Partner\ClassType;
@@ -55,9 +56,10 @@ class PartnerClassTypeController extends Controller
                 ],
                 [
                     'title' => __('Class Types'),
-                    'link' => null,
+                    'link' => route('partner.classtypes.index'),
                 ],
             ),
+            'statuses' => StateType::labels(),
         ]);
     }
 
@@ -92,6 +94,7 @@ class PartnerClassTypeController extends Controller
                     'link' => null,
                 ],
             ),
+            'statuses' => StateType::labels(),
         ]);
     }
 
@@ -140,11 +143,12 @@ class PartnerClassTypeController extends Controller
                     'link' => null,
                 ],
                 [
-                    'title' => __('Class Type details'),
+                    'title' => __('Details'),
                     'link' => null,
                 ],
             ),
             'classtype' => $classtype,
+            'statuses' => StateType::labels(),
         ]);
     }
 
@@ -176,11 +180,12 @@ class PartnerClassTypeController extends Controller
                     'link' => null,
                 ],
                 [
-                    'title' => __('Edit Class Type'),
+                    'title' => __('Edit'),
                     'link' => null,
                 ],
             ),
-            'classtype' => $classtype
+            'classtype' => $classtype,
+            'statuses' => StateType::labels(),
         ]);
     }
 

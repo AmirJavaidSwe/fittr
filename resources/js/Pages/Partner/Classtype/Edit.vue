@@ -7,10 +7,15 @@ const props = defineProps({
     classtype: {
         type: Object,
         required: true
-    }
+    },
+    statuses: {
+        type: Array,
+        required: true,
+    },
 });
 
 const form = useForm({
+    status: props.classtype.status,
     title: props.classtype.title,
     description: props.classtype.description
 });
@@ -25,5 +30,7 @@ const storeItem = () => {
 
 <template>
     <Form :form="form"
-          :submitted="storeItem"/>
+          :submitted="storeItem"
+          :statuses="statuses"
+          />
 </template>

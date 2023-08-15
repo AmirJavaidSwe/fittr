@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Partner;
 
+use App\Enums\StateType;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
 class ClasstypeFormRequest extends FormRequest
 {
@@ -26,6 +28,7 @@ class ClasstypeFormRequest extends FormRequest
         $rules =  [
             'title' => 'required|string|max:255',
             'description' => 'nullable|max:65355',
+            'status' => ['required', new Enum(StateType::class)],
         ];
 
         return $rules;

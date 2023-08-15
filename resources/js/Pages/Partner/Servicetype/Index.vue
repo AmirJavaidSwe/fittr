@@ -19,6 +19,7 @@ import { faCog, faPlus } from "@fortawesome/free-solid-svg-icons";
 import DateValue from "../../../Components/DataTable/DateValue.vue";
 import ActionsIcon from '@/Icons/ActionsIcon.vue';
 import CloseModal from "@/Components/CloseModal.vue";
+import StatusLabel from "@/Components/StatusLabel.vue";
 
 const props = defineProps({
     disableSearch: {
@@ -27,6 +28,7 @@ const props = defineProps({
     },
     business_settings: Object,
     servicetypes: Object,
+    statuses: Array,
     search: String,
     per_page: Number,
     order_by: String,
@@ -67,6 +69,7 @@ watch(() => form.search, runSearch);
 
 // Create/Edit servicetypes Queries
 let form_new = useForm({
+    status: false,
     title: null,
     description: null,
 });
@@ -85,6 +88,7 @@ const storeItem = () => {
 
 let form_edit = useForm({
     id: "",
+    status: false,
     title: null,
     description: null,
 });
@@ -97,6 +101,7 @@ const closeEditModal = () => {
 const handleUpdateForm = (data) => {
     showEditModal.value = true;
     form_edit.id = data.id;
+    form_edit.status = data.status;
     form_edit.title = data.title;
     form_edit.description = data.description;
 };
@@ -167,6 +172,12 @@ const deleteItem = () => {
                 :currentSort="form.order_by === 'id'"
             /> -->
             <TableHead
+                title="Status"
+                @click="setOrdering('status')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'status'"
+            />
+            <TableHead
                 title="Title"
                 @click="setOrdering('title')"
                 :arrowSide="form.order_dir"
@@ -201,6 +212,9 @@ const deleteItem = () => {
 
         <template #tableData>
             <tr v-for="(servicetype, index) in servicetypes.data" :key="index">
+                <table-data class="text-center">
+                    <StatusLabel :status="props.statuses.find(el => el.value == servicetype.status).label" />
+                </table-data>
                 <table-data>
                     <Link
                         class="font-semibold text-primary-500 hover:text-primary-900"
@@ -278,7 +292,7 @@ const deleteItem = () => {
         </template>
 
         <template #content>
-            <Form :form="form_new" :submitted="storeItem" modal />
+            <Form :form="form_new" :submitted="storeItem" modal :statuses="statuses" />
         </template>
     </SideModal>
 
@@ -291,7 +305,7 @@ const deleteItem = () => {
         </template>
 
         <template #content>
-            <Form :form="form_edit" :submitted="updateItem" modal />
+            <Form :form="form_edit" :submitted="updateItem" modal :statuses="statuses" />
         </template>
     </SideModal>
 

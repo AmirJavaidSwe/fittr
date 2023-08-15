@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Shared;
+namespace App\Services\Shared\Stripe;
 
 use App\Models\StripeEvent;
 use Illuminate\Http\Response;
@@ -8,7 +8,7 @@ use Illuminate\Http\Response;
 // Main job of this class is to dispatch actions received from Stripe webhook event
 // Every method in this class supposed to handle specific event type.
 
-class StripeWebhookService
+class WebhookService
 {
     public function __construct()
     {

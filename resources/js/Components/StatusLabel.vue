@@ -28,7 +28,7 @@ const computedClasses = computed(() => {
 <template>
     <span
         :class="computedClasses"
-        class="px-3 py-2 inline-flex text-xs lg:text-sm 2xl:text-md font-semibold rounded-full"
+        class="px-2 py-1 inline-flex text-xs lg:text-sm font-semibold rounded-full"
     >
         {{ status }}
     </span>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Partner;
 
+use App\Enums\StateType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Partner\ServiceTypeFormRequest;
 use App\Models\Partner\ServiceType;
@@ -57,6 +58,7 @@ class PartnerServiceTypeController extends Controller
                     'link' => route('partner.servicetypes.index'),
                 ],
             ),
+            'statuses' => StateType::labels(),
         ]);
     }
 
@@ -91,6 +93,7 @@ class PartnerServiceTypeController extends Controller
                     'link' => null,
                 ],
             ),
+            'statuses' => StateType::labels(),
         ]);
     }
 
@@ -144,6 +147,7 @@ class PartnerServiceTypeController extends Controller
                 ],
             ),
             'servicetype' => $servicetype,
+            'statuses' => StateType::labels(),
         ]);
     }
 
@@ -179,7 +183,8 @@ class PartnerServiceTypeController extends Controller
                     'link' => null,
                 ],
             ),
-            'servicetype' => $servicetype
+            'servicetype' => $servicetype,
+            'statuses' => StateType::labels(),
         ]);
     }
 
