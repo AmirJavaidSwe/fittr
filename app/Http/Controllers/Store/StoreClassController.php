@@ -33,7 +33,7 @@ class StoreClassController extends Controller
                     $query->whereIn('class_type_id', $request->class_type);
                 })
                 ->when(count($request->instructor ?? []), function($query) use($request) {
-                    $query->whereIn('instructor_id', $request->instructor); // Requires adjustments as per new changes of multiple class instructors.
+                    $query->whereHas('instructor', fn($query) => $query->whereIn('instructor_id', $request->instructor));
                 })
                 // Left commented for discussion
                 // ->when($request->time, function($query) use($request, $startDate) {
