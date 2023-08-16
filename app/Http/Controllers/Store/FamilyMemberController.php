@@ -32,29 +32,27 @@ class FamilyMemberController extends Controller
 
         return $this->redirectBackSuccess(__('Family member added successfully'));
     }
+
     public function update(FamilyMemberRequest $request, $subdomain, $id)
     {
-        $member = FamilyMember::find($id);
-
-        $member->fill($request->all());
-
-        $member->save();
+        $member = FamilyMember::findOrFail($id);
+        $member->update($request->validated());
 
         if($request->has_image == false) {
-            $member->profile_photo_path = null;
+            $member->deleteProfilePhoto();
         }
 
         if($request->hasFile('profile_photo')) {
             $member->updateProfilePhoto($request->profile_photo);
-        }
-        $member->save();
+        };
 
         return $this->redirectBackSuccess(__('Family member updated successfully'));
     }
 
     public function destroy($subdomain, $id)
     {
-        $member = FamilyMember::find($id);
+        $member = FamilyMember::findOrFail($id);
+        $member->deleteProfilePhoto();
         $member->delete();
 
         return $this->redirectBackSuccess(__('Family member deleted successfully'));

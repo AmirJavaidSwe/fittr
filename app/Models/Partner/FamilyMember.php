@@ -4,15 +4,15 @@ namespace App\Models\Partner;
 
 use App\Enums\PartnerUserRole;
 use Illuminate\Support\Str;
-use Laravel\Jetstream\HasProfilePhoto;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use App\Services\Shared\CacheMasterService;
-use App\Enums\SettingKey;
+use Laravel\Jetstream\HasProfilePhoto;
 
 class FamilyMember extends Model
 {
     use HasProfilePhoto;
+    use SoftDeletes;
 
     /**
      * The database connection that should be used by the model.
@@ -40,7 +40,6 @@ class FamilyMember extends Model
     protected $casts = [
         'date_of_birth' => 'date'
     ];
-
 
     /**
      * The accessors to append to the model's array form.

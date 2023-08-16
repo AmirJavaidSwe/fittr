@@ -18,6 +18,7 @@ return new class extends Migration
             $table->date('date_of_birth')->nullable();
             $table->string('profile_photo_path')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
