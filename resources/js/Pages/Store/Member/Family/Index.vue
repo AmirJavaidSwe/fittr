@@ -80,7 +80,8 @@ const editMember = (member) => {
     EditForm.profile_photo_path = member.profile_photo_path;
     EditForm.profile_photo_url =
         member.profile_photo_path !== null ? member.profile_photo_url : null;
-    EditForm.has_image = member.profile_photo_path !== null ? true : false;
+    // EditForm.has_image = member.profile_photo_path !== null ? true : false;
+    EditForm.has_image = !!member.profile_photo_path;
     showEditModal.value = true;
 };
 
@@ -138,7 +139,7 @@ const deleteItem = () => {
     </div>
     <div class="mt-[75px]">
         <template v-for="(familyMember, index) in family_members">
-            <CardBasic>
+            <CardBasic class="mb-4">
                 <template #default>
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
@@ -154,22 +155,12 @@ const deleteItem = () => {
                                 <div class="block pl-4">
                                     <DateValue
                                         :show-calender-icon="false"
-                                        :date="
-                                            DateTime.fromISO(
-                                                familyMember.date_of_birth
-                                            )
-                                                .toFormat(
-                                                    business_settings
-                                                        .date_format.format_js
-                                                )
-                                        "
+                                        :date="DateTime.fromISO(familyMember.date_of_birth).toFormat(business_settings.date_format.format_js)"
                                     />
                                 </div>
                             </div>
                         </div>
-                        <div
-                            class="inline-flex items-center justify-start mr-20"
-                        >
+                        <div class="inline-flex items-center justify-start mr-20">
                             <EditIcon
                                 class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-5 cursor-pointer text-blue"
                                 v-tooltip="'Edit'"
@@ -243,8 +234,8 @@ const deleteItem = () => {
                 size="default"
                 styling="danger"
                 class="ml-3"
-                :class="{ 'opacity-25': form.processing }"
-                :disabled="form.processing"
+                :class="{ 'opacity-25': EditForm.processing }"
+                :disabled="EditForm.processing"
                 @click="deleteItem"
             >
                 Delete

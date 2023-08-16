@@ -6,7 +6,7 @@ use Illuminate\Validation\Rules\File;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class MemberFamilyRequest extends FormRequest
+class FamilyMemberRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,9 +26,9 @@ class MemberFamilyRequest extends FormRequest
     public function rules()
     {
         return  [
-            'name' => 'required',
+            'name' => 'required|max:100',
             'date_of_birth' => 'required|date',
-            'profile_photo' => ['nullable', 'mimes:jpg,jpeg,png,,webp', 'max:2048']
+            'profile_photo' => ['nullable', 'mimes:jpg,jpeg,png,webp', 'max:2048']
         ];
     }
 }

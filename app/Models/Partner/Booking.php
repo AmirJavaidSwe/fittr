@@ -23,9 +23,6 @@ class Booking extends Model
      *
      * @var array
      */
-    protected $casts = [
-        'family_booking' => 'array'
-    ];
 
     protected $appends = ['status_text'];
 

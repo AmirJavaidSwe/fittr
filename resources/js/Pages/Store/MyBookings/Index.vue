@@ -1,4 +1,5 @@
 <script setup>
+import { computed, ref, watch } from "vue";
 import Section from '@/Components/Section.vue';
 import Pagination from "@/Components/Pagination.vue";
 import TableHead from "@/Components/DataTable/TableHead.vue";
@@ -6,10 +7,10 @@ import TableData from "@/Components/DataTable/TableData.vue";
 import DataTableLayout from "@/Components/DataTable/Layout.vue";
 import ButtonLink from '@/Components/ButtonLink.vue';
 import Search from '@/Components/DataTable/Search.vue';
-import { Link, useForm } from '@inertiajs/vue3';
+import SelectInput from '@/Components/SelectInput.vue';
+import { Link, useForm, usePage } from '@inertiajs/vue3';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
-import { watch } from 'vue';
 import DateValue from '@/Components/DataTable/DateValue.vue';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
 import { DateTime } from 'luxon';
@@ -32,6 +33,9 @@ const props = defineProps({
 
 const form = useForm({
     search: props.search,
+    member_id: props.member_id ?? null,
+    search_member_id: props.search_member_id ?? null,
+    is_parent: props.is_parent ?? true,
     per_page: props.per_page,
     order_by: props.order_by,
     order_dir: props.order_dir,
@@ -61,6 +65,37 @@ const setPerPage = (n) => {
 
 // form.search getter only;
 watch(() => form.search, runSearch);
+watch(
+  () => form.member_id,
+  (newValue, oldValue) => {
+      console.log(newValue)
+    if(newValue == '') {
+        form.search_member_id = null,
+        form.is_parent = null,
+        runSearch()
+        return;
+    }
+    if(newValue.indexOf("--") <= -1) return false
+    if(newValue == '') {
+        form.search_member_id = null,
+        form.is_parent = true,
+        runSearch()
+    } else {
+        const type = newValue.split('--')[0]
+        const val = newValue.split('--')[1]
+        if(type == 'parent') {
+            form.search_member_id = val
+            form.is_parent = true
+            runSearch()
+        } else if(type == 'child') {
+            form.search_member_id = val
+            form.is_parent = false
+            runSearch()
+        }
+    }
+  },
+  { deep: true }
+)
 
 const bookingForm = useForm({
     class_id: ''
@@ -78,6 +113,34 @@ const cancelBooking = (class_id) => {
     });
 }
 
+const user = ref(usePage().props.user);
+
+const ucwords = (str) => {
+    return str.replace(/^(.)|\s+(.)/g, function($1) {
+        return $1.toUpperCase();
+    });
+}
+
+const optionsList= computed(() => {
+    const data = []
+    data.push({
+        id: '',
+        name: 'Change User',
+    })
+    data.push({
+        id: 'parent--'+user?.value?.id,
+        name: ucwords(user?.value?.name),
+        parent: true,
+    })
+    for(let i=0; i < user?.value?.family?.length; i++) {
+        data.push({
+            id: 'child--'+user?.value?.family[i]?.id,
+            name: ucwords(user?.value?.family[i]?.name),
+            parent: false,
+        })
+    }
+    return data
+})
 </script>
 <template>
     <Section bg="bg-transparent" class="flex flex-col">
@@ -93,7 +156,20 @@ const cancelBooking = (class_id) => {
                     @reset="form.search = null"
                     @pp_changed="setPerPage"
                     :noFilter="true"
-                    />
+                />
+
+                <div class="text-right">
+                    <SelectInput
+                        id="bookings_filter"
+                        v-model="form.member_id"
+                        :options="optionsList"
+                        option_value="id"
+                        option_text="name"
+                        class="mt-1 block w-full"
+                    >
+                    </SelectInput>
+                </div>
+
             </template>
 
             <template #tableHead>
@@ -126,7 +202,7 @@ const cancelBooking = (class_id) => {
                     title="Status"
                 />
 
-                <table-head title="Action" />
+                <table-head title="Action" class="text-right" />
             </template>
 
             <template #tableData>
@@ -147,11 +223,28 @@ const cancelBooking = (class_id) => {
                     </table-data>
                     <table-data> {{ booking.class?.duration }} </table-data>
                     <table-data>
-                        <AvatarValue :title="booking.class.instructor?.name" />
+                        <template v-if="booking.class?.instructor.length">
+                            <template
+                                v-for="(
+                                    instructor, ins
+                                ) in booking.class?.instructor"
+                                :key="ins"
+                            >
+                                <AvatarValue
+                                    class="cursor-pointer inline-flex justify-center mr-1 text-center items-center"
+                                    :onlyTooltip="true"
+                                    :title="instructor?.name ?? 'Demo Ins'"
+                                />
+                            </template>
+                        </template>
+                        <template v-else>
+                            <AvatarValue :title="'Demo Ins'" />
+                        </template>
+                        <!-- <AvatarValue :title="booking.class.instructor?.name" /> -->
                     </table-data>
                     <table-data> {{ booking.class?.studio?.location?.title }} </table-data>
                     <table-data> {{ booking.status_text }} </table-data>
-                    <table-data>
+                    <table-data class="text-right">
                         <Dropdown
                             v-if="booking.status_text.toLowerCase() == 'active'"
                             align="right"

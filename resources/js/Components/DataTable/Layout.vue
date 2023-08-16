@@ -112,7 +112,7 @@ const moveTable = (e) => {
                     <slot name="tableHead"></slot>
                 </tr>
             </thead>
-            <tbody class="" @mousedown="grabTable" @mouseup="releaseTable" @mousemove="moveTable">
+            <tbody class="data-table-layout" @mousedown="grabTable" @mouseup="releaseTable" @mousemove="moveTable">
                 <!-- <tr> -->
                 <slot name="tableData"></slot>
                 <!-- </tr> -->

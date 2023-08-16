@@ -122,13 +122,13 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     // Relation
-    public function memberFamily()
+    public function familyMember()
     {
-        return $this->hasMany(MemberFamily::class);
+        return $this->hasMany(FamilyMember::class);
     }
 
     public function getFamilyAttribute(): array
     {
-        return $this->memberFamily()->get()->toArray();
+        return $this->familyMember()->get()->toArray();
     }
 }

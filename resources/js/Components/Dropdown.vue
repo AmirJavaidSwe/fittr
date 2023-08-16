@@ -36,24 +36,23 @@ const setRowHeight = (new_val) => {
             // we can directly access the elements from the NodeList.
             const dataTableLayoutTr = dataTableLayout[0].querySelectorAll("tr");
 
-            if (dataTableLayoutTr.length <= 2) {
-                // we can use the same elementsWithClass1 variable.
-                const openedDropdownInnerLinks =
-                    dataTableLayoutTr[0].querySelectorAll(
+            if (dataTableLayoutTr.length <= 3) {
+                let openedDropdownInnerLinks = null;
+                let currentTr = null
+                for (let i = 0; i < dataTableLayoutTr.length; i++) {
+                    currentTr = dataTableLayoutTr[i];
+                    openedDropdownInnerLinks = currentTr.querySelectorAll(
                         ".main-dropdown-opened .dropdown-inner-link"
                     );
+                    if(openedDropdownInnerLinks !== null && openedDropdownInnerLinks.length) break;
+                }
 
-                // Use parseInt with a radix of 10 to avoid unexpected behavior with leading zeros.
-
-                if (openedDropdownInnerLinks.length > 0) {
+                if(openedDropdownInnerLinks !== null && openedDropdownInnerLinks.length) {
                     const height =
-                        parseInt(66) *
+                        parseInt(75) *
                             parseInt(openedDropdownInnerLinks.length) +
                         "px";
-                    // Remove !important from the style object, as it's not necessary.
-                    dataTableLayoutTr.forEach((element) => {
-                        element.style.height = height;
-                    });
+                        currentTr.style.height = height;
                 } else {
                     dataTableLayoutTr.forEach((element) => {
                         element.removeAttribute("style");
