@@ -25,6 +25,9 @@ class PartnerDatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        //clear cache, it has subdomains and business
+        Artisan::call('cache:clear');
+
         $partners = User::partner()/*->databaseless()*/->get();
 
         $db_master_partner_username = config('database.connections.mysql.master_partner_username');
