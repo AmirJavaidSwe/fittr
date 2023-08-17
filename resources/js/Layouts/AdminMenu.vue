@@ -6,11 +6,16 @@ import {
     faHome,
     faGaugeHigh,
     faUserTie,
+    faUserLock,
     faServer,
     faGears,
     faMoneyBillTransfer,
     faCoffee,
 } from "@fortawesome/free-solid-svg-icons";
+
+defineProps({
+    collapsed: Boolean,
+});
 
 const active_route = reactive({
     name: route().current(),
@@ -22,7 +27,7 @@ router.on("navigate", (event) => {
 </script>
 
 <template>
-    <div class="flex-grow p-4 bg-primary-500 overflow-y-auto space-y-4">
+    <div>
         <NavLink
             :href="route('admin.dashboard')"
             :active="active_route.name == 'admin.dashboard'"
@@ -33,8 +38,8 @@ router.on("navigate", (event) => {
                 user: $page.props.user,
             }"
         >
-            <font-awesome-icon :icon="faHome" />
-            <div>Dashboard</div>
+            <font-awesome-icon :icon="faHome" class="w-8 h-8" />
+            <div class="overflow-hidden whitespace-nowrap overflow-ellipsis transition-opacity" :class="{'opacity-0': collapsed}">Dashboard</div>
         </NavLink>
         <NavLink
             :href="route('admin.partners.performance.index')"
@@ -46,8 +51,8 @@ router.on("navigate", (event) => {
                 user: $page.props.user,
             }"
         >
-            <font-awesome-icon :icon="faGaugeHigh" />
-            <div>Partner performance</div>
+            <font-awesome-icon :icon="faGaugeHigh" class="w-8 h-8" />
+            <div class="overflow-hidden whitespace-nowrap overflow-ellipsis transition-opacity" :class="{'opacity-0': collapsed}">Partner performance</div>
         </NavLink>
         <NavLink
             :href="route('admin.partners.index')"
@@ -59,8 +64,8 @@ router.on("navigate", (event) => {
                 user: $page.props.user,
             }"
         >
-            <font-awesome-icon :icon="faUserTie" />
-            <div>Partner management</div>
+            <font-awesome-icon :icon="faUserTie" class="w-8 h-8" />
+            <div class="overflow-hidden whitespace-nowrap overflow-ellipsis transition-opacity" :class="{'opacity-0': collapsed}">Partner management</div>
         </NavLink>
         <NavLink
             :href="route('admin.instances.index')"
@@ -72,8 +77,8 @@ router.on("navigate", (event) => {
                 user: $page.props.user,
             }"
         >
-            <font-awesome-icon :icon="faServer" />
-            <div>AWS Instances</div>
+            <font-awesome-icon :icon="faServer" class="w-8 h-8" />
+            <div class="overflow-hidden whitespace-nowrap overflow-ellipsis transition-opacity" :class="{'opacity-0': collapsed}">AWS Instances</div>
         </NavLink>
         <NavLink
             :href="route('admin.settings')"
@@ -85,8 +90,8 @@ router.on("navigate", (event) => {
                 user: $page.props.user,
             }"
         >
-            <font-awesome-icon :icon="faGears" />
-            <div>Settings</div>
+            <font-awesome-icon :icon="faGears" class="w-8 h-8" />
+            <div class="overflow-hidden whitespace-nowrap overflow-ellipsis transition-opacity" :class="{'opacity-0': collapsed}">Settings</div>
         </NavLink>
         <NavLink
             :href="route(`${$page.props.user.source}.roles.index`)"
@@ -100,22 +105,22 @@ router.on("navigate", (event) => {
                 user: $page.props.user,
             }"
         >
-            <font-awesome-icon :icon="faGears" />
-            <div>Roles</div>
+            <font-awesome-icon :icon="faUserLock" class="w-8 h-8" />
+            <div class="overflow-hidden whitespace-nowrap overflow-ellipsis transition-opacity" :class="{'opacity-0': collapsed}">Roles</div>
         </NavLink>
         <NavLink
             :href="route('admin.se.index')"
             :active="active_route.name == 'admin.se.index'"
         >
-            <font-awesome-icon :icon="faMoneyBillTransfer" />
-            <div>Stripe events</div>
+            <font-awesome-icon :icon="faMoneyBillTransfer" class="w-8 h-8" />
+            <div class="overflow-hidden whitespace-nowrap overflow-ellipsis transition-opacity" :class="{'opacity-0': collapsed}">Stripe events</div>
         </NavLink>
-        <NavLink
+        <!-- <NavLink
             :href="route('admin.demo')"
             :active="active_route.name == 'admin.demo'"
         >
             <font-awesome-icon :icon="faCoffee" />
             <div>Typography</div>
-        </NavLink>
+        </NavLink> -->
     </div>
 </template>

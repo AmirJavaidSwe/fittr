@@ -60,7 +60,7 @@ const moveTable = (e) => {
         <slot name="search"></slot>
         <div class="sm:flex sm:items-center">
             <div
-                class="mt-4 sm:mt-0 lg:ml-2 fixed bottom-0 left-0 w-full bg-white py-5 border-t border-t-grey z-10 lg:static lg:bg-transparent lg:border-none lg:py-0 flex flex-wrap justify-center gap-2"
+                class="fixed bg-white border-t border-t-grey bottom-0 flex flex-wrap gap-2 justify-center left-0 lg:bg-transparent lg:border-none lg:ml-2 lg:py-0 lg:static mt-4 py-5 sm:mt-0 w-full z-10"
             >
                 <slot name="button"></slot>
                 <ButtonLink
@@ -81,7 +81,7 @@ const moveTable = (e) => {
 
         <div class="sm:flex sm:items-center" v-if="extraActions">
             <div
-                class="mt-0 fixed top-0 left-0 w-full bg-white py-5 z-10 flex flex-wrap justify-center gap-2"
+                class="mt-0 absolute top-0 left-0 w-full bg-white py-6 z-10 flex flex-wrap justify-center gap-2"
             >
                 <slot name="extraActions"></slot>
                 <p class="mt-2">{{ extraActions }} Rows Selected</p>

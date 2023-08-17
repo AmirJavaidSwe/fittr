@@ -19,7 +19,6 @@ defineProps({
 
             <single-view-row
                 label="File Name"
-                :even="false"
                 :value="exporting.file_name"
             />
 
@@ -27,7 +26,6 @@ defineProps({
 
             <single-view-row
                 label="Filters"
-                :even="false"
                 :value="exporting.filters"
             />
 
@@ -36,7 +34,7 @@ defineProps({
                 :value="exporting.storage_disk"
             />
 
-            <single-view-row :even="false">
+            <single-view-row>
                 <template #label>
                     <span class="text-sm font-medium text-gray-500">
                         Created By
@@ -61,7 +59,6 @@ defineProps({
 
             <single-view-row
                 label="Created At"
-                :even="false"
                 :value="DateTime.fromISO(exporting.created_at).toRelative()"
             />
 

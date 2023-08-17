@@ -84,37 +84,31 @@ const runSearch = (form) => {
         <template #item>
             <single-view-row
                 label="ID"
-                :even="false"
                 :value="class_lesson.id"
             />
 
             <single-view-row
                 label="Name"
-                :even="true"
                 :value="class_lesson.title"
             />
 
             <single-view-row
                 label="Studio"
-                :even="false"
                 :value="class_lesson.studio?.title"
             />
 
             <single-view-row
                 label="Class Type"
-                :even="true"
                 :value="class_lesson.class_type?.title"
             />
 
             <single-view-row
                 label="Instructor"
-                :even="true"
                 :value="class_lesson.instructor?.name"
             />
 
             <single-view-row
                 label="Status"
-                :even="false"
             >
                 <template #value>
                     <StatusLabel :status="class_lesson.status_label" />
@@ -123,7 +117,6 @@ const runSearch = (form) => {
 
             <single-view-row
                 label="Capacity Status"
-                :even="true"
             >
                 <template #value>
                     <div
@@ -137,7 +130,6 @@ const runSearch = (form) => {
 
             <single-view-row
                 label="Start At"
-                :even="false"
                 :value="
                     DateTime.fromISO(class_lesson.start_date)
                         .setZone(business_settings.timezone)
@@ -151,7 +143,6 @@ const runSearch = (form) => {
 
             <single-view-row
                 label="End At"
-                :even="true"
                 :value="
                     DateTime.fromISO(class_lesson.end_date)
                         .setZone(business_settings.timezone)
@@ -165,13 +156,11 @@ const runSearch = (form) => {
 
             <single-view-row
                 label="Class Capacity"
-                :even="false"
                 :value="class_lesson.spaces ? class_lesson.spaces : 'Default: '+class_lesson.default_spaces"
             />
 
             <single-view-row
                 label="Created At"
-                :even="true"
                 :value="
                     DateTime.fromISO(class_lesson.created_at)
                         .setZone(business_settings.timezone)
@@ -181,7 +170,6 @@ const runSearch = (form) => {
 
             <single-view-row
                 label="Updated At"
-                :even="false"
                 :value="DateTime.fromISO(class_lesson.updated_at).toRelative()"
             />
         </template>

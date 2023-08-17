@@ -31,13 +31,12 @@ const props = defineProps({
         </template>
 
         <template #item>
-            <single-view-row label="Name" :even="false" :value="partner.name" />
+            <single-view-row label="Name" :value="partner.name" />
             <single-view-row
                 label="Email address"
-                :even="true"
                 :value="partner.email"
             />
-            <single-view-row label="Email verified" :even="false">
+            <single-view-row label="Email verified">
                 <template #value>
                     <span v-if="partner.email_verified_at"
                         >YES,
@@ -49,7 +48,7 @@ const props = defineProps({
                     </span>
                 </template>
             </single-view-row>
-            <single-view-row label="Date created" :even="true">
+            <single-view-row label="Date created">
                 <template #value>
                     {{ DateTime.fromISO(partner.created_at) }}
                     {{ DateTime.fromISO(partner.created_at).toRelative() }}

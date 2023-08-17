@@ -33,12 +33,10 @@ defineProps({
         </template>
         <template #item>
             <single-view-row 
-                :even="false"
                 label="ID"
                 :value="servicetype.id" />
 
             <single-view-row
-                :even="true"
                 label="Status"
             >
                 <template #value>
@@ -47,25 +45,21 @@ defineProps({
             </single-view-row>
 
             <single-view-row
-                :even="false"
                 label="Title"
                 :value="servicetype.title"
             />
 
             <single-view-row
-                :even="true"
                 label="Description"
                 :value="servicetype.description"
             />
 
             <single-view-row
-                :even="false"
                 label="Created At"
                 :value="DateTime.fromISO(servicetype.created_at).toLocaleString(DateTime.DATETIME_HUGE)"
             />
 
             <single-view-row
-                :even="true"
                 label="Updated At"
                 :value="DateTime.fromISO(servicetype.updated_at).toRelative()"
             />

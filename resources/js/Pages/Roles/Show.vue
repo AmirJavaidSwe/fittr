@@ -36,15 +36,14 @@ const props = defineProps({
         </template>
 
         <template #item>
-            <single-view-row label="Title" :even="false" :value="role.title" />
-            <single-view-row label="Source" :even="true" :value="role.source" />
+            <single-view-row label="Title" :value="role.title" />
+            <single-view-row label="Source" :value="role.source" />
             <single-view-row
                 v-if="role.business_id"
                 label="Business ID"
-                :even="false"
                 :value="role.business_id"
             />
-            <single-view-row label="Created At" :even="true">
+            <single-view-row label="Created At">
                 <template #value>
                     {{
                         DateTime.fromISO(role.created_at).toLocaleString(

@@ -2,22 +2,16 @@
 import { reactive } from "vue";
 import { router } from "@inertiajs/vue3";
 import NavLink from "@/Components/NavLink.vue";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import PartnerSidebarDashboardIcon from "@/Icons/PartnerSidebarDashboardIcon.vue";
 import PartnerSidebarClassesIcon from "@/Icons/PartnerSidebarClassesIcon.vue";
 import PartnerSidebarMemberIcon from "@/Icons/PartnerSidebarMemberIcon.vue";
 import PartnerSidebarInstructorIcon from "@/Icons/PartnerSidebarInstructorIcon.vue";
 import PartnerSidebarDataCenterIcon from "@/Icons/PartnerSidebarDataCenterIcon.vue";
 import PartnerSidebarSettingsIcon from "@/Icons/PartnerSidebarSettingsIcon.vue";
-import {
-    faHome,
-    faBookOpen,
-    faUsers,
-    faUserTie,
-    faWandMagicSparkles,
-    faRepeat,
-    faGears,
-} from "@fortawesome/free-solid-svg-icons";
+
+defineProps({
+    collapsed: Boolean,
+});
 
 const active_route = reactive({
     name: route().current(),
@@ -29,7 +23,7 @@ router.on("navigate", (event) => {
 </script>
 
 <template>
-    <div class="flex-grow p-4 bg-primary-500 overflow-y-auto space-y-4">
+    <div>
         <NavLink
             :href="route('partner.dashboard')"
             :active="active_route.name == 'partner.dashboard'"
@@ -40,8 +34,8 @@ router.on("navigate", (event) => {
                 user: $page.props.user,
             }"
         >
-            <PartnerSidebarDashboardIcon />
-            <div>Dashboard</div>
+            <PartnerSidebarDashboardIcon class="w-8 h-8 overflow-visible" />
+            <div class="overflow-hidden whitespace-nowrap overflow-ellipsis transition-opacity" :class="{'opacity-0': collapsed}">Dashboard</div>
         </NavLink>
         <NavLink
             :href="route('partner.classes.index')"
@@ -53,8 +47,8 @@ router.on("navigate", (event) => {
                 user: $page.props.user,
             }"
         >
-            <PartnerSidebarClassesIcon />
-            <div>Classes</div>
+            <PartnerSidebarClassesIcon class="w-8 h-8 overflow-visible" />
+            <div class="overflow-hidden whitespace-nowrap overflow-ellipsis transition-opacity" :class="{'opacity-0': collapsed}">Classes</div>
         </NavLink>
         <NavLink
             :href="route('partner.members.index')"
@@ -66,8 +60,8 @@ router.on("navigate", (event) => {
                 user: $page.props.user,
             }"
         >
-            <PartnerSidebarMemberIcon />
-            <div>Members</div>
+            <PartnerSidebarMemberIcon class="w-8 h-8 overflow-visible" />
+            <div class="overflow-hidden whitespace-nowrap overflow-ellipsis transition-opacity" :class="{'opacity-0': collapsed}">Members</div>
         </NavLink>
         <NavLink
             :href="route('partner.instructors.index')"
@@ -79,15 +73,15 @@ router.on("navigate", (event) => {
                 user: $page.props.user,
             }"
         >
-            <PartnerSidebarInstructorIcon />
-            <div>Instructors</div>
+            <PartnerSidebarInstructorIcon class="w-8 h-8 overflow-visible" />
+            <div class="overflow-hidden whitespace-nowrap overflow-ellipsis transition-opacity" :class="{'opacity-0': collapsed}">Instructors</div>
         </NavLink>
         <NavLink
             :href="route('partner.exports.index')"
             :active="active_route.name == 'partner.exports.index'"
         >
-            <PartnerSidebarDataCenterIcon />
-            <div>Data Center</div>
+            <PartnerSidebarDataCenterIcon class="w-8 h-8 overflow-visible" />
+            <div class="overflow-hidden whitespace-nowrap overflow-ellipsis transition-opacity" :class="{'opacity-0': collapsed}">Data Center</div>
         </NavLink>
         <NavLink
             :href="route('partner.settings.index')"
@@ -99,8 +93,8 @@ router.on("navigate", (event) => {
                 user: $page.props.user,
             }"
         >
-            <PartnerSidebarSettingsIcon />
-            <div>Settings</div>
+            <PartnerSidebarSettingsIcon class="w-8 h-8 overflow-visible" />
+            <div class="overflow-hidden whitespace-nowrap overflow-ellipsis transition-opacity" :class="{'opacity-0': collapsed}">Settings</div>
         </NavLink>
     </div>
 </template>

@@ -32,19 +32,16 @@ defineProps({
             <single-view-row label="ID" :value="amenity.id" />
 
             <single-view-row
-                :even="false"
-                label="Name"
+                label="Title"
                 :value="amenity.title"
             />
 
             <single-view-row
-                :even="true"
                 label="Status"
                 :value="amenity.status"
             />
 
             <single-view-row
-                :even="false"
                 label="Created At"
                 :value="DateTime.fromISO(amenity.updated_at).toRelative()"
             />
