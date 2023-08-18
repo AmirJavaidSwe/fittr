@@ -5,17 +5,16 @@ namespace App\Http\Middleware;
 use Closure;
 use App\Enums\SettingGroup;
 use App\Services\Partner\BusinessSettingService;
+use App\Services\Partner\DatabaseConnectionService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Crypt;
 use Symfony\Component\HttpFoundation\Response;
 
 class ConnectPartnerDatabase
 {
-    public function __construct(BusinessSettingService $business_settings_service)
+    public function __construct(BusinessSettingService $business_settings_service, DatabaseConnectionService $db_service)
     {
         $this->business_settings_service = $business_settings_service;
+        $this->db_service = $db_service;
     }
 
     /**
@@ -56,18 +55,7 @@ class ConnectPartnerDatabase
         }
 
         //Set connection to database: (run time)
-        Config::set('database.connections.mysql_partner', [
-            'driver' => 'mysql',
-            'host' => $business->db_host,
-            'port' => $business->db_port,
-            'database' => $business->db_name,
-            'username' => $business->db_user,
-            'password' => Crypt::decryptString($business->db_password),
-            'charset'   => 'utf8mb4',
-            'collation' => 'utf8mb4_unicode_ci',
-            'prefix'    => '',
-            'strict'    => true,
-        ]);
+        $this->db_service->connect($business);
 
         return $next($request);
     }

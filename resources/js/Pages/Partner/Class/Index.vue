@@ -1008,7 +1008,7 @@ const closePreviewModal = () => {
             <BulkEditForm
                 :form="formBulkEdit"
                 :statuses="statuses"
-                :studios="studioList"
+                :studios="studios"
                 :instructors="instructors"
                 :classtypes="classtypes"
                 :business_settings="business_settings"

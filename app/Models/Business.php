@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Business extends Model
 {
@@ -39,6 +40,11 @@ class Business extends Model
     public function settings(): HasMany
     {
         return $this->hasMany(BusinessSetting::class, 'business_id');
+    }
+
+    public function name(): HasOne
+    {
+        return $this->hasOne(BusinessSetting::class, 'business_id')->where('key', 'business_name');
     }
 
     // Accessors

@@ -4,15 +4,25 @@ namespace App\Services\Shared\Stripe;
 
 use App\Models\StripeEvent;
 use Illuminate\Http\Response;
+use App\Services\Shared\FulfillmentService;
 
 // Main job of this class is to dispatch actions received from Stripe webhook event
 // Every method in this class supposed to handle specific event type.
 
 class WebhookService
 {
-    public function __construct()
+    public function __construct(FulfillmentService $fulfillment_service)
     {
+        $this->fulfillment_service = $fulfillment_service;
+    }
 
+    public function processCheckout($event) : void
+    {
+        try {
+            $this->fulfillment_service->processCheckout($event);
+        } catch (\Exception $e) {
+            //TODO
+        }
     }
 
     public function checkoutSessionCompleted(StripeEvent $event)
@@ -25,11 +35,15 @@ class WebhookService
         // Bacs Direct Debit, Bank transfers, Boleto, Canadian pre-authorized debits, Konbini, OXXO, SEPA Direct Debit, SOFORT, or ACH Direct Debit
         // confirmation may come later with 'checkout.session.async_payment_succeeded'
         // In any case we must check if $session->payment_status == 'paid' before fulfilling order
+        $this->processCheckout($event);
+
         return new Response("Event {$event->stripe_id} received ok", 200);
     }
 
     public function checkoutSessionAsyncPaymentSucceeded(StripeEvent $event)
     {
+        $this->processCheckout($event);
+
         return new Response("Event {$event->stripe_id} received ok", 200);
     }
 
@@ -38,10 +52,10 @@ class WebhookService
         return new Response("Event {$event->stripe_id} received ok", 200);
     }
 
-    public function paymentIntentSucceeded(StripeEvent $event)
-    {
-        return new Response("Event {$event->stripe_id} received ok", 200);
-    }
+    // public function paymentIntentSucceeded(StripeEvent $event)
+    // {
+    //     return new Response("Event {$event->stripe_id} received ok", 200);
+    // }
 
 
 }

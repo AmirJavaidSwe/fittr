@@ -3,6 +3,12 @@
 namespace App\Services\Shared\Stripe;
 
 use Stripe\StripeClient;
+use Stripe\Exception\CardException;
+use Stripe\Exception\RateLimitException;
+use Stripe\Exception\InvalidRequestException;
+use Stripe\Exception\AuthenticationException;
+use Stripe\Exception\ApiConnectionException;
+use Stripe\Exception\ApiErrorException;
 
 class StripeService
 {
@@ -35,17 +41,17 @@ class StripeService
     {
         try {
             $response = $this->endpoint($endpoint)->{$action}(...$arguments);
-        } catch(\Stripe\Exception\CardException $e) {
+        } catch(CardException $e) {
             $this->setError($e);
-        } catch (\Stripe\Exception\RateLimitException $e) {
+        } catch (RateLimitException $e) {
             $this->setError($e);
-        } catch (\Stripe\Exception\InvalidRequestException $e) {
+        } catch (InvalidRequestException $e) {
             $this->setError($e);
-        } catch (\Stripe\Exception\AuthenticationException  $e) {
+        } catch (AuthenticationException $e) {
             $this->setError($e);
-        } catch (\Stripe\Exception\ApiConnectionException $e) {
+        } catch (ApiConnectionException $e) {
             $this->setError($e);
-        } catch (\Stripe\Exception\ApiErrorException $e) {
+        } catch (ApiErrorException $e) {
             $this->setError($e);
         } catch (\Exception $e) {
             $this->setError($e);

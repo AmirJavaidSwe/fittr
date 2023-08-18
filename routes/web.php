@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\InstanceController;
 use App\Http\Controllers\Admin\PackageController;
 use App\Http\Controllers\Admin\PartnerController;
 use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\StripeEventController;
 
 use App\Http\Controllers\Shared\RoleController;
 use App\Http\Controllers\Shared\StripeWebhookController;
@@ -38,7 +39,7 @@ use App\Http\Controllers\Partner\PartnerUserController;
 // Service store area, partner subdomains:
 use App\Http\Controllers\Store\InstructorDashboardController;
 use App\Http\Controllers\Store\MemberDashboardController;
-use App\Http\Controllers\Store\MemberFamilyController;
+use App\Http\Controllers\Store\FamilyMemberController;
 use App\Http\Controllers\Store\StoreBookingController;
 use App\Http\Controllers\Store\StoreClassController;
 use App\Http\Controllers\Store\StoreInstructorController;
@@ -107,6 +108,10 @@ Route::domain('app.'.config('app.domain'))->group(function () {
                 Route::delete('/packages/{package}', 'destroy')->name('destroy');
             });
             Route::resource('roles', RoleController::class);
+            Route::controller(StripeEventController::class)->name('se.')->group(function () {
+                Route::get('/se', 'index')->name('index');
+                Route::get('/se/{id}', 'show')->name('show');
+            });
         });
 
         //PARTNER
@@ -204,7 +209,7 @@ Route::domain('{subdomain}.'.config('app.domain'))->middleware(['auth.subdomain'
     Route::get('/memberships', [StorePackController::class, 'index'])->name('memberships.index');
     Route::get('/membership-private/{url}', [StorePackController::class, 'showPrivate'])->name('memberships.private');
 
-    Route::post('/buy/{price}', [StorePaymentController::class, 'index'])->name('payments.index');
+    Route::post('/buy/{price}', [StorePaymentController::class, 'index'])->name('payments.index')->middleware(['auth:sanctum', config('jetstream.auth_session')]);
     Route::get('/success', [StorePaymentController::class, 'success'])->name('payments.success');
 
     //google auth
@@ -221,7 +226,9 @@ Route::domain('{subdomain}.'.config('app.domain'))->middleware(['auth.subdomain'
             Route::post('/bookings/cancel', [StoreBookingController::class, 'cancel'])->name('bookings.cancel');
             Route::post('/bookings/add-to-waitlist', [StoreBookingController::class, 'addToWaitlist'])->name('bookings.add-to-waitlist');
             Route::post('/bookings/remove-from-waitlist', [StoreBookingController::class, 'removeFromWaitList'])->name('bookings.remove-from-waitlist');
-            Route::resource('family', MemberFamilyController::class);
+            Route::resource('family', FamilyMemberController::class);
+            Route::post('/bookings/other-famly', [StoreBookingController::class, 'bookForOtherFamly'])->name('bookings.other-famly');
+            Route::post('/bookings/cancel-all', [StoreBookingController::class, 'cancelForAllOrSelected'])->name('bookings.cancel-all');
         });
 
         //INSTRUCTOR

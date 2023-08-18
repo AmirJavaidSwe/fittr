@@ -8,6 +8,7 @@ import {
     faUserTie,
     faServer,
     faGears,
+    faMoneyBillTransfer,
     faCoffee,
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -101,6 +102,13 @@ router.on("navigate", (event) => {
         >
             <font-awesome-icon :icon="faGears" />
             <div>Roles</div>
+        </NavLink>
+        <NavLink
+            :href="route('admin.se.index')"
+            :active="active_route.name == 'admin.se.index'"
+        >
+            <font-awesome-icon :icon="faMoneyBillTransfer" />
+            <div>Stripe events</div>
         </NavLink>
         <NavLink
             :href="route('admin.demo')"
