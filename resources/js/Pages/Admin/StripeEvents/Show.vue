@@ -57,7 +57,7 @@ const props = defineProps({
                 <dt class="text-gray-500 w-full md:w-48">Received</dt>
                 <dd class="text-lg font-semibold">{{ DateTime.fromISO(se.created_at).toLocaleString(DateTime.DATETIME_MED) }} ({{ DateTime.fromISO(se.created_at).toRelative() }})</dd>
             </div>
-            <div class="flex flex-wrap gap-2">
+            <div class="flex flex-wrap gap-2 overflow-auto">
                 <dt class="text-blue-600 w-full md:w-48 mt-4"> Event JSON data</dt>
                 <dd class="text-lg">
                     <div class="bg-white p-4">

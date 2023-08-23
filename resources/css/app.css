@@ -13,6 +13,22 @@
         -ms-overflow-style: none;  /* IE and Edge */
         scrollbar-width: none;  /* Firefox */
     }
+
+    /* width/height */
+    ::-webkit-scrollbar {
+        @apply w-2 h-2;
+    }
+    
+    /* Track */
+    ::-webkit-scrollbar-track {
+        /* @apply bg-primary-500; */
+        @apply bg-mainbg;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        @apply bg-primary-500;
+    }
 }
 
 :root {
@@ -83,10 +99,6 @@ select {
     @apply rounded-s-none !important;
 }
 /* App Layout */
-.headerIcon {
-    @apply bg-primary-100 rounded-md flex items-center justify-center text-lg text-primary-500 mr-1 w-8 h-8 lg:w-11 lg:h-11 lg:text-xl;
-}
-
 .settingicons_bg{
     background-color: rgb(214 223 217 / var(--tw-bg-opacity));
 }
@@ -97,15 +109,6 @@ div.iti__selected-flag {
 
 div.iti .input-field {
     @apply pl-20 !important
-}
-
-.main-sidebar a:hover svg path, .main-sidebar a:hover svg rect {
-    @apply stroke-black;
-}
-.main-sidebar .active svg rect,
-.main-sidebar .active svg path
-{
-    @apply stroke-black;
 }
 
 /* Store Front Classes */

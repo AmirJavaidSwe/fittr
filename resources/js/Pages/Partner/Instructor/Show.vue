@@ -30,25 +30,21 @@ defineProps({
             <single-view-row label="ID" :value="instructor.id" />
 
             <single-view-row
-                :even="false"
                 label="Name"
                 :value="instructor.name"
             />
 
             <single-view-row
-                :even="true"
                 label="Contents"
                 :value="instructor.email"
             />
 
             <single-view-row
-                :even="false"
                 label="Created At"
                 :value="DateTime.fromISO(instructor.created_at)"
             />
 
             <single-view-row
-                :even="true"
                 label="Updated At"
                 :value="DateTime.fromISO(instructor.updated_at).toRelative()"
             />

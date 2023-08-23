@@ -30,22 +30,19 @@ defineProps({
         <template #item>
             <single-view-row label="ID" :value="member.id" />
 
-            <single-view-row :even="false" label="Name" :value="member.name" />
+            <single-view-row label="Name" :value="member.name" />
 
             <single-view-row
-                :even="true"
                 label="Contents"
                 :value="member.email"
             />
 
             <single-view-row
-                :even="false"
                 label="Created At"
                 :value="DateTime.fromISO(member.created_at)"
             />
 
             <single-view-row
-                :even="true"
                 label="Updated At"
                 :value="DateTime.fromISO(member.updated_at).toRelative()"
             />

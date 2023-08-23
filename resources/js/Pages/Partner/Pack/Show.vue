@@ -34,14 +34,14 @@ const isDefaultType = computed(() => {
             </div>
         </template>
         <template #item>
-            <single-view-row :even="true" label="Type" :value="pack_types.find(element => element.value == pack.type).label"/>
-            <single-view-row :even="false" label="ID" :value="pack.id"/>
-            <single-view-row :even="true" label="Title" :value="pack.title"/>
-            <single-view-row :even="false" label="Sub title" :value="pack.sub_title"/>
-            <single-view-row :even="true" label="Description" :value="pack.description"/>
-            <single-view-row :even="false" label="Product ID" :value="pack.stripe_product_id"/>
-            <single-view-row :even="true" label="Pack is active" :value="pack.is_active ? 'Yes':'no'"/>
-            <single-view-row :even="false" label="Price options">
+            <single-view-row label="Type" :value="pack_types.find(element => element.value == pack.type).label"/>
+            <single-view-row label="ID" :value="pack.id"/>
+            <single-view-row label="Title" :value="pack.title"/>
+            <single-view-row label="Sub title" :value="pack.sub_title"/>
+            <single-view-row label="Description" :value="pack.description"/>
+            <single-view-row label="Product ID" :value="pack.stripe_product_id"/>
+            <single-view-row label="Pack is active" :value="pack.is_active ? 'Yes':'no'"/>
+            <single-view-row label="Price options">
                 <template v-slot:value v-if="pack.prices">
                     <div v-for="price in pack.prices" class="shadow-md w-80">
                         <div class="flex font-medium items-center justify-between space-between p-2" :class="price.is_active ? 'bg-green-400' : 'bg-gray-400'">
@@ -64,16 +64,16 @@ const isDefaultType = computed(() => {
                 </template>
             </single-view-row>
             
-            <single-view-row :even="false" label="Intro pack" :value="pack.is_intro ? 'Yes':'No'"/>
-            <single-view-row :even="true" label="Unlimited pack" :value="pack.is_unlimited ? 'Yes':'No'"/>
-            <single-view-row :even="false" label="Use Fair Access Policy" :value="pack.is_fap ? 'Yes':'No'"/>
-            <single-view-row :even="true" label="Has restrictions" :value="pack.is_restricted ? 'Yes':'No'"/>
-            <single-view-row :even="false" label="Private pack" :value="pack.is_private ? 'Yes':'No'"/>
-            <single-view-row :even="true" label="Private URL" :value="pack.private_url"/>
-            <single-view-row :even="false" label="Pack active from" :value="pack.active_from ? DateTime.fromISO(pack.active_from).setZone(business_settings.timezone).toFormat(business_settings.date_format.format_js) : null"/>
-            <single-view-row :even="true" label="Pack active to" :value="pack.active_to ? DateTime.fromISO(pack.active_to).setZone(business_settings.timezone).toFormat(business_settings.date_format.format_js) : null"/>
-            <single-view-row :even="false" label="Created At" :value="DateTime.fromISO(pack.created_at).setZone(business_settings.timezone).toFormat(business_settings.date_format.format_js)"/>
-            <single-view-row :even="true" label="Updated At" :value="DateTime.fromISO(pack.updated_at).toRelative()"/>
+            <single-view-row label="Intro pack" :value="pack.is_intro ? 'Yes':'No'"/>
+            <single-view-row label="Unlimited pack" :value="pack.is_unlimited ? 'Yes':'No'"/>
+            <single-view-row label="Use Fair Access Policy" :value="pack.is_fap ? 'Yes':'No'"/>
+            <single-view-row label="Has restrictions" :value="pack.is_restricted ? 'Yes':'No'"/>
+            <single-view-row label="Private pack" :value="pack.is_private ? 'Yes':'No'"/>
+            <single-view-row label="Private URL" :value="pack.private_url"/>
+            <single-view-row label="Pack active from" :value="pack.active_from ? DateTime.fromISO(pack.active_from).setZone(business_settings.timezone).toFormat(business_settings.date_format.format_js) : null"/>
+            <single-view-row label="Pack active to" :value="pack.active_to ? DateTime.fromISO(pack.active_to).setZone(business_settings.timezone).toFormat(business_settings.date_format.format_js) : null"/>
+            <single-view-row label="Created At" :value="DateTime.fromISO(pack.created_at).setZone(business_settings.timezone).toFormat(business_settings.date_format.format_js)"/>
+            <single-view-row label="Updated At" :value="DateTime.fromISO(pack.updated_at).toRelative()"/>
         </template>
     </single-view>
 </template>

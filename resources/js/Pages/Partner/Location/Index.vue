@@ -304,7 +304,7 @@ const closeAmenityCreateForm = () => {
                 <!-- <table-data :title="location.id"/> -->
                 <table-data>
                     <Link
-                        class="font-medium text-indigo-600 hover:text-indigo-500"
+                        class="font-semibold text-primary-500 hover:text-primary-900"
                         :href="route('partner.locations.show', location)"
                     >
                         {{ location.title }}

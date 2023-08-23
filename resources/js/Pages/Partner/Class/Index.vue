@@ -546,7 +546,7 @@ const closePreviewModal = () => {
 
 </script>
 <template>
-    <data-table-layout
+    <DataTableLayout
         :disableButton="true"
         :extra-actions="rowSelected.length"
         @bulk-edit="bulkEdit"
@@ -847,7 +847,7 @@ const closePreviewModal = () => {
                 @pp_changed="setPerPage"
             />
         </template>
-    </data-table-layout>
+    </DataTableLayout>
 
     <!-- Export form Modal -->
     <SideModal :show="showFilterModal" @close="closeFilterModal">
@@ -1028,12 +1028,12 @@ const closePreviewModal = () => {
         <template #content>
             <div class="mt-5">
                 <span class="text-danger-500">
-                    Are you sure you would like to delete this all selected items?
+                    Are you sure you would like to delete all selected items?
                 </span>
             </div>
             <div class="mt-3">
                 <span class="font-semibold">
-                    You need to provide your password to confirm
+                    Please provide your password to confirm
                 </span>
             </div>
 

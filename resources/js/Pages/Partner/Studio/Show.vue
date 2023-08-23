@@ -26,34 +26,29 @@ defineProps({
             </div>
         </template>
         <template #item>
-            <single-view-row :even="false" label="ID" :value="studio.id" />
+            <single-view-row label="ID" :value="studio.id" />
 
             <single-view-row
-                :even="true"
                 label="Title"
                 :value="studio.title"
             />
 
             <single-view-row
-                :even="false"
                 label="Location"
                 :value="studio.location?.title"
             />
 
             <single-view-row
-                :even="true"
                 label="Ordering"
                 :value="studio.ordering"
             />
 
             <single-view-row
-                :even="false"
                 label="Created At"
                 :value="DateTime.fromISO(studio.created_at).toString()"
             />
 
             <single-view-row
-                :even="true"
                 label="Updated At"
                 :value="DateTime.fromISO(studio.updated_at).toRelative()"
             />
