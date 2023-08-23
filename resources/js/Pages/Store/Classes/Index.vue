@@ -19,6 +19,7 @@ import AvatarValue from "@/Components/DataTable/AvatarValue.vue";
 import Modal from "@/Components/Modal.vue";
 import CloseModal from "@/Components/CloseModal.vue";
 import CardBasic from "@/Components/CardBasic.vue";
+import WaitlistModal from "./Partials/WaitlistModal.vue";
 import DateValue from "@/Components/DataTable/DateValue.vue";
 
 const props = defineProps({
@@ -124,6 +125,8 @@ const showModal = (data) => {
     data.end_date = DateTime.fromISO(data.end_date, { zone: props.business_settings?.timezone });
     classDetails.value = { ...data };
     let user_id = usePage().props?.user?.id;
+
+    classDetails.value.has_family = user.value?.family?.length ? true : false
     classDetails.value.is_waiting = typeof classDetails.value.waitlists?.filter(item => item.user_id === user_id)[0] !== 'undefined';
 }
 
@@ -189,9 +192,9 @@ const cancelBooking = () => {
         showCacnelBookingModal.value = true
         return;
     }
-    // bookingForm.class_id = classDetails.value.id;
+    bookingForm.class_id = classDetails.value.id;
 
-    /* bookingForm.post(
+    bookingForm.post(
         route("ss.member.bookings.cancel", {
             subdomain: props.business_settings.subdomain,
         }),
@@ -202,47 +205,24 @@ const cancelBooking = () => {
                 }
             },
         }
-    ); */
+    );
 };
 
-const waitlistForm = useForm({ class_id: '' });
 
-const addToWaitList = () => {
-    waitlistForm.class_id = classDetails.value.id;
+const showWaitlistModal = ref(false)
+const disableButton = ref(false)
+const addRemoveUsersToWaitlist = ref(0)
 
-    const swal = useSwal();
+// param values
+// 1, just add current user to waitlist
+// 2, for current user and family  add / remove to waitlist
+// 3, remove current user from waitlist
 
-    swal.messageBox({
-        title: 'This class is full',
-        text: 'You can still book to waitlist. We will inform you if space becomes available.',
-    }).then((result) => {
+const addRemoveFromWaitlist = (param) => {
+    showWaitlistModal.value = true
+    addRemoveUsersToWaitlist.value = param
+}
 
-        waitlistForm.post(route('ss.member.bookings.add-to-waitlist', { subdomain: props.business_settings.subdomain }), {
-            onSuccess: (res) => {
-                if (res.props.flash.type === 'success') {
-                    let classData = res.props.classes[classDetails.value.start_date.toSQLDate()];
-                    classData = classData?.length ? classData.filter(item => item.id === classDetails.value.id)[0] : undefined;
-                    showModal(classData);
-                }
-            }
-        });
-    });
-
-};
-
-const removeFromWaitList = () => {
-    waitlistForm.class_id = classDetails.value.id;
-
-    waitlistForm.post(route('ss.member.bookings.remove-from-waitlist', { subdomain: props.business_settings.subdomain }), {
-        onSuccess: (res) => {
-            if (res.props.flash.type === 'success') {
-                let classData = res.props.classes[classDetails.value.start_date.toSQLDate()];
-                classData = classData?.length ? classData.filter(item => item.id === classDetails.value.id)[0] : undefined;
-                showModal(classData);
-            }
-        }
-    });
-};
 
 const { screen } = useWindowSize();
 
@@ -363,8 +343,8 @@ const confirmBookingOtherFamilyMemberBooking = (classDetail, members) => {
         }),
         {
             onSuccess: (res) => {
+                closeBookForOtherFamilyMembersModal(false);
                 if (res.props.flash.type === "success") {
-                    closeBookForOtherFamilyMembersModal(false);
                     modal.value = false
                 }
             },
@@ -771,10 +751,12 @@ const alreadyBooked = (isParent, id) => {
             <ButtonLink v-else-if="isCancelAbleBooking(classDetails)" styling="secondary" size="default" @click="cancelBooking"
                 :disabled="bookingForm.processing">Cancel Booking</ButtonLink>
             <div v-else-if="!classDetails.spaces_left" class="inline-flex">
-                <ButtonLink v-if="classDetails.is_waiting" styling="secondary" size="default" @click="removeFromWaitList"
-                    :disabled="waitlistForm.processing">Remove from waitlist</ButtonLink>
-                <ButtonLink v-else styling="secondary" size="default" @click="addToWaitList"
-                    :disabled="waitlistForm.processing">Add to waitlist</ButtonLink>
+                <ButtonLink v-if="!classDetails.has_family && classDetails.is_waiting" styling="secondary" size="default" @click="addRemoveFromWaitlist(3)" :disable="disableButton"
+                    >Remove from waitlist</ButtonLink>
+                    <ButtonLink v-else-if="!classDetails.has_family && !classDetails.is_waiting" styling="secondary" size="default" @click="addRemoveFromWaitlist(1)" :disable="disableButton"
+                    >Add to waitlist</ButtonLink>
+                <ButtonLink v-else styling="secondary" size="default" @click="addRemoveFromWaitlist(2)" :disable="disableButton"
+                    >Add or Remove from waitlist</ButtonLink>
             </div>
             <ButtonLink v-else-if="!classDetails.is_booked" styling="secondary" size="default" @click="handleBooking" :disabled="bookingForm.processing">
                 Book</ButtonLink>
@@ -955,4 +937,6 @@ const alreadyBooked = (isParent, id) => {
 
         </CardBasic>
     </Modal>
+
+    <WaitlistModal v-if="showWaitlistModal" :class-detail="classDetails" :modal="modal" :add-remove-users-to-waitlist="addRemoveUsersToWaitlist" @hide-both=";[showWaitlistModal = false, modal = false, addRemoveUsersToWaitlist = 0]" :business-settings="business_settings" @hide=";[showWaitlistModal = false, addRemoveUsersToWaitlist = 0]" @disable-button=";[disableButton = true]" @enable-button=";[disableButton = false]" />
 </template>
