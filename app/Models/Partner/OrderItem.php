@@ -3,17 +3,15 @@
 namespace App\Models\Partner;
 
 use App\Enums\StripeCurrency;
-use App\Models\StripeEvent;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Order extends Model
+class OrderItem extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'orders';
+    protected $table = 'order_items';
     protected $connection = 'mysql_partner';
     protected $guarded = ['id'];
 
@@ -23,10 +21,11 @@ class Order extends Model
      * @var array
      */
     protected $casts = [
+        'is_processed' => 'boolean',
+        'quantity' => 'integer',
+        'amount_discount' => 'integer',
         'amount_subtotal' => 'integer',
         'amount_total' => 'integer',
-        'line_items_pulled' => 'boolean',
-        'line_items' => 'integer',
         'deleted_at' => 'datetime',
     ];
 
@@ -37,6 +36,7 @@ class Order extends Model
      */
     protected $appends = [
         'currency_symbol',
+        'unit_amount_formatted',
         'amount_discount_formatted',
         'amount_subtotal_formatted',
         'amount_total_formatted',
@@ -45,25 +45,30 @@ class Order extends Model
     // Local scopes
     
     // Relationships
-    public function items(): HasMany
+    public function order(): BelongsTo
     {
-        return $this->hasMany(OrderItem::class);
+        return $this->belongsTo(Order::class);
     }
 
-    public function user(): BelongsTo
+    public function price_stripe(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(PackPrice::class, 'stripe_price_id', 'stripe_price_id')->withTrashed();
     }
 
-    public function stripe_event(): BelongsTo
+    public function pack_price(): BelongsTo
     {
-        return $this->belongsTo(StripeEvent::class);
+        return $this->belongsTo(PackPrice::class, 'pack_price_id')->withTrashed();
     }
     
     // Accessors
     public function getCurrencySymbolAttribute(): ?string
     {
         return StripeCurrency::from($this->currency)->symbol();
+    }
+
+    public function getUnitAmountFormattedAttribute(): ?string
+    {
+        return $this->currency_symbol.number_format($this->unit_amount/100, 2);
     }
 
     public function getAmountDiscountFormattedAttribute(): ?string

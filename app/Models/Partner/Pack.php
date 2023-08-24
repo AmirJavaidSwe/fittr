@@ -42,7 +42,7 @@ class Pack extends Model
     ];
 
     // Relationships
-    public function prices(): MorphMany
+    public function pack_prices(): MorphMany
     {
         return $this->morphMany(PackPrice::class, 'priceable');
     }

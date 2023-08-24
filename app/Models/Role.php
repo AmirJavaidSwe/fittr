@@ -15,6 +15,8 @@ class Role extends Model
     use HasSlug;
     use SoftDeletes;
 
+    protected $connection = 'mysql';
+    protected $table = 'roles';
     protected $fillable = [
         'title', 'slug'
     ];

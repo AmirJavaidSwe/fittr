@@ -10,6 +10,7 @@ class Subscription extends Model
 {
     use SoftDeletes;
 
+    protected $connection = 'mysql';
     protected $table = 'subscriptions';
     protected $guarded = [
         'id',

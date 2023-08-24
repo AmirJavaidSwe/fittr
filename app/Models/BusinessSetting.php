@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class BusinessSetting extends Model
 {
+    protected $connection = 'mysql';
     protected $table = 'business_settings';
     protected $guarded = [
         'id',
