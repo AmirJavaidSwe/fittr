@@ -62,7 +62,7 @@ class PartnerPackController extends Controller
                               ->orWhere('title', 'LIKE', '%'.$this->search.'%');
                     });
                 })
-                ->with(['prices.locations'])
+                ->with(['pack_prices.locations'])
                 ->paginate($this->per_page)
                 ->withQueryString(),
             'search' => $this->search,
@@ -173,7 +173,7 @@ class PartnerPackController extends Controller
                     'link' => null,
                 ],
             ),
-            'pack' => $pack->load(['prices']),
+            'pack' => $pack->load(['pack_prices']),
             'pack_types' => PackType::labels(),
             'periods' => StripePeriod::labels(),
             'price_types' => StripePriceType::labels(),
@@ -188,7 +188,7 @@ class PartnerPackController extends Controller
      */
     public function edit(Pack $pack)
     {
-        $pack->load(['prices.locations'])->prices->transform(function ($item) {
+        $pack->load(['pack_prices.locations'])->pack_prices->transform(function ($item) {
             $item->location_ids = $item->locations->pluck('id');
 
             return $item;
@@ -263,7 +263,7 @@ class PartnerPackController extends Controller
      */
     public function destroy(Pack $pack)
     {
-        $pack->prices()->update(['is_active' => false]);
+        $pack->pack_prices()->update(['is_active' => false]);
         $pack->delete();
 
         //archive product at stripe

@@ -8,12 +8,14 @@ use App\Events\BusinessSettingUpdated;
 use App\Events\SubscriptionCancelled;
 use App\Events\SubscriptionChanged;
 use App\Events\SubscriptionStarted;
+use App\Events\OrderPaid;
 use App\Listeners\BookingCancellationListener;
 use App\Listeners\BookingConfirmationListener;
 use App\Listeners\BusinessSettingUpdatedListener;
 use App\Listeners\SubscriptionCancelledListener;
 use App\Listeners\SubscriptionChangedListener;
 use App\Listeners\SubscriptionStartedListener;
+use App\Listeners\OrderPaidListener;
 use App\Models\Partner\ClassLesson;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -49,6 +51,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         BookingCancellation::class => [
             BookingCancellationListener::class,
+        ],
+        OrderPaid::class => [
+            OrderPaidListener::class,
         ],
     ];
 

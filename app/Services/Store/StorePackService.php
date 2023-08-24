@@ -10,10 +10,10 @@ class StorePackService
 {
     public function activePacks(): \Illuminate\Database\Eloquent\Collection
     {
-        return Pack::active()->with(['prices' => function (Builder $query) {
+        return Pack::active()->with(['pack_prices' => function (Builder $query) {
             //keep only active prices
             $query->where('is_active', true);
-        }, 'prices.locations:id,title,status'
+        }, 'pack_prices.locations:id,title,status'
         ])->get();
     }
 

@@ -35,7 +35,7 @@ router.on("navigate", (event) => {
             <font-awesome-icon :icon="faReceipt" class="w-4" />
             <div>My memberships</div>
         </NavLink>
-        <NavLink href="#">
+        <NavLink :href="route('ss.member.orders.index', { subdomain })" :active="active_route.name == 'ss.member.orders.index'">
             <font-awesome-icon :icon="faFileInvoiceDollar" class="w-4" />
             <div>Orders history</div>
         </NavLink>

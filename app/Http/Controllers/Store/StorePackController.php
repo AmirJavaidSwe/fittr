@@ -22,7 +22,7 @@ class StorePackController extends Controller
     public function index(Request $request)
     {
         $packs = $this->store_pack_service->activePacks();
-        $price_buttons = $this->store_pack_service->priceButtons($packs->pluck('prices')->flatten());
+        $price_buttons = $this->store_pack_service->priceButtons($packs->pluck('pack_prices')->flatten());
 
         return Inertia::render('Store/Packs/Index', [
             'page_title' => __('Memberships'),
@@ -39,7 +39,7 @@ class StorePackController extends Controller
     public function showPrivate(Request $request)
     {
         $pack = Pack::active()->private()
-        ->with(['prices' => function (Builder $query) {
+        ->with(['pack_prices' => function (Builder $query) {
                 $query->where('is_active', true);
             }, 'prices.locations:id,title,status'
         ])

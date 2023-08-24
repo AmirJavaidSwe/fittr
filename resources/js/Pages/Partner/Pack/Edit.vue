@@ -56,7 +56,7 @@ const toggleOrDeletePrice = (action, id) => {
           :classtypes="classtypes"
           :servicetypes="servicetypes"
           :default_currency="business_settings.default_currency"
-          :prices="pack.prices"
+          :pack_prices="pack.pack_prices"
           :submitted="updateItem"
           :toggleOrDeletePrice="toggleOrDeletePrice"
         />

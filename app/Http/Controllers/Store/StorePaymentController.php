@@ -107,15 +107,6 @@ class StorePaymentController extends Controller
             return redirect()->route('ss.home', $subdomain);
         }
 
-        //request must have a trace from url query!
-        $trace = $request->trace;
-        //check if order has been created from webhook event
-        $order = Order::where('trace', $trace)->first();
-
-        //TODO
-        //if order has been created, show order contents with a summary
-        dump($order);
-
         return Inertia::render('Store/Success', [
             'page_title' => __('Success'),
             'header' => __('Success'),

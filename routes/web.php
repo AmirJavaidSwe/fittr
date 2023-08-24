@@ -44,6 +44,7 @@ use App\Http\Controllers\Store\StoreBookingController;
 use App\Http\Controllers\Store\StoreClassController;
 use App\Http\Controllers\Store\StoreInstructorController;
 use App\Http\Controllers\Store\StoreLocationController;
+use App\Http\Controllers\Store\StoreOrderController;
 use App\Http\Controllers\Store\StorePackController;
 use App\Http\Controllers\Store\StorePaymentController;
 use App\Http\Controllers\Store\StorePublicController;
@@ -58,8 +59,20 @@ Route::middleware(['auth', 'auth.source:partner', 'verified'])->name('partner.on
     Route::post('/onboarding', [PartnerOnboardController::class, 'update'])->name('update');
 });
 
+$domain = config('app.domain');
+
+// remove if block in production.
+// With below block we can have multiple domains pointing to the app.
+// As long as url starts with 'app.' subdomain, we can have unlimited number of domains, e.g. 'fittr' (http://app.fittr), 'fittr.local' (http://app.fittr.local),...
+// This is usefull when we want to be logged is as admin to http://app.fittr and as partner at http://app.fittr2 at the same time in same browser other tab
+if(config('app.env') != 'production'){
+    $host = request()->host(); // config('app.domain') is => fittr.local, request()->host() is => app.fittr.local
+    $domain = stristr($host, '.'); // e.g. '.fittr.local'
+    $domain = substr($domain, 1); // e.g. 'fittr.local'
+}
+
 // this is for fittr admin users and partner users
-Route::domain('app.'.config('app.domain'))->group(function () {
+Route::domain('app.'.$domain)->group(function () {
     Route::get('/', function () {
         return Inertia::render('Welcome', [
             'canLogin' => Route::has('login'),
@@ -197,7 +210,7 @@ Route::domain('app.'.config('app.domain'))->group(function () {
 // this is for partner members and instructors, public service store or logged in area
 // AuthenticateSubdomain middleware will check if such subdomain exist to prevent random access and will set proper db connection (in addition to) 'database.connections.mysql_partner'
 // All routes have prefix ss. (short for service store)
-Route::domain('{subdomain}.'.config('app.domain'))->middleware(['auth.subdomain'])->name('ss.')->group(function () {
+Route::domain('{subdomain}.'.$domain)->middleware(['auth.subdomain'])->name('ss.')->group(function () {
 
     Route::get('/', [StorePublicController::class, 'index'])->name('home');
 
@@ -229,6 +242,7 @@ Route::domain('{subdomain}.'.config('app.domain'))->middleware(['auth.subdomain'
             Route::resource('family', FamilyMemberController::class);
             Route::post('/bookings/other-famly', [StoreBookingController::class, 'bookForOtherFamly'])->name('bookings.other-famly');
             Route::post('/bookings/cancel-all', [StoreBookingController::class, 'cancelForAllOrSelected'])->name('bookings.cancel-all');
+            Route::get('/orders', [StoreOrderController::class, 'index'])->name('orders.index');
         });
 
         //INSTRUCTOR

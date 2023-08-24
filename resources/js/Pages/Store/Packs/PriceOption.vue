@@ -84,7 +84,7 @@ defineEmits(['priceSelected']);
             </div>
             </template>
         </div>
-        <div v-if="pack.prices.length > 1" class="cursor-pointer p-2" @click="$emit('priceSelected', pack.id, price.id)">
+        <div v-if="pack.pack_prices.length > 1" class="cursor-pointer p-2" @click="$emit('priceSelected', pack.id, price.id)">
             <font-awesome-icon v-if="state_buttons[pack.id].selected_price_id == price.id" :icon="faCircleCheck" />
             <font-awesome-icon v-else :icon="faCircle" />
         </div>

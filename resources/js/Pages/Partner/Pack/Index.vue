@@ -172,8 +172,8 @@ const duplicateItem = () => {
                     </ButtonLink>
                 </TableData>
                 <TableData>
-                    <div v-if="pack.prices">
-                        <div v-for="price in pack.prices" class="space-x-1">
+                    <div v-if="pack.pack_prices">
+                        <div v-for="price in pack.pack_prices" class="space-x-1">
                             <span class="font-bold" :title="price.currency.toUpperCase()">{{price.price_formatted}}</span>
                             <span>
                                 {{price_types.find(({value}) => value === price.type)?.label}}
