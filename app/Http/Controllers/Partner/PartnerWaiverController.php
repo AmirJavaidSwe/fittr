@@ -89,7 +89,24 @@ class PartnerWaiverController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        return Inertia::render('Partner/Waiver/Edit', [
+            'page_title' => __('Edit Waiver'),
+            'header' => array(
+                [
+                    'title' => __('Waivers'),
+                    'link' => route('partner.waivers.index'),
+                ],
+                [
+                    'title' => '/',
+                    'link' => null,
+                ],
+                [
+                    'title' => __('Edit Waiver'),
+                    'link' => null,
+                ],
+            ),
+            'editWaiver' => Waiver::findOrFail($id)
+        ]);
     }
 
     /**
@@ -97,7 +114,10 @@ class PartnerWaiverController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $waiver = Waiver::findOrFail($id);
+        $waiver->update($request->all());
+
+        return $this->redirectBackSuccess(__('Waiver updated successfully'), 'partner.waivers.index');
     }
 
     /**
@@ -105,6 +125,9 @@ class PartnerWaiverController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $waiver = Waiver::findOrFail($id);
+        $waiver->delete();
+
+        return $this->redirectBackSuccess(__('Waiver deleted successfully'), 'partner.waivers.index');
     }
 }

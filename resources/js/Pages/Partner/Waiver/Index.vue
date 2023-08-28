@@ -170,6 +170,7 @@ const showQuestion = (id) => {
             />
             <table-head title="Description" />
             <table-head title="Questions" />
+            <table-head title="Action" class="flex justify-end" />
         </template>
 
         <template #tableData>
@@ -188,8 +189,45 @@ const showQuestion = (id) => {
                         </span>
                 </table-data>
                 <table-data>
-                    <span @click="showQuestion(obj.id)" class="cursor-pointer">Cick to Show</span>
+                    <span @click="showQuestion(obj.id)" class="cursor-pointer">Click to Show</span>
                 </table-data>
+                <TableData class="text-right">
+                    <Dropdown
+                        align="right"
+                        width="48"
+                        :top="index > waivers.length - 3"
+                        :content-classes="['bg-white']"
+                    >
+                        <template #trigger>
+                            <button class="text-dark text-lg">
+                                <ActionsIcon />
+                            </button>
+                        </template>
+
+                        <template #content>
+                            <DropdownLink
+                                as="button"
+                                @click="$inertia.visit(route('partner.waivers.edit', { id: obj.id }))"
+                            >
+                                <EditIcon
+                                    class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
+                                />
+                                Edit
+                            </DropdownLink>
+                            <DropdownLink
+                                as="button"
+                                @click="confirmDeletion(obj.id)"
+                            >
+                                <span class="text-danger-500 flex items-center">
+                                    <DeleteIcon
+                                        class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
+                                    />
+                                    <span> Delete </span>
+                                </span>
+                            </DropdownLink>
+                        </template>
+                    </Dropdown>
+                </TableData>
             </tr>
 
         </template>
@@ -246,7 +284,22 @@ const showQuestion = (id) => {
                 </div>
             </template>
             <template #default>
-                {{ singleWaiver }}
+                <data-table-layout :disableButton="true">
+                    <template #tableHead>
+                        <table-head
+                            title="Question"
+                        />
+                        <table-head
+                            title="Question Type"
+                        />
+                    </template>
+                    <template #tableData>
+                        <tr v-for="(obj, index) in singleWaiver.questions">
+                            <table-data>{{ obj.question }}</table-data>
+                            <table-data>{{ obj.selectedQuestionType }}</table-data>
+                        </tr>
+                    </template>
+                </data-table-layout>
             </template>
 
         </CardBasic>
