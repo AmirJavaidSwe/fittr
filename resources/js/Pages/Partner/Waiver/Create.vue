@@ -1,0 +1,189 @@
+<script setup>
+import { ref, computed, onMounted, watch } from "vue";
+import { useForm } from "@inertiajs/vue3";
+import { WaiverHelpers } from "./WaiverHelpers/Index.js";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import FormSection from "@/Components/FormSection.vue";
+import InputLabel from "@/Components/InputLabel.vue";
+import InputError from "@/Components/InputError.vue";
+import TextInput from "@/Components/TextInput.vue";
+import TextArea from "@/Components/TextArea.vue";
+import Checkbox from "@/Components/Checkbox.vue";
+import ActionMessage from "@/Components/ActionMessage.vue";
+import ButtonLink from "@/Components/ButtonLink.vue";
+import Multiselect from "@vueform/multiselect";
+import { faPlus, faEye } from "@fortawesome/free-solid-svg-icons";
+import DeleteIcon from "@/Icons/Delete.vue";
+import Switcher from "@/Components/Switcher.vue";
+
+const form = useForm({
+    title: "",
+    description: "",
+    show_at: "",
+    is_signature_needed : false
+});
+
+const helpers = WaiverHelpers();
+
+const waiverShowPlaces = helpers.getShowPlaces()
+
+const create = () => {
+    form.transform((data) => ({
+        ...data,
+        questions: questionsData.value,
+    })).post(route("partner.waivers.store"), {
+        preserveScroll: true,
+    });
+};
+
+
+const questionsData = ref([
+    {
+        question: "",
+        selectedQuestionType: null,
+    },
+]);
+
+const addQuestion = () => {
+    questionsData.value.push({
+        question: "",
+        selectedQuestionType: null,
+    });
+};
+const removeLine = (index) => {
+    questionsData.value.splice(index, 1);
+};
+
+const questionTypes = helpers.questionTypes()
+</script>
+<template>
+    <FormSection @submitted="create" class="w-full lg:w-1/2">
+        <template #title> Waiver Information </template>
+        <template #description> Add waiver details. </template>
+        <template #form>
+            <!-- Name -->
+            <div class="col-span-6 sm:col-span-4">
+                <InputLabel for="title" value="Title" />
+                <TextInput
+                    id="title"
+                    v-model="form.title"
+                    type="text"
+                    class="mt-1 block w-full"
+                    autocomplete="off"
+                />
+                <InputError :message="form.errors.name" class="mt-2" />
+            </div>
+            <div class="col-span-6 sm:col-span-4">
+                <InputLabel for="show_at" value="Show At" />
+                <Multiselect
+                    autocomplete="off"
+                    class="w-full"
+                    mode="single"
+                    v-model="form.show_at"
+                    :options="waiverShowPlaces"
+                />
+                <InputError :message="form.errors.show_at" class="mt-2" />
+            </div>
+            <div class="col-span-6 sm:col-span-4">
+                <InputLabel for="description" value="Description" />
+                <TextArea
+                    id="description"
+                    v-model="form.description"
+                    type="text"
+                    class="mt-1 block w-full"
+                    rows="5"
+                    cols="10"
+                    autocomplete="description"
+                />
+                <InputError :message="form.errors.description" class="mt-2" />
+            </div>
+
+            <div class="w-full flex items-center">
+                <div class="w-96 pr-2">
+                    <div class="bg-blue-100">
+                        <label for="question" class="block font-medium p-2"
+                            >Question</label
+                        >
+                    </div>
+                </div>
+                <div class="w-40 pr-2">
+                    <div class="bg-green-100">
+                        <label for="questionType" class="block font-medium p-2"
+                            >Question Type</label
+                        >
+                    </div>
+                </div>
+                <div class="w-10"></div>
+            </div>
+            <div
+                class="items-center w-full flex"
+                v-for="(options, i) in questionsData"
+            >
+                <div class="w-96 pr-2">
+                    <TextInput
+                        :id="'question--' + i"
+                        v-model="questionsData[i].question"
+                        type="text"
+                        class="mt-1 block w-full"
+                        :class="'question--' + i"
+                        autocomplete="off"
+                    />
+                </div>
+                <div class="w-40 pr-2">
+                    <Multiselect
+                        class="w-full"
+                        mode="single"
+                        v-model="questionsData[i].selectedQuestionType"
+                        :options="questionTypes"
+                    />
+                </div>
+                <div class="w-10 ml-4">
+                    <span
+                        class="text-danger-500 flex items-center cursor-pointer"
+                        @click="removeLine(i)"
+                    >
+                        <DeleteIcon
+                            class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
+                        />
+                    </span>
+                </div>
+            </div>
+
+            <div
+                class="flex flex-row items-center justify-start text-blue-800"
+            >
+                <font-awesome-icon class="mx-2" :icon="faPlus" />
+                <label
+                    class="mr-3 w-full text-blue-800 cursor-pointer"
+                    @click="addQuestion"
+                >
+                    Add Question
+                </label>
+            </div>
+
+            <!-- Off-peak -->
+            <div>
+                <Switcher
+                    v-model="form.is_signature_needed"
+                    title="Signature Needed?"
+                    description=""
+                    :show-labels="['No', 'Yes']"
+                />
+            </div>
+        </template>
+        <template #actions>
+            <ActionMessage :on="form.recentlySuccessful" class="mr-3">
+                Add.
+            </ActionMessage>
+            <ButtonLink
+                styling="secondary"
+                size="default"
+                :class="{ 'opacity-25': form.processing }"
+                :disabled="form.processing"
+            >
+                Add
+            </ButtonLink>
+        </template>
+    </FormSection>
+</template>
+<style src="@vueform/multiselect/themes/tailwind.css"></style>

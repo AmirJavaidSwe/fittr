@@ -2,11 +2,11 @@
 
 namespace App\Console\Commands;
 
-use DB;
 use App\Models\Business;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Artisan;
 
 class PartnerMigrate extends Command

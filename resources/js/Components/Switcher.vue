@@ -26,6 +26,11 @@ const props = defineProps({
         default: null,
         required: false,
     },
+    showLabels: {
+        type: Array,
+        default: [],
+        required: false,
+    },
 });
 
 const enabled = ref(props.modelValue);
@@ -44,6 +49,7 @@ const enabled = ref(props.modelValue);
                 {{ description }}
             </SwitchDescription>
         </span>
+        <span v-if="props.showLabels.length" class="text-sm font-bold text-gray-500 mr-2">{{ props.showLabels[0] }}</span>
         <Switch
             v-slot="enabled"
             @update:modelValue="$emit('update:modelValue', $event)"
@@ -57,5 +63,6 @@ const enabled = ref(props.modelValue);
                 ]"
             />
         </Switch>
+        <span v-if="props.showLabels.length" class="text-sm font-bold text-gray-500 ml-2">{{ props.showLabels[1] }}</span>
     </SwitchGroup>
 </template>

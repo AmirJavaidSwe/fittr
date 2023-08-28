@@ -84,6 +84,13 @@ router.on("navigate", (event) => {
             <div class="overflow-hidden whitespace-nowrap overflow-ellipsis transition-opacity" :class="{'opacity-0': collapsed}">Data Center</div>
         </NavLink>
         <NavLink
+            :href="route('partner.waivers.index')"
+            :active="active_route.name == 'partner.waiver.index'"
+        >
+            <PartnerSidebarInstructorIcon class="w-8 h-8 overflow-visible" />
+            <div class="overflow-hidden whitespace-nowrap overflow-ellipsis transition-opacity" :class="{'opacity-0': collapsed}">Waivers</div>
+        </NavLink>
+        <NavLink
             :href="route('partner.settings.index')"
             :active="active_route.name == 'partner.settings.index'"
             v-can="{

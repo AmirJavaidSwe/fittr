@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, defineAsyncComponent } from "vue";
+import { ref, watch, computed, defineAsyncComponent } from "vue";
 import { router, Link, usePage } from "@inertiajs/vue3";
 import AppHead from "@/Layouts/AppHead.vue";
 import LogoLetter from "@/Components/LogoLetter.vue";
@@ -59,11 +59,15 @@ const headerIsArray = computed(() => {
 const { screen } = useWindowSize();
 
 // Sidebar Collapse
-const sidebarCollapsed = ref(screen.value == 'mobile');
+const sidebarCollapsed = ref(screen.value == 'sm' || screen.value == 'mobile');
 const sidebarClasses = computed(() => ({
     'w-12': sidebarCollapsed.value,
     'w-48': !sidebarCollapsed.value,
 }))
+
+watch(screen, (newVal, oldVal) => {
+    sidebarCollapsed.value = (newVal == 'sm' || newVal == 'mobile') ? true : false
+})
 
 // Back function
 let back = function (e) {
