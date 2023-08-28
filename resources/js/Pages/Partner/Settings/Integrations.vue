@@ -7,27 +7,22 @@ import Checkbox from "@/Components/Checkbox.vue";
 import ActionMessage from "@/Components/ActionMessage.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
 import MailchimpIcon from "@/Icons/MailchimpIcon.vue";
-import SendinblueNew from "@/Icons/SendinblueNew.vue";
-import SendinGridNew from "@/Icons/SendinGridNew.vue";
+import SendinblueIcon from "@/Icons/Sendinblue.vue";
+import SendGridIcon from "@/Icons/SendGrid.vue";
 
 const props = defineProps({
     form_data: Object,
 });
 const form = useForm({
     integration_mailchimp_status: props.form_data.integration_mailchimp_status,
-    integration_mailchimp_api_key:
-        props.form_data.integration_mailchimp_api_key,
-    integration_mailchimp_list_id:
-        props.form_data.integration_mailchimp_list_id,
+    integration_mailchimp_api_key: props.form_data.integration_mailchimp_api_key,
+    integration_mailchimp_list_id: props.form_data.integration_mailchimp_list_id,
     integration_sendgrid_status: props.form_data.integration_sendgrid_status,
     integration_sendgrid_api_key: props.form_data.integration_sendgrid_api_key,
     integration_sendgrid_list_id: props.form_data.integration_sendgrid_list_id,
-    integration_sendinblue_status:
-        props.form_data.integration_sendinblue_status,
-    integration_sendinblue_api_key:
-        props.form_data.integration_sendinblue_api_key,
-    integration_sendinblue_list_id:
-        props.form_data.integration_sendinblue_list_id,
+    integration_sendinblue_status: props.form_data.integration_sendinblue_status,
+    integration_sendinblue_api_key: props.form_data.integration_sendinblue_api_key,
+    integration_sendinblue_list_id: props.form_data.integration_sendinblue_list_id,
 });
 const submitForm = () => {
     form.put(route("partner.settings.integrations"));
@@ -42,9 +37,7 @@ const submitForm = () => {
             </div>
             <div class="bg-mainBg p-5 rounded mt-3 mb-3">
                 <div class="flex flex-wrap justify-between items-center border-b-2 border-slate-300  pb-4">
-                    <div>
-                        <MailchimpIcon />
-                    </div>
+                    <MailchimpIcon />
                     <div>
                         <label class="flex items-center">
                             <Checkbox v-model:checked="form.integration_mailchimp_status" :value="form.integration_mailchimp_status ? '1' : '0'" />
@@ -81,9 +74,7 @@ const submitForm = () => {
             <!--sendgrid-->
             <div class="bg-mainBg p-5 rounded mt-3 mb-3">
                 <div class="flex flex-wrap justify-between items-center border-b-2 border-slate-300  pb-4">
-                    <div>
-                        <SendinGridNew />
-                    </div>
+                    <SendGridIcon class="w-36" />
                     <div>
                         <label class="flex items-center">
                             <Checkbox v-model:checked="form.integration_sendgrid_status" :value="form.integration_sendgrid_status ? '1' : '0'" />
@@ -134,9 +125,7 @@ const submitForm = () => {
             <!--sendinblue-->
             <div class="bg-mainBg p-5 rounded mt-3 mb-3">
                 <div class="flex flex-wrap justify-between items-center border-b-2 border-slate-300  pb-4">
-                    <div>
-                        <SendinblueNew />
-                    </div>
+                    <SendinblueIcon class="w-36" />
                     <div>
                         <label class="flex items-center">
                             <Checkbox v-model:checked="form.integration_sendinblue_status" :value="form.integration_sendinblue_status ? '1' : '0'" />
