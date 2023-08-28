@@ -6,12 +6,7 @@ import TableHead from "@/Components/DataTable/TableHead.vue";
 import TableData from "@/Components/DataTable/TableData.vue";
 import Search from "@/Components/DataTable/Search.vue";
 import Pagination from "@/Components/Pagination.vue";
-import ButtonLink from "@/Components/ButtonLink.vue";
-import ConfirmationModal from "@/Components/ConfirmationModal.vue";
-import EditIcon from "@/Icons/Edit.vue";
-import DeleteIcon from "@/Icons/Delete.vue";
-import Dropdown from "@/Components/Dropdown.vue";
-import DropdownLink from "@/Components/DropdownLink.vue";
+// import ButtonLink from "@/Components/ButtonLink.vue";
 import { DateTime } from "luxon";
 import ActionsIcon from "@/Icons/ActionsIcon.vue";
 import {
@@ -23,7 +18,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import DateValue from "@/Components/DataTable/DateValue.vue";
 const props = defineProps({
-    orders: Object,
+    memberships: Object,
+    pack_types: Array,
+    price_types: Array,
     search: String,
     per_page: Number,
     order_by: String,
@@ -53,7 +50,7 @@ const setPerPage = (n) => {
 };
 
 const runSearch = () => {    
-    form.get(route("ss.member.orders.index", {subdomain: props.business_settings.subdomain}), {
+    form.get(route("ss.member.memberships.index", {subdomain: props.business_settings.subdomain}), {
         preserveScroll: true,
         preserveState: true,
         replace: true,
@@ -89,72 +86,55 @@ watch(() => form.search, runSearch);
                     </span>
                 </div>
             </TableHead>
-            <TableHead>
-                Items
+            <TableHead
+                @click="setOrdering('billing_type')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'billing_type'">
+                Billing
             </TableHead>
             <TableHead
-                @click="setOrdering('payment_status')"
+                @click="setOrdering('type')"
                 :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'payment_status'"
-            >
-                Status
+                :currentSort="form.order_by === 'type'">
+                Type
             </TableHead>
             <TableHead
-                @click="setOrdering('amount_total')"
+                @click="setOrdering('title')"
                 :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'amount_total'"
-            >
-                Order total
+                :currentSort="form.order_by === 'title'">
+                Title
             </TableHead>
-            
-            <TableHead title="Actions" class="flex justify-end" />
         </template>
 
         <template #tableData>
-            <tr v-for="order in props.orders.data" :key="order.id">
+            <tr v-for="membership in props.memberships.data" :key="membership.id">
                 <TableData>
                     <DateValue 
                         :date="
-                            DateTime.fromISO(order.created_at)
+                            DateTime.fromISO(membership.created_at)
                             .setZone(business_settings.timezone)
                             .toFormat(business_settings.date_format.format_js +' ' +business_settings.time_format?.format_js)
                         "
                         />
                 </TableData>
                 <TableData>
-                    <div v-for="item in order.items" :key="item.id">
-                        <div v-tooltip="item.pack_price.priceable.description">
-                            {{item.pack_price.priceable.title}}
-                        </div>
-                        <div>
-                            {{item.pack_price.priceable.sub_title}}
-                        </div>
-                        <div class="font-bold">
-                            {{item.amount_total_formatted}}
-                            <template v-if="item.pack_price.type == 'recurring'">
-                                {{item.pack_price.interval_human}}
-                            </template>
-                        </div>
-                    </div>
+                    {{price_types.find(({value}) => value === membership.billing_type)?.label}}
                 </TableData>
                 <TableData>
-                    {{order.payment_status}}
+                    {{pack_types.find(({value}) => value === membership.type)?.label}}
                 </TableData>
                 <TableData>
-                    {{order.amount_total_formatted}}
-                </TableData>
-                <TableData class="text-right">
-                    X
+                    {{membership.title}}
                 </TableData>
             </tr>
         </template>
 
         <template #pagination>
-            <pagination
-                :links="orders.links"
-                :to="orders.to"
-                :from="orders.from"
-                :total="orders.total"
+            <Pagination
+                :links="memberships.links"
+                :to="memberships.to"
+                :from="memberships.from"
+                :total="memberships.total"
                 @pp_changed="setPerPage"
             />
         </template>

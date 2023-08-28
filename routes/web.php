@@ -27,8 +27,10 @@ use App\Http\Controllers\Partner\PartnerExportController;
 use App\Http\Controllers\Partner\PartnerInstructorController;
 use App\Http\Controllers\Partner\PartnerLocationController;
 use App\Http\Controllers\Partner\PartnerMemberController;
+use App\Http\Controllers\Partner\PartnerMembershipController;
 use App\Http\Controllers\Partner\PartnerOnboardController;
 use App\Http\Controllers\Partner\PartnerOnTheFlyResource;
+use App\Http\Controllers\Partner\PartnerOrderController;
 use App\Http\Controllers\Partner\PartnerPackController;
 use App\Http\Controllers\Partner\PartnerServiceTypeController;
 use App\Http\Controllers\Partner\PartnerStudioController;
@@ -43,6 +45,7 @@ use App\Http\Controllers\Store\FamilyMemberController;
 use App\Http\Controllers\Store\StoreBookingController;
 use App\Http\Controllers\Store\StoreClassController;
 use App\Http\Controllers\Store\StoreInstructorController;
+use App\Http\Controllers\Store\StoreMembershipController;
 use App\Http\Controllers\Store\StoreLocationController;
 use App\Http\Controllers\Store\StoreOrderController;
 use App\Http\Controllers\Store\StorePackController;
@@ -202,6 +205,12 @@ Route::domain('app.'.$domain)->group(function () {
             Route::resource('taxes', PartnerTaxController::class);
             Route::resource('charges', PartnerChargeController::class);
             Route::get('partner/on-the-fly-resources', [PartnerOnTheFlyResource::class, 'index'])->name('on-the-fly-resources');
+
+            Route::get('/orders', [PartnerOrderController::class, 'index'])->name('orders.index');
+            Route::get('/orders/{order}', [PartnerOrderController::class, 'show'])->name('orders.show');
+
+            Route::get('/memberships', [PartnerMembershipController::class, 'index'])->name('memberships.index');
+            Route::get('/memberships/{membership}', [PartnerMembershipController::class, 'show'])->name('memberships.show');
         });
 
     });
@@ -243,6 +252,7 @@ Route::domain('{subdomain}.'.$domain)->middleware(['auth.subdomain'])->name('ss.
             Route::post('/bookings/other-famly', [StoreBookingController::class, 'bookForOtherFamly'])->name('bookings.other-famly');
             Route::post('/bookings/cancel-all', [StoreBookingController::class, 'cancelForAllOrSelected'])->name('bookings.cancel-all');
             Route::get('/orders', [StoreOrderController::class, 'index'])->name('orders.index');
+            Route::get('/my-memberships', [StoreMembershipController::class, 'index'])->name('memberships.index');
         });
 
         //INSTRUCTOR
