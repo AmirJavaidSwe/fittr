@@ -23,20 +23,24 @@ class BusinessSettingService
         $this->cache = $cache;
     }
 
-    public function getByGroup(SettingGroup $group): array
+    public function getByGroup(SettingGroup $group, $business_id = null): array
     {
-        $business = session('business');
+        if(empty($business_id)){
+            $business_id = session('business')->id ?? null;
+        }
 
-        return $this->model->ofBusiness($business->id)->ofGroup($group)->get()->each(function($item) {
+        return $this->model->ofBusiness($business_id)->ofGroup($group)->get()->each(function($item) {
             $item->val = $this->getCastValue($item);
         })->pluck('val', 'key')->toArray();
     }
 
-    public function getByGroups($groups): array
+    public function getByGroups($groups, $business_id = null): array
     {
-        $business = session('business');
+        if(empty($business_id)){
+            $business_id = session('business')->id ?? null;
+        }
 
-        return $this->model->ofBusiness($business->id)->ofGroups($groups)->get()->each(function($item) {
+        return $this->model->ofBusiness($business_id)->ofGroups($groups)->get()->each(function($item) {
             $item->val = $this->getCastValue($item);
         })->pluck('val', 'key')->toArray();
     }
@@ -55,6 +59,19 @@ class BusinessSettingService
         }
 
         return $results;
+    }
+
+    public function getByBusinessId($business_id): array
+    {
+        $groups = array(
+            SettingGroup::general_details,
+            SettingGroup::general_address,
+            SettingGroup::general_formats,
+            SettingGroup::service_store_general,
+            SettingGroup::service_store_header,
+            SettingGroup::bookings,
+        );
+        return $this->getByGroups(array_column($groups, 'name'), $business_id);
     }
 
     public function getCastValue(BusinessSetting $item)

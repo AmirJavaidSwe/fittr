@@ -11,6 +11,7 @@ class DatabaseConnectionService
     public function connect(Business $business): void
     {
         Config::set('database.connections.mysql_partner', [
+            'business_id' => $business->id,
             'driver' => 'mysql',
             'host' => $business->db_host,
             'port' => $business->db_port,
