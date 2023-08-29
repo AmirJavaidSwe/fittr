@@ -7,6 +7,7 @@ import { useForm } from "@inertiajs/vue3";
 import CloseModal from "@/Components/CloseModal.vue";
 import SideModal from "@/Components/SideModal.vue";
 import Form from "./Form.vue";
+import WaiverForm from "./WaiverForm.vue";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import DateValue from "@/Components/DataTable/DateValue.vue";
 import { DateTime } from "luxon";
@@ -18,11 +19,13 @@ const props = defineProps({
     business_settings: Object,
     page_title: String,
     family_members: Object,
+    waiver: Object | null,
 });
 
 
 const showCreateModal = ref(false);
 const showEditModal = ref(false);
+const showWaiverModal = ref(false);
 const closeCreateModal = () => {
     showCreateModal.value = false;
     CreateForm.reset().clearErrors();
@@ -31,6 +34,11 @@ const closeCreateModal = () => {
 const closeEditModal = () => {
     showEditModal.value = false;
     EditForm.reset().clearErrors();
+};
+
+const closeWaiverModal = () => {
+    showWaiverModal.value = false;
+    WaiverFormData.reset().clearErrors();
 };
 const CreateForm = useForm({
     name: null,
@@ -46,8 +54,19 @@ const EditForm = useForm({
     profile_photo_url: null,
     has_image: false,
 });
+const WaiverFormData = useForm({
+    title: null,
+    description: null,
+    sign_needed: null,
+    questionType: null,
+});
 
 const storeFamilyMember = () => {
+    // check if waiver is not null then show waiver modal
+    if (props.waiver !== null) {
+        showWaiverModal.value = true;
+    }
+    return;
     CreateForm.post(
         route("ss.member.family.store", {
             subdomain: props.business_settings.subdomain,
@@ -242,4 +261,21 @@ const deleteItem = () => {
             </ButtonLink>
         </template>
     </ConfirmationModal>
+
+    <!-- Waiver Modal -->
+    <SideModal :show="showWaiverModal" @close="closeWaiverModal">
+        <template #title> Waiver Details </template>
+        <template #close>
+            <CloseModal @click="closeWaiverModal" />
+        </template>
+
+        <template #content>
+            <WaiverForm
+                :form="WaiverFormData"
+                :submitted="storeFamilyMember"
+                :waiver="props.waiver"
+                modal
+            />
+        </template>
+    </SideModal>
 </template>

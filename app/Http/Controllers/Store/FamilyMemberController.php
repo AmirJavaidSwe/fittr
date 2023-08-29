@@ -7,16 +7,17 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Partner\FamilyMemberRequest;
 use App\Models\Partner\FamilyMember;
+use App\Models\Partner\Waiver;
 
 class FamilyMemberController extends Controller
 {
 
     public function index(Request $request)
     {
-
         return Inertia::render('Store/Member/Family/Index', [
             'family_members' => FamilyMember::where('user_id', auth()->user()->id)->get(),
             'page_title' => __('Family'),
+            'waiver' => Waiver::where('show_at', 'family-add')->whereNull('deleted_at')->first(),
         ]);
     }
 
