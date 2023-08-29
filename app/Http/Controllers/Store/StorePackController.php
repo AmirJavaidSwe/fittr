@@ -41,12 +41,12 @@ class StorePackController extends Controller
         $pack = Pack::active()->private()
         ->with(['pack_prices' => function (Builder $query) {
                 $query->where('is_active', true);
-            }, 'prices.locations:id,title,status'
+            }, 'pack_prices.locations:id,title,status'
         ])
         ->where('private_url', $request->url)
         ->firstOrFail();
 
-        $price_buttons = $this->store_pack_service->priceButtons($pack->prices);
+        $price_buttons = $this->store_pack_service->priceButtons($pack->pack_prices);
 
         return Inertia::render('Store/Packs/ShowPrivate', [
             'page_title' => __('Memberships'),

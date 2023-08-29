@@ -159,15 +159,15 @@ class BusinessSettingService
     // Method to get Packs with prices having FAP enabled, used by Fair access policy setting
     public function getFapPacks()
     {
-        return Pack::whereHas('prices')
-            ->with(['prices' => function (Builder $query) {
+        return Pack::whereHas('pack_prices')
+            ->with(['pack_prices' => function (Builder $query) {
                 $query->where('type', StripePriceType::recurring->name)->where('is_unlimited', true)->where('is_fap', true);
             }])
             ->orderBy('created_at', 'desc')
             ->get()
             ->reject(function ($item) {
                 // keep packs having fap prices only
-                return $item->prices->isEmpty();
+                return $item->pack_prices->isEmpty();
             })
             ->values(); //reset keys, json
     }
