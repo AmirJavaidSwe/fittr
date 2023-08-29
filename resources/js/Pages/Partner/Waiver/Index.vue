@@ -64,14 +64,17 @@ const confirmDeletion = (id) => {
     itemDeleting.value = true;
 };
 const deleteItem = () => {
-    form.delete(route("partner.waivers.destroy", { id: itemIdDeleting.value }), {
-        preserveScroll: true,
-        preserveState: true,
-        onSuccess: () => {
-            itemDeleting.value = false;
-            itemIdDeleting.value = null;
-        },
-    });
+    form.delete(
+        route("partner.waivers.destroy", { id: itemIdDeleting.value }),
+        {
+            preserveScroll: true,
+            preserveState: true,
+            onSuccess: () => {
+                itemDeleting.value = false;
+                itemIdDeleting.value = null;
+            },
+        }
+    );
 };
 
 const setOrdering = (col) => {
@@ -97,64 +100,47 @@ watch(() => form.search, runSearch);
 const waiverShowPlaces = ref([
     {
         label: "On Signup",
-        value: "sign-up"
+        value: "sign-up",
     },
     {
         label: "Upon Adding a Family Member",
-        value: "family-add"
+        value: "family-add",
     },
     {
         label: "On Checkout",
-        value: "checkout"
-    }
+        value: "checkout",
+    },
 ]);
 
-const singleWaiver = ref([])
-const singleQuestionsModal = ref(false)
+const singleWaiver = ref([]);
+const singleQuestionsModal = ref(false);
 
 const showQuestion = (id) => {
     const obj = find(props.waivers, (o) => {
-        return o.id === id
-    })
-    singleWaiver.value = obj
-    singleQuestionsModal.value = true
-}
-
+        return o.id === id;
+    });
+    singleWaiver.value = obj;
+    singleQuestionsModal.value = true;
+};
 </script>
 <template>
-    <data-table-layout :disableButton="true">
-        <template #search>
-            <!-- <Search
-                :noFilter="true"
-                v-model="form.search"
-                @reset="form.search = null"
-            /> -->
-        </template>
-
-            <template #button>
-                <ButtonLink class="text-right align-right"
-                v-can="{
-                    module: 'users',
-                    roles: $page.props.user.user_roles,
-                    permission: 'create',
-                    user: $page.props.user,
-                }"
-                styling="secondary"
-                size="default"
-                :href="route('partner.waivers.create')"
-                >
-                Create new
-                <font-awesome-icon class="ml-2" :icon="faPlus" />
-            </ButtonLink>
-            <!-- <ButtonLink v-can="{
+    <div class="block text-right mb-5 mr-4">
+        <ButtonLink
+            v-can="{
                 module: 'users',
                 roles: $page.props.user.user_roles,
                 permission: 'create',
                 user: $page.props.user,
-            }" :href="route(`partner.waivers.create`)" type="primary" styling="secondary" size="default">Add new
-            <font-awesome-icon class="ml-2" :icon="faPlus" /></ButtonLink> -->
-        </template>
-
+            }"
+            styling="secondary"
+            size="default"
+            :href="route('partner.waivers.create')"
+        >
+            Create new
+            <font-awesome-icon class="ml-2" :icon="faPlus" />
+        </ButtonLink>
+    </div>
+    <data-table-layout :disableButton="true">
         <template #tableHead>
             <table-head
                 title="Title"
@@ -169,6 +155,7 @@ const showQuestion = (id) => {
                 :currentSort="form.order_by === 'show_at'"
             />
             <table-head title="Description" />
+            <table-head title="Sign Needed?" />
             <table-head title="Questions" />
             <table-head title="Action" class="flex justify-end" />
         </template>
@@ -176,20 +163,28 @@ const showQuestion = (id) => {
         <template #tableData>
             <tr v-for="(obj, index) in waivers">
                 <table-data>{{ obj.title }}</table-data>
-                <table-data>{{ helpers.getShowAtValue(obj.show_at).label }}</table-data>
+                <table-data>{{
+                    helpers.getShowAtValue(obj.show_at).label
+                }}</table-data>
                 <table-data>
                     <span
-                            v-if="obj.description.length > 25"
-                            v-tooltip="obj.description"
-                        >
-                            {{ obj.description.substring(0, 25) }}...
-                        </span>
-                        <span v-else>
-                            {{ obj.description }}
-                        </span>
+                        v-if="obj.description.length > 25"
+                        v-tooltip="obj.description"
+                    >
+                        {{ obj.description.substring(0, 25) }}...
+                    </span>
+                    <span v-else>
+                        {{ obj.description }}
+                    </span>
                 </table-data>
                 <table-data>
-                    <span @click="showQuestion(obj.id)" class="cursor-pointer">Click to Show</span>
+                    {{ obj.is_signature_needed ? "Yes" : "No" }}
+                </table-data>
+
+                <table-data>
+                    <span @click="showQuestion(obj.id)" class="cursor-pointer"
+                        >Click to Show</span
+                    >
                 </table-data>
                 <TableData class="text-right">
                     <Dropdown
@@ -207,7 +202,13 @@ const showQuestion = (id) => {
                         <template #content>
                             <DropdownLink
                                 as="button"
-                                @click="$inertia.visit(route('partner.waivers.edit', { id: obj.id }))"
+                                @click="
+                                    $inertia.visit(
+                                        route('partner.waivers.edit', {
+                                            id: obj.id,
+                                        })
+                                    )
+                                "
                             >
                                 <EditIcon
                                     class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
@@ -229,7 +230,6 @@ const showQuestion = (id) => {
                     </Dropdown>
                 </TableData>
             </tr>
-
         </template>
 
         <template #pagination>
@@ -279,29 +279,29 @@ const showQuestion = (id) => {
                 <div class="flex justify-between items-center">
                     <div class="text-md mx-auto">Waiver Questions</div>
                     <div>
-                        <CloseModal @click="singleQuestionsModal = false" v-tooltip="'Cancel and Close'" />
+                        <CloseModal
+                            @click="singleQuestionsModal = false"
+                            v-tooltip="'Cancel and Close'"
+                        />
                     </div>
                 </div>
             </template>
             <template #default>
                 <data-table-layout :disableButton="true">
                     <template #tableHead>
-                        <table-head
-                            title="Question"
-                        />
-                        <table-head
-                            title="Question Type"
-                        />
+                        <table-head title="Question" />
+                        <table-head title="Question Type" />
                     </template>
                     <template #tableData>
                         <tr v-for="(obj, index) in singleWaiver.questions">
                             <table-data>{{ obj.question }}</table-data>
-                            <table-data>{{ obj.selectedQuestionType }}</table-data>
+                            <table-data>{{
+                                obj.selectedQuestionType
+                            }}</table-data>
                         </tr>
                     </template>
                 </data-table-layout>
             </template>
-
         </CardBasic>
     </Modal>
 </template>

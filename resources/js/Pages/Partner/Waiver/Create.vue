@@ -127,6 +127,7 @@ const questionTypes = helpers.questionTypes()
                         class="mt-1 block w-full"
                         :class="'question--' + i"
                         autocomplete="off"
+                        placeholder="Add Question Here"
                     />
                 </div>
                 <div class="w-40 pr-2">
@@ -135,6 +136,7 @@ const questionTypes = helpers.questionTypes()
                         mode="single"
                         v-model="questionsData[i].selectedQuestionType"
                         :options="questionTypes"
+                        placeholder="Choose an option"
                     />
                 </div>
                 <div class="w-10 ml-4">
