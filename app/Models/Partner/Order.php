@@ -50,6 +50,11 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 
+    public function memberships(): HasMany
+    {
+        return $this->hasMany(Membership::class);
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

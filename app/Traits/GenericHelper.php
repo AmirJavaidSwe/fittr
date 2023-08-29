@@ -18,9 +18,15 @@ trait GenericHelper
 
     public function redirectBackSuccess($msg = null, $route = null)
     {
-        return empty($route) ? 
+        return empty($route) ?
             redirect()->back()->with('flash_type', 'success')->with('flash_message', __($msg ?? 'Success'))->with('flash_timestamp', time()) :
             redirect()->route($route)->with('flash_type', 'success')->with('flash_message', __($msg ?? 'Success'))->with('flash_timestamp', time());
+    }
+
+    public function redirectBackSuccessWithSubdomain($msg = null, $route)
+    {
+        return redirect(route($route, ["subdomain" => request()->session()->get('business_settings')['subdomain']]))
+        ->with('flash_type', 'success')->with('flash_message', __($msg ?? 'Success'))->with('flash_timestamp', time());
     }
 
     public static function isMainDomain(): bool
@@ -33,7 +39,7 @@ trait GenericHelper
 
     public static function generateString($type = 'password', $length = 10): string
     {
-        
+
         switch ($type) {
             case 'password':
                 $special_chars = ['!', '@', '#', '$', '%', '^', '&', '*', '(', ')'];
@@ -44,7 +50,7 @@ trait GenericHelper
                 $string .= $lc_range[array_rand($lc_range)];
                 $string .= $uc_range[array_rand($uc_range)];
                 break;
-            
+
             default:
                 $string = Str::random($length);
                 break;

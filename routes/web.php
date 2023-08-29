@@ -2,27 +2,25 @@
 
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Foundation\Application;
-use Laravel\Socialite\Facades\Socialite;
-
 use App\Http\Controllers\Admin\DemoController;
-use App\Http\Controllers\Shared\RoleController;
 use App\Http\Controllers\Admin\PackageController;
 use App\Http\Controllers\Admin\PartnerController;
 use App\Http\Controllers\Admin\InstanceController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\DashboardController;
-
-use App\Http\Controllers\Store\StorePackController;
-use App\Http\Controllers\Store\StoreClassController;
-use App\Http\Controllers\Store\StoreOrderController;
-
 use App\Http\Controllers\Admin\StripeEventController;
 use App\Http\Controllers\Store\StorePublicController;
+use App\Http\Controllers\Shared\RoleController;
+use App\Http\Controllers\Partner\PartnerMembershipController;
+use App\Http\Controllers\Partner\PartnerOrderController;
 use App\Http\Controllers\Partner\PartnerTaxController;
 use App\Http\Controllers\Shared\UserProfileController;
 use App\Http\Controllers\Store\FamilyMemberController;
 use App\Http\Controllers\Store\StoreBookingController;
+use App\Http\Controllers\Store\StoreClassController;
+use App\Http\Controllers\Store\StoreMembershipController;
+use App\Http\Controllers\Store\StoreOrderController;
+use App\Http\Controllers\Store\StorePackController;
 use App\Http\Controllers\Store\StorePaymentController;
 use App\Http\Controllers\Partner\PartnerPackController;
 use App\Http\Controllers\Partner\PartnerUserController;
@@ -54,7 +52,7 @@ Route::get('/auth/google', [UserProfileController::class, 'googleRedirect'])->mi
 Route::get('/auth/google-callback', [UserProfileController::class, 'googleAuth']);
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'webhook']);
 
-//Routes to complete partner onboarding. Accessible and auto-redirected to from 'ConnectPartnerDatabase' middleware when user has no business relation.
+// Routes to complete partner onboarding. Accessible and auto-redirected to from 'ConnectPartnerDatabase' middleware when user has no business relation.
 Route::middleware(['auth', 'auth.source:partner', 'verified'])->name('partner.onboarding.')->group(function () {
     Route::get('/onboarding', [PartnerOnboardController::class, 'index'])->name('index');
     Route::post('/onboarding', [PartnerOnboardController::class, 'update'])->name('update');
@@ -85,7 +83,7 @@ Route::domain('app.'.$domain)->group(function () {
 
     Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
 
-        //ADMIN
+        // ADMIN
         Route::middleware(['auth.source:admin'])->prefix('admin')->name('admin.')->group(function () {
             Route::get('/demo', [DemoController::class, 'index'])->name('demo');
             Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -110,8 +108,8 @@ Route::domain('app.'.$domain)->group(function () {
             Route::post('/settings/save-admin', [SettingsController::class, 'saveAdmins'])->name('settings.save.admins');
             Route::get('/settings/edit-admin/{id}', [SettingsController::class, 'editAdmins'])->name('settings.edit.admins');
             Route::put('/settings/edit-admin/{id}', [SettingsController::class, 'updateAdmins'])->name('settings.update.admins');
-            //this can be resource controller, listing methods for clarity
-            //implicit binding
+            // this can be resource controller, listing methods for clarity
+            // implicit binding
             Route::controller(PackageController::class)->name('packages.')->group(function () {
                 Route::get('/packages', 'index')->name('index');
                 Route::get('/packages/create', 'create')->name('create');
@@ -128,7 +126,7 @@ Route::domain('app.'.$domain)->group(function () {
             });
         });
 
-        //PARTNER
+        // PARTNER
         Route::middleware(['auth.source:partner', 'partner.connect'])->name('partner.')->group(function () {
             Route::get('/dashboard', [PartnerDashboardController::class, 'index'])->name('dashboard');
             Route::post('/login-as', [PartnerDashboardController::class, 'loginAs'])->name('login-as');
@@ -170,8 +168,8 @@ Route::domain('app.'.$domain)->group(function () {
             Route::get('/settings/payments/stripe', [BusinessSettingController::class, 'paymentsStripe'])->name('settings.payments.stripe');
             Route::post('/settings/payments/stripe', [BusinessSettingController::class, 'connectStripe']);
 
-            //partner.members.index
-            //partner.members.destroy /members/{member}
+            // partner.members.index
+            // partner.members.destroy /members/{member}
             Route::resource('amenity', PartnerAmenityController::class);
             Route::put('classes/bulk-edit', [PartnerClassLessonController::class, 'bulkEdit'])->name('classes.bulk-edit');
             Route::delete('classes/bulk-delete', [PartnerClassLessonController::class, 'bulkDelete'])->name('classes.bulk-delete');
@@ -204,6 +202,12 @@ Route::domain('app.'.$domain)->group(function () {
             Route::resource('charges', PartnerChargeController::class);
             Route::get('partner/on-the-fly-resources', [PartnerOnTheFlyResource::class, 'index'])->name('on-the-fly-resources');
             Route::resource('waivers', PartnerWaiverController::class);
+
+            Route::get('/orders', [PartnerOrderController::class, 'index'])->name('orders.index');
+            Route::get('/orders/{order}', [PartnerOrderController::class, 'show'])->name('orders.show');
+
+            Route::get('/memberships', [PartnerMembershipController::class, 'index'])->name('memberships.index');
+            Route::get('/memberships/{membership}', [PartnerMembershipController::class, 'show'])->name('memberships.show');
         });
 
     });
@@ -227,12 +231,12 @@ Route::domain('{subdomain}.'.$domain)->middleware(['auth.subdomain'])->name('ss.
     Route::post('/buy/{price}', [StorePaymentController::class, 'index'])->name('payments.index')->middleware(['auth:sanctum', config('jetstream.auth_session')]);
     Route::get('/success', [StorePaymentController::class, 'success'])->name('payments.success');
 
-    //google auth
+    // google auth
     Route::post('/auth/google-callback', [UserProfileController::class, 'processSubdomainRequest']);
 
     Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
 
-        //MEMBER
+        // MEMBER
         Route::middleware(['auth.role:member'])->name('member.')->group(function () {
             Route::get('/dashboard', [MemberDashboardController::class, 'index'])->name('dashboard');
 
@@ -245,9 +249,10 @@ Route::domain('{subdomain}.'.$domain)->middleware(['auth.subdomain'])->name('ss.
             Route::post('/bookings/other-famly', [StoreBookingController::class, 'bookForOtherFamly'])->name('bookings.other-famly');
             Route::post('/bookings/cancel-all', [StoreBookingController::class, 'cancelForAllOrSelected'])->name('bookings.cancel-all');
             Route::get('/orders', [StoreOrderController::class, 'index'])->name('orders.index');
+            Route::get('/my-memberships', [StoreMembershipController::class, 'index'])->name('memberships.index');
         });
 
-        //INSTRUCTOR
+        // INSTRUCTOR
         Route::middleware(['auth.role:instructor'])->prefix('instructor')->name('instructor.')->group(function () {
             Route::get('/dashboard', [InstructorDashboardController::class, 'index'])->name('dashboard');
         });

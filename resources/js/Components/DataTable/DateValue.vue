@@ -22,5 +22,6 @@ const props = defineProps({
         </span>
         <span v-else class="text-grey mr-2"><TimeIcon /></span>
         {{ date }}
+        <slot></slot>
     </div>
 </template>

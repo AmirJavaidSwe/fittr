@@ -6,6 +6,7 @@ use App\Enums\StripeCurrency;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class OrderItem extends Model
 {
@@ -59,7 +60,12 @@ class OrderItem extends Model
     {
         return $this->belongsTo(PackPrice::class, 'pack_price_id')->withTrashed();
     }
-    
+
+    public function membership(): HasOne
+    {
+        return $this->hasOne(Membership::class);
+    }
+
     // Accessors
     public function getCurrencySymbolAttribute(): ?string
     {
