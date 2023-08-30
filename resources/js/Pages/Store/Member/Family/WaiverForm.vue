@@ -8,6 +8,7 @@ import TextInput from "@/Components/TextInput.vue";
 import Textarea from "@/Components/Textarea.vue";
 import Radio from "@/Components/Radio.vue";
 import Checkbox from "@/Components/Checkbox.vue";
+import SignaturePad from "@/Components/SignaturePad.vue";
 
 const props = defineProps({
     form: {
@@ -36,7 +37,7 @@ const props = defineProps({
             <div class="w-full flex items-center">
                 <div class="w-full">
                     <div class="bg-blue-100">
-                        <label for="question" class="block font-medium p-2"
+                        <label for="question" class="block font-medium p-2 font-extrabold text-lg"
                             >Questions</label
                         >
                     </div>
@@ -81,8 +82,25 @@ const props = defineProps({
                     />
                 </template>
             </div>
-
-
+            <div class="w-full flex items-center">
+                <div class="w-full">
+                    <div class="bg-blue-100">
+                        <label for="question" class="block font-medium p-2 font-extrabold text-lg"
+                            >Signature</label
+                        >
+                    </div>
+                </div>
+                <div class="w-10"></div>
+            </div>
+            <div class="w-full flex items-center">
+                <div class="w-full">
+                    <SignaturePad
+                        v-model="waiver.signature"
+                        onEnd="waiver.saveSignature"
+                    />
+                </div>
+                <div class="w-10"></div>
+            </div>
         </template>
     </FormSection>
 </template>

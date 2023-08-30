@@ -32,6 +32,7 @@
         "libphonenumber-js": "^1.10.37",
         "luxon": "^3.3.0",
         "sweetalert2": "^11.4.8",
+        "vue-signature-pad": "^3.0.2",
         "vue3-dropzone": "^2.0.1"
     }
 }
