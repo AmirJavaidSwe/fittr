@@ -23,20 +23,24 @@ class BusinessSettingService
         $this->cache = $cache;
     }
 
-    public function getByGroup(SettingGroup $group): array
+    public function getByGroup(SettingGroup $group, $business_id = null): array
     {
-        $business = session('business');
+        if(empty($business_id)){
+            $business_id = session('business')->id ?? null;
+        }
 
-        return $this->model->ofBusiness($business->id)->ofGroup($group)->get()->each(function($item) {
+        return $this->model->ofBusiness($business_id)->ofGroup($group)->get()->each(function($item) {
             $item->val = $this->getCastValue($item);
         })->pluck('val', 'key')->toArray();
     }
 
-    public function getByGroups($groups): array
+    public function getByGroups($groups, $business_id = null): array
     {
-        $business = session('business');
+        if(empty($business_id)){
+            $business_id = session('business')->id ?? null;
+        }
 
-        return $this->model->ofBusiness($business->id)->ofGroups($groups)->get()->each(function($item) {
+        return $this->model->ofBusiness($business_id)->ofGroups($groups)->get()->each(function($item) {
             $item->val = $this->getCastValue($item);
         })->pluck('val', 'key')->toArray();
     }
@@ -55,6 +59,19 @@ class BusinessSettingService
         }
 
         return $results;
+    }
+
+    public function getByBusinessId($business_id): array
+    {
+        $groups = array(
+            SettingGroup::general_details,
+            SettingGroup::general_address,
+            SettingGroup::general_formats,
+            SettingGroup::service_store_general,
+            SettingGroup::service_store_header,
+            SettingGroup::bookings,
+        );
+        return $this->getByGroups(array_column($groups, 'name'), $business_id);
     }
 
     public function getCastValue(BusinessSetting $item)
@@ -142,15 +159,15 @@ class BusinessSettingService
     // Method to get Packs with prices having FAP enabled, used by Fair access policy setting
     public function getFapPacks()
     {
-        return Pack::whereHas('prices')
-            ->with(['prices' => function (Builder $query) {
+        return Pack::whereHas('pack_prices')
+            ->with(['pack_prices' => function (Builder $query) {
                 $query->where('type', StripePriceType::recurring->name)->where('is_unlimited', true)->where('is_fap', true);
             }])
             ->orderBy('created_at', 'desc')
             ->get()
             ->reject(function ($item) {
                 // keep packs having fap prices only
-                return $item->prices->isEmpty();
+                return $item->pack_prices->isEmpty();
             })
             ->values(); //reset keys, json
     }

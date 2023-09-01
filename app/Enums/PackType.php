@@ -85,4 +85,12 @@ enum PackType
         });
         return array_values($filtered);
     }
+
+    public static function creditable($value): bool
+    {
+        return match($value) {
+            'class_lesson', 'service', 'hybrid' => true,
+            default => false,
+        };
+    }
 }

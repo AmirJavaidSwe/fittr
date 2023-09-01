@@ -8,4 +8,5 @@ class LocationPackPrice extends Model
 {
     protected $table = 'location_pack_price';
     protected $connection = 'mysql_partner';
+    protected $guarded = ['id'];
 }

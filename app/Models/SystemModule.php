@@ -9,6 +9,8 @@ class SystemModule extends Model
 {
     use HasFactory;
 
+    protected $connection = 'mysql';
+    protected $table = 'system_modules';
     protected $fillable = [
         'name', 'slug', 'is_for'
     ];

@@ -11,6 +11,7 @@ class Business extends Model
 {
     use SoftDeletes;
 
+    protected $connection = 'mysql';
     protected $table = 'businesses';
     protected $guarded = [
         'id',

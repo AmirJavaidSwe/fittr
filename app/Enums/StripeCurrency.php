@@ -219,4 +219,36 @@ enum StripeCurrency: string
             default => 0,
         };
     }
+
+    public function symbol() : string
+    {
+        return match($this) {
+            self::AED => 'AED',
+            self::AUD => 'AU$',
+            self::BGN => 'BGN',
+            self::BRL => 'R$',
+            self::CAD => 'CA$',
+            self::CHF => 'CHF',
+            self::CZK => 'Kč',
+            self::DKK => 'Dkr',
+            self::EUR => '€',
+            self::GBP => '£',
+            self::GIP => 'GIP',
+            self::HKD => 'HK$',
+            self::HRK => 'HRK',
+            self::HUF => 'Ft',
+            self::JPY => '¥',
+            self::MXN => 'MX$',
+            self::MYR => 'RM',
+            self::NOK => 'Nkr',
+            self::NZD => 'NZ$',
+            self::PLN => 'zł',
+            self::RON => 'RON',
+            self::SEK => 'Skr',
+            self::SGD => 'S$',
+            self::THB => '฿',
+            self::USD => '$',
+            default => '',
+        };
+    }
 }

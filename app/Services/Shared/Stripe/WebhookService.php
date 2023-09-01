@@ -16,12 +16,19 @@ class WebhookService
         $this->fulfillment_service = $fulfillment_service;
     }
 
+    public function response($event, $for = 'connected')
+    {
+        return $for == 'connected' ? 
+            new Response("Event {$event->stripe_id} for connected account received ok", 200):
+            new Response("Local event {$event->stripe_id} received ok", 200);
+    }
+
     public function processCheckout($event) : void
     {
         try {
             $this->fulfillment_service->processCheckout($event);
         } catch (\Exception $e) {
-            //TODO
+            //TODO log/alert
         }
     }
 
@@ -35,27 +42,39 @@ class WebhookService
         // Bacs Direct Debit, Bank transfers, Boleto, Canadian pre-authorized debits, Konbini, OXXO, SEPA Direct Debit, SOFORT, or ACH Direct Debit
         // confirmation may come later with 'checkout.session.async_payment_succeeded'
         // In any case we must check if $session->payment_status == 'paid' before fulfilling order
+        if($event->event_for == 'local'){
+            //do nothing for now (partner tier subscription)
+            return $this->response($event, $event->event_for);
+        }
         $this->processCheckout($event);
 
-        return new Response("Event {$event->stripe_id} received ok", 200);
+        return $this->response($event, $event->event_for);
     }
 
     public function checkoutSessionAsyncPaymentSucceeded(StripeEvent $event)
     {
+        if($event->event_for == 'local'){
+            //do nothing for now (partner tier subscription)
+            return $this->response($event, $event->event_for);
+        }
         $this->processCheckout($event);
 
-        return new Response("Event {$event->stripe_id} received ok", 200);
+        return $this->response($event, $event->event_for);
     }
 
     public function checkoutSessionAsyncPaymentFailed(StripeEvent $event)
     {
-        return new Response("Event {$event->stripe_id} received ok", 200);
+        if($event->event_for == 'local'){
+            //do nothing for now (partner tier subscription)
+            return $this->response($event, $event->event_for);
+        }
+
+        return $this->response($event, $event->event_for);
     }
 
     // public function paymentIntentSucceeded(StripeEvent $event)
     // {
-    //     return new Response("Event {$event->stripe_id} received ok", 200);
+    //     return $this->response($event, $event->event_for);
     // }
-
 
 }

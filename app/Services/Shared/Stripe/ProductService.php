@@ -54,9 +54,8 @@ class ProductService extends StripeService
     // Helper method that returns formed array to be used for product create/update
     public function getPackData($pack) : array
     {
-        return array(
+        $data =  array(
             'name' => $pack->title,
-            'description' => $pack->description,
             'active' => $pack->is_active,
             'shippable' => false,
             'metadata' => [
@@ -64,6 +63,11 @@ class ProductService extends StripeService
                 'type' => $pack->type,
             ],
         );
+
+        if(!empty($pack->description)){
+            $data['description'] = $pack->description;
+        }
+        return $data;
     }
 
     // Method to create new Stripe product
@@ -120,7 +124,7 @@ class ProductService extends StripeService
             'currency_symbol' => $currency_symbol,
         ] + $validated_data;
         //create new price
-        $price = $pack->prices()->create($model_data);
+        $price = $pack->pack_prices()->create($model_data);
         //sync location restrictions
         $price->locations()->sync($validated_data['location_ids'] ?? []);
 

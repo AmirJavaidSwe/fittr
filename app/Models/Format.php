@@ -9,6 +9,7 @@ class Format extends Model
 {
     use SoftDeletes;
 
+    protected $connection = 'mysql';
     protected $table = 'formats';
     protected $guarded = [
         'id',

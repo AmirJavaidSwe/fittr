@@ -8,8 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class PermissionRole extends Model
 {
     use HasFactory;
-    protected $table='permission_role';
 
+    protected $connection = 'mysql';
+    protected $table='permission_role';
     protected $fillable = [
         'permission_id', 'role_id'
     ];

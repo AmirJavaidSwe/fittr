@@ -31,20 +31,19 @@ router.on("navigate", (event) => {
             <font-awesome-icon :icon="faHome" class="w-4" />
             <div>Dashboard</div>
         </NavLink>
-        <NavLink href="#">
+        <NavLink :href="route('ss.member.memberships.index', { subdomain })" :active="active_route.name == 'ss.member.memberships.index'">
             <font-awesome-icon :icon="faReceipt" class="w-4" />
             <div>My memberships</div>
         </NavLink>
-        <NavLink href="#">
+        <NavLink :href="route('ss.member.orders.index', { subdomain })" :active="active_route.name == 'ss.member.orders.index'">
             <font-awesome-icon :icon="faFileInvoiceDollar" class="w-4" />
             <div>Orders history</div>
         </NavLink>
-        <NavLink :href="route('ss.member.bookings.index', { subdomain })
-            ">
+        <NavLink :href="route('ss.member.bookings.index', { subdomain })" :active="active_route.name == 'ss.member.bookings.index'">
             <font-awesome-icon :icon="faGears" class="w-4" />
             <div>My bookings</div>
         </NavLink>
-        <NavLink :href="route('ss.member.family.index', { subdomain })">
+        <NavLink :href="route('ss.member.family.index', { subdomain })" :active="active_route.name == 'ss.member.family.index'">
             <font-awesome-icon :icon="faUsers" class="w-4" />
             <div>Family</div>
         </NavLink>

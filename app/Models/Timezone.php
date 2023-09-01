@@ -9,6 +9,7 @@ class Timezone extends Model
 {
     use SoftDeletes;
 
+    protected $connection = 'mysql';
     protected $table = 'timezones';
     protected $guarded = [
         'id',

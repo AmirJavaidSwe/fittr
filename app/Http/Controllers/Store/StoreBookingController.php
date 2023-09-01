@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers\Store;
 
-use App\Enums\BookingStatus;
-use App\Events\BookingCancellation;
-use App\Events\BookingConfirmation;
-use App\Http\Controllers\Controller;
-use App\Models\Partner\Booking;
-use App\Models\Partner\ClassLesson;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Http\Request;
+use App\Models\Partner\Booking;
+use App\Http\Controllers\Controller;
+use App\Services\Store\Booking\StoreBookingService;
+use App\Services\Store\Booking\StoreBookingCancellationService;
+use App\Services\Store\Waitlist\StoreWaitlistService;
 
 class StoreBookingController extends Controller
 {
@@ -64,305 +63,46 @@ class StoreBookingController extends Controller
 
     public function store(Request $request)
     {
-        $class = ClassLesson::with(['bookings' => function ($query) {
-            $query->where('user_id', auth()->user()?->id)->active();
-        }])
-        ->active()
-        ->find($request->class_id);
+        $storeBookingService = new StoreBookingService;
 
-        $maxDaysBooking = session('business_settings.days_max_booking');
-
-        $maxBookingStart = now(session('business_settings.timezone'))->startOfDay();
-        $maxBookingEnd = $maxBookingStart->copy()
-        ->when($maxDaysBooking, fn($date) => $date->addDays($maxDaysBooking-1))
-        ->endOfDay()
-        ->utc();
-        $maxBookingStart = $maxBookingStart->utc();
-
-        if(!$class) {
-            return $this->redirectBackError(__('The class does not exist.'));
-        }
-
-        if(
-            $maxDaysBooking
-            && !(
-                $maxBookingStart->lte($class->start_date)
-                && $maxBookingEnd->gte($class->end_date)
-            )
-        ) {
-            return $this->redirectBackError(__('The class cannot be booked.'));
-        }
-
-        if($class->bookings->count()) {
-            return $this->redirectBackError(__('The class cannot be booked again.'));
-        }
-
-        //allow late booking, up to the end of class (TBD)
-        if (now()->greaterThan($class->end_date)) {
-            return $this->redirectBackError(__('This class can no longer be booked.'));
-        }
-
-
-
-        // TODO
-        // $decision = $this->service->getReservationDecision($request);
-        // going forward we will add another step for member selecting the seat or space and any other extras before we save the model
-
-
-        if(!$this->classHasSpaceLeft($request->class_id)) {
-            return $this->redirectBackError(__('This class can no longer be booked because it doesn\'t have required spaces left.'));
-        }
-
-        if($request->is_family_booking && count($request->familyBooking['family_member']['ids'])) {
-            $familyDetails = $request->familyBooking;
-            if($familyDetails['user_id'] != null) {
-                $booking = Booking::create([
-                    'class_id' => $request->class_id,
-                    'user_id' => $request->user()->id,
-                    'is_family_booking' => ($request->is_family_booking) ? 1 : 0,
-                ]);
-            }
-            foreach($request->familyBooking['family_member']['ids'] as $id) {
-                $booking = Booking::create([
-                    'class_id' => $request->class_id,
-                    'user_id' => $request->user()->id,
-                    'is_family_booking' => ($request->is_family_booking) ? 1 : 0,
-                    'family_member_id' => $id,
-                ]);
-            }
-        } else {
-            $booking = Booking::create([
-                'class_id' => $request->class_id,
-                'user_id' => $request->user()->id,
-            ]);
-        }
-
-        $booking->load(['user', 'class.classType', 'class.instructor', 'class.studio.location']);
-
-        event(new BookingConfirmation($booking));
-
-        return $this->redirectBackSuccess('The class has been booked.');
+        return $storeBookingService->store();
     }
 
-    public function cancel(Request $request)
+    public function cancel()
     {
-        $booking = Booking::with(['user', 'class.classType', 'class.instructor', 'class.studio.location'])->where('class_id', $request->class_id)->where('user_id', auth()->user()?->id)->active()->first();
+        $storeBookingCancellationService = new StoreBookingCancellationService;
 
-        if(!$booking) {
-            return $this->redirectBackError('The booking not found.');
-        }
+        return $storeBookingCancellationService->cancel();
 
-        if(now()->gte($booking->class?->start_date)) {
-            return $this->redirectBackError('The booking cannot be cancelled after the class has been started.');
-        }
-
-        if($booking->status == BookingStatus::get('cancelled')) {
-            return $this->redirectBackError('The booking cannot be cancelled again.');
-        }
-
-        $booking->update([
-            'status' => BookingStatus::get('cancelled'),
-            'cancelled_at' => now(),
-        ]);
-
-        event(new BookingCancellation($booking));
-
-        $waitlist = Booking::with('user', 'class.classType', 'class.instructor', 'class.studio.location')->where('class_id', $request->class_id)->waitlisted()->first();
-
-        if($waitlist) {
-            $waitlist->update([
-                'status' => BookingStatus::get('active'),
-            ]);
-
-            event(new BookingConfirmation($waitlist));
-        }
-
-
-        return $this->redirectBackSuccess('The booking has been cancelled.');
     }
 
-    public function addToWaitlist(Request $request)
+    public function addToWaitlist()
     {
-        $class = ClassLesson::with(['waitlists' => function ($query) {
-            $query->where('user_id', auth()->user()?->id);
-        }])
-        ->active()
-        ->find($request->class_id);
-
-        $maxDaysBooking = session('business_settings.days_max_booking');
-        $maxBookingStart = now(session('business_settings.timezone'))->startOfDay();
-        $maxBookingEnd = $maxBookingStart->copy()
-        ->when($maxDaysBooking, fn($date) => $date->addDays($maxDaysBooking-1))
-        ->endOfDay()
-        ->utc();
-        $maxBookingStart = $maxBookingStart->utc();
-
-        if(!$class) {
-            return $this->redirectBackError(__('The class does not exist.'));
-        }
-
-        if(
-            $maxDaysBooking
-            && !(
-                $maxBookingStart->lte($class->start_date)
-                && $maxBookingEnd->gte($class->end_date)
-            )
-        ) {
-            return $this->redirectBackError(__('The class cannot be added to waitlist.'));
-        }
-
-        if($class->waitlists->count()) {
-            return $this->redirectBackError(__('The class cannot be added to waitlist again.'));
-        }
-
-        if (now() > $class->start_date->subDay()) {
-            return $this->redirectBackError(__('This class can no longer be added to waitlist.'));
-        }
-
-        Booking::create([
-            'class_id' => $request->class_id,
-            'user_id' => $request->user()->id,
-            'status' => BookingStatus::get('waitlisted'),
-        ]);
-
-        return $this->redirectBackSuccess('The class has been added to waitlist.');
+        $storeWaitlistService = new StoreWaitlistService;
+        return $storeWaitlistService->addToWaitlist();
     }
 
-    public function removeFromWaitList(Request $request)
+    public function removeFromWaitList()
     {
-        $booking = Booking::where('class_id', $request->class_id)->where('user_id', auth()->user()?->id)->waitlisted()->first();
-
-        if(!$booking) {
-            return $this->redirectBackError('The booking not found.');
-        }
-
-        $booking->delete();
-
-        return $this->redirectBackSuccess('The class has been removed from waitlist.');
+        $storeWaitlistService = new StoreWaitlistService;
+        return $storeWaitlistService->removeFromWaitList();
     }
 
-
-    public function classHasSpaceLeft($id) {
-        $request = request();
-        $class = ClassLesson::with(['bookings' => function ($query) {
-            $query->active();
-        }])
-        ->active()
-        ->find($id);
-
-        $spaces = $class->spaces;
-        $bookingsCount = $class->bookings->count();
-
-        $bookingFor = 0;
-
-        if($request->is_family_booking && count($request->familyBooking['family_member']['ids'])) {
-            $bookingFor += count($request->familyBooking['family_member']['ids']);
-            if($request->familyBooking['user_id']) {
-                $bookingFor++;
-            }
-        }
-        if($request->has('is_new_family_booking') && count($request->members)) {
-            $bookingFor = count($request->members);
-        }
-
-        return (($bookingsCount + $bookingFor) > $spaces) ? false : true;
-    }
 
     public function bookForOtherFamly(Request $request) {
 
-        if(!$this->classHasSpaceLeft($request->class_id)) {
-            return $this->redirectBackError(__('This class can no longer be booked because it doesn\'t have required spaces left.'));
-        }
 
-        foreach($request->members as $member) {
-            $booking = Booking::create([
-                'class_id' => $request->class_id,
-                'user_id' => $request->user()->id,
-                'is_family_booking' => 1,
-                'family_member_id' => $member['is_parent'] == false ? $member['id'] : null,
-            ]);
-        }
-        Booking::where('user_id', $request->user()->id)->where('class_id', $request->class_id)->active()->update(['is_family_booking' => 1]);
+        $storeBookingService = new StoreBookingService;
 
-        return redirect(route("ss.classes.index", ["subdomain" => $request->session()->get('business_settings')['subdomain']]))->with('flash_type', 'success')->with('flash_message', __('Success'))->with('flash_timestamp', time());
+        return $storeBookingService->bookForOtherFamly();
 
-        // return Inertia::location());
-
-        // return $this->redirectBackSuccess(
-        //     'Booked Successfully!',
-        //     route("ss.classes.index", ["subdomain" => $request->session()->get('business_settings')['subdomain']])
-        // );
     }
+
     public function cancelForAllOrSelected(Request $request) {
 
-        $bookings = [];
-        $waitlists = [];
+        $storeBookingCancellationService = new StoreBookingCancellationService;
 
-        foreach($request->ids_cancellation as $k => $member) {
-
-            $booking = Booking::with(['user', 'class.classType', 'class.instructor', 'class.studio.location'])->where('class_id', $request->class_id)
-            ->where('user_id', auth()->user()?->id);
-
-            if(!$member['is_parent']) {
-                $booking = $booking->where('family_member_id', $member['id']);
-            }
-            $booking = $booking->active()->first();
-
-            if(!$booking) {
-                return $this->redirectBackError('The booking not found.');
-            }
-
-            if(now()->gte($booking->class?->start_date)) {
-                return $this->redirectBackError('The booking cannot be cancelled after the class has been started.');
-            }
-
-            if($booking->status == BookingStatus::get('cancelled')) {
-                return $this->redirectBackError('The booking cannot be cancelled again.');
-            }
-
-            $bookings[] = $booking;
-
-            // $booking->update([
-            //     'status' => BookingStatus::get('cancelled'),
-            //     'cancelled_at' => now(),
-            // ]);
-
-            // event(new BookingCancellation($booking));
-
-            $waitlist = Booking::with('user', 'class.classType', 'class.instructor', 'class.studio.location')->where('class_id', $request->class_id)->waitlisted()->skip($k)->first();
-
-            if($waitlist) {
-                $waitlists[] = $waitlist;
-            }
-            // if($waitlist) {
-            //     $waitlist->update([
-            //         'status' => BookingStatus::get('active'),
-            //     ]);
-
-            //     event(new BookingConfirmation($waitlist));
-            // }
-        }
-        foreach($bookings as $key => $booking) {
-            $booking->update([
-                'status' => BookingStatus::get('cancelled'),
-                'cancelled_at' => now(),
-            ]);
-            event(new BookingCancellation($booking));
-        }
-        foreach($waitlists as $key => $waitlist) {
-            $waitlist->update([
-                'status' => BookingStatus::get('active'),
-            ]);
-            event(new BookingConfirmation($waitlist));
-        }
-        return redirect(route("ss.classes.index", ["subdomain" => $request->session()->get('business_settings')['subdomain']]))->with('flash_type', 'success')->with('flash_message', __('The booking has been cancelled.'))->with('flash_timestamp', time());
-
-        // return Inertia::location());
-
-        // return $this->redirectBackSuccess(
-        //     'Booked Successfully!',
-        //     route("ss.classes.index", ["subdomain" => $request->session()->get('business_settings')['subdomain']])
-        // );
+        return $storeBookingCancellationService->cancelForAllOrSelected();
     }
 
 }

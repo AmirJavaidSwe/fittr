@@ -9,6 +9,8 @@ class Permission extends Model
 {
     use HasFactory;
 
+    protected $connection = 'mysql';
+    protected $table = 'permissions';
     protected $fillable = [
         'name', 'slug', 'system_module_id'
     ];

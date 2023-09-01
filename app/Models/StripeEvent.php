@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class StripeEvent extends Model
 {
+    protected $connection = 'mysql';
     protected $table = 'stripe_events';
     protected $guarded = [
         'id',

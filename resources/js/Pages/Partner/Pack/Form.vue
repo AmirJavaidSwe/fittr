@@ -27,7 +27,7 @@ const props = defineProps({
     locations: Array,
     classtypes: Object,
     servicetypes: Object,
-    prices: Array,
+    pack_prices: Array,
     default_currency: String,
     form: {
         type: Object,
@@ -312,7 +312,7 @@ const showEditPrice = (price) => {
             </template>
             <template v-else>
                 <div class="flex flex-wrap items-center justify-between">
-                    <h2 class="text-2xl">Pricing options ({{prices.length}})</h2>
+                    <h2 class="text-2xl">Pricing options ({{pack_prices.length}})</h2>
                     <ButtonLink
                         styling="primary"
                         size="small"
@@ -324,9 +324,9 @@ const showEditPrice = (price) => {
 
                 </div>
                 <!-- Existing prices list: -->
-                <div v-if="prices.length" class="flex flex-wrap gap-4">
+                <div v-if="pack_prices.length" class="flex flex-wrap gap-4">
                     <PriceCard
-                        v-for="price in prices"
+                        v-for="price in pack_prices"
                         :key="price.id"
                         :price="price"
                         :pack_type="form.type"

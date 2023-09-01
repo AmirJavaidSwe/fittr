@@ -2,6 +2,7 @@
 
 use App\Enums\StripeCheckoutMode;
 use App\Enums\StripePaymentStatus;
+use App\Enums\StripeSessionStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,14 +17,21 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('user_id')->unsigned()->nullable();
-            $table->enum('mode', StripeCheckoutMode::all());
+            $table->bigInteger('stripe_event_id')->unsigned()->nullable();
+            $table->string('stripe_customer_id', 255)->nullable();
+            $table->enum('checkout_mode', StripeCheckoutMode::all());
+            $table->enum('checkout_status', StripeSessionStatus::all());
             $table->enum('payment_status', StripePaymentStatus::all());
             $table->string('session_id', 255)->nullable();
             $table->string('payment_intent', 255)->nullable();
-            $table->string('customer', 255)->nullable();
             $table->uuid('trace')->nullable();
-            $table->integer('amount_subtotal')->unsigned()->default(0);
-            $table->integer('amount_total')->unsigned()->default(0);
+            $table->string('currency', 3)->nullable(); //ISO 3 chars
+            $table->integer('amount_discount')->unsigned()->default(0); //stripe integer
+            $table->integer('amount_subtotal')->unsigned()->default(0); //stripe integer
+            $table->integer('amount_total')->unsigned()->default(0); //stripe integer
+            $table->boolean('line_items_pulled')->default(false)->comment('checkout session');
+            $table->integer('line_items')->unsigned()->default(0); //total number of checkout session line items (order_items)
+            // $table->boolean('is_processed')->default(false)->comment('whole'); // main flag for order completion
             $table->timestamps();
             $table->softDeletes();
         });

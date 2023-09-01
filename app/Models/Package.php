@@ -9,6 +9,7 @@ class Package extends Model
 {
     use SoftDeletes;
 
+    protected $connection = 'mysql';
     protected $table = 'packages';
     protected $guarded = [
         'id',

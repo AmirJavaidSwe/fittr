@@ -27,8 +27,10 @@ use App\Http\Controllers\Partner\PartnerExportController;
 use App\Http\Controllers\Partner\PartnerInstructorController;
 use App\Http\Controllers\Partner\PartnerLocationController;
 use App\Http\Controllers\Partner\PartnerMemberController;
+use App\Http\Controllers\Partner\PartnerMembershipController;
 use App\Http\Controllers\Partner\PartnerOnboardController;
 use App\Http\Controllers\Partner\PartnerOnTheFlyResource;
+use App\Http\Controllers\Partner\PartnerOrderController;
 use App\Http\Controllers\Partner\PartnerPackController;
 use App\Http\Controllers\Partner\PartnerServiceTypeController;
 use App\Http\Controllers\Partner\PartnerStudioController;
@@ -43,7 +45,9 @@ use App\Http\Controllers\Store\FamilyMemberController;
 use App\Http\Controllers\Store\StoreBookingController;
 use App\Http\Controllers\Store\StoreClassController;
 use App\Http\Controllers\Store\StoreInstructorController;
+use App\Http\Controllers\Store\StoreMembershipController;
 use App\Http\Controllers\Store\StoreLocationController;
+use App\Http\Controllers\Store\StoreOrderController;
 use App\Http\Controllers\Store\StorePackController;
 use App\Http\Controllers\Store\StorePaymentController;
 use App\Http\Controllers\Store\StorePublicController;
@@ -58,8 +62,20 @@ Route::middleware(['auth', 'auth.source:partner', 'verified'])->name('partner.on
     Route::post('/onboarding', [PartnerOnboardController::class, 'update'])->name('update');
 });
 
+$domain = config('app.domain');
+
+// remove if block in production.
+// With below block we can have multiple domains pointing to the app.
+// As long as url starts with 'app.' subdomain, we can have unlimited number of domains, e.g. 'fittr' (http://app.fittr), 'fittr.local' (http://app.fittr.local),...
+// This is usefull when we want to be logged is as admin to http://app.fittr and as partner at http://app.fittr2 at the same time in same browser other tab
+if(config('app.env') != 'production'){
+    $host = request()->host(); // config('app.domain') is => fittr.local, request()->host() is => app.fittr.local
+    $domain = stristr($host, '.'); // e.g. '.fittr.local'
+    $domain = substr($domain, 1); // e.g. 'fittr.local'
+}
+
 // this is for fittr admin users and partner users
-Route::domain('app.'.config('app.domain'))->group(function () {
+Route::domain('app.'.$domain)->group(function () {
     Route::get('/', function () {
         return Inertia::render('Welcome', [
             'canLogin' => Route::has('login'),
@@ -189,6 +205,12 @@ Route::domain('app.'.config('app.domain'))->group(function () {
             Route::resource('taxes', PartnerTaxController::class);
             Route::resource('charges', PartnerChargeController::class);
             Route::get('partner/on-the-fly-resources', [PartnerOnTheFlyResource::class, 'index'])->name('on-the-fly-resources');
+
+            Route::get('/orders', [PartnerOrderController::class, 'index'])->name('orders.index');
+            Route::get('/orders/{order}', [PartnerOrderController::class, 'show'])->name('orders.show');
+
+            Route::get('/memberships', [PartnerMembershipController::class, 'index'])->name('memberships.index');
+            Route::get('/memberships/{membership}', [PartnerMembershipController::class, 'show'])->name('memberships.show');
         });
 
     });
@@ -197,7 +219,7 @@ Route::domain('app.'.config('app.domain'))->group(function () {
 // this is for partner members and instructors, public service store or logged in area
 // AuthenticateSubdomain middleware will check if such subdomain exist to prevent random access and will set proper db connection (in addition to) 'database.connections.mysql_partner'
 // All routes have prefix ss. (short for service store)
-Route::domain('{subdomain}.'.config('app.domain'))->middleware(['auth.subdomain'])->name('ss.')->group(function () {
+Route::domain('{subdomain}.'.$domain)->middleware(['auth.subdomain'])->name('ss.')->group(function () {
 
     Route::get('/', [StorePublicController::class, 'index'])->name('home');
 
@@ -229,6 +251,8 @@ Route::domain('{subdomain}.'.config('app.domain'))->middleware(['auth.subdomain'
             Route::resource('family', FamilyMemberController::class);
             Route::post('/bookings/other-famly', [StoreBookingController::class, 'bookForOtherFamly'])->name('bookings.other-famly');
             Route::post('/bookings/cancel-all', [StoreBookingController::class, 'cancelForAllOrSelected'])->name('bookings.cancel-all');
+            Route::get('/orders', [StoreOrderController::class, 'index'])->name('orders.index');
+            Route::get('/my-memberships', [StoreMembershipController::class, 'index'])->name('memberships.index');
         });
 
         //INSTRUCTOR
