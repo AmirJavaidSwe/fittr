@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             LocationSeeder::class,
             StudioSeeder::class,
             PackSeeder::class,
+            NotificationTemplateSeeder::class,
         ]);
     }
 }

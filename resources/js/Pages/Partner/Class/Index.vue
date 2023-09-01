@@ -25,7 +25,7 @@ import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
 import CloseModal from "@/Components/CloseModal.vue";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope, faEnvelopesBulk, faPlus } from "@fortawesome/free-solid-svg-icons";
 import StatusLabel from "@/Components/StatusLabel.vue";
 import ColoredValue from "@/Components/DataTable/ColoredValue.vue";
 import AvatarValue from "@/Components/DataTable/AvatarValue.vue";
@@ -41,6 +41,7 @@ import PreviewModal from "./PreviewModal.vue";
 import { useSwal } from "@/Composables/swal";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faCopy } from "@fortawesome/free-regular-svg-icons";
+import EmailClass from "./EmailClass.vue";
 
 const props = defineProps({
     disableSearch: {
@@ -543,6 +544,13 @@ const closePreviewModal = () => {
     previewClassDetails.value = {};
 };
 
+const showEmailClass = ref(false);
+const emailClassData = ref({});
+
+const emailClass = (classLesson) => {
+    emailClassData.value = { ...classLesson };
+    showEmailClass.value = true;
+};
 
 </script>
 <template>
@@ -821,6 +829,18 @@ const closePreviewModal = () => {
                                     class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
                                 />
                                 Duplicate
+                            </DropdownLink>
+                            <DropdownLink
+                                as="button"
+                                @click="emailClass(class_lesson)"
+                            >
+                                <span class="flex items-center">
+                                    <FontAwesomeIcon
+                                        class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
+                                        :icon="faEnvelopesBulk"
+                                    />
+                                    <span> Email Class </span>
+                                </span>
                             </DropdownLink>
                             <DropdownLink
                                 as="button"
@@ -1107,6 +1127,13 @@ const closePreviewModal = () => {
         :classDetails="previewClassDetails"
         :business_settings="business_settings"
         @close="closePreviewModal"
+    />
+
+    <EmailClass
+        :show="showEmailClass"
+        :classDetails="emailClassData"
+        :business_settings="business_settings"
+        @close="showEmailClass = false"
     />
 
 </template>

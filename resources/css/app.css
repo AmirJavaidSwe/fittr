@@ -18,7 +18,7 @@
     ::-webkit-scrollbar {
         @apply w-2 h-2;
     }
-    
+
     /* Track */
     ::-webkit-scrollbar-track {
         /* @apply bg-primary-500; */
@@ -157,4 +157,13 @@ div.iti .input-field {
 
 .swal2-styled.swal2-cancel {
     @apply inline-flex items-center disabled:opacity-25 transition font-semibold bg-white rounded-md border border-grey hover:border-secondary-500 hover:bg-secondary-100 hover:text-secondary-500 focus:bg-secondary-100 focus:text-secondary-500 active:bg-white active:text-secondary-500 active:border-secondary-500 text-gray-900 px-4 h-11 text-sm;
+}
+
+/* CKEditor */
+.ck-editor__editable_inline {
+    min-height: 200px;
+}
+
+.ck-content ol, .ck-content ul {
+    padding: 0 0 0 1.25rem;
 }

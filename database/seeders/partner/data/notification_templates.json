@@ -1,0 +1,42 @@
+[
+    {
+        "title": "Class start reminder",
+        "key": "CLASS_START_REMINDER",
+        "placeholders": [
+            "SUBJECT",
+            "CLASS_TITLE",
+            "CLASS_DATE",
+            "CLASS_START",
+            "CLASS_END",
+            "MEMBER_NAME",
+            "CLASS_TYPE",
+            "CLASS_STUDIO",
+            "CLASS_LOCATION"
+        ],
+        "from_name": "Demo Fittr",
+        "from_email": "demo@fittr.tech",
+        "subject": "Class start reminder",
+        "content": "<p>Hello [#MEMBER_NAME#],</p><p>&nbsp;</p><p>This is a friendly reminder that your <strong>[#CLASS_TYPE#]</strong> will be happening in the next 24 hours.</p><p>&nbsp;</p><p>Details:</p><p>Class type: <strong>[#CLASS_TYPE#]</strong></p><p>Date: <strong>[#CLASS_DATE#]</strong></p><p>Start Time: <strong>[#CLASS_START#]</strong></p><p>End Time: <strong>[#CLASS_END#]</strong></p><p>Studio: <strong>[#CLASS_STUDIO#]</strong></p><p>Location: <strong>[#CLASS_LOCATION#]</strong></p><p>&nbsp;</p><p>Thank you!</p>",
+        "content_plain": "Hello [#MEMBER_NAME#],\n\nThis is a friendly reminder that your [#CLASS_TYPE#] will be happening in the next 24 hours.\n\nDetails:\n\nClass type: [#CLASS_TYPE#]\nDate: [#CLASS_DATE#]\nStart Time: [#CLASS_START#]\nEnd Time: [#CLASS_END#]\nStudio: [#CLASS_STUDIO#]\nLocation: [#CLASS_LOCATION#]\n\nThank you!\n"
+    },
+    {
+        "title": "Class participants",
+        "key": "CLASS_PARTICIPANTS",
+        "placeholders": [
+            "SUBJECT",
+            "CLASS_TITLE",
+            "CLASS_DATE",
+            "CLASS_START",
+            "CLASS_END",
+            "MEMBER_NAME",
+            "CLASS_TYPE",
+            "CLASS_STUDIO",
+            "CLASS_LOCATION"
+        ],
+        "from_name": "Demo Fittr",
+        "from_email": "demo@fittr.tech",
+        "subject": "[#SUBJECT#]",
+        "content": "<p>Hello [#MEMBER_NAME#],</p><p>&nbsp;</p><p>We would like to inform you something about <strong>[#CLASS_TYPE#]</strong>.</p><p>&nbsp;</p><p>Details:</p><p>Class type: <strong>[#CLASS_TYPE#]</strong></p><p>Date: <strong>[#CLASS_DATE#]</strong></p><p>Start Time: <strong>[#CLASS_START#]</strong></p><p>End Time: <strong>[#CLASS_END#]</strong></p><p>Studio: <strong>[#CLASS_STUDIO#]</strong></p><p>Location: <strong>[#CLASS_LOCATION#]</strong></p><p>&nbsp;</p><p>Thank you!</p>",
+        "content_plain": "Hello [#MEMBER_NAME#],\n \nWe would like to inform you something about [#CLASS_TYPE#].\n \nDetails:\nClass type: [#CLASS_TYPE#]\nDate: [#CLASS_DATE#]\nStart Time: [#CLASS_START#]\nEnd Time: [#CLASS_END#]\nStudio: [#CLASS_STUDIO#]\nLocation: [#CLASS_LOCATION#]\n \nThank you!\n"
+    }
+]

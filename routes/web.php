@@ -28,6 +28,7 @@ use App\Http\Controllers\Partner\PartnerInstructorController;
 use App\Http\Controllers\Partner\PartnerLocationController;
 use App\Http\Controllers\Partner\PartnerMemberController;
 use App\Http\Controllers\Partner\PartnerMembershipController;
+use App\Http\Controllers\Partner\PartnerNotificationTemplateController;
 use App\Http\Controllers\Partner\PartnerOnboardController;
 use App\Http\Controllers\Partner\PartnerOnTheFlyResource;
 use App\Http\Controllers\Partner\PartnerOrderController;
@@ -179,6 +180,8 @@ Route::domain('app.'.$domain)->group(function () {
             Route::delete('classes/bulk-delete', [PartnerClassLessonController::class, 'bulkDelete'])->name('classes.bulk-delete');
             Route::get('classes/bulk-copy', [PartnerClassLessonController::class, 'bulkCopy'])->name('classes.bulk-copy');
             Route::post('classes/bulk-copy', [PartnerClassLessonController::class, 'storeBulkCopy'])->name('classes.store-bulk-copy');
+            Route::get('classes/{class}/participants', [PartnerClassLessonController::class, 'participants'])->name('classes.participants');
+            Route::post('classes/{class}/email-class', [PartnerClassLessonController::class, 'emailClass'])->name('classes.email-class');
             Route::resource('classes', PartnerClassLessonController::class);
             Route::resource('classtypes', PartnerClassTypeController::class);
             Route::resource('servicetypes', PartnerServiceTypeController::class);
@@ -211,6 +214,14 @@ Route::domain('app.'.$domain)->group(function () {
 
             Route::get('/memberships', [PartnerMembershipController::class, 'index'])->name('memberships.index');
             Route::get('/memberships/{membership}', [PartnerMembershipController::class, 'show'])->name('memberships.show');
+
+            Route::get('notification-templates', [PartnerNotificationTemplateController::class, 'index'])->name('notification-templates.index');
+            Route::get('notification-templates/{notificationTemplate}', [PartnerNotificationTemplateController::class, 'show'])->name('notification-templates.show');
+            Route::get('notification-templates/{notificationTemplate}/edit', [PartnerNotificationTemplateController::class, 'edit'])->name('notification-templates.edit');
+            Route::put('notification-templates/{notificationTemplate}', [PartnerNotificationTemplateController::class, 'update'])->name('notification-templates.update');
+            Route::post('notification-templates/preview', [PartnerNotificationTemplateController::class, 'preview'])->name('notification-templates.preview');
+            Route::post('notification-templates/test', [PartnerNotificationTemplateController::class, 'test'])->name('notification-templates.test');
+            Route::get('notification-templates/{notificationTemplate}/load', [PartnerNotificationTemplateController::class, 'load'])->name('notification-templates.load');
         });
 
     });
