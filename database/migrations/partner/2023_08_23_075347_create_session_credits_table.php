@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\PackType;
 use App\Enums\StateType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -19,6 +20,7 @@ return new class extends Migration
             $table->bigInteger('order_item_id')->unsigned()->nullable(); //parent OrderItem
             $table->bigInteger('membership_id')->unsigned()->nullable(); //parent Membership
             $table->enum('status', StateType::all())->default(StateType::get('inactive'));
+            $table->enum('type', PackType::creditTypes()); //matched pack type, onу of creditable types (corp, default excluded)
             $table->decimal('price_value', 8, 2)->unsigned()->default(0)->comment('avg'); // avg price value of single credit
             $table->json('restrictions')->nullable()->comment('json'); //Object having applicable restrictions (location, class type, service type, off-peak only)
             $table->text('notes_user')->nullable();

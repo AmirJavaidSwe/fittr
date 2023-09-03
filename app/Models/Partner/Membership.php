@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 class Membership extends Model
 {
@@ -36,6 +38,7 @@ class Membership extends Model
         'interval_count' => 'integer',
         'fixed_count' => 'integer',
         'deleted_at' => 'datetime',
+        'expiration_date' => 'datetime', //appended
     ];
 
     /**
@@ -44,7 +47,13 @@ class Membership extends Model
      * @var array
      */
     protected $appends = [
-
+        'expiration_date',
+        'interval_human',
+        'price_floor',
+        'price_floor_formatted',
+        'price_decimals',
+        'price_formatted',
+        'price_formatted_full',
     ];
 
     // Local scopes
@@ -74,7 +83,77 @@ class Membership extends Model
     {
         return $this->belongsTo(PackPrice::class);
     }
-    
+
+    public function membership_charges(): HasMany
+    {
+        return $this->hasMany(MembershipCharge::class);
+    }
+
+    public function session_credits(): HasMany
+    {
+        return $this->hasMany(SessionCredit::class);
+    }
+
     // Accessors
-   
+    public function getExpirationDateAttribute(): ?Carbon
+    {
+        if(!$this->is_expiring){
+            return null;
+        }
+
+        //expiration date is for one_time, recurring must look for membership_charges
+
+        $expiration_date = $this->created_at->copy();
+        switch ($this->expiration_period) {
+            case 'day':
+                $expiration_date->addDays($this->expiration);
+                break;
+            case 'week':
+                $expiration_date->addWeeks($this->expiration);
+                break;
+            case 'month':
+                $expiration_date->addMonths($this->expiration);
+                break;
+            case 'year':
+                $expiration_date->addYears($this->expiration);
+                break;
+        }
+
+        return $expiration_date;
+    }
+
+    public function getIntervalHumanAttribute(): ?string
+    {
+        if(empty($this->interval_count)){
+            return null;
+        }
+        $string = $this->interval_count == 1 ? __('per') : __('every');
+        $string .= ($this->interval_count == 1 ? '' : ' '.$this->interval_count).' '. __(Str::plural($this->interval, $this->interval_count));
+        return $string;
+    }
+
+    public function getPriceFloorAttribute(): int
+    {
+        return floor($this->price);
+    }
+
+    public function getPriceFloorFormattedAttribute(): ?string
+    {
+        return number_format($this->price_floor);
+    }
+
+    public function getPriceDecimalsAttribute(): ?int
+    {
+        return round(fmod($this->price, 1), 2) * 100;
+    }
+
+    public function getPriceFormattedAttribute(): ?string
+    {
+        return $this->currency_symbol.number_format($this->price, 2);
+    }
+
+    public function getPriceFormattedFullAttribute(): ?string
+    {
+        return $this->price_formatted.' '.strtoupper($this->currency);
+    }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\PackType;
+use App\Enums\StateType;
 use App\Enums\StripePeriod;
 use App\Enums\StripePriceType;
 use Illuminate\Database\Migrations\Migration;
@@ -16,11 +17,13 @@ return new class extends Migration
     {
         Schema::create('memberships', function (Blueprint $table) {
             $table->id();
+            $table->enum('status', StateType::all())->default(StateType::get('inactive'));
             $table->bigInteger('user_id')->unsigned()->nullable();
             $table->bigInteger('order_id')->unsigned()->nullable(); //parent Order
             $table->bigInteger('order_item_id')->unsigned()->nullable(); //parent OrderItem
             $table->bigInteger('pack_id')->unsigned(); //parent Pack
             $table->bigInteger('pack_price_id')->unsigned(); //parent PackPrice
+            $table->string('stripe_subscription_id')->nullable(); //recurring only
             $table->enum('type', PackType::all());
             $table->string('title', 255);
             $table->string('sub_title', 255)->nullable();
