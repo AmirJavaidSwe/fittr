@@ -52,9 +52,16 @@ defineEmits(['priceSelected']);
             <!-- pack.type == 'default' -->
             <template v-if="isDefaultType">
             <!-- Show expiration period -->
-            <span class="font-bold" v-if="price.is_expiring">
-                {{price.expiration}} {{price.expiration_period}} pass
+
+            <span class="font-bold">
+                <template v-if="price.is_expiring">
+                    {{price.expiration}} {{price.expiration_period}} pass
+                </template>
+                <!-- <template v-else>
+                    NO EXPIRATION
+                </template> -->
             </span>
+
             </template>
 
             <template v-else>

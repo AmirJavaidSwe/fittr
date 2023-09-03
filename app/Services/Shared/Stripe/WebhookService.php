@@ -4,16 +4,18 @@ namespace App\Services\Shared\Stripe;
 
 use App\Models\StripeEvent;
 use Illuminate\Http\Response;
-use App\Services\Shared\FulfillmentService;
+use App\Services\Shared\OnetimeFulfillmentService;
+use App\Services\Shared\RecurringFulfillmentService;
 
 // Main job of this class is to dispatch actions received from Stripe webhook event
 // Every method in this class supposed to handle specific event type.
 
 class WebhookService
 {
-    public function __construct(FulfillmentService $fulfillment_service)
+    public function __construct(RecurringFulfillmentService $recurring_fulfillment_service, OnetimeFulfillmentService $onetime_fulfillment_service)
     {
-        $this->fulfillment_service = $fulfillment_service;
+        $this->recurring_fulfillment_service = $recurring_fulfillment_service;
+        $this->onetime_fulfillment_service = $onetime_fulfillment_service;
     }
 
     public function response($event, $for = 'connected')
@@ -26,7 +28,7 @@ class WebhookService
     public function processCheckout($event) : void
     {
         try {
-            $this->fulfillment_service->processCheckout($event);
+            $this->onetime_fulfillment_service->processCheckout($event);
         } catch (\Exception $e) {
             //TODO log/alert
         }
@@ -76,5 +78,22 @@ class WebhookService
     // {
     //     return $this->response($event, $event->event_for);
     // }
+
+    // Subscription charge
+    public function invoicePaid(StripeEvent $event)
+    {
+        if($event->event_for == 'local'){
+            //do nothing for now (partner tier subscription)
+            return $this->response($event, $event->event_for);
+        }
+
+        try {
+            $this->recurring_fulfillment_service->processInvoicePaid($event);
+        } catch (\Exception $e) {
+            //TODO log/alert
+        }
+
+        return $this->response($event, $event->event_for);
+    }
 
 }

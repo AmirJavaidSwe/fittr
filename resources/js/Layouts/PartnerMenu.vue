@@ -111,7 +111,7 @@ router.on("navigate", (event) => {
             }"
         >
             <font-awesome-icon :icon="faCashRegister" class="w-8 h-8 overflow-visible" />
-            <div class="overflow-hidden whitespace-nowrap overflow-ellipsis transition-opacity" :class="{'opacity-0': collapsed}">Orders</div>
+            <div class="overflow-hidden whitespace-nowrap overflow-ellipsis transition-opacity" :class="{'opacity-0': collapsed}">Sales/Orders</div>
         </NavLink>
         <NavLink
             :href="route('partner.memberships.index')"

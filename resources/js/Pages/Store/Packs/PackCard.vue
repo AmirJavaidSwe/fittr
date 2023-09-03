@@ -43,10 +43,16 @@ defineEmits(['priceSelected', 'buy']);
 </script>
 
 <template>
-    <div :class="{
+    <div 
+        class="relative"
+        :class="{
                 'border-secondary-600': pack.type == 'class_lesson',
+                'border-blue-600': pack.type == 'service',
+                'border-secondary-100': pack.type == 'hybrid',
+                'border-primary-400': pack.type == 'default',
                 'border-lime-600': pack.type == 'corporate',
             }">
+        <div v-if="pack.type == 'hybrid'" class="absolute bg-gradient-to-r from-secondary-600 h-2 inset-x-0 top-[-8px] rounded-tl-md rounded-tr-md to-blue-600 w-full"></div>
         <div class="font-bold">{{pack.title}}</div>
         <div v-if="pack.sub_title" class="text-grey">{{pack.sub_title}}</div>
         <div v-if="pack.pack_prices.length" class="py-2">
