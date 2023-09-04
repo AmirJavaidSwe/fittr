@@ -1,93 +1,74 @@
 <script setup>
-import { computed, defineProps, ref } from "vue";
+import { onMounted, ref, watch, watchEffect } from "vue";
+import { faUndo, faTimes } from "@fortawesome/free-solid-svg-icons";
+import SignaturePad from "signature_pad";
+import debounce from 'lodash/debounce';
 
-const props = defineProps({
-    minWidth: {
-        type: Number,
-        default: 0.5,
-    },
-    maxWidth: {
-        type: Number,
-        default: 2.5,
-    },
-    penColor: {
-        type: String,
-        default: "black",
-    },
-    onEnd: {
-        type: Function,
-        default: () => {},
-    },
+
+const props = defineProps(['sign'])
+
+const emit = defineEmits(['onSignatureUpdate'])
+
+const canvas = ref(null)
+
+const signaturePad = ref(null)
+
+
+const updateSignature = debounce(() => {
+    let data = null;
+    if(!signaturePad.value.isEmpty()) {
+        data = signaturePad.value.toDataURL('image/png');
+    }
+    emit('onSignatureUpdate', data);
+}, 300)
+
+onMounted(() => {
+    canvas.value = document.getElementById('signature-pad');
+    signaturePad.value = new SignaturePad(canvas.value, {
+      backgroundColor: 'rgb(255, 255, 255)' // necessary for saving image as JPEG; can be removed is only saving as PNG or SVG
+    });
+    if(props.sign) {
+        signaturePad.value.fromDataURL(props.sign, { ratio: 1 });
+    }
+
+
+    signaturePad.value.addEventListener("endStroke", () => {
+        updateSignature();
+    });
 });
 
-const signature = ref('');
-const signaturePadRef = ref(null);
-
-const undo = () => {
-    signaturePadRef.value.undoSignature();
+const undoSignature = () => {
+    var data = signaturePad.value.toData();
+    if (data) {
+        data.pop(); // remove the last dot or line
+        signaturePad.value.fromData(data);
+        updateSignature();
+    }
 };
-
-const clear = () => {
-    signaturePadRef.value.clearSignature();
+const clearSignature = () => {
+    signaturePad.value.clear();
+    updateSignature();
 };
-
-const save = () => {
-    signature.value = signaturePadRef.value.saveSignature();
-};
-
-const signaturePadOptions = computed(() => {
-    return {
-        minWidth: props.minWidth,
-        maxWidth: props.maxWidth,
-        penColor: props.penColor,
-        onEnd: save,
-    };
-});
 </script>
 
 <template>
-    <VueSignaturePad
-        ref="signaturePadRef"
-        :options="signaturePadOptions"
-        class="border border-gray-300 rounded-md"
-    />
-    <div class="flex justify-between">
-        <button
-            class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center"
-            @click="undo"
-        >
-            <svg
-                class="w-4 h-4 mr-2"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-                fill="currentColor"
+    <div class="h-40 mb-12 border rounded-md border-gray-500">
+        <canvas id="signature-pad"></canvas>
+        <div class="flex justify-between">
+            <button type="button"
+                class="bg-gray-200 hover:bg-gray-300 text-gray-800 mt-3 font-bold py-2 px-4 rounded inline-flex items-center"
+                @click="undoSignature"
             >
-                <path
-                    fill-rule="evenodd"
-                    d="M10 2a8 8 0 100 16 8 8 0 000-16zM7.293 9.707a1 1 0 010-1.414L9.586 5.95a1 1 0 011.414 1.414L8.414 9l2.586 2.586a1 1 0 01-1.414 1.414L7.293 9.707z"
-                    clip-rule="evenodd"
-                />
-            </svg>
-            Undo
-        </button>
-        <button
-            class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center"
-            @click="clear"
-        >
-            <svg
-                class="w-4 h-4 mr-2"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-                fill="currentColor"
+                <font-awesome-icon :icon="faUndo" style="color: #333" /> &nbsp;
+                Undo
+            </button>
+            <button type="button"
+                class="bg-gray-200 hover:bg-gray-300 text-gray-800 mt-3 font-bold py-2 px-4 rounded inline-flex items-center"
+                @click="clearSignature"
             >
-                <path
-                    fill-rule="evenodd"
-                    d="M10 2a8 8 0 100 16 8 8 0 000-16zM8 9a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1zm4.293 1.707a1 1 0 010-1.414L12.414 9l1.879-1.879a1 1 0 10-1.414-1.414L11 7.586l-1.879-1.88a1 1 0 00-1.414 1.414L9.586 9l-1.88 1.879a1 1 0 001.414 1.414L11 10.414l1.879 1.879a1 1 0 001.414-1.414L12.414 9z"
-                    clip-rule="evenodd"
-                />
-            </svg>
-            Clear
-        </button>
+                <font-awesome-icon :icon="faTimes" style="color: #333" /> &nbsp;
+                Clear
+            </button>
+        </div>
     </div>
-
 </template>

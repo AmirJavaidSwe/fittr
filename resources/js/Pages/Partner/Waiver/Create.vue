@@ -12,7 +12,11 @@ import Checkbox from "@/Components/Checkbox.vue";
 import ActionMessage from "@/Components/ActionMessage.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
 import Multiselect from "@vueform/multiselect";
-import { faPlus, faEye } from "@fortawesome/free-solid-svg-icons";
+import {
+    faPlus,
+    faArrowUp,
+    faArrowDown,
+} from "@fortawesome/free-solid-svg-icons";
 import DeleteIcon from "@/Icons/Delete.vue";
 import Switcher from "@/Components/Switcher.vue";
 
@@ -55,6 +59,24 @@ const removeLine = (index) => {
 };
 
 const questionTypes = helpers.questionTypes()
+
+
+const moveDown = (index) => {
+    if (index >= 0 && index < questionsData.value.length - 1) {
+        const itemToMove = questionsData.value[index];
+        questionsData.value.splice(index, 1); // Remove the item from its current position
+        questionsData.value.splice(index + 1, 0, itemToMove); // Insert it one index down
+    }
+};
+
+const moveUp = (index) => {
+    if (index > 0 && index < questionsData.value.length) {
+        const itemToMove = questionsData.value[index];
+        questionsData.value.splice(index, 1); // Remove the item from its current position
+        questionsData.value.splice(index - 1, 0, itemToMove); // Insert it one index up
+    }
+};
+
 </script>
 <template>
     <FormSection @submitted="create" class="w-full lg:w-1/2">
@@ -71,7 +93,7 @@ const questionTypes = helpers.questionTypes()
                     class="mt-1 block w-full"
                     autocomplete="off"
                 />
-                <InputError :message="form.errors.name" class="mt-2" />
+                <InputError :message="form.errors.title" class="mt-2" />
             </div>
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="show_at" value="Show At" />
@@ -117,8 +139,24 @@ const questionTypes = helpers.questionTypes()
             </div>
             <div
                 class="items-center w-full flex"
-                v-for="(options, i) in questionsData"
+                v-for="(options, i) in questionsData" :key="i"
             >
+            <div class="w-4 pr-1" v-if="i != questionsData.length - 1" @click="moveDown(i)">
+                        <span  class="cursor-pointer">
+                            <font-awesome-icon
+                                :icon="faArrowDown"
+                                style="color: #333"
+                            />
+                        </span>
+                    </div>
+                    <div class="w-4 pr-1" v-if="i != 0" @click="moveUp(i)">
+                        <span class="cursor-pointer">
+                            <font-awesome-icon
+                                :icon="faArrowUp"
+                                style="color: #333"
+                            />
+                        </span>
+                    </div>
                 <div class="w-96 pr-2">
                     <TextInput
                         :id="'question--' + i"
@@ -129,6 +167,7 @@ const questionTypes = helpers.questionTypes()
                         autocomplete="off"
                         placeholder="Add Question Here"
                     />
+                    <InputError v-if="form?.errors.hasOwnProperty('questions.'+i+'.question')" :message="form?.errors['questions.'+i+'.question']" class="mt-2" />
                 </div>
                 <div class="w-40 pr-2">
                     <Multiselect
@@ -138,9 +177,10 @@ const questionTypes = helpers.questionTypes()
                         :options="questionTypes"
                         placeholder="Choose an option"
                     />
+                    <InputError v-if="form.errors?.hasOwnProperty('questions.'+i+'.selectedQuestionType')" :message="form?.errors['questions.'+i+'.selectedQuestionType']" class="mt-2" />
                 </div>
                 <div class="w-10 ml-4">
-                    <span
+                    <span v-if="i != 0"
                         class="text-danger-500 flex items-center cursor-pointer"
                         @click="removeLine(i)"
                     >

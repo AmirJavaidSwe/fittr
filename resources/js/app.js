@@ -13,7 +13,6 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import directive from './directive';
 import FloatingVue from "floating-vue";
 import "@splidejs/vue-splide/css/core";
-import VueSignaturePad from 'vue-signature-pad';
 
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
@@ -55,7 +54,6 @@ createInertiaApp({
         app.component('font-awesome-icon', FontAwesomeIcon);
         app.use(directive); // Register the custom directive here
         app.use(FloatingVue);
-        app.use(VueSignaturePad);
 
         return app.mount(el);
     },

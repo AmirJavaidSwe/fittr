@@ -91,7 +91,7 @@ const formatDate = computed(() => {
 
             <ButtonLink
                 :class="{ 'opacity-25': form.processing }"
-                :disabled="form.processing"
+                :disabled="form.processing || !form.name || !form.date_of_birth"
                 styling="secondary"
                 size="default"
                 type="submit"

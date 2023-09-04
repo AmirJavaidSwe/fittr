@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('waivers', function (Blueprint $table) {
+        Schema::create('user_waivers', function (Blueprint $table) {
             $table->id();
-            $table->string('title')->nullable();
-            $table->longText('description')->nullable();
-            $table->string('show_at')->nullable();
-            $table->boolean('is_signature_needed')->default(0);
-            $table->json('questions')->nullable();
+            $table->unsignedBigInteger('waiver_id')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->json('user_waiver_accepted_data')->nullable();
+            $table->text('signature')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('waivers');
+        Schema::dropIfExists('user_waivers');
     }
 };

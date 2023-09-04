@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Partner;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Models\Partner\Waiver;
 use Inertia\Inertia;
+use Illuminate\Http\Request;
+use App\Models\Partner\Waiver;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Partner\WaiverFromRequest;
+use App\Models\Partner\UserWaiver;
 
 class PartnerWaiverController extends Controller
 {
@@ -69,7 +71,7 @@ class PartnerWaiverController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(WaiverFromRequest $request)
     {
         Waiver::create($request->all());
 
@@ -112,7 +114,7 @@ class PartnerWaiverController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(WaiverFromRequest $request, $id)
     {
         $waiver = Waiver::findOrFail($id);
         $waiver->update($request->all());
@@ -126,6 +128,7 @@ class PartnerWaiverController extends Controller
     public function destroy(string $id)
     {
         $waiver = Waiver::findOrFail($id);
+        UserWaiver::where('waiver_id', $id)->delete();
         $waiver->delete();
 
         return $this->redirectBackSuccess(__('Waiver deleted successfully'), 'partner.waivers.index');

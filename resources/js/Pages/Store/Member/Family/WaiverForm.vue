@@ -1,14 +1,18 @@
 <script setup>
-import { computed, watch } from "vue";
-import "@vuepic/vue-datepicker/dist/main.css";
-import "@vueform/multiselect/themes/tailwind.css";
+import { ref, computed } from "vue";
 import FormSection from "@/Components/FormSection.vue";
 import InputLabel from "@/Components/InputLabel.vue";
-import TextInput from "@/Components/TextInput.vue";
 import Textarea from "@/Components/Textarea.vue";
 import Radio from "@/Components/Radio.vue";
 import Checkbox from "@/Components/Checkbox.vue";
 import SignaturePad from "@/Components/SignaturePad.vue";
+import ActionMessage from "@/Components/ActionMessage.vue";
+import ButtonLink from "@/Components/ButtonLink.vue";
+import { useForm, usePage } from "@inertiajs/vue3";
+import InputError from "@/Components/InputError.vue";
+
+
+const signaturePad = ref(null);
 
 const props = defineProps({
     form: {
@@ -19,8 +23,26 @@ const props = defineProps({
         type: Function,
         required: true,
     },
-    waiver: Object | null,
+    waiver: Object,
+    createForm: Object,
+    editForm: Object,
 });
+
+const onSignatureUpdate = ($event) => {
+    props.form.sign = $event;
+};
+
+const answerError = computed(() => {
+    return (props?.createForm?.errors?.answer_error || props?.editForm?.errors?.answer_error) ? true : false
+})
+
+const signatureError = computed(() => {
+    return {
+        error: (props?.createForm?.errors?.signature_error || props?.editForm?.errors?.signature_error) ? true : false,
+        msg: (props?.createForm?.errors?.signature_error || props?.editForm?.errors?.signature_error)
+    }
+})
+
 </script>
 
 <template>
@@ -34,73 +56,92 @@ const props = defineProps({
                 <InputLabel value="Description" />
                 <p>{{ waiver.description }}</p>
             </div>
-            <div class="w-full flex items-center">
-                <div class="w-full">
-                    <div class="bg-blue-100">
-                        <label for="question" class="block font-medium p-2 font-extrabold text-lg"
-                            >Questions</label
-                        >
-                    </div>
-                </div>
-                <div class="w-10"></div>
-            </div>
             <div
-                v-for="(question, index) in waiver.questions"
+                v-for="(obj, index) in form.waiverQandA"
                 class="items-center w-full"
                 :key="index"
             >
-                <InputLabel :value="question.question" />
-                <template v-if="question.selectedQuestionType === 'Yes/No'">
-                    <div class="flex items-center mb-2 mt-2">
-                        <Radio
-                            v-model="question.selectedAnswer"
-                            :value="'Yes'"
-                            class="mr-2"
-                            id="yes"
-                        />
-                        <InputLabel :value="'Yes'" for="yes" class="mr-6" />
-                        <Radio
-                            v-model="question.selectedAnswer"
-                            :value="'No'"
-                            class="mr-2"
-                            id="no"
-                        />
-                        <InputLabel :value="'No'" for="no" />
+                <template v-if="obj.type === 'Yes/No'">
+                    <div class="flex w-full justify-between mb-2 mt-10">
+                        <InputLabel :value="obj.question" />
+                        <div class="inline-flex mr-5">
+                            <Radio
+                                v-model="form.waiverQandA[index].answer"
+                                :value="'Yes'"
+                                class="mr-2"
+                                :id="'yes--' + index"
+                            />
+                            <InputLabel
+                                :value="'Yes'"
+                                :for="'yes--' + index"
+                                class="mr-6"
+                                :name="obj.question"
+                            />
+                            <Radio
+                                v-model="form.waiverQandA[index].answer"
+                                :value="'No'"
+                                class="mr-2"
+                                :id="'no--' + index"
+                                :name="obj.question"
+                            />
+                            <InputLabel :value="'No'" :for="'no--' + index" />
+                        </div>
                     </div>
+                    <InputError v-if="answerError && !form.waiverQandA[index].answer" :message="'Required'" class="" />
                 </template>
-                <template v-else-if="question.selectedQuestionType === 'Checkbox'">
-                    <Checkbox
-                        v-model="question.selectedAnswers"
-                        :options="question.options"
-                    />
+                <template v-else-if="obj.type === 'Checkbox'">
+                    <div class="flex justify-between items-center mb-2 mt-10">
+                        <InputLabel :value="obj.question" :for="obj.question" />
+                        <Checkbox
+                            :id="obj.question"
+                            class="mr-5"
+                            :checked="form.waiverQandA[index].answer === true"
+                            v-model="form.waiverQandA[index].answer"
+                        />
+                    </div>
+                    <InputError v-if="answerError && !form.waiverQandA[index].answer" :message="'Required'" class="" />
                 </template>
-                <template v-else-if="question.selectedQuestionType === 'Free Text'">
-                    <Textarea
-                        v-model="question.answerText"
-                        placeholder="Enter your answer here..."
-                        class="w-full"
-                    />
+                <template v-else-if="obj.type === 'Free Text'">
+                    <div class="mb-2 mt-10">
+                        <div class="block items-center mb-2 mt-2">
+                            <InputLabel :value="obj.question" />
+                        </div>
+                        <div class="block items-center mb-2 mt-2">
+                            <Textarea
+                                v-model="form.waiverQandA[index].answer"
+                                placeholder="Enter your answer here..."
+                                class="w-full"
+                                rows="5"
+                                cols="10"
+                            />
+                        </div>
+                        <InputError v-if="answerError && !form.waiverQandA[index].answer" :message="'Required'" class="" />
+                    </div>
                 </template>
             </div>
             <div class="w-full flex items-center">
-                <div class="w-full">
-                    <div class="bg-blue-100">
-                        <label for="question" class="block font-medium p-2 font-extrabold text-lg"
-                            >Signature</label
-                        >
-                    </div>
-                </div>
-                <div class="w-10"></div>
+                <InputLabel :value="'Signature'" />
             </div>
-            <div class="w-full flex items-center">
-                <div class="w-full">
-                    <SignaturePad
-                        v-model="waiver.signature"
-                        onEnd="waiver.saveSignature"
-                    />
-                </div>
-                <div class="w-10"></div>
+            <div class="w-full mt-12 mb-2">
+                <SignaturePad @on-signature-update="onSignatureUpdate" :sign="form.sign" />
+                <InputError v-if="signatureError.error" :message="signatureError.msg" class="mb-10" />
             </div>
+        </template>
+        <template #actions>
+            <ActionMessage :on="form.recentlySuccessful" class="mt-10 mr-3">
+                Saved.
+            </ActionMessage>
+
+            <ButtonLink
+                :class="{ 'opacity-25': form.processing } + 'mt-10'"
+                :disabled="form.processing"
+                styling="secondary"
+                size="default"
+                type="submit"
+            >
+                <span v-if="!editForm.id">Add Family Member</span>
+                <span v-else>Save Changes</span>
+            </ButtonLink>
         </template>
     </FormSection>
 </template>

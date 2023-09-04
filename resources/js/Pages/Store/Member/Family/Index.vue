@@ -1,9 +1,8 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref, computed } from "vue";
 import CardBasic from "@/Components/CardBasic.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
-import Search from "@/Components/DataTable/Search.vue";
-import { useForm } from "@inertiajs/vue3";
+import { useForm, usePage } from "@inertiajs/vue3";
 import CloseModal from "@/Components/CloseModal.vue";
 import SideModal from "@/Components/SideModal.vue";
 import Form from "./Form.vue";
@@ -19,8 +18,26 @@ const props = defineProps({
     business_settings: Object,
     page_title: String,
     family_members: Object,
-    waiver: Object | null,
+    waiver: Object,
+    user_waiver: Object|null
 });
+
+const waiverFormData = useForm({
+    waiverQandA: [],
+    sign: props.user_waiver ? props.user_waiver?.signature : null,
+});
+
+const waiverQandData = () => {
+    if (props.waiver) {
+        for (let i = 0; i < props.waiver.questions.length; i++) {
+            waiverFormData.waiverQandA.push({
+                question: props.waiver.questions[i].question,
+                type: props.waiver.questions[i].selectedQuestionType,
+                answer: props.user_waiver ? props.user_waiver?.user_waiver_accepted_data[i]?.answer : null,
+            });
+        }
+    }
+};
 
 
 const showCreateModal = ref(false);
@@ -38,7 +55,7 @@ const closeEditModal = () => {
 
 const closeWaiverModal = () => {
     showWaiverModal.value = false;
-    WaiverFormData.reset().clearErrors();
+    waiverFormData.reset().clearErrors();
 };
 const CreateForm = useForm({
     name: null,
@@ -54,42 +71,60 @@ const EditForm = useForm({
     profile_photo_url: null,
     has_image: false,
 });
-const WaiverFormData = useForm({
-    title: null,
-    description: null,
-    sign_needed: null,
-    questionType: null,
-});
+
+const questionsData = ref([
+    {
+        question: "",
+        selectedQuestionType: null,
+    },
+]);
 
 const storeFamilyMember = () => {
     // check if waiver is not null then show waiver modal
-    if (props.waiver !== null) {
-        showWaiverModal.value = true;
+    if (props.waiver !== null && (props.user_waiver === null || props.user_waiver.waiver_id != props.waiver.id || props.user_waiver.user_waiver_accepted_data.length != props.waiver.questions.length)) {
+        if(!showWaiverModal.value) {
+            showWaiverModal.value = true;
+            return;
+        }
     }
-    return;
-    CreateForm.post(
+    CreateForm.transform((data) => ({
+        ...data,
+        waiver_id: props.waiver !== null ? props.waiver.id : null,
+        waiver_data: props.waiver !== null  ? {
+            data: waiverFormData.waiverQandA,
+            signature: waiverFormData.sign,
+        } : {},
+    })).post(
         route("ss.member.family.store", {
             subdomain: props.business_settings.subdomain,
         }),
         {
             preserveScroll: true,
             onSuccess: () => {
-                CreateForm.reset().clearErrors();
                 showCreateModal.value = false;
+                showWaiverModal.value = false;
+                waiverFormData.reset().clearErrors();
+                CreateForm.reset().clearErrors();
             },
         }
-    );
-};
+        );
+    };
 
-const removeFile = (param) => {
-    if (param == "CreateForm") {
-        CreateForm.profile_photo = null;
-    } else if (param == "EditForm") {
-        EditForm.profile_photo_path = null;
-        EditForm.has_image = false;
-    }
-};
+    const removeFile = (param) => {
+        if (param == "CreateForm") {
+            CreateForm.profile_photo = null;
+        } else if (param == "EditForm") {
+            EditForm.profile_photo_path = null;
+            EditForm.has_image = false;
+        }
+    };
 
+    const showCreateFamily = () => {
+    showCreateModal.value = true;
+    waiverFormData.reset().clearErrors();
+    waiverQandData();
+
+}
 const editMember = (member) => {
     EditForm.reset().clearErrors();
     EditForm.id = member.id;
@@ -98,66 +133,98 @@ const editMember = (member) => {
     EditForm.profile_photo = member.profile_photo;
     EditForm.profile_photo_path = member.profile_photo_path;
     EditForm.profile_photo_url =
-        member.profile_photo_path !== null ? member.profile_photo_url : null;
+    member.profile_photo_path !== null ? member.profile_photo_url : null;
     // EditForm.has_image = member.profile_photo_path !== null ? true : false;
     EditForm.has_image = !!member.profile_photo_path;
     showEditModal.value = true;
+    waiverFormData.reset().clearErrors();
+    waiverQandData();
 };
 
 const updateMember = () => {
+    // check if waiver is not null then show waiver modal
+    if (props.waiver !== null && (props.user_waiver === null || props.user_waiver.waiver_id != props.waiver.id || props.user_waiver.user_waiver_accepted_data.length != props.waiver.questions.length)) {
+        if(!showWaiverModal.value) {
+            showWaiverModal.value = true;
+            return;
+        }
+    }
     EditForm.transform((data) => ({
         ...data,
         _method: "put",
+        waiver_id: props.waiver !== null ? props.waiver.id : null,
+        waiver_data: props.waiver !== null  ? {
+            data: waiverFormData.waiverQandA,
+            signature: waiverFormData.sign,
+        } : {},
     })).post(
-        route("ss.member.family.update", {family: EditForm.id, subdomain: props.business_settings.subdomain}),
+        route("ss.member.family.update", {
+            family: EditForm.id,
+            subdomain: props.business_settings.subdomain,
+        }),
         {
             preserveScroll: true,
             onSuccess: () => {
                 EditForm.reset().clearErrors();
-                showEditModal.value = false
+                showEditModal.value = false;
+                showWaiverModal.value = false;
+                waiverFormData.reset().clearErrors();
             },
         }
-    );
-};
+        );
+    };
 
-//delete confirmation modal:
-const itemDeleting = ref(false);
-const itemIdDeleting = ref(null);
-const confirmDeletion = (id) => {
-    itemIdDeleting.value = id;
-    itemDeleting.value = true;
-};
-
-const deleteItem = () => {
-    EditForm.delete(
-        route("ss.member.family.destroy", {family: itemIdDeleting.value, subdomain: props.business_settings.subdomain}),
-        {
-            preserveScroll: true,
-            preserveState: true,
-            onSuccess: () => {
-                itemDeleting.value = false;
-                itemIdDeleting.value = null;
-            },
+    const storeOrUpdateFamilyMember = () => {
+        if(EditForm.id && showEditModal.value == true) {
+            updateMember()
+        } else {
+            storeFamilyMember()
         }
-    );
-};
-</script>
+    }
+
+
+    //delete confirmation modal:
+    const itemDeleting = ref(false);
+    const itemIdDeleting = ref(null);
+    const confirmDeletion = (id) => {
+        itemIdDeleting.value = id;
+        itemDeleting.value = true;
+    };
+
+    const deleteItem = () => {
+        EditForm.delete(
+            route("ss.member.family.destroy", {
+                family: itemIdDeleting.value,
+                subdomain: props.business_settings.subdomain,
+            }),
+            {
+                preserveScroll: true,
+                preserveState: true,
+                onSuccess: () => {
+                    itemDeleting.value = false;
+                    itemIdDeleting.value = null;
+                    waiverFormData.reset().clearErrors();
+                    waiverQandData();
+                },
+            }
+            );
+        };
+    </script>
 
 <template>
-    <div
-        class="text-right"
-    >
-        <ButtonLink class="text-right"
+    <div class="text-right">
+        <ButtonLink
+            class="text-right"
             styling="secondary"
             size="default"
-            @click="showCreateModal = true"
+            @click="showCreateFamily"
         >
             Add New Member
             <font-awesome-icon class="ml-2" :icon="faPlus" />
         </ButtonLink>
     </div>
     <div class="mt-[75px]">
-        <template v-for="(familyMember, index) in family_members">
+        <template v-for="(familyMember, index) in family_members" :key="index">
             <CardBasic class="mb-4">
                 <template #default>
                     <div class="flex items-center justify-between">
@@ -174,12 +241,21 @@ const deleteItem = () => {
                                 <div class="block pl-4">
                                     <DateValue
                                         :show-calender-icon="false"
-                                        :date="DateTime.fromISO(familyMember.date_of_birth).toFormat(business_settings.date_format.format_js)"
+                                        :date="
+                                            DateTime.fromISO(
+                                                familyMember.date_of_birth
+                                            ).toFormat(
+                                                business_settings.date_format
+                                                    .format_js
+                                            )
+                                        "
                                     />
                                 </div>
                             </div>
                         </div>
-                        <div class="inline-flex items-center justify-start mr-20">
+                        <div
+                            class="inline-flex items-center justify-start mr-20"
+                        >
                             <EditIcon
                                 class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-5 cursor-pointer text-blue"
                                 v-tooltip="'Edit'"
@@ -188,7 +264,9 @@ const deleteItem = () => {
                             <DeleteIcon
                                 class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2 cursor-pointer text-red-900"
                                 v-tooltip="'Delete'"
-                                @click.prevent="confirmDeletion(familyMember.id)"
+                                @click.prevent="
+                                    confirmDeletion(familyMember.id)
+                                "
                             />
                         </div>
                     </div>
@@ -264,15 +342,24 @@ const deleteItem = () => {
 
     <!-- Waiver Modal -->
     <SideModal :show="showWaiverModal" @close="closeWaiverModal">
-        <template #title> Waiver Details </template>
+        <template #title>
+            <div class="w-full">
+                You need to sign "{{ props.waiver.title }}" once before adding
+                family members
+            </div>
+        </template>
         <template #close>
-            <CloseModal @click="closeWaiverModal" />
+            <div class="w-20 text-right">
+                <CloseModal @click="closeWaiverModal" />
+            </div>
         </template>
 
         <template #content>
             <WaiverForm
-                :form="WaiverFormData"
-                :submitted="storeFamilyMember"
+                :form="waiverFormData"
+                :create-form="CreateForm"
+                :edit-form="EditForm"
+                :submitted="storeOrUpdateFamilyMember"
                 :waiver="props.waiver"
                 modal
             />
