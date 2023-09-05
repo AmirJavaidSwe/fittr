@@ -1,5 +1,5 @@
 import './bootstrap';
-import "sweetalert2/dist/sweetalert2.css";
+// import "sweetalert2/dist/sweetalert2.css"; //<- seems to be injecting styles to the page, no need to bundle?
 import "floating-vue/dist/style.css";
 import '../css/app.css';
 
