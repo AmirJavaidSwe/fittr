@@ -4,8 +4,9 @@ namespace App\Models\Partner;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
 class PackPrice extends Model
@@ -45,6 +46,7 @@ class PackPrice extends Model
      */
     protected $appends = [
         'taxonomy_sessions',
+        'interval_adjective',
         'interval_human',
         'price_floor',
         'price_floor_formatted',
@@ -65,6 +67,11 @@ class PackPrice extends Model
         return $this->belongsToMany(Location::class);
     }
 
+    public function memberships(): HasMany
+    {
+        return $this->hasMany(Membership::class);
+    }
+
     // Accessors
     public function getTaxonomySessionsAttribute(): ?string
     {
@@ -80,6 +87,26 @@ class PackPrice extends Model
         $string = $this->interval_count == 1 ? __('per') : __('every');
         $string .= ($this->interval_count == 1 ? '' : ' '.$this->interval_count).' '. __(Str::plural($this->interval, $this->interval_count));
         return $string;
+    }
+
+    public function getIntervalAdjectiveAttribute(): ?string
+    {
+        if(empty($this->interval_count)){
+            return null;
+        }
+        if($this->interval_count != 1){
+            return $this->interval_human;
+        }
+        switch ($this->interval) {
+            case 'day':
+               return __('daily');
+            case 'week':
+               return __('weekly');
+            case 'month':
+               return __('monthly');
+            case 'year':
+               return __('annually');
+        }
     }
 
     public function getPriceFloorAttribute(): int

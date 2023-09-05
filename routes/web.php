@@ -190,6 +190,7 @@ Route::domain('app.'.$domain)->group(function () {
 
             Route::resource('packs', PartnerPackController::class);
             Route::post('/packs/{pack}/duplicate', [PartnerPackController::class, 'duplicate'])->name('packs.duplicate');
+            Route::post('/packs/{pack}/toggle', [PartnerPackController::class, 'toggle'])->name('packs.toggle');
             Route::post('/packs/{pack}/price', [PartnerPackController::class, 'storePrice'])->name('packs.price.store');
             Route::put('/packs/price/{price}', [PartnerPackController::class, 'updatePrice'])->name('packs.price.update');
 

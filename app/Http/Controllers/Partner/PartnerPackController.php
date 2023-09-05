@@ -49,26 +49,8 @@ class PartnerPackController extends Controller
      */
     public function index(Request $request)
     {
-        $this->search = $request->query('search', null);
-        $this->per_page = $request->query('per_page', 10);
-        $this->order_by = $request->query('order_by', 'type');
-        $this->order_dir = $request->query('order_dir', 'asc');
-
         return Inertia::render('Partner/Pack/Index', [
-            'packs' => Pack::orderBy($this->order_by, $this->order_dir)
-                ->when($this->search, function ($query) {
-                    $query->where(function($query) {
-                        $query->orWhere('id', intval($this->search))
-                              ->orWhere('title', 'LIKE', '%'.$this->search.'%');
-                    });
-                })
-                ->with(['pack_prices.locations'])
-                ->paginate($this->per_page)
-                ->withQueryString(),
-            'search' => $this->search,
-            'per_page' => intval($this->per_page),
-            'order_by' => $this->order_by,
-            'order_dir' => $this->order_dir,
+            'packs' =>  $this->pack_service->getGroupedPacks(),
             'page_title' => __('Settings - Packs'),
             'header' => array(
                 [
@@ -84,7 +66,6 @@ class PartnerPackController extends Controller
                     'link' => route('partner.packs.index'),
                 ],
             ),
-            'pack_types' => PackType::labels(),
             'price_types' => StripePriceType::labels(),
         ]);
     }
@@ -253,6 +234,15 @@ class PartnerPackController extends Controller
         $result = $this->stripe_product_service->createOrUpdatePackProduct($this->connected_account_id, $pack);
 
         return $result->error ? $this->redirectBackError($result->error_message) : $this->redirectBackSuccess(__('Pack updated successfully'));
+    }
+
+    public function toggle(Pack $pack)
+    {
+        $active = !$pack->is_active;
+        $msg = $active ?  __('Pack enabled.') :  __('Pack disabled.');
+        $pack->update(['is_active' => $active]);
+
+        return $this->redirectBackSuccess($msg);
     }
 
     /**
