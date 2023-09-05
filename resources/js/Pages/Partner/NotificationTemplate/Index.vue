@@ -9,8 +9,6 @@ import TableData from "@/Components/DataTable/TableData.vue";
 import DataTableLayout from "@/Components/DataTable/Layout.vue";
 import Form from "./Form.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
-import Dropdown from "@/Components/Dropdown.vue";
-import DropdownLink from "@/Components/DropdownLink.vue";
 import EditIcon from "@/Icons/Edit.vue";
 import ActionsIcon from "@/Icons/ActionsIcon.vue";
 import DateValue from "@/Components/DataTable/DateValue.vue";
@@ -18,6 +16,8 @@ import SideModal from "@/Components/SideModal.vue";
 import CloseModal from "@/Components/CloseModal.vue";
 import StatusLabel from "@/Components/StatusLabel.vue";
 import PreviewNotificationTemplate from "./PreviewNotificationTemplate.vue";
+
+import { hideAllPoppers } from 'floating-vue';
 
 const props = defineProps({
     disableSearch: {
@@ -106,6 +106,7 @@ const saveForm = () => {
 };
 
 const showEditModal = (data) => {
+    hideAllPoppers();
     editForm.reset().clearErrors();
 
     data = Object.assign({}, data);
@@ -149,67 +150,65 @@ const showPreview = async () => {
 </script>
 
 <template>
-    <data-table-layout :disable-button="true" :disable-search="disableSearch">
+    <DataTableLayout :disable-button="true" :disable-search="disableSearch">
         <template #search>
             <Search
                 v-model="form.search"
                 :disable-search="disableSearch"
                 @reset="form.search = null"
-                @pp_changed="setPerPage"
                 :noFilter="true"
             />
         </template>
 
         <template #tableHead>
-            <table-head
+            <TableHead
                 title="Title"
                 @click="setOrdering('title')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'title'"
             />
-            <table-head
+            <TableHead
                 title="Subject"
                 @click="setOrdering('subject')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'subject'"
             />
-            <table-head
+            <TableHead
                 title="Unsubscribe"
                 @click="setOrdering('unsubscribe')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'unsubscribe'"
             />
-            <table-head
+            <TableHead
                 title="Bypass"
                 @click="setOrdering('bypass')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'bypass'"
             />
-            <table-head
+            <TableHead
                 title="Status"
                 @click="setOrdering('status')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'status'"
             />
-            <table-head
+            <TableHead
                 title="Created At"
                 @click="setOrdering('created_at')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'created_at'"
             />
-            <table-head
+            <TableHead
                 title="Updated At"
                 @click="setOrdering('updated_at')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'updated_at'"
             />
-            <table-head title="Action" class="justify-end flex" />
+            <TableHead title="Action" class="justify-end flex" />
         </template>
 
         <template #tableData>
             <tr v-for="(notificationTemplate, index) in notificationTemplates.data">
-                <!-- <table-data :title="notificationTemplate.id"/> -->
-                <table-data>
+                <TableData>
                     <span
                         v-if="notificationTemplate.title?.length > 25"
                         v-tooltip="notificationTemplate.title"
@@ -219,8 +218,8 @@ const showPreview = async () => {
                     <span v-else>
                         {{ notificationTemplate.title }}
                     </span>
-                </table-data>
-                <table-data>
+                </TableData>
+                <TableData>
                     <span
                         v-if="notificationTemplate.subject?.length > 25"
                         v-tooltip="notificationTemplate.subject"
@@ -230,17 +229,17 @@ const showPreview = async () => {
                     <span v-else>
                         {{ notificationTemplate.subject }}
                     </span>
-                </table-data>
-                <table-data>
+                </TableData>
+                <TableData>
                     <StatusLabel :status="notificationTemplate.unsubscribe ? 'Yes' : 'No'" />
-                </table-data>
-                <table-data>
+                </TableData>
+                <TableData>
                     <StatusLabel :status="notificationTemplate.bypass ? 'Yes' : 'No'" />
-                </table-data>
-                <table-data>
+                </TableData>
+                <TableData>
                     <StatusLabel :status="notificationTemplate.status ? 'Enabled' : 'Disabled'" />
-                </table-data>
-                <table-data>
+                </TableData>
+                <TableData>
                     <DateValue
                         :date="
                             DateTime.fromISO(notificationTemplate.created_at)
@@ -250,51 +249,31 @@ const showPreview = async () => {
                                 )
                         "
                     />
-                </table-data>
-                <table-data>
+                </TableData>
+                <TableData>
                     <DateValue
                         :date="
                             DateTime.fromISO(notificationTemplate.updated_at).toRelative()
                         "
                     />
-                </table-data>
-                <table-data class="justify-end flex">
-                    <Dropdown
-                        align="right"
-                        width="48"
-                        :top="index > notificationTemplates.data.length - 3"
-                        :content-classes="['bg-white']"
-                    >
-                        <template #trigger>
-                            <button class="text-dark text-lg">
-                                <ActionsIcon />
-                            </button>
-                        </template>
-
-                        <template #content>
-                            <DropdownLink
-                                as="button"
-                                @click="showEditModal(notificationTemplate)"
-                            >
-                                <EditIcon
-                                    class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
-                                />
-                                <span> Edit </span>
-                            </DropdownLink>
-                            <!-- <DropdownLink
-                                as="button"
-                                @click="confirmDeletion(notificationTemplate.id)"
-                            >
-                                <span class="text-danger-500 flex items-center">
-                                    <DeleteIcon
-                                        class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
-                                    />
+                </TableData>
+                <TableData class="justify-end flex">
+                    <VDropdown placement="bottom-end">
+                        <button><ActionsIcon /></button>
+                        <template #popper>
+                            <div class="p-2 w-40 space-y-4">
+                                <ButtonLink styling="default" size="small" class="w-full " @click="showEditModal(notificationTemplate)">
+                                    <EditIcon class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2" />
+                                    <span> Edit </span>
+                                </ButtonLink>
+                                <!-- <ButtonLink styling="danger" size="small" class="w-full " @click="confirmDeletion(notificationTemplate)">
+                                    <DeleteIcon class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2" />
                                     <span> Delete </span>
-                                </span>
-                            </DropdownLink> -->
+                                </ButtonLink> -->
+                            </div>
                         </template>
-                    </Dropdown>
-                </table-data>
+                    </VDropdown>
+                </TableData>
             </tr>
         </template>
 
@@ -307,7 +286,7 @@ const showPreview = async () => {
                 @pp_changed="setPerPage"
             />
         </template>
-    </data-table-layout>
+    </DataTableLayout>
 
     <!-- Edit Notification Template Modal -->
     <SideModal :show="modal" @close="modal = false">
