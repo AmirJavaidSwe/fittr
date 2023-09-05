@@ -14,6 +14,16 @@ class LocationSeeder extends Seeder
      */
     public function run()
     {
-        Location::factory()->count(5)->create();
+        Location::factory()
+            ->count(5)
+            ->sequence(
+                ['title' => 'Wandsworth'],
+                ['title' => 'Borough'],
+                ['title' => 'Richmond'],
+                ['title' => 'Moorgate'],
+                ['title' => 'Bank'],
+                ['title' => 'Covent Garden'],
+            )
+            ->create();
     }
 }

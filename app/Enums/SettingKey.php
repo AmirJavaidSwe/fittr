@@ -331,6 +331,7 @@ enum SettingKey: string
         return match($this) {
             static::business_name,
             static::business_email,
+            static::business_phone,
             static::timezone,
             static::address_line1,
             static::address_line2,
@@ -362,7 +363,6 @@ enum SettingKey: string
 
             static::country_id,
             static::legal_country_id,
-            static::business_phone,
             static::date_format,
             static::time_format,
             static::days_max_booking,

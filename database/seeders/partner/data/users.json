@@ -9,30 +9,28 @@
         "role": "member",
         "name": "Phil Parker",
         "email": "phil@fittr.tech",
-        "password": "phil"
+        "password": "phil",
+        "stripe_id": "cus_OZTN5S2jp59jTC"
     },
     {
         "role": "member",
         "name": "Leo Studenikin",
         "email": "leo@fittr.tech",
-        "password": "leo"
+        "password": "leo",
+        "stripe_id": "cus_OTLJYXODKdXFld"
     },
     {
         "role": "member",
-        "name": "Mishuk Adhikari",
-        "email": "mishuk.ad.bd@gmail.com",
-        "password": "mishuksecret"
+        "name": "Obaid Farooq",
+        "email": "obaiidfarooq@hotmail.com",
+        "password": "obaid",
+        "stripe_id": "cus_OaC7c3H9065jui"
     },
     {
         "role": "member",
         "name": "Amir",
         "email": "softwareengr.1@gmail.com",
-        "password": "amir"
-    },
-    {
-        "role": "member",
-        "name": "Tung",
-        "email": "gslip228@gmail.com",
-        "password": "tung"
+        "password": "amir",
+        "stripe_id": "cus_OaC8yoypIDkpN8"
     }
 ]
