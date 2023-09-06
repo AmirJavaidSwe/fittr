@@ -24,7 +24,9 @@ const form = useForm({
     title: "",
     description: "",
     show_at: "",
-    is_signature_needed : false
+    is_signature_needed : false,
+    is_active : false,
+    sign_again : false,
 });
 
 const helpers = WaiverHelpers();
@@ -203,6 +205,24 @@ const moveUp = (index) => {
                 </label>
             </div>
 
+            <!-- Off-peak -->
+            <div>
+                <Switcher
+                    v-model="form.is_active"
+                    title="Active"
+                    description=""
+                    :show-labels="['No', 'Yes']"
+                />
+            </div>
+            <!-- Off-peak -->
+            <div>
+                <Switcher
+                    v-model="form.sign_again"
+                    title="Old users need to sign this?"
+                    description=""
+                    :show-labels="['No', 'Yes']"
+                />
+            </div>
             <!-- Off-peak -->
             <div>
                 <Switcher

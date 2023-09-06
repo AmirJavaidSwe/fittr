@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Partner\Waiver;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Partner\WaiverFromRequest;
+use App\Models\Partner\FamilyMemberWaiver;
 use App\Models\Partner\UserWaiver;
 
 class PartnerWaiverController extends Controller
@@ -118,6 +119,10 @@ class PartnerWaiverController extends Controller
     {
         $waiver = Waiver::findOrFail($id);
         $waiver->update($request->all());
+
+        if($request->sign_again) {
+            FamilyMemberWaiver::where('waiver_id', $id)->delete();
+        }
 
         return $this->redirectBackSuccess(__('Waiver updated successfully'), 'partner.waivers.index');
     }

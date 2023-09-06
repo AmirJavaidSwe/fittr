@@ -10,16 +10,18 @@ use App\Models\Partner\FamilyMember;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\Partner\FamilyMemberRequest;
 use App\Http\Requests\Partner\FamilyWaiverValidation;
-use App\Models\Partner\UserWaiver;
+use App\Models\Partner\FamilyMemberWaiver;
 
 class FamilyMemberController extends Controller
 {
 
     public function index(Request $request)
     {
-        $waiver = Waiver::where('show_at', 'family-add')->whereNull('deleted_at')->first();
+        $waiver = Waiver::where('show_at', 'family-add')->where('is_active', 1)->first();
         if($waiver) {
-            $user_waiver = UserWaiver::where('user_id', auth()->user()->id)->where('waiver_id', $waiver->id)->first();
+            $user_waiver = FamilyMemberWaiver::where('user_id', auth()->user()->id)
+            ->where('waiver_id', $waiver->id)
+            ->pluck('family_member_id')->toArray();
         }
         return Inertia::render('Store/Member/Family/Index', [
             'family_members' => FamilyMember::where('user_id', auth()->user()->id)->get(),
@@ -38,6 +40,8 @@ class FamilyMemberController extends Controller
         }
 
         $member = FamilyMember::create($request->all());
+
+        $this->saveWaiverAcceptanceData($member->id);
 
         if ($request->hasFile('profile_photo')) {
             $member->updateProfilePhoto($request->profile_photo);
@@ -58,6 +62,11 @@ class FamilyMemberController extends Controller
 
         $member = FamilyMember::findOrFail($id);
         $member->update($request->validated());
+
+        if(!(FamilyMemberWaiver::where('family_member_id', $member->id)->where('user_id', auth()->user()->id)->exists())) {
+            $this->saveWaiverAcceptanceData($member->id);
+        }
+
 
         if ($request->has_image == false) {
             $member->deleteProfilePhoto();
@@ -116,10 +125,7 @@ class FamilyMemberController extends Controller
 
                 return $this->formatErrorMessages($validator);
 
-            } else {
-                $this->saveWaiverAcceptanceData();
             }
-
         }
 
         return [];
@@ -154,12 +160,16 @@ class FamilyMemberController extends Controller
         return $errorMessages;
     }
 
-    public function saveWaiverAcceptanceData() {
+    public function saveWaiverAcceptanceData($family_member_id) {
 
-        UserWaiver::where('user_id', auth()->user()->id)->where('waiver_id', request()->waiver_id)->delete();
-        UserWaiver::create([
+        FamilyMemberWaiver::where('user_id', auth()->user()->id)
+        ->where('waiver_id', request()->waiver_id)
+        ->where('family_member_id', $family_member_id)
+        ->delete();
+        return FamilyMemberWaiver::create([
             'user_id' => auth()->user()->id,
             'waiver_id' => request()->waiver_id,
+            'family_member_id' => $family_member_id,
             'user_waiver_accepted_data' => request()->waiver_data['data'],
             'signature' => request()->waiver_data['signature'],
         ]);

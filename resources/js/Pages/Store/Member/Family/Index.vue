@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, watch, computed } from "vue";
 import CardBasic from "@/Components/CardBasic.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
 import { useForm, usePage } from "@inertiajs/vue3";
@@ -24,20 +24,24 @@ const props = defineProps({
 
 const waiverFormData = useForm({
     waiverQandA: [],
-    sign: props.user_waiver ? props.user_waiver?.signature : null,
+    sign: props?.user_waiver?.length ? props?.user_waiver?.signature : null,
 });
 
+watch(waiverFormData, (newVal, oldVal) => {
+    console.log(newVal)
+})
 const waiverQandData = () => {
     if (props.waiver) {
         for (let i = 0; i < props.waiver.questions.length; i++) {
             waiverFormData.waiverQandA.push({
                 question: props.waiver.questions[i].question,
                 type: props.waiver.questions[i].selectedQuestionType,
-                answer: props.user_waiver ? props.user_waiver?.user_waiver_accepted_data[i]?.answer : null,
+                answer: null,
             });
         }
     }
 };
+
 
 
 const showCreateModal = ref(false);
@@ -81,7 +85,8 @@ const questionsData = ref([
 
 const storeFamilyMember = () => {
     // check if waiver is not null then show waiver modal
-    if (props.waiver !== null && (props.user_waiver === null || props.user_waiver.waiver_id != props.waiver.id || props.user_waiver.user_waiver_accepted_data.length != props.waiver.questions.length)) {
+
+    if (props.waiver !== null) {
         if(!showWaiverModal.value) {
             showWaiverModal.value = true;
             return;
@@ -92,7 +97,7 @@ const storeFamilyMember = () => {
         waiver_id: props.waiver !== null ? props.waiver.id : null,
         waiver_data: props.waiver !== null  ? {
             data: waiverFormData.waiverQandA,
-            signature: waiverFormData.sign,
+            signature: waiverFormData.sign ?? null,
         } : {},
     })).post(
         route("ss.member.family.store", {
@@ -105,6 +110,7 @@ const storeFamilyMember = () => {
                 showWaiverModal.value = false;
                 waiverFormData.reset().clearErrors();
                 CreateForm.reset().clearErrors();
+                waiverQandData()
             },
         }
         );
@@ -126,6 +132,8 @@ const storeFamilyMember = () => {
 
 }
 const editMember = (member) => {
+    console.log(props.user_waiver)
+    console.log(member.id)
     EditForm.reset().clearErrors();
     EditForm.id = member.id;
     EditForm.name = member.name;
@@ -143,7 +151,8 @@ const editMember = (member) => {
 
 const updateMember = () => {
     // check if waiver is not null then show waiver modal
-    if (props.waiver !== null && (props.user_waiver === null || props.user_waiver.waiver_id != props.waiver.id || props.user_waiver.user_waiver_accepted_data.length != props.waiver.questions.length)) {
+
+    if ((props.waiver !== null && !props?.user_waiver?.length) || (props.waiver !== null || props?.user_waiver?.length) && (!props.user_waiver.includes(EditForm.id))) {
         if(!showWaiverModal.value) {
             showWaiverModal.value = true;
             return;
@@ -152,7 +161,7 @@ const updateMember = () => {
     EditForm.transform((data) => ({
         ...data,
         _method: "put",
-        waiver_id: props.waiver !== null ? props.waiver.id : null,
+        waiver_id: ((props.waiver !== null && !props?.user_waiver?.length) || (props.waiver !== null || props?.user_waiver?.length) && (!props.user_waiver.includes(EditForm.id))) ? props.waiver_id : null,
         waiver_data: props.waiver !== null  ? {
             data: waiverFormData.waiverQandA,
             signature: waiverFormData.sign,
@@ -169,6 +178,7 @@ const updateMember = () => {
                 showEditModal.value = false;
                 showWaiverModal.value = false;
                 waiverFormData.reset().clearErrors();
+                waiverQandData()
             },
         }
         );

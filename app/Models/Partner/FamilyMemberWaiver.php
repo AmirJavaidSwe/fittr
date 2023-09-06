@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class UserWaiver extends Model
+class FamilyMemberWaiver extends Model
 {
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = 'user_waivers';
+    protected $table = 'family_member_waivers';
     protected $connection = 'mysql_partner';
     protected $guarded = ['id'];
 
