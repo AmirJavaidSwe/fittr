@@ -42,6 +42,9 @@ const classes = computed(() => {
                 " bg-white rounded-md border border-grey hover:border-secondary-500 hover:bg-secondary-100 hover:text-secondary-500 focus:bg-secondary-100 focus:text-secondary-500 active:bg-white active:text-secondary-500 active:border-secondary-500";
             break;
 
+        case "transparent":
+            break;
+
         case "blank":
             common += " text-primary-500 hover:text-primary-900";
             break;

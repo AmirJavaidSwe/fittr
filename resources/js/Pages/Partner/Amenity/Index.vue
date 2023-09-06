@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch } from "vue";
-import { Link, useForm } from "@inertiajs/vue3";
+import { useForm } from "@inertiajs/vue3";
 import { DateTime } from "luxon";
 import Form from "./Form.vue";
 import SideModal from "@/Components/SideModal.vue";
@@ -11,8 +11,6 @@ import Search from "@/Components/DataTable/Search.vue";
 import Pagination from "@/Components/Pagination.vue";
 import ConfirmationModal from "@/Components/ConfirmationModal.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
-import Dropdown from "@/Components/Dropdown.vue";
-import DropdownLink from "@/Components/DropdownLink.vue";
 import EditIcon from "@/Icons/Edit.vue";
 import DeleteIcon from "@/Icons/Delete.vue";
 import { faCog, faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -20,6 +18,7 @@ import StatusLabel from "../../../Components/StatusLabel.vue";
 import DateValue from "../../../Components/DataTable/DateValue.vue";
 import ActionsIcon from '@/Icons/ActionsIcon.vue';
 import CloseModal from "@/Components/CloseModal.vue";
+import { hideAllPoppers } from 'floating-vue';
 
 const props = defineProps({
     disableSearch: {
@@ -91,6 +90,7 @@ const closeEditModal = () => {
 };
 
 const handleUpdateForm = (data) => {
+    hideAllPoppers();
     showEditModal.value = true;
     form_edit["id"] = data.id;
     form_edit["title"] = data.title;
@@ -108,6 +108,7 @@ const updateAmenities = () => {
 const itemDeleting = ref(false);
 const itemIdDeleting = ref(null);
 const confirmDeletion = (id) => {
+    hideAllPoppers();
     itemIdDeleting.value = id;
     itemDeleting.value = true;
 };
@@ -126,14 +127,14 @@ const deleteItem = () => {
 };
 </script>
 <template>
-    <data-table-layout :disableButton="true">
+    <DataTableLayout :disableButton="true">
         <template #button>
             <ButtonLink
                 styling="secondary"
                 size="default"
                 @click="showCreateModal = true"
             >
-                Create a new amenity
+                Create new
                 <font-awesome-icon class="ml-2" :icon="faPlus" />
             </ButtonLink>
         </template>
@@ -143,112 +144,87 @@ const deleteItem = () => {
                 v-model="form.search"
                 :disable-search="disableSearch"
                 @reset="form.search = null"
-                @pp_changed="setPerPage"
                 noFilter
             />
         </template>
 
         <template #tableHead>
-            <!-- <table-head
-                title="Id"
-                @click="setOrdering('id')"
-                :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'id'"
-            /> -->
-            <table-head
+            <TableHead
                 title="Title"
                 @click="setOrdering('title')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'title'"
             />
-            <table-head
+            <TableHead
                 title="Status"
                 @click="setOrdering('status')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'status'"
             />
-            <table-head
+            <TableHead
                 title="Created At"
                 @click="setOrdering('created_at')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'created_at'"
             />
-            <table-head
+            <TableHead
                 title="Updated At"
                 @click="setOrdering('updated_at')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'updated_at'"
             />
-            <table-head title="Action" class="flex justify-end" />
+            <TableHead title="Action" class="flex justify-end" />
         </template>
 
         <template #tableData>
             <tr v-for="(amenity, index) in amenities.data" :key="index">
-                <!-- <table-data :title="amenity.id" /> -->
-                <table-data>
-                    <Link
-                        class="font-medium text-indigo-600 hover:text-indigo-500"
-                        :href="route('partner.amenity.show', amenity)"
-                    >
+                <TableData>
+                    <ButtonLink :href="route('partner.amenity.show', amenity)">
                         {{ amenity.title }}
-                    </Link>
-                </table-data>
-                <table-data>
+                    </ButtonLink>
+                </TableData>
+                <TableData>
                     <StatusLabel
                         :status="amenity.status ? 'Active' : 'Inactive'"
                     />
-                </table-data>
-                <table-data>
+                </TableData>
+                <TableData>
                     <DateValue :date="DateTime.fromISO(amenity.created_at)
                                 .setZone(business_settings.timezone)
-                                .toFormat(
-                                    business_settings.date_format?.format_js
-                                )" />
-                </table-data>
-                <table-data>
+                                .toFormat(business_settings.date_format?.format_js)" />
+                </TableData>
+                <TableData>
                     <DateValue
-                        :date="
-                            DateTime.fromISO(amenity.updated_at).toRelative()
-                        "
+                        :date="DateTime.fromISO(amenity.updated_at).toRelative()"
                     />
-                </table-data>
-                <table-data class="text-right">
-                    <Dropdown
-                        align="right"
-                        width="48"
-                        :top="index > amenities.data.length - 3"
-                        :content-classes="['bg-white']"
-                    >
-                        <template #trigger>
-                            <button class="text-dark text-lg">
-                                <ActionsIcon />
-                            </button>
-                        </template>
-
-                        <template #content>
-                            <DropdownLink
-                                as="button"
-                                @click="handleUpdateForm(amenity)"
-                            >
-                                <EditIcon
-                                    class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
-                                />
-                                <span> Edit </span>
-                            </DropdownLink>
-                            <DropdownLink
-                                as="button"
-                                @click="confirmDeletion(amenity.id)"
-                            >
-                                <span class="text-danger-500 flex items-center">
-                                    <DeleteIcon
-                                        class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
-                                    />
+                </TableData>
+                <TableData class="text-right">
+                     <VDropdown placement="bottom-end">
+                        <button><ActionsIcon /></button>
+                        <template #popper>
+                            <div class="p-2 w-40 space-y-4">
+                                <ButtonLink
+                                    styling="blank"
+                                    size="small"
+                                    class="w-full flex justify-between hover:bg-gray-100"
+                                    @click="handleUpdateForm(amenity)"
+                                    >
+                                    <EditIcon class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2" />
+                                    <span> Edit </span>
+                                </ButtonLink>
+                                <ButtonLink
+                                    styling="transparent"
+                                    size="small"
+                                    class="w-full flex justify-between text-danger-500 hover:text-danger-700 hover:bg-gray-100"
+                                    @click="confirmDeletion(amenity.id)"
+                                    >
+                                    <DeleteIcon class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2" />
                                     <span> Delete </span>
-                                </span>
-                            </DropdownLink>
+                                </ButtonLink>
+                            </div>
                         </template>
-                    </Dropdown>
-                </table-data>
+                    </VDropdown>
+                </TableData>
             </tr>
         </template>
 
@@ -261,7 +237,7 @@ const deleteItem = () => {
                 @pp_changed="setPerPage"
             />
         </template>
-    </data-table-layout>
+    </DataTableLayout>
 
     <!-- Create new amenity Modal -->
     <SideModal :show="showCreateModal" @close="closeCreateModal">
@@ -276,9 +252,9 @@ const deleteItem = () => {
         </template>
     </SideModal>
 
-    <!-- Update studio Modal -->
+    <!-- Update amenity Modal -->
     <SideModal :show="showEditModal" @close="closeEditModal">
-        <template #title> Update studio </template>
+        <template #title> Update amenity </template>
 
         <template #close>
             <CloseModal @click="closeEditModal" />

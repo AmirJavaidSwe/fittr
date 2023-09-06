@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch } from "vue";
-import { Link, useForm, usePage } from "@inertiajs/vue3";
+import { useForm } from "@inertiajs/vue3";
 import { DateTime } from "luxon";
 import Search from "@/Components/DataTable/Search.vue";
 import Pagination from "@/Components/Pagination.vue";

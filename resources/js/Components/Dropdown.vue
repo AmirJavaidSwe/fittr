@@ -22,46 +22,7 @@ let open = ref(false);
 const emit = defineEmits(["toggled"]);
 watch(open, (new_val) => {
     emit("toggled", new_val);
-
-    setRowHeight(new_val);
 });
-
-const setRowHeight = (new_val) => {
-    setTimeout(() => {
-        // We can use the native DOM API and querySelectorAll.
-        const dataTableLayout = document.querySelectorAll(".data-table-layout");
-
-        // elementsWithClass is already a NodeList, so there is no need to check for .length.
-        if (dataTableLayout.length) {
-            // we can directly access the elements from the NodeList.
-            const dataTableLayoutTr = dataTableLayout[0].querySelectorAll("tr");
-
-            if (dataTableLayoutTr.length <= 3) {
-                let openedDropdownInnerLinks = null;
-                let currentTr = null
-                for (let i = 0; i < dataTableLayoutTr.length; i++) {
-                    currentTr = dataTableLayoutTr[i];
-                    openedDropdownInnerLinks = currentTr.querySelectorAll(
-                        ".main-dropdown-opened .dropdown-inner-link"
-                    );
-                    if(openedDropdownInnerLinks !== null && openedDropdownInnerLinks.length) break;
-                }
-
-                if(openedDropdownInnerLinks !== null && openedDropdownInnerLinks.length) {
-                    const height =
-                        parseInt(75) *
-                            parseInt(openedDropdownInnerLinks.length) +
-                        "px";
-                        currentTr.style.height = height;
-                } else {
-                    dataTableLayoutTr.forEach((element) => {
-                        element.removeAttribute("style");
-                    });
-                }
-            }
-        }
-    }, 100);
-};
 
 const closeOnEscape = (e) => {
     if (open.value && e.key === "Escape") {

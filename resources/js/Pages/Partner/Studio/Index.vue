@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch, computed } from "vue";
-import { Link, useForm } from "@inertiajs/vue3";
+import { useForm } from "@inertiajs/vue3";
 import { DateTime } from "luxon";
 import Form from "./Form.vue";
 import SideModal from "@/Components/SideModal.vue";
@@ -10,8 +10,6 @@ import TableHead from "@/Components/DataTable/TableHead.vue";
 import TableData from "@/Components/DataTable/TableData.vue";
 import DataTableLayout from "@/Components/DataTable/Layout.vue";
 import ConfirmationModal from "@/Components/ConfirmationModal.vue";
-import Dropdown from "@/Components/Dropdown.vue";
-import DropdownLink from "@/Components/DropdownLink.vue";
 import EditIcon from "@/Icons/Edit.vue";
 import DeleteIcon from "@/Icons/Delete.vue";
 import { faCog, faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -20,6 +18,7 @@ import DateValue from "@/Components/DataTable/DateValue.vue";
 import OnTheFlyResourceCreate from "@/Components/OnTheFlyResourceCreate.vue";
 import ActionsIcon from "@/Icons/ActionsIcon.vue";
 import uniqBy from "lodash/uniqBy";
+import { hideAllPoppers } from 'floating-vue';
 
 const props = defineProps({
     disableSearch: {
@@ -101,6 +100,7 @@ const closeEditModal = () => {
 };
 
 const handleUpdateForm = (studio) => {
+    hideAllPoppers();
     showEditModal.value = true;
     form_edit.id = studio.id;
     form_edit.title = studio.title;
@@ -119,6 +119,7 @@ const updateStudios = () => {
 const itemDeleting = ref(false);
 const itemIdDeleting = ref(null);
 const confirmDeletion = (id) => {
+    hideAllPoppers();
     itemIdDeleting.value = id;
     itemDeleting.value = true;
 };
@@ -153,14 +154,14 @@ const locationList = computed(() => {
 });
 </script>
 <template>
-    <data-table-layout :disable-search="disableSearch" :disableButton="true">
+    <DataTableLayout :disable-search="disableSearch" :disableButton="true">
         <template #button>
             <ButtonLink
                 styling="secondary"
                 size="default"
                 @click="showCreateModal = true"
             >
-                Create a new studio
+                Create new
                 <font-awesome-icon class="ml-2" :icon="faPlus" />
             </ButtonLink>
             <!-- <ButtonLink
@@ -183,106 +184,82 @@ const locationList = computed(() => {
         </template>
 
         <template #tableHead>
-            <!-- <table-head
-                title="Id"
-                @click="setOrdering('id')"
-                :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'id'"
-            /> -->
-            <table-head
+            <TableHead
                 title="Title"
                 @click="setOrdering('title')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'title'"
             />
-            <table-head title="Location" />
-            <table-head
+            <TableHead title="Location" />
+            <TableHead
                 title="Ordering"
                 @click="setOrdering('ordering')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'ordering'"
             />
-            <table-head
+            <TableHead
                 title="Created At"
                 @click="setOrdering('created_at')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'created_at'"
             />
-            <table-head
+            <TableHead
                 title="Updated At"
                 @click="setOrdering('updated_at')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'updated_at'"
             />
-            <table-head title="Action" :justifyContent="'justify-end'" />
+            <TableHead title="Action" :justifyContent="'justify-end'" />
         </template>
 
         <template #tableData>
             <tr v-for="(studio, index) in studios.data" :key="index">
-                <!-- <table-data :title="studio.id" /> -->
-                <table-data>
-                    <Link
-                        class="font-medium text-indigo-600 hover:text-indigo-500"
-                        :href="route('partner.studios.show', studio)"
-                    >
+                <TableData>
+                    <ButtonLink :href="route('partner.studios.show', studio)">
                         {{ studio.title }}
-                    </Link>
-                </table-data>
-                <table-data :title="studio.location?.title" />
-                <table-data :title="studio.ordering" />
-                <table-data>
+                    </ButtonLink>
+                </TableData>
+                <TableData :title="studio.location?.title" />
+                <TableData :title="studio.ordering" />
+                <TableData>
                     <DateValue
-                        :date="
-                            DateTime.fromISO(studio.created_at)
+                        :date="DateTime.fromISO(studio.created_at)
                                 .setZone(business_settings.timezone)
-                                .toFormat(
-                                    business_settings.date_format.format_js
-                                )
-                        "
+                                .toFormat(business_settings.date_format.format_js)"
                     />
-                </table-data>
-                <table-data>
+                </TableData>
+                <TableData>
                     <DateValue
                         :date="DateTime.fromISO(studio.updated_at).toRelative()"
                     />
-                </table-data>
-                <table-data class="justify-end flex">
-                    <Dropdown
-                        align="right"
-                        width="48"
-                        :top="index > studios.data.length - 3"
-                        :content-classes="['bg-white']"
-                    >
-                        <template #trigger>
-                            <button class="text-dark text-lg">
-                                <ActionsIcon />
-                            </button>
-                        </template>
-
-                        <template #content>
-                            <DropdownLink
-                                as="button"
-                                @click="handleUpdateForm(studio)"
-                            >
-                                <EditIcon
-                                    class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
-                                />
-                                <span> Edit </span>
-                            </DropdownLink>
-                            <DropdownLink
-                                as="button"
-                                @click="confirmDeletion(studio.id)"
-                            >
-                                <span class="text-danger-500 flex items-center">
-                                    <DeleteIcon
-                                        class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
-                                    />
+                </TableData>
+                <TableData class="justify-end flex">
+                    <VDropdown placement="bottom-end">
+                        <button><ActionsIcon /></button>
+                        <template #popper>
+                            <div class="p-2 w-40 space-y-4">
+                                <ButtonLink
+                                    styling="blank"
+                                    size="small"
+                                    class="w-full flex justify-between hover:bg-gray-100"
+                                    @click="handleUpdateForm(studio)"
+                                    >
+                                    <EditIcon class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2" />
+                                    <span> Edit </span>
+                                </ButtonLink>
+                                <ButtonLink
+                                    styling="transparent"
+                                    size="small"
+                                    class="w-full flex justify-between text-danger-500 hover:text-danger-700 hover:bg-gray-100"
+                                    @click="confirmDeletion(studio.id)"
+                                    >
+                                    <DeleteIcon class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2" />
                                     <span> Delete </span>
-                                </span>
-                            </DropdownLink>
+                                </ButtonLink>
+                            </div>
                         </template>
-                    </Dropdown>
-                </table-data>
+                    </VDropdown>
+                </TableData>
             </tr>
         </template>
 
@@ -295,7 +272,7 @@ const locationList = computed(() => {
                 @pp_changed="setPerPage"
             />
         </template>
-    </data-table-layout>
+    </DataTableLayout>
 
     <!-- Create new studio Modal -->
     <SideModal :show="showCreateModal" @close="closeCreateModal">

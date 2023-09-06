@@ -11,9 +11,7 @@ import ConfirmationModal from "@/Components/ConfirmationModal.vue";
 import DialogModal from "@/Components/DialogModal.vue";
 import Form from "./Form.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
-import Dropdown from "@/Components/Dropdown.vue";
 import { faCog, faPlus } from "@fortawesome/free-solid-svg-icons";
-import DropdownLink from "@/Components/DropdownLink.vue";
 import EditIcon from "@/Icons/Edit.vue";
 import DeleteIcon from "@/Icons/Delete.vue";
 import ActionsIcon from "@/Icons/ActionsIcon.vue";
@@ -23,6 +21,7 @@ import CloseModal from "@/Components/CloseModal.vue";
 import cloneDeep from "lodash/cloneDeep";
 import uniqBy from "lodash/uniqBy";
 import OnTheFlyResourceCreate from "@/Components/OnTheFlyResourceCreate.vue";
+import { hideAllPoppers } from 'floating-vue';
 
 const props = defineProps({
     disableSearch: {
@@ -100,6 +99,7 @@ watch(() => form.search, runSearch);
 const itemDeleting = ref(false);
 const itemIdDeleting = ref(null);
 const confirmDeletion = (id) => {
+    hideAllPoppers();
     itemIdDeleting.value = id;
     itemDeleting.value = true;
 };
@@ -154,6 +154,7 @@ const saveForm = () => {
 };
 
 const showCreateModal = () => {
+    hideAllPoppers();
     createForm.reset().clearErrors();
     editMode.value = false;
     modal.value = true;
@@ -161,6 +162,7 @@ const showCreateModal = () => {
 };
 
 const showEditModal = (data) => {
+    hideAllPoppers();
     createForm.reset().clearErrors();
 
     data = Object.assign({}, data);
@@ -234,7 +236,7 @@ const closeAmenityCreateForm = () => {
 </script>
 
 <template>
-    <data-table-layout :disable-button="true" :disable-search="disableSearch">
+    <DataTableLayout :disable-button="true" :disable-search="disableSearch">
         <template #button>
             <ButtonLink
                 styling="secondary"
@@ -260,7 +262,6 @@ const closeAmenityCreateForm = () => {
                 v-model="form.search"
                 :disable-search="disableSearch"
                 @reset="form.search = null"
-                @pp_changed="setPerPage"
                 :noFilter="true"
             />
         </template>
@@ -272,100 +273,80 @@ const closeAmenityCreateForm = () => {
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'id'"
             /> -->
-            <table-head
+            <TableHead
                 title="Title"
                 @click="setOrdering('title')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'title'"
             />
-            <table-head
+            <TableHead
                 title="General Manager"
                 @click="setOrdering('manager_id')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'manager_id'"
             />
-            <table-head
+            <TableHead
                 title="Created At"
                 @click="setOrdering('created_at')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'created_at'"
             />
-            <table-head
+            <TableHead
                 title="Updated At"
                 @click="setOrdering('updated_at')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'updated_at'"
             />
-            <table-head title="Action" class="justify-end flex" />
+            <TableHead title="Action" class="justify-end flex" />
         </template>
 
         <template #tableData>
             <tr v-for="(location, index) in locations.data">
-                <!-- <table-data :title="location.id"/> -->
-                <table-data>
-                    <Link
-                        class="font-semibold text-primary-500 hover:text-primary-900"
-                        :href="route('partner.locations.show', location)"
-                    >
+                <TableData>
+                    <ButtonLink :href="route('partner.locations.show', location)">
                         {{ location.title }}
-                    </Link>
-                </table-data>
-                <table-data :title="location.manager?.name" />
-                <table-data>
+                    </ButtonLink>
+                </TableData>
+                <TableData :title="location.manager?.name" />
+                <TableData>
                     <DateValue
                         :date="
                             DateTime.fromISO(location.created_at)
                                 .setZone(business_settings.timezone)
-                                .toFormat(
-                                    business_settings.date_format.format_js
-                                )
+                                .toFormat(business_settings.date_format.format_js)
                         "
                     />
-                </table-data>
-                <table-data>
-                    <DateValue
-                        :date="
-                            DateTime.fromISO(location.updated_at).toRelative()
-                        "
-                    />
-                </table-data>
-                <table-data class="justify-end flex">
-                    <Dropdown
-                        align="right"
-                        width="48"
-                        :top="index > locations.data.length - 3"
-                        :content-classes="['bg-white']"
-                    >
-                        <template #trigger>
-                            <button class="text-dark text-lg">
-                                <ActionsIcon />
-                            </button>
-                        </template>
-
-                        <template #content>
-                            <DropdownLink
-                                as="button"
-                                @click="showEditModal(location)"
-                            >
-                                <EditIcon
-                                    class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
-                                />
-                                <span> Edit </span>
-                            </DropdownLink>
-                            <DropdownLink
-                                as="button"
-                                @click="confirmDeletion(location.id)"
-                            >
-                                <span class="text-danger-500 flex items-center">
-                                    <DeleteIcon
-                                        class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
-                                    />
+                </TableData>
+                <TableData>
+                    <DateValue :date="DateTime.fromISO(location.updated_at).toRelative()" />
+                </TableData>
+                <TableData class="justify-end flex">
+                    <VDropdown placement="bottom-end">
+                        <button><ActionsIcon /></button>
+                        <template #popper>
+                            <div class="p-2 w-40 space-y-4">
+                                <ButtonLink
+                                    styling="blank"
+                                    size="small"
+                                    class="w-full flex justify-between hover:bg-gray-100"
+                                    @click="showEditModal(location)"
+                                    >
+                                    <EditIcon class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2" />
+                                    <span> Edit </span>
+                                </ButtonLink>
+                                <ButtonLink
+                                    styling="transparent"
+                                    size="small"
+                                    class="w-full flex justify-between text-danger-500 hover:text-danger-700 hover:bg-gray-100"
+                                    @click="confirmDeletion(location.id)"
+                                    >
+                                    <DeleteIcon class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2" />
                                     <span> Delete </span>
-                                </span>
-                            </DropdownLink>
+                                </ButtonLink>
+                            </div>
                         </template>
-                    </Dropdown>
-                </table-data>
+                    </VDropdown>
+                </TableData>
             </tr>
         </template>
 
@@ -378,7 +359,7 @@ const closeAmenityCreateForm = () => {
                 @pp_changed="setPerPage"
             />
         </template>
-    </data-table-layout>
+    </DataTableLayout>
 
     <!-- Delete Confirmation Modal -->
     <ConfirmationModal :show="itemDeleting" @close="itemDeleting = false">
