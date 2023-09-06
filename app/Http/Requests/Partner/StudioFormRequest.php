@@ -3,6 +3,8 @@
 namespace App\Http\Requests\Partner;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use Illuminate\Database\Query\Builder;
 
 class StudioFormRequest extends FormRequest
 {
@@ -24,9 +26,13 @@ class StudioFormRequest extends FormRequest
     public function rules()
     {
         $rules =  [
-            'title' => 'required|string|max:250',
+            'title' => [
+                'required',
+                'string',
+                'max:250',
+                Rule::unique('App\Models\Partner\Studio')->where(fn (Builder $query) => $query->where('location_id', $this->location_id))->ignore($this->studio?->id),
+            ],
             'location_id' => 'required|numeric',
-            // 'ordering' => 'required|integer',
         ];
 
         if($this->class_type_studios) {
@@ -45,6 +51,18 @@ class StudioFormRequest extends FormRequest
             'location_id' => 'location',
             'class_type_studios.*.class_type_id' => 'class type',
             'class_type_studios.*.spaces' => 'number of places',
+        ];
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'title.unique' => __('The :attribute has already been taken for selected location.'),
         ];
     }
 }

@@ -12,11 +12,12 @@ import DataTableLayout from "@/Components/DataTable/Layout.vue";
 import ConfirmationModal from "@/Components/ConfirmationModal.vue";
 import EditIcon from "@/Icons/Edit.vue";
 import DeleteIcon from "@/Icons/Delete.vue";
+import ActionsIcon from "@/Icons/ActionsIcon.vue";
+import DuplicateIcon from "@/Icons/Duplicate.vue";
 import { faCog, faPlus } from "@fortawesome/free-solid-svg-icons";
 import ButtonLink from "@/Components/ButtonLink.vue";
 import DateValue from "@/Components/DataTable/DateValue.vue";
 import OnTheFlyResourceCreate from "@/Components/OnTheFlyResourceCreate.vue";
-import ActionsIcon from "@/Icons/ActionsIcon.vue";
 import uniqBy from "lodash/uniqBy";
 import { hideAllPoppers } from 'floating-vue';
 
@@ -73,6 +74,7 @@ let form_class = useForm({
     location_id: null,
 });
 
+// new studio modal
 const showCreateModal = ref(false);
 const closeCreateModal = () => {
     showCreateModal.value = false;
@@ -86,6 +88,7 @@ const storeStudio = () => {
     });
 };
 
+// edit existing studio modal
 let form_edit = useForm({
     id: "",
     title: null,
@@ -107,7 +110,6 @@ const handleUpdateForm = (studio) => {
     form_edit.location_id = studio.location_id;
     form_edit.class_type_studios = [...studio.class_type_studios];
 };
-
 const updateStudios = () => {
     form_edit.put(route("partner.studios.update", form_edit), {
         preserveScroll: true,
@@ -115,7 +117,33 @@ const updateStudios = () => {
     });
 };
 
-//delete confiramtion modal:
+//duplication modal:
+const form_duplicate = useForm({
+    title: null,
+    location_id: null,
+    class_type_studios: [],
+});
+const showDuplicateModal = ref(false);
+const handleDuplicateForm = (data) => {
+    hideAllPoppers();
+    showDuplicateModal.value = true;
+    form_duplicate.title = data.title;
+};
+const closeDuplicateModal = () => {
+    showDuplicateModal.value = false;
+    form_duplicate.reset().clearErrors();
+};
+const storeDuplicate = () => {
+    form_duplicate.post(route("partner.studios.store"), {
+        preserveScroll: true,
+        onSuccess: () => {
+            showDuplicateModal.value = false;
+            form_duplicate.reset().clearErrors();
+        },
+    });
+};
+
+//delete confirmation modal:
 const itemDeleting = ref(false);
 const itemIdDeleting = ref(null);
 const confirmDeletion = (id) => {
@@ -248,6 +276,15 @@ const locationList = computed(() => {
                                     <span> Edit </span>
                                 </ButtonLink>
                                 <ButtonLink
+                                    styling="blank"
+                                    size="small"
+                                    class="w-full flex justify-between hover:bg-gray-100"
+                                    @click="handleDuplicateForm(studio)"
+                                    >
+                                    <DuplicateIcon class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2" />
+                                    <span> Duplicate </span>
+                                </ButtonLink>
+                                <ButtonLink
                                     styling="transparent"
                                     size="small"
                                     class="w-full flex justify-between text-danger-500 hover:text-danger-700 hover:bg-gray-100"
@@ -301,6 +338,20 @@ const locationList = computed(() => {
                 :class_types="class_types"
                 @create-new-location="showLocationCreateForm = true"
                 modal
+            />
+        </template>
+    </SideModal>
+
+    <!-- Duplicate studio Modal -->
+    <SideModal :show="showDuplicateModal" @close="closeDuplicateModal">
+        <template #title> Duplicate studio </template>
+
+        <template #content>
+            <Form
+                :form="form_duplicate"
+                :submitted="storeDuplicate"
+                :locations="locations"
+                :class_types="class_types"
             />
         </template>
     </SideModal>
