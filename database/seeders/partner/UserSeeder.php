@@ -26,6 +26,7 @@ class UserSeeder extends Seeder
         foreach ($users as $user) {
             DB::table('users')->insert([
                 'role' => $user->role,
+                'stripe_id' => $user->stripe_id ?? null,
                 'name' => $user->name,
                 'email' => $user->email,
                 'password' => Hash::make($user->password),

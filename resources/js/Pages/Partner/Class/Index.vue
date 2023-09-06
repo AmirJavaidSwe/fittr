@@ -16,16 +16,17 @@ import TableData from "@/Components/DataTable/TableData.vue";
 import DataTableLayout from "@/Components/DataTable/Layout.vue";
 import SideModal from "@/Components/SideModal.vue";
 import ConfirmationModal from "@/Components/ConfirmationModal.vue";
+import ButtonLink from "@/Components/ButtonLink.vue";
+import CloseModal from "@/Components/CloseModal.vue";
+import PreviewModal from "./PreviewModal.vue";
+import { useSwal } from "@/Composables/swal";
 import ImportIcon from "@/Icons/Import.vue";
 import ExportIcon from "@/Icons/Export.vue";
 import EditIcon from "@/Icons/Edit.vue";
 import DuplicateIcon from "@/Icons/Duplicate.vue";
 import DeleteIcon from "@/Icons/Delete.vue";
-import Dropdown from "@/Components/Dropdown.vue";
-import DropdownLink from "@/Components/DropdownLink.vue";
-import ButtonLink from "@/Components/ButtonLink.vue";
-import CloseModal from "@/Components/CloseModal.vue";
-import { faEnvelope, faEnvelopesBulk, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope, faEnvelopesBulk, faPlus, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { faCopy } from "@fortawesome/free-regular-svg-icons";
 import StatusLabel from "@/Components/StatusLabel.vue";
 import ColoredValue from "@/Components/DataTable/ColoredValue.vue";
 import AvatarValue from "@/Components/DataTable/AvatarValue.vue";
@@ -35,12 +36,8 @@ import Checkbox from "@/Components/Checkbox.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import InputError from "@/Components/InputError.vue";
 import TextInput from "@/Components/TextInput.vue";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import OnTheFlyResourceCreate from "@/Components/OnTheFlyResourceCreate.vue";
-import PreviewModal from "./PreviewModal.vue";
-import { useSwal } from "@/Composables/swal";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faCopy } from "@fortawesome/free-regular-svg-icons";
+import { hideAllPoppers } from 'floating-vue';
 import EmailClass from "./EmailClass.vue";
 
 const props = defineProps({
@@ -139,6 +136,7 @@ watch(() => form.isDirty, runSearch);
 const itemDeleting = ref(false);
 const itemIdDeleting = ref(null);
 const confirmDeletion = (id) => {
+    hideAllPoppers();
     itemIdDeleting.value = id;
     itemDeleting.value = true;
 };
@@ -229,7 +227,7 @@ let formEdit = useForm({
     default_spaces: null,
 });
 const handleUpdateForm = (data) => {
-
+    hideAllPoppers();
     showEditModal.value = true;
     formEdit.id = data.id;
     formEdit.title = data.title;
@@ -245,6 +243,7 @@ const handleUpdateForm = (data) => {
     formEdit.default_spaces = data.default_spaces;
 };
 const handleDuplicateForm = (data) => {
+    hideAllPoppers();
     showDuplicateClassModal.value = true;
     duplicateClassForm.title = data.title;
     duplicateClassForm.status = "inactive";
@@ -562,7 +561,7 @@ const emailClass = (classLesson) => {
     >
         <template #button>
             <ButtonLink :href="route('partner.classes.bulk-copy')" styling="default" size="default">
-                <FontAwesomeIcon class="w-4 h-4 2xl:w-6 2xl:h-6 mr-0 md:mr-2" :icon="faCopy" />
+                <font-awesome-icon class="w-4 h-4 2xl:w-6 2xl:h-6 mr-0 md:mr-2" :icon="faCopy" />
                 <span class="hidden md:block">Bulk Copy</span>
             </ButtonLink>
             <ButtonLink styling="default" size="default" @click="null">
@@ -799,62 +798,40 @@ const emailClass = (classLesson) => {
 
                 <!-- Actions -->
                 <TableData class="text-right">
-                    <Dropdown
-                        align="right"
-                        width="48"
-                        :top="index > classes.data.length - 3"
-                        :content-classes="['bg-white']"
-                    >
-                        <template #trigger>
-                            <button class="text-dark text-lg">
-                                <ActionsIcon />
-                            </button>
-                        </template>
-
-                        <template #content>
-                            <DropdownLink
-                                as="button"
-                                @click="handleUpdateForm(class_lesson)"
-                            >
-                                <EditIcon
-                                    class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
-                                />
-                                Edit
-                            </DropdownLink>
-                            <DropdownLink
-                                as="button"
-                                @click="handleDuplicateForm(class_lesson)"
-                            >
-                                <DuplicateIcon
-                                    class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
-                                />
-                                Duplicate
-                            </DropdownLink>
-                            <DropdownLink
-                                as="button"
-                                @click="emailClass(class_lesson)"
-                            >
-                                <span class="flex items-center">
-                                    <FontAwesomeIcon
-                                        class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
-                                        :icon="faEnvelopesBulk"
-                                    />
-                                    <span> Email Class </span>
-                                </span>
-                            </DropdownLink>
-                            <DropdownLink
-                                as="button"
-                                @click="confirmDeletion(class_lesson.id)"
-                            >
-                                <span class="text-danger-500 flex items-center">
-                                    <DeleteIcon
-                                        class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
-                                    />
+                    <VDropdown placement="bottom-end">
+                        <button><ActionsIcon /></button>
+                        <template #popper>
+                            <div class="p-2 w-40 space-y-4">
+                                <ButtonLink
+                                    styling="blank"
+                                    size="small"
+                                    class="w-full flex justify-between hover:bg-gray-100"
+                                    @click="handleUpdateForm(class_lesson)"
+                                    >
+                                    <EditIcon class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2" />
+                                    <span> Edit </span>
+                                </ButtonLink>
+                                <ButtonLink
+                                    styling="blank"
+                                    size="small"
+                                    class="w-full flex justify-between hover:bg-gray-100"
+                                    @click="handleDuplicateForm(class_lesson)"
+                                    >
+                                    <DuplicateIcon class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2" />
+                                    <span> Duplicate </span>
+                                </ButtonLink>
+                                <ButtonLink
+                                    styling="transparent"
+                                    size="small"
+                                    class="w-full flex justify-between text-danger-500 hover:text-danger-700 hover:bg-gray-100"
+                                    @click="confirmDeletion(class_lesson.id)"
+                                    >
+                                    <DeleteIcon class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2" />
                                     <span> Delete </span>
-                                </span>
-                            </DropdownLink>
+                                </ButtonLink>
+                            </div>
                         </template>
-                    </Dropdown>
+                    </VDropdown>
                 </TableData>
             </tr>
         </template>

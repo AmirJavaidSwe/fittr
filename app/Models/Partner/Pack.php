@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Pack extends Model
 {
@@ -38,7 +39,9 @@ class Pack extends Model
      * @var array
      */
     protected $appends = [
- 
+        'not_yet_active',
+        'became_inactive',
+        'will_become_inactive',
     ];
 
     // Relationships
@@ -47,7 +50,26 @@ class Pack extends Model
         return $this->morphMany(PackPrice::class, 'priceable');
     }
 
+    public function memberships(): HasMany
+    {
+        return $this->hasMany(Membership::class);
+    }
+
     // Accessors
+    public function getNotYetActiveAttribute(): ?bool
+    {
+        return !empty($this->active_from) && $this->active_from->isFuture() ? true : null;
+    }
+
+    public function getBecameInactiveAttribute(): ?bool
+    {
+        return !empty($this->active_to) && $this->active_to->isPast() ? true : null;
+    }
+
+    public function getWillBecomeInactiveAttribute(): ?bool
+    {
+        return !empty($this->active_to) && $this->active_to->isFuture() ? true : null;
+    }
 
     // Local scopes
     public function scopeActive(Builder $query): void
@@ -67,5 +89,10 @@ class Pack extends Model
     public function scopePrivate(Builder $query): void
     {
         $query->where('is_private', true)->whereNotNull('private_url');
+    }
+
+    public function scopePublic(Builder $query): void
+    {
+        $query->where('is_private', false);
     }
 }

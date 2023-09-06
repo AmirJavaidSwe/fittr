@@ -163,6 +163,114 @@ class PartnerDatabaseSeeder extends Seeder
                         'val' => 'demo',
                     ]
                 );
+                //date_format
+                $business->settings()->updateOrCreate(
+                    ['key' => SettingKey::date_format->name],
+                    [
+                        'group_name' => SettingGroup::general_formats->name,
+                        'cast_to' => CastType::integer->name,
+                        'val' => 6,
+                    ]
+                );
+                //time_format
+                $business->settings()->updateOrCreate(
+                    ['key' => SettingKey::time_format->name],
+                    [
+                        'group_name' => SettingGroup::general_formats->name,
+                        'cast_to' => CastType::integer->name,
+                        'val' => 8,
+                    ]
+                );
+                //business_name
+                $business->settings()->updateOrCreate(
+                    ['key' => SettingKey::business_name->name],
+                    [
+                        'group_name' => SettingGroup::general_details->name,
+                        'cast_to' => CastType::string->name,
+                        'val' => 'ACME Corp',
+                    ]
+                );
+                //business_email
+                $business->settings()->updateOrCreate(
+                    ['key' => SettingKey::business_email->name],
+                    [
+                        'group_name' => SettingGroup::general_details->name,
+                        'cast_to' => CastType::string->name,
+                        'val' => 'support@fittr.tech',
+                    ]
+                );
+                //country_id
+                $business->settings()->updateOrCreate(
+                    ['key' => SettingKey::country_id->name],
+                    [
+                        'group_name' => SettingGroup::general_details->name,
+                        'cast_to' => CastType::integer->name,
+                        'val' => 231,
+                    ]
+                );
+                //business_phone
+                $business->settings()->updateOrCreate(
+                    ['key' => SettingKey::business_phone->name],
+                    [
+                        'group_name' => SettingGroup::general_details->name,
+                        'cast_to' => CastType::string->name,
+                        'val' => 441112223333,
+                    ]
+                );
+                //timezone
+                $business->settings()->updateOrCreate(
+                    ['key' => SettingKey::timezone->name],
+                    [
+                        'group_name' => SettingGroup::general_details->name,
+                        'cast_to' => CastType::string->name,
+                        'val' => 'Europe/London',
+                    ]
+                );
+                //fap_status
+                $business->settings()->updateOrCreate(
+                    ['key' => SettingKey::fap_status->name],
+                    [
+                        'group_name' => SettingGroup::fap->name,
+                        'cast_to' => CastType::boolean->name,
+                        'val' => 1,
+                    ]
+                );
+                //days_max_booking
+                $business->settings()->updateOrCreate(
+                    ['key' => SettingKey::days_max_booking->name],
+                    [
+                        'group_name' => SettingGroup::bookings->name,
+                        'cast_to' => CastType::integer->name,
+                        'val' => 7,
+                    ]
+                );
+                //days_max_timetable
+                $business->settings()->updateOrCreate(
+                    ['key' => SettingKey::days_max_timetable->name],
+                    [
+                        'group_name' => SettingGroup::bookings->name,
+                        'cast_to' => CastType::integer->name,
+                        'val' => 14,
+                    ]
+                );
+                //logo_url
+                $business->settings()->updateOrCreate(
+                    ['key' => SettingKey::logo_url->name],
+                    [
+                        'group_name' => SettingGroup::service_store_header->name,
+                        'cast_to' => CastType::string->name,
+                        'val' => '/locations',
+                    ]
+                );
+                //logo
+                $business->settings()->updateOrCreate(
+                    ['key' => SettingKey::logo->name],
+                    [
+                        'group_name' => SettingGroup::service_store_header->name,
+                        'cast_to' => CastType::string->name,
+                        'val' => 'logo/WCl1AyBWdykPShPpff6ky1wKtj68d7eFYiHd7H9d.svg',
+                    ]
+                );
                 // Artisan::call('db:seed --force Database\\\Seeders\\\Partner\\\DatabaseSeeder');
                 Artisan::call('db:seed', ['--class' => 'Database\Seeders\Partner\DatabaseSeeder', '--force' => true]);
             }

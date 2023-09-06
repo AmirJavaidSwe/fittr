@@ -15,6 +15,11 @@ enum PackType
         return array_column(self::cases(), 'name');
     }
 
+    public static function creditTypes(): array
+    {
+        return array_column(array(static::class_lesson, static::service, static::hybrid), 'name');
+    }
+
     public static function from(string $case)
     {
         return match(true) {
@@ -36,28 +41,38 @@ enum PackType
         return array(
             [
                 'label' => __('Class'),
+                'label_plural' => __('Classes'),
                 'value' => self::class_lesson->name,
                 'description' => __('Plan provides fixed or unlimited number of sessions that can be used to book classes.'),
+                'order' => 2,
             ],
             [
                 'label' => __('Service'),
+                'label_plural' => __('Services'),
                 'value' => self::service->name,
                 'description' => __('Plan provides fixed or unlimited number of sessions that can be used to book services.'),
+                'order' => 3,
             ],
             [
                 'label' => __('Hybrid'),
+                'label_plural' => __('Hybrids'),
                 'value' => self::hybrid->name,
                 'description' => __('Plan provides fixed or unlimited number of sessions to both, classes and services.'),
+                'order' => 4,
             ],
             [
-                'label' => __('Default'),
+                'label' => __('Pass'),
+                'label_plural' => __('Passes'),
                 'value' => self::default->name,
                 'description' => __('Plan provides general access or pass to studio only. This type will not generate any session credits.'),
+                'order' => 1,
             ],
             [
                 'label' => __('Corporate'),
+                'label_plural' => __('Corporate'),
                 'value' => self::corporate->name,
                 'description' => __('Corporate plans will produce unique redemption code. Everytime member redeems it, one session credit will be added. Member can use the credit to book a class.'),
+                'order' => 5,
             ],
         );
     }

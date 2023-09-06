@@ -22,8 +22,10 @@ return new class extends Migration
             $table->enum('checkout_mode', StripeCheckoutMode::all());
             $table->enum('checkout_status', StripeSessionStatus::all());
             $table->enum('payment_status', StripePaymentStatus::all());
-            $table->string('session_id', 255)->nullable();
-            $table->string('payment_intent', 255)->nullable();
+            $table->string('session_id', 255)->nullable()->comment('sc_'); //Stripe sc_...
+            $table->string('subscription_id', 255)->nullable()->comment('sub_'); // Stripe sub_... recurring only (checkout_mode = subscription)
+            $table->string('invoice_id', 255)->nullable()->comment('in_'); // Stripe in_... recurring only (checkout_mode = subscription)
+            $table->string('payment_intent', 255)->nullable()->comment('pi_'); // Stripe pi_...
             $table->uuid('trace')->nullable();
             $table->string('currency', 3)->nullable(); //ISO 3 chars
             $table->integer('amount_discount')->unsigned()->default(0); //stripe integer

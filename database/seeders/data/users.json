@@ -25,21 +25,15 @@
     },
     {
         "source": "admin",
-        "name": "Mishuk Adhikari",
-        "email": "mishuk.ad.bd@gmail.com",
-        "password": "mishuksecret"
+        "name": "Obaid Farooq",
+        "email": "obaiidfarooq@hotmail.com",
+        "password": "obaid"
     },
     {
         "source": "admin",
         "name": "Amir",
         "email": "softwareengr.1@gmail.com",
         "password": "amir"
-    },
-    {
-        "source": "admin",
-        "name": "Tung",
-        "email": "gslip228@gmail.com",
-        "password": "tung"
     },
     {
         "source": "partner",
@@ -60,23 +54,5 @@
         "name": "Demo Partner3",
         "email": "dummy3@fittr.tech",
         "password": "dummy3"
-    },
-    {
-        "source": "partner",
-        "name": "Demo Partner4",
-        "email": "dummy4@fittr.tech",
-        "password": "dummy4"
-    },
-    {
-        "source": "partner",
-        "name": "Demo Partner5",
-        "email": "dummy5@fittr.tech",
-        "password": "dummy5"
-    },
-    {
-        "source": "partner",
-        "name": "Demo Partner6",
-        "email": "dummy6@fittr.tech",
-        "password": "dummy6"
     }
 ]

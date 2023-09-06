@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch } from "vue";
-import { Link, useForm } from "@inertiajs/vue3";
+import { useForm } from "@inertiajs/vue3";
 import { DateTime } from "luxon";
 import Form from "./Form.vue";
 import SideModal from "@/Components/SideModal.vue";
@@ -11,14 +11,13 @@ import TableData from "@/Components/DataTable/TableData.vue";
 import DataTableLayout from "@/Components/DataTable/Layout.vue";
 import ConfirmationModal from "@/Components/ConfirmationModal.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
-import Dropdown from "@/Components/Dropdown.vue";
-import DropdownLink from "@/Components/DropdownLink.vue";
 import EditIcon from "@/Icons/Edit.vue";
 import DeleteIcon from "@/Icons/Delete.vue";
 import { faUserLock, faCog, faPlus } from "@fortawesome/free-solid-svg-icons";
 import DateValue from "@/Components/DataTable/DateValue.vue";
 import ActionsIcon from "@/Icons/ActionsIcon.vue";
 import CloseModal from "@/Components/CloseModal.vue";
+import { hideAllPoppers } from 'floating-vue';
 
 const props = defineProps({
     disableSearch: {
@@ -95,6 +94,7 @@ const closeEditModal = () => {
 };
 
 const handleUpdateForm = (data) => {
+    hideAllPoppers();
     showEditModal.value = true;
     form_edit.id = data.id;
     form_edit.name = data.name;
@@ -112,6 +112,7 @@ const updateMember = () => {
 const itemDeleting = ref(false);
 const itemIdDeleting = ref(null);
 const confirmDeletion = (id) => {
+    hideAllPoppers();
     itemIdDeleting.value = id;
     itemDeleting.value = true;
 };
@@ -131,7 +132,7 @@ const deleteItem = () => {
 </script>
 
 <template>
-    <data-table-layout :disable-search="disableSearch" :disableButton="true">
+    <DataTableLayout :disable-search="disableSearch" :disableButton="true">
         <template #button>
             <ButtonLink
                 styling="secondary"
@@ -161,15 +162,13 @@ const deleteItem = () => {
         </template>
 
         <template #tableHead>
-            <!-- <table-head title="Id" @click="setOrdering('id')" :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'id'" /> -->
-            <table-head
+            <TableHead
                 title="Name"
                 @click="setOrdering('name')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'name'"
             />
-            <table-head
+            <TableHead
                 title="Email"
                 @click="setOrdering('email')"
                 :arrowSide="form.order_dir"
@@ -187,92 +186,71 @@ const deleteItem = () => {
                     </span>
                 </div>
             </TableHead>
-            <table-head
+            <TableHead
                 title="Updated At"
                 @click="setOrdering('updated_at')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'updated_at'"
             />
-            <table-head title="Action" class="flex justify-end" />
+            <TableHead title="Action" class="flex justify-end" />
         </template>
 
         <template #tableData>
             <tr v-for="(member, index) in members.data" :key="index">
-                <!-- <table-data :title="member.id" /> -->
-                <table-data>
-                    <Link
-                        class="font-semibold text-primary-500 hover:text-primary-900"
-                        :href="route('partner.members.show', member)"
-                    >
+                <TableData>
+                    <ButtonLink :href="route('partner.members.show', member)">
                         {{ member.name }}
-                    </Link>
-                </table-data>
-                <table-data :title="member.email" />
-                <table-data>
+                    </ButtonLink>
+                </TableData>
+                <TableData :title="member.email" />
+                <TableData>
                     <DateValue :date="DateTime.fromISO(member.created_at)
                     .setZone(business_settings.timezone)
                     .toFormat(business_settings.date_format.format_js + ' ' + business_settings.time_format.format_js)" />
-                </table-data>
-                <table-data>
+                </TableData>
+                <TableData>
                     <DateValue
                         :date="DateTime.fromISO(member.updated_at).toRelative()"
                     />
-                </table-data>
-                <table-data class="text-right">
-                    <div class="flex justify-end">
-                        <Link
-                            :href="route('partner.login-as')"
-                            :data="{ id: member.id }"
-                            method="post"
-                            as="button"
-                            type="button"
-                            class="mr-2"
-                            title="Login as"
-                        >
-                            <font-awesome-icon
-                                class="mr-2"
-                                :icon="faUserLock"
-                            />
-                        </Link>
-                        <Dropdown
-                            align="right"
-                            width="48"
-                            :top="index > members.data.length - 3"
-                            :content-classes="['bg-white']"
-                        >
-                            <template #trigger>
-                                <button class="text-dark text-lg">
-                                    <ActionsIcon />
-                                </button>
-                            </template>
-
-                            <template #content>
-                                <DropdownLink
-                                    as="button"
+                </TableData>
+                <TableData class="text-right">
+                    <VDropdown placement="bottom-end">
+                        <button><ActionsIcon /></button>
+                        <template #popper>
+                            <div class="p-2 w-40 space-y-4">
+                                <ButtonLink
+                                    styling="blank"
+                                    size="small"
+                                    class="w-full flex justify-between hover:bg-gray-100"
                                     @click="handleUpdateForm(member)"
-                                >
-                                    <EditIcon
-                                        class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
-                                    />
-                                    <span> Edit </span>
-                                </DropdownLink>
-                                <DropdownLink
-                                    as="button"
-                                    @click="confirmDeletion(member.id)"
-                                >
-                                    <span
-                                        class="text-danger-500 flex items-center"
                                     >
-                                        <DeleteIcon
-                                            class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
-                                        />
-                                        <span> Delete </span>
-                                    </span>
-                                </DropdownLink>
-                            </template>
-                        </Dropdown>
-                    </div>
-                </table-data>
+                                    <EditIcon class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2" />
+                                    <span> Edit </span>
+                                </ButtonLink>
+                                <ButtonLink
+                                    styling="blank"
+                                    size="small"
+                                    class="w-full flex justify-between hover:bg-gray-100"
+                                    :href="route('partner.login-as')"
+                                    :data="{ id: member.id }"
+                                    method="post"
+                                    >
+                                    <font-awesome-icon class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2" :icon="faUserLock" />
+                                    <span> Login as </span>
+                                </ButtonLink>
+                                <ButtonLink
+                                    styling="transparent"
+                                    size="small"
+                                    class="w-full flex justify-between text-danger-500 hover:text-danger-700 hover:bg-gray-100"
+                                    @click="confirmDeletion(member.id)"
+                                    >
+                                    <DeleteIcon class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2" />
+                                    <span> Delete </span>
+                                </ButtonLink>
+                            </div>
+                        </template>
+                    </VDropdown>
+                </TableData>
             </tr>
         </template>
 
@@ -285,7 +263,7 @@ const deleteItem = () => {
                 @pp_changed="setPerPage"
             />
         </template>
-    </data-table-layout>
+    </DataTableLayout>
 
     <!-- Create new member Modal -->
     <SideModal :show="showCreateModal" @close="closeCreateModal">

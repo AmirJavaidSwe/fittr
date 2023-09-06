@@ -34,7 +34,7 @@ class LocationFactory extends Factory
             'map_longitude' => $this->faker->longitude(),
             'email' => $this->faker->email(),
             'ordering' => rand(1, 100),
-            'status' => rand(0, 1)
+            'status' => 1
         ];
     }
 }

@@ -5,102 +5,41 @@ namespace App\Services\Shared;
 use App\Enums\PackType;
 use App\Enums\StateType;
 use App\Enums\StripeCheckoutMode;
+use App\Enums\StripeInvoiceStatus;
 use App\Enums\StripePaymentStatus;
+use App\Enums\StripePriceType;
 use App\Enums\StripeSessionStatus;
-use App\Events\OrderPaid;
 use App\Models\Partner\Membership;
+use App\Models\Partner\MembershipCharge;
 use App\Models\Partner\Order;
 use App\Models\Partner\OrderItem;
 use App\Models\Partner\SessionCredit;
 use App\Models\Partner\User;
 use App\Models\StripeEvent;
 use App\Services\Partner\DatabaseConnectionService;
+use App\Services\Shared\Stripe\InvoiceService;
 use App\Services\Shared\Stripe\PaymentService;
 
 class FulfillmentService
 {
-    public function __construct(DatabaseConnectionService $db_service, PaymentService $stripe_payment_service)
+    public function __construct(DatabaseConnectionService $db_service, InvoiceService $stripe_invoice_service, PaymentService $stripe_payment_service)
     {
         $this->db_service = $db_service;
+        $this->stripe_invoice_service = $stripe_invoice_service;
         $this->stripe_payment_service = $stripe_payment_service;
     }
 
-    public function processCheckout(StripeEvent $stripe_event)
+    public function shouldAbort(StripeEvent $stripe_event): bool
     {
         if($stripe_event->is_processed){
-            return;
+            return true;
         }
-        // checkout could be for partner users (majority) or for partner as customer (business subscribes to service tier)
-        // $stripe_event->event_for is an enum of 'connected', 'local'
-        // $business has stripe_customer_id (business is a customer, for 'local' events) and stripe_account_id (foreign key to connected account, for 'connected' events)
 
-        //beta flow for 'connected':
         $business = $stripe_event->business ?? null;
         if(empty($business)){
-            return;
+            return true;
         }
-
-        //set database connection
-        $this->db_service->connect($business);
-
-        // json data full event object
-        $session = $stripe_event->data;
-
-        //check for existing?
-        $order = Order::where('trace', $session->client_reference_id)->with(['items'])->first();
-
-        if($order && $order->line_items_pulled /*is_processed*/){
-            //make sure that each of the items has been processed
-            $items_processed = $order->items->every(fn($item) => $item->is_processed);
-
-            return $items_processed ? $this->markEventProcessed($stripe_event) : null;
-
-            //TODO flow to cover the case when some of order_items exist in DB but hasn't beed processed on initial run
-        }
-
-        // pull line items from Stripe checkout session
-        // Retrieve checkout session
-        $connected_account_id = $stripe_event->connected_account;
-        $params = ['expand' => ['line_items.data.discounts']];
-        $remote = $this->stripe_payment_service->retrieveCheckoutSession($connected_account_id, $session->id, $params);
-        if($remote->error){
-            //all stripe webhooks will get 200 back
-            //if anything failed on our end, we have to take care of processing $stripe_event again
-            //log error
-            return;
-        }
-        
-        $session_stripe = $remote->data;
-
-         //create new order, if doesn't exist
-        $order = $order ?: $this->createOrder($session_stripe, $stripe_event->id);
-
-        // assign user to order
-        $this->updateOrderUser($order);
-
-        // create new OrderItem for each of line items (is_processed is false by default)
-        if($order->line_items_pulled === false || $order->items->isEmpty()){
-            $stripe_line_items = $session_stripe->line_items->data;
-            $this->createOrderItems($order, $stripe_line_items);
-        }
-
-        //update order, set line_items_pulled = true; line_items count (this prevents related count), refresh the model and load related order_items
-        $this->updateOrder($order);
-
-        // assign price_id to each order_item
-        $this->updateOrderItems($order);
-
-        // Process each line item:
-        //  create new Membership for type 'pack'
-        //  create session credits (conditionally)
-        //  mark each order_item 'is_processed'
-        $order->items->each(fn($order_item) => $this->processOrderItem($order_item));
-
-        // send confirmation email (queued event)
-        event(new OrderPaid($order));
-
-        //mark stripe event as processed
-        return $this->markEventProcessed($stripe_event);
+        return false;
     }
 
     public function markEventProcessed($stripe_event) : bool
@@ -113,17 +52,24 @@ class FulfillmentService
         return $order_item->update(['is_processed' => true]);
     }
 
+    public function markMembershipChargeProcessed($membership_charge) : bool
+    {
+        return $membership_charge->update(['is_processed' => true]);
+    }
+
     public function createOrder($session, $stripe_event_id = null) : Order
     {
         return Order::create([
             'user_id' => null, //default
             'stripe_event_id' => $stripe_event_id,
             'stripe_customer_id' => $session->customer,
-            'session_id' => $session->id,
             'checkout_mode' => StripeCheckoutMode::get($session->mode),
             'checkout_status' => StripeSessionStatus::get($session->status),
             'payment_status' => StripePaymentStatus::get($session->payment_status),
-            'payment_intent' => $session->payment_intent,
+            'session_id' => $session->id, //Stripe ID, not a local foreign key
+            'subscription_id' => $session->subscription, //Stripe ID, not a local foreign key
+            'invoice_id' => $session->invoice, //Stripe ID, not a local foreign key
+            'payment_intent' => $session->payment_intent, //Stripe ID, not a local foreign key
             'trace' => $session->client_reference_id,
             'currency' => $session->currency,
             'amount_discount' => $session->total_details->amount_discount,
@@ -197,6 +143,18 @@ class FulfillmentService
             case 'pack':
                 $membership = $this->createMembership($order_item);
                 $this->createSessionCredits($membership);
+
+                if($membership->billing_type == StripePriceType::get('recurring')){
+                    //MembershipCharge could already exist in database for new subscription, happens when 'invoice.paid' received before 'checkout.session.completed'
+                    //in such case $membership_charge has no `membership_id` and `user_id`
+                    $stripe_invoice_id = $order_item->order->invoice_id;
+                    $existing_charge = MembershipCharge::where('stripe_invoice_id', $stripe_invoice_id)->first();
+                    if($existing_charge){
+                        $existing_charge->update(['membership_id' => $membership->id, 'user_id' => $membership->user_id, 'is_processed' => true]);
+                    }
+                    //if no $existing_charge, 'invoice.paid' webhook event will take care of $membership_charge creation with upsertMembershipCharge($invoice_object, $membership)
+                }
+
                 break;
             
             default:
@@ -210,6 +168,7 @@ class FulfillmentService
     public function createMembership($order_item) : Membership
     {
         $pack_price = $order_item->pack_price;
+        $order = $order_item->order;
         $pack = $pack_price->priceable;
 
         $restrictions = $pack->is_restricted ? array_filter($pack->restrictions) : []; // keep non empty only
@@ -228,9 +187,11 @@ class FulfillmentService
                 'order_item_id' => $order_item->id,
             ],
             [
+                'status' => StateType::get('active'),
                 'order_id' => $order_item->order_id,
                 'pack_id' => $pack->id,
                 'pack_price_id' => $pack_price->id,
+                'stripe_subscription_id' => $order->subscription_id,
                 'type' => $pack->type,
                 'title' => $pack->title,
                 'sub_title' => $pack->sub_title,
@@ -254,6 +215,33 @@ class FulfillmentService
                 'fixed_count' => $pack_price->fixed_count,
                 'is_renewable' => $pack_price->is_renewable,
                 'is_intro' => $pack_price->is_intro,
+            ]
+        );
+    }
+
+    public function upsertMembershipCharge($invoice_object, $membership = null) : MembershipCharge
+    {
+        return MembershipCharge::updateOrCreate(
+            ['stripe_invoice_id' => $invoice_object->id],
+            [
+                'membership_id' => $membership->id ?? null,
+                'user_id' => $membership->user_id ?? null,
+                'stripe_subscription_id' => $invoice_object->subscription,
+                'is_paid' => $invoice_object->paid,
+                'invoice_number' => $invoice_object->number,
+                'stripe_charge_id' => $invoice_object->charge,
+                'stripe_payment_intent_id' => $invoice_object->payment_intent,
+                'stripe_status' => StripeInvoiceStatus::get($invoice_object->status),
+                'currency' => $invoice_object->currency,
+                'amount_due' => $invoice_object->amount_due,
+                'amount_paid' => $invoice_object->amount_paid,
+                'amount_remaining' => $invoice_object->amount_remaining,
+                'discount' => $invoice_object->discount,
+                'subtotal' => $invoice_object->subtotal,
+                'total' => $invoice_object->total,
+                'application_fee_amount' => $invoice_object->application_fee_amount,
+                'period_start' => $invoice_object->period_start,
+                'period_end' => $invoice_object->period_end,
             ]
         );
     }
@@ -295,6 +283,7 @@ class FulfillmentService
                 'order_item_id' => $membership->order_item_id,
                 'membership_id' => $membership->id,
                 'status' => StateType::get('active'),
+                'type' => $membership->type,
                 'price_value' => round($membership->price / $membership->sessions, 2),
                 'restrictions' => $membership->restrictions, //inherits from membership
                 'expiry_at' => $expiry_at ?? null, // credit does not expire if null

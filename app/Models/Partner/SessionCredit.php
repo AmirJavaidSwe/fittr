@@ -2,6 +2,7 @@
 
 namespace App\Models\Partner;
 
+use App\Enums\StateType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -26,6 +27,7 @@ class SessionCredit extends Model
         'used_at' => 'datetime',
         'refunded_at' => 'datetime',
         'deleted_at' => 'datetime',
+        'is_active' => 'boolean', //appended
     ];
 
     /**
@@ -34,7 +36,7 @@ class SessionCredit extends Model
      * @var array
      */
     protected $appends = [
-
+        'is_active',
     ];
 
     // Relationships
@@ -59,6 +61,23 @@ class SessionCredit extends Model
     }
 
     // Accessors
+    public function getIsActiveAttribute(): bool
+    {
+        if($this->status != StateType::get('active')){
+            return false;
+        }
+
+        if(!empty($this->used_at)){
+            return false;
+        }
+
+        if(!empty($this->expiry_at) && $this->expiry_at->isPast()){
+            return false;
+        }
+
+        return true;
+    }
+
     // Local scopes
 
 }

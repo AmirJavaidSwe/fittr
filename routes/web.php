@@ -193,6 +193,7 @@ Route::domain('app.'.$domain)->group(function () {
 
             Route::resource('packs', PartnerPackController::class);
             Route::post('/packs/{pack}/duplicate', [PartnerPackController::class, 'duplicate'])->name('packs.duplicate');
+            Route::post('/packs/{pack}/toggle', [PartnerPackController::class, 'toggle'])->name('packs.toggle');
             Route::post('/packs/{pack}/price', [PartnerPackController::class, 'storePrice'])->name('packs.price.store');
             Route::put('/packs/price/{price}', [PartnerPackController::class, 'updatePrice'])->name('packs.price.update');
 
@@ -263,7 +264,8 @@ Route::domain('{subdomain}.'.$domain)->middleware(['auth.subdomain'])->name('ss.
             Route::post('/bookings/other-famly', [StoreBookingController::class, 'bookForOtherFamly'])->name('bookings.other-famly');
             Route::post('/bookings/cancel-all', [StoreBookingController::class, 'cancelForAllOrSelected'])->name('bookings.cancel-all');
             Route::get('/orders', [StoreOrderController::class, 'index'])->name('orders.index');
-            Route::get('/my-memberships', [StoreMembershipController::class, 'index'])->name('memberships.index');
+            Route::get('/my-memberships', [StoreMembershipController::class, 'index'])->name('memberships.index');//not a table
+            Route::get('/all-memberships', [StoreMembershipController::class, 'all'])->name('memberships.all'); //basic table of historical records
         });
 
         //INSTRUCTOR

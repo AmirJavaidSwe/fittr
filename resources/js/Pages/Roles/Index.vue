@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch } from "vue";
-import { Link, useForm, usePage } from "@inertiajs/vue3";
+import { useForm, usePage } from "@inertiajs/vue3";
 import DataTableLayout from "@/Components/DataTable/Layout.vue";
 import TableHead from "@/Components/DataTable/TableHead.vue";
 import TableData from "@/Components/DataTable/TableData.vue";
@@ -10,8 +10,6 @@ import ButtonLink from "@/Components/ButtonLink.vue";
 import ConfirmationModal from "@/Components/ConfirmationModal.vue";
 import EditIcon from "@/Icons/Edit.vue";
 import DeleteIcon from "@/Icons/Delete.vue";
-import Dropdown from "@/Components/Dropdown.vue";
-import DropdownLink from "@/Components/DropdownLink.vue";
 import { DateTime } from "luxon";
 import ActionsIcon from "@/Icons/ActionsIcon.vue";
 import {
@@ -22,6 +20,8 @@ import {
     faCog,
 } from "@fortawesome/free-solid-svg-icons";
 import DateValue from "../../Components/DataTable/DateValue.vue";
+import { hideAllPoppers } from 'floating-vue';
+
 const props = defineProps({
     roles: Object,
     search: String,
@@ -42,6 +42,7 @@ const form = useForm({
 const itemDeleting = ref(false);
 const itemIdDeleting = ref(null);
 const confirmDeletion = (slug) => {
+    hideAllPoppers();
     itemIdDeleting.value = slug;
     itemDeleting.value = true;
 };
@@ -77,7 +78,7 @@ const runSearch = () => {
 watch(() => form.search, runSearch);
 </script>
 <template>
-    <data-table-layout :disableButton="true">
+    <DataTableLayout :disableButton="true">
         <template #search>
             <Search
                 :noFilter="true"
@@ -103,111 +104,83 @@ watch(() => form.search, runSearch);
         </template>
 
         <template #tableHead>
-            <!-- <table-head
-                title="ID"
-                @click="setOrdering('id')"
-                :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'id'"
-            /> -->
-            <table-head
+            <TableHead
                 title="Title"
                 @click="setOrdering('title')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'title'"
             />
-            <table-head
+            <TableHead
                 title="Date created"
                 @click="setOrdering('created_at')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'created_at'"
             />
-            <table-head title="Actions" class="flex justify-end" />
+            <TableHead title="Actions" class="flex justify-end" />
         </template>
 
         <template #tableData>
             <tr v-for="(role, index) in props.roles.data" :key="role.id">
-                <!-- <table-data>{{ role.id }}</table-data> -->
-                <table-data>{{ role.title }}</table-data>
-                <table-data>
+                <TableData>
+                     <ButtonLink
+                        :href="role.url_show"
+                        v-can="{
+                            module: 'roles',
+                            roles: $page.props.user.user_roles,
+                            permission: 'view',
+                            user: $page.props.user,
+                        }">
+                        {{ role.title }}
+                    </ButtonLink>
+                </TableData>
+                <TableData>
                     <div v-if="business_settings">
                         <DateValue
-                            :date="
-                                DateTime.fromISO(role.created_at)
+                            :date="DateTime.fromISO(role.created_at)
                                     .setZone(business_settings.timezone)
-                                    .toFormat(
-                                        business_settings.date_format
-                                            .format_js +
-                                            ' ' +
-                                            business_settings.time_format
-                                                ?.format_js
-                                    )
-                            "
+                                    .toFormat(business_settings.date_format.format_js + ' ' +
+                                            business_settings.time_format?.format_js)"
                         />
                     </div>
                     <div v-else>
                         <DateValue
-                            :date="
-                                DateTime.fromISO(
-                                    role.created_at
-                                ).toLocaleString(DateTime.DATETIME_HUGE)
-                            "
+                            :date="DateTime.fromISO(role.created_at).toLocaleString(DateTime.DATETIME_HUGE)"
                         />
                     </div>
-                </table-data>
-                <table-data class="text-right">
-                    <Dropdown
-                        align="right"
-                        width="48"
-                        :top="index > props.roles.data.length - 3"
-                        :content-classes="['bg-white']"
-                    >
-                        <template #trigger>
-                            <button class="text-dark text-lg">
-                                <ActionsIcon />
-                            </button>
-                        </template>
-
-                        <template #content>
-                            <DropdownLink
-                                :href="role.url_show"
-                                v-can="{
-                                    module: 'roles',
-                                    roles: $page.props.user.user_roles,
-                                    permission: 'view',
-                                    user: $page.props.user,
-                                }"
-                            >
-                                <font-awesome-icon class="mr-2" :icon="faEye" />
-                                View
-                            </DropdownLink>
-                            <DropdownLink
-                                :href="role.url_edit"
-                                v-can="{
-                                    module: 'roles',
-                                    roles: $page.props.user.user_roles,
-                                    permission: 'update',
-                                    user: $page.props.user,
-                                }"
-                            >
-                                <EditIcon
-                                    class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
-                                />
-                                Edit
-                            </DropdownLink>
-                            <DropdownLink
-                                as="button"
-                                @click="confirmDeletion(role.slug)"
-                            >
-                                <span class="text-danger-500 flex items-center">
-                                    <DeleteIcon
-                                        class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
-                                    />
+                </TableData>
+                <TableData class="text-right">
+                    <VDropdown placement="bottom-end">
+                        <button><ActionsIcon /></button>
+                        <template #popper>
+                            <div class="p-2 w-40 space-y-4">
+                                <ButtonLink
+                                    styling="blank"
+                                    size="small"
+                                    class="w-full flex justify-between hover:bg-gray-100"
+                                    :href="role.url_edit"
+                                    v-can="{
+                                        module: 'roles',
+                                        roles: $page.props.user.user_roles,
+                                        permission: 'update',
+                                        user: $page.props.user,
+                                    }"
+                                    >
+                                    <EditIcon class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2" />
+                                    <span> Edit </span>
+                                </ButtonLink>
+                                <ButtonLink
+                                    styling="transparent"
+                                    size="small"
+                                    class="w-full flex justify-between text-danger-500 hover:text-danger-700 hover:bg-gray-100"
+                                    @click="confirmDeletion(role.slug)"
+                                    >
+                                    <DeleteIcon class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2" />
                                     <span> Delete </span>
-                                </span>
-                            </DropdownLink>
+                                </ButtonLink>
+                            </div>
                         </template>
-                    </Dropdown>
-                </table-data>
+                    </VDropdown>
+                </TableData>
             </tr>
         </template>
 
@@ -220,7 +193,7 @@ watch(() => form.search, runSearch);
                 @pp_changed="runSearch"
             />
         </template>
-    </data-table-layout>
+    </DataTableLayout>
 
     <!-- Delete Confirmation Modal -->
     <ConfirmationModal :show="itemDeleting" @close="itemDeleting = false">

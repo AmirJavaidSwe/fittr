@@ -45,16 +45,23 @@ defineEmits(['priceSelected']);
                     <span class="text-3xl">{{price.price_floor_formatted}}</span>
                     <span v-if="price.price_decimals > 0">.{{price.price_decimals}}</span>
                 </div>
-                <div v-if="price.interval_count">{{price.interval_human}}</div>
+                <div v-if="price.interval_count">{{price.interval_adjective}}</div>
             </div>
             <span class="border"></span>
 
             <!-- pack.type == 'default' -->
             <template v-if="isDefaultType">
             <!-- Show expiration period -->
-            <span class="font-bold" v-if="price.is_expiring">
-                {{price.expiration}} {{price.expiration_period}} pass
+
+            <span class="font-bold">
+                <template v-if="price.is_expiring">
+                    {{price.expiration}} {{price.expiration_period}} pass
+                </template>
+                <!-- <template v-else>
+                    NO EXPIRATION
+                </template> -->
             </span>
+
             </template>
 
             <template v-else>

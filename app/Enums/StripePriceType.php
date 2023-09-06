@@ -12,6 +12,19 @@ enum StripePriceType
         return array_column(self::cases(), 'name');
     }
 
+    public static function get(string $case): string
+    {
+        return self::from($case)->name;
+    }
+
+    public static function from(string $case)
+    {
+        return match(true) {
+            $case == 'one_time' => static::one_time,
+            $case == 'recurring' => static::recurring,
+        };
+    }
+
     public static function labels(): array
     {
         return array(

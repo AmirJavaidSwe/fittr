@@ -88,7 +88,7 @@ const priceSelected = (pack_id, price_id) => {
         <div class="text-xl font-bold text-center">
             Pricing
         </div>
-        <div class="text-center mb-4 sticky top-0 bg-gray-300">
+        <div class="text-center mb-4 sticky top-0 bg-gray-300 z-10">
             Purchase Class Pack or Membership for
             <div class="inline-block">
                 <InputLabel for="location" value="Location" class="sr-only" />
