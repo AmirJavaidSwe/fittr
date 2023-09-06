@@ -823,6 +823,18 @@ const emailClass = (classLesson) => {
                                 <ButtonLink
                                     styling="transparent"
                                     size="small"
+                                    class="w-full flex justify-between hover:bg-gray-100"
+                                    @click="emailClass(class_lesson)"
+                                    >
+                                    <font-awesome-icon
+                                        class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
+                                        :icon="faEnvelopesBulk"
+                                    />
+                                    <span> Email class </span>
+                                </ButtonLink>
+                                <ButtonLink
+                                    styling="transparent"
+                                    size="small"
                                     class="w-full flex justify-between text-danger-500 hover:text-danger-700 hover:bg-gray-100"
                                     @click="confirmDeletion(class_lesson.id)"
                                     >
