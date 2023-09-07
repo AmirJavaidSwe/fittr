@@ -25,7 +25,7 @@ import ExportIcon from "@/Icons/Export.vue";
 import EditIcon from "@/Icons/Edit.vue";
 import DuplicateIcon from "@/Icons/Duplicate.vue";
 import DeleteIcon from "@/Icons/Delete.vue";
-import { faPlus, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope, faEnvelopesBulk, faPlus, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { faCopy } from "@fortawesome/free-regular-svg-icons";
 import StatusLabel from "@/Components/StatusLabel.vue";
 import ColoredValue from "@/Components/DataTable/ColoredValue.vue";
@@ -38,7 +38,6 @@ import InputError from "@/Components/InputError.vue";
 import TextInput from "@/Components/TextInput.vue";
 import OnTheFlyResourceCreate from "@/Components/OnTheFlyResourceCreate.vue";
 import { hideAllPoppers } from 'floating-vue';
-import EmailClass from "./EmailClass.vue";
 import EmailClass from "./EmailClass.vue";
 
 const props = defineProps({
@@ -548,6 +547,7 @@ const showEmailClass = ref(false);
 const emailClassData = ref({});
 
 const emailClass = (classLesson) => {
+    hideAllPoppers();
     emailClassData.value = { ...classLesson };
     showEmailClass.value = true;
 };
