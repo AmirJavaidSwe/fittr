@@ -210,10 +210,28 @@ const deleteItem = () => {
                 </TableData>
                 <TableData>
                     <ButtonLink :href="route('partner.classtypes.show', classtype)">
-                        {{ classtype.title }}
+                        <span
+                            v-if="classtype.title.length > 25"
+                            v-tooltip="classtype.title"
+                        >
+                            {{ classtype.title.substring(0, 25) }}...
+                        </span>
+                        <span v-else>
+                            {{ classtype.title }}
+                        </span>
                     </ButtonLink>
                 </TableData>
-                <TableData :title="classtype.description" />
+                <TableData>
+                    <span
+                        v-if="classtype.description.length > 25"
+                        v-tooltip="classtype.description"
+                    >
+                        {{ classtype.description.substring(0, 25) }}...
+                    </span>
+                    <span v-else>
+                        {{ classtype.description }}
+                    </span>
+                </TableData>
                 <TableData>
                     <DateValue :date="DateTime.fromISO(classtype.created_at)
                     .setZone(business_settings.timezone)

@@ -7,7 +7,7 @@ import Checkbox from "@/Components/Checkbox.vue";
 import ActionMessage from "@/Components/ActionMessage.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
 import MailchimpIcon from "@/Icons/MailchimpIcon.vue";
-import SendinblueIcon from "@/Icons/Sendinblue.vue";
+import BrevoIcon from "@/Icons/Brevo.vue";
 import SendGridIcon from "@/Icons/SendGrid.vue";
 
 const props = defineProps({
@@ -125,7 +125,7 @@ const submitForm = () => {
             <!--sendinblue-->
             <div class="bg-mainBg p-5 rounded mt-3 mb-3">
                 <div class="flex flex-wrap justify-between items-center border-b-2 border-slate-300  pb-4">
-                    <SendinblueIcon class="w-36" />
+                    <BrevoIcon class="w-36" />
                     <div>
                         <label class="flex items-center">
                             <Checkbox v-model:checked="form.integration_sendinblue_status" :value="form.integration_sendinblue_status ? '1' : '0'" />
@@ -135,8 +135,8 @@ const submitForm = () => {
                     </div>
                 </div>
                 <div class="w-full pt-5">
-                    <h3 class="text-2xl pb-4"><strong>Sendinblue</strong></h3>
-                    <p><span class="mr-2 border-l-4 border-[#315D3F] rounded-md border-t-[4px]"></span>Run email campaigns for your customers. Everytime new user signs up, we will send a contact information to your Sendinblue account.</p>
+                    <h3 class="text-2xl pb-4"><strong>Brevo</strong></h3>
+                    <p><span class="mr-2 border-l-4 border-[#315D3F] rounded-md border-t-[4px]"></span>Run email campaigns for your customers. Everytime new user signs up, we will send a contact information to your Brevo account.</p>
                 </div>
                 <div class="grid gap-4 grid-cols-2 mt-5" v-if="form.integration_sendinblue_status">
                     <div class="grow-none">

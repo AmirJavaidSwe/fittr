@@ -218,10 +218,28 @@ const deleteItem = () => {
                 </TableData>
                 <TableData>
                     <ButtonLink :href="route('partner.servicetypes.show', servicetype)">
-                        {{ servicetype.title }}
+                        <span
+                            v-if="servicetype.title.length > 25"
+                            v-tooltip="servicetype.title"
+                        >
+                            {{ servicetype.title.substring(0, 25) }}...
+                        </span>
+                        <span v-else>
+                            {{ servicetype.title }}
+                        </span>
                     </ButtonLink>
                 </TableData>
-                <TableData :title="servicetype.description" />
+                <TableData>
+                    <span
+                        v-if="servicetype.description.length > 25"
+                        v-tooltip="servicetype.description"
+                    >
+                        {{ servicetype.description.substring(0, 25) }}...
+                    </span>
+                    <span v-else>
+                        {{ servicetype.description }}
+                    </span>
+                </TableData>
                 <TableData>
                     <DateValue :date="DateTime.fromISO(servicetype.created_at)
                     .setZone(business_settings.timezone)
