@@ -61,7 +61,7 @@ const signatureError = computed(() => {
             </div>
             <div class="" v-if="waiver.description">
                 <InputLabel value="Description" />
-                <p>{{ waiver.description }}</p>
+                <p v-html="waiver.description"></p>
             </div>
             <div
                 v-for="(obj, index) in form.waiverQandA"

@@ -171,12 +171,12 @@ const showQuestion = (id) => {
                 <table-data>
                     <span
                         v-if="obj.description.length > 25"
-                        v-tooltip="obj.description"
+                        v-tooltip="{ content: obj.description, html: true }"
                     >
-                        {{ obj.description.substring(0, 25) }}...
+                        <span v-html="obj.description.substring(0, 25)+'...'"></span>
                     </span>
                     <span v-else>
-                        {{ obj.description }}
+                        <span v-html="obj.description"></span>
                     </span>
                 </table-data>
                 <table-data>
@@ -195,47 +195,37 @@ const showQuestion = (id) => {
                     >
                 </table-data>
                 <TableData class="text-right">
-                    <Dropdown
-                        align="right"
-                        width="48"
-                        :top="index > waivers.length - 3"
-                        :content-classes="['bg-white']"
-                    >
-                        <template #trigger>
-                            <button class="text-dark text-lg">
-                                <ActionsIcon />
-                            </button>
-                        </template>
-
-                        <template #content>
-                            <DropdownLink
-                                as="button"
-                                @click="
+                    <VDropdown placement="bottom-end">
+                        <button><ActionsIcon /></button>
+                        <template #popper>
+                            <div class="p-2 w-40 space-y-4">
+                                <ButtonLink
+                                    styling="blank"
+                                    size="small"
+                                    class="w-full flex justify-between hover:bg-gray-100"
+                                    @click="
                                     $inertia.visit(
                                         route('partner.waivers.edit', {
                                             id: obj.id,
                                         })
                                     )
                                 "
-                            >
-                                <EditIcon
-                                    class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
-                                />
-                                Edit
-                            </DropdownLink>
-                            <DropdownLink
-                                as="button"
-                                @click="confirmDeletion(obj.id)"
-                            >
-                                <span class="text-danger-500 flex items-center">
-                                    <DeleteIcon
-                                        class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
-                                    />
+                                    >
+                                    <EditIcon class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2" />
+                                    <span> Edit </span>
+                                </ButtonLink>
+                                <ButtonLink
+                                    styling="transparent"
+                                    size="small"
+                                    class="w-full flex justify-between text-danger-500 hover:text-danger-700 hover:bg-gray-100"
+                                    @click="confirmDeletion(obj.id)"
+                                    >
+                                    <DeleteIcon class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2" />
                                     <span> Delete </span>
-                                </span>
-                            </DropdownLink>
+                                </ButtonLink>
+                            </div>
                         </template>
-                    </Dropdown>
+                    </VDropdown>
                 </TableData>
             </tr>
         </template>

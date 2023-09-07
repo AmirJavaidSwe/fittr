@@ -51,6 +51,7 @@ use App\Http\Controllers\Store\StoreOrderController;
 use App\Http\Controllers\Store\StorePackController;
 use App\Http\Controllers\Store\StorePaymentController;
 use App\Http\Controllers\Store\StorePublicController;
+use App\Http\Controllers\Store\WaiverVerificationController;
 
 Route::get('/auth/google', [UserProfileController::class, 'googleRedirect'])->middleware(['guest:'.config('fortify.guard')])->name('auth.google');
 Route::get('/auth/google-callback', [UserProfileController::class, 'googleAuth']);

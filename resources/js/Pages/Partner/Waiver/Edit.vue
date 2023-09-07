@@ -7,11 +7,10 @@ import FormSection from "@/Components/FormSection.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import InputError from "@/Components/InputError.vue";
 import TextInput from "@/Components/TextInput.vue";
-import TextArea from "@/Components/TextArea.vue";
-import Checkbox from "@/Components/Checkbox.vue";
 import ActionMessage from "@/Components/ActionMessage.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
 import Multiselect from "@vueform/multiselect";
+import RichTextInput from '@/Components/RichTextInput.vue';
 import {
     faPlus,
     faArrowUp,
@@ -110,15 +109,7 @@ const moveUp = (index) => {
                 </div>
                 <div class="col-span-6 sm:col-span-4">
                     <InputLabel for="description" value="Description" />
-                    <TextArea
-                        id="description"
-                        v-model="form.description"
-                        type="text"
-                        class="mt-1 block w-full"
-                        rows="5"
-                        cols="10"
-                        autocomplete="description"
-                    />
+                    <RichTextInput v-model="form.description" />
                     <InputError
                         :message="form.errors.description"
                         class="mt-2"
