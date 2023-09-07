@@ -22,9 +22,9 @@ class DatabaseSeeder extends Seeder
             ClasstypeSeeder::class,
             ServicetypeSeeder::class,
             ClassesSeeder::class,
-            LocationSeeder::class,
-            StudioSeeder::class,
+            LocationSeeder::class, //Studios added via Location
             PackSeeder::class,
+            RoleSeeder::class,
         ]);
     }
 }

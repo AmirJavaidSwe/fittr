@@ -16,6 +16,8 @@ class PackSeeder extends Seeder
      */
     public function run()
     {
+        dump('seeding packs');
+
         if (!Storage::disk('seeders')->exists('/partner/data/sandboxpacks.json')) {
             dump('/partner/data/users.json file does not exist!');
             return;

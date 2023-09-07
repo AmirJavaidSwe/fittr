@@ -14,6 +14,8 @@ class InstructorSeeder extends Seeder
      */
     public function run()
     {
+        dump('seeding instructor users');
+
         $this->call(InstructorFactory::class);
     }
 }

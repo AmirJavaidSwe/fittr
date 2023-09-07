@@ -28,14 +28,14 @@ class PartnerDatabaseSeeder extends Seeder
         //clear cache, it has subdomains and business
         Artisan::call('cache:clear');
 
-        $partners = User::partner()/*->databaseless()*/->get();
+        $partners = User::partner()/*->databaseless()*/->where('email', 'LIKE', 'dummy%')->get();
 
         $db_master_partner_username = config('database.connections.mysql.master_partner_username');
         $db_master_partner_password = config('database.connections.mysql.master_partner_password');
         DB::statement("DROP USER IF EXISTS '$db_master_partner_username'@'%'"); //backup user is case encrypted password corrupted
         DB::statement("CREATE USER '$db_master_partner_username'@'%' IDENTIFIED BY '$db_master_partner_password'");
 
-        //Create new database for each Partner user
+        //Create new database for each Partner user (dummy only)
         foreach ($partners as $partner) {
             $db_name = 'fittr_p'.$partner->id;
             $db_host = config('database.connections.mysql.host');
@@ -126,6 +126,7 @@ class PartnerDatabaseSeeder extends Seeder
 
             //create runtime config (mysql_partner - does not exist in the file)
             Config::set('database.connections.mysql_partner', [
+                'business_id' => $business->id,
                 'driver' => 'mysql',
                 'host' => $db_host,
                 'port' => $db_port,
@@ -268,9 +269,83 @@ class PartnerDatabaseSeeder extends Seeder
                     [
                         'group_name' => SettingGroup::service_store_header->name,
                         'cast_to' => CastType::string->name,
-                        'val' => 'logo/WCl1AyBWdykPShPpff6ky1wKtj68d7eFYiHd7H9d.svg',
+                        // 'val' => 'logo/WCl1AyBWdykPShPpff6ky1wKtj68d7eFYiHd7H9d.svg', //logo gym
+                        'val' => 'logo/rvGZ8vYmwNZ5U4Boz6DiOta7kV7raJtDATZ2YVhs.jpg',
                     ]
                 );
+                //favicon
+                $business->settings()->updateOrCreate(
+                    ['key' => SettingKey::favicon->name],
+                    [
+                        'group_name' => SettingGroup::service_store_header->name,
+                        'cast_to' => CastType::string->name,
+                        'val' => 'favicon/98mi9T3fVxS7LVJkD0FEn0vcmuTgnutTeFOLVxjF.png',
+                    ]
+                );
+                //link_facebook
+                $business->settings()->updateOrCreate(
+                    ['key' => SettingKey::link_facebook->name],
+                    [
+                        'group_name' => SettingGroup::service_store_header->name,
+                        'cast_to' => CastType::string->name,
+                        'val' => 'https://www.facebook.com/digmefitness',
+                    ]
+                );
+                //link_instagram
+                $business->settings()->updateOrCreate(
+                    ['key' => SettingKey::link_instagram->name],
+                    [
+                        'group_name' => SettingGroup::service_store_header->name,
+                        'cast_to' => CastType::string->name,
+                        'val' => 'https://www.instagram.com/digmefitness',
+                    ]
+                );
+                //link_twitter
+                $business->settings()->updateOrCreate(
+                    ['key' => SettingKey::link_twitter->name],
+                    [
+                        'group_name' => SettingGroup::service_store_header->name,
+                        'cast_to' => CastType::string->name,
+                        'val' => 'https://twitter.com/digmefitness',
+                    ]
+                );
+                //address_line1
+                $business->settings()->updateOrCreate(
+                    ['key' => SettingKey::address_line1->name],
+                    [
+                        'group_name' => SettingGroup::general_address->name,
+                        'cast_to' => CastType::string->name,
+                        'val' => 'Spencer House, 23 Sheen Road',
+                    ]
+                );
+                //city
+                $business->settings()->updateOrCreate(
+                    ['key' => SettingKey::city->name],
+                    [
+                        'group_name' => SettingGroup::general_address->name,
+                        'cast_to' => CastType::string->name,
+                        'val' => 'Richmond',
+                    ]
+                );
+                //legal_country_id
+                $business->settings()->updateOrCreate(
+                    ['key' => SettingKey::legal_country_id->name],
+                    [
+                        'group_name' => SettingGroup::general_address->name,
+                        'cast_to' => CastType::integer->name,
+                        'val' => 231,
+                    ]
+                );
+                //zip_code
+                $business->settings()->updateOrCreate(
+                    ['key' => SettingKey::zip_code->name],
+                    [
+                        'group_name' => SettingGroup::general_address->name,
+                        'cast_to' => CastType::string->name,
+                        'val' => 'TW9 1BN',
+                    ]
+                );
+
                 // Artisan::call('db:seed --force Database\\\Seeders\\\Partner\\\DatabaseSeeder');
                 Artisan::call('db:seed', ['--class' => 'Database\Seeders\Partner\DatabaseSeeder', '--force' => true]);
             }

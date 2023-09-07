@@ -1,0 +1,94 @@
+[
+    {
+        "status": 1,
+        "title": "Covent Garden",
+        "brief": "With the best CYCLE workouts, YOGA flows and BARRE classes, there is no doubt we've got something for you! You'll come for the workout, but you'll stay for the vibes and the friends you make. We are more than workouts; we are a community. The studio is located right in the heart of Seven Dials and within a very short walk from Leicester Square, Covent Garden and Tottenham Court Road tube stations.",
+        "address_line_1": "4-10 Tower Street",
+        "address_line_2": "Covent Garden",
+        "country_id": 231,
+        "city": "London",
+        "postcode": "WC2H 9NP",
+        "map_latitude": "51.4409656",
+        "map_longitude": "-0.3404793",
+        "tel": "+44 020 4553 1306",
+        "email": "coventgarden@digmefitness.com",
+        "studios": [
+            {
+                "status": 1,
+                "title": "The Arena"
+            },
+            {
+                "status": 1,
+                "title": "The Island"
+            }
+        ]
+    },
+    {
+        "status": 1,
+        "title": "Richmond",
+        "brief": "Digme was born in Richmond and is a mainstay in the local community. You'll come for the workouts but stay for the friends you make and the laughs you have!  Join us in our original studio for the very best CYCLE workouts in the UK. We are a three-minute walk from Richmond train and tube station.",
+        "address_line_1": "23 Sheen Road",
+        "address_line_2": null,
+        "country_id": 231,
+        "city": "Richmond",
+        "postcode": "TW9 1BN",
+        "map_latitude": "51.4610512",
+        "map_longitude": "-0.3017242",
+        "tel": "+44 020 4553 109",
+        "email": "richmond@digmefitness.com",
+        "studios": [
+            {
+                "status": 1,
+                "title": "The Arena"
+            }
+        ]
+    },
+    {
+        "status": 1,
+        "title": "Moorgate",
+        "brief": "You'll join us for the best CYCLE and Circuits workouts in London, but you'll stay for the laughs you have and the friends you'll make. We aren't a workout, we are a community.  The studio is just a two minute walk from Moorgate tube station and a short walk from Liverpool Street, Barbican and Bank stations.",
+        "address_line_1": "1 Fore Street",
+        "address_line_2": "Moor Place (via Moor Lane)",
+        "country_id": 231,
+        "city": "West Esteban",
+        "postcode": "EC2Y 5EJ",
+        "map_latitude": "51.5181768",
+        "map_longitude": "-0.0905412",
+        "tel": "+44 020 4553 1304",
+        "email": "moorgate@digmefitness.com",
+        "studios": [
+            {
+                "status": 1,
+                "title": "The Arena"
+            }
+        ]
+    },
+    {
+        "status": 1,
+        "title": "Bank",
+        "brief": "Simply the best and friendliest fitness studios in the City of London. With all of our CYCLE, HIIT, STRENGTH, YOGA and BARRE sessions, we've got something for you!  Our Bank studio is in the heart of the City and a very short walk from Bank, Moorgate, Monument and Cannon Street tube stations, immerse yourself in The Arena, feel the burn in the The Energy Lab or enjoy a mindful yoga flow or bouncing Barre class in The Island at our Bank studio.",
+        "address_line_1": "40 Coleman Street London",
+        "address_line_2": null,
+        "country_id": 231,
+        "city": "London",
+        "postcode": "EC2R 5EH",
+        "map_latitude": "51.5151197",
+        "map_longitude": "-0.0903553",
+        "tel": "+44 020 4553 1305",
+        "email": "bank@digmefitness.com",
+        "studios": [
+            {
+                "status": 1,
+                "title": "The Arena"
+            },
+            {
+                "status": 1,
+                "title": "The Energy Lab"
+            },
+            {
+                "status": 1,
+                "title": "The Island"
+            }
+        ]
+    }
+]

@@ -15,8 +15,19 @@ class AmenitySeeder extends Seeder
      */
     public function run()
     {
-        Storage::disk('public')->deleteDirectory('images/amenity');
+        $business_id = config('database.connections.mysql_partner.business_id');
+        dump('seeding amenities');
 
-        return Amenity::factory()->count(5)->create();
+        if (!Storage::disk('seeders')->exists('/partner/data/amenities.json')) {
+            dump('/partner/data/amenities.json file does not exist!');
+            return;
+        }
+        $amenities = json_decode(Storage::disk('seeders')->get('/partner/data/amenities.json'));
+        foreach ($amenities as $amenity) {
+            Amenity::create([
+                'title' => $amenity->title,
+                'status' => $amenity->status,
+            ]);
+        }
     }
 }

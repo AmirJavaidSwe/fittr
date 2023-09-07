@@ -35,6 +35,23 @@ class UserSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now()
             ]);
+            if(!empty($user->users)){
+                foreach ($user->users as $partner_admin) {
+                    $partnerId = DB::table('users')->insertGetId([
+                        'business_id' => $partner_admin->business_id, 
+                        'is_super' => $partner_admin->is_super ?? true, 
+                        'source' => $partner_admin->source,
+                        'name' => $partner_admin->name, 
+                        'email' => $partner_admin->email,
+                        'password' => Hash::make($partner_admin->password), 
+                        'remember_token' => Str::random(10),
+                        'email_verified_at' => now(),
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ]);
+                }
+            }
+
             // $role = Role::where('source', $user->source)->whereSlug($user->source)->first();
             // DB::table('role_user')->insert([
             //     'role_id' => $role->id,

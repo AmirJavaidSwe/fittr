@@ -38,6 +38,11 @@ class Business extends Model
         return $this->hasMany(User::class, 'business_id');
     }
 
+    public function roles(): HasMany
+    {
+        return $this->hasMany(Role::class);
+    }
+
     public function settings(): HasMany
     {
         return $this->hasMany(BusinessSetting::class, 'business_id');

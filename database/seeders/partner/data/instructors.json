@@ -17,16 +17,29 @@
         "email": "instructor3@fittr.tech",
         "password": "instructor3"
     },
+
     {
         "role": "instructor",
-        "name": "Demo Instructor 4",
-        "email": "instructor4@fittr.tech",
-        "password": "instructor4"
+        "name": "Frances Merry",
+        "email": "francesevemerry@gmail.com",
+        "password": "francesevemerry"
     },
     {
         "role": "instructor",
-        "name": "Demo Instructor 5",
-        "email": "instructor5@fittr.tech",
-        "password": "instructor5"
+        "name": "Dan Little" ,
+        "email": "danlittle1@me.com",
+        "password": "danlittle1"
+    },
+    {
+        "role": "instructor",
+        "name": "Chloe Laureyns" ,
+        "email": "chloelaureyns@hotmail.com",
+        "password": "chloelaureyn"
+    },
+    {
+        "role": "instructor",
+        "name": "Paul Gascoyne" ,
+        "email": "ucanfitness@gmail.com",
+        "password": "ucanfitness"
     }
 ]

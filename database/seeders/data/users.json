@@ -1,5 +1,70 @@
 [
     {
+        "source": "partner",
+        "name": "Demo Partner1",
+        "email": "dummy1@fittr.tech",
+        "password": "dummy1",
+        "stripe_account_id": "acct_1MlaLVFZgNT1PRCW",
+        "users": [
+            {
+                "source": "partner",
+                "business_id": 1,
+                "name": "Jan Bargy",
+                "email": "jan@digmefitness.com",
+                "password": "jan",
+                "is_super": false
+            },
+            {
+                "source": "partner",
+                "business_id": 1,
+                "name": "Hattie Bass",
+                "email": "hattie@digmefirness.com",
+                "password": "hattie",
+                "is_super": false
+            },
+            {
+                "source": "partner",
+                "business_id": 1,
+                "name": "Geoff Bamber",
+                "email": "geoff@digmefitness.com",
+                "password": "geoff",
+                "is_super": true
+            },
+            {
+                "source": "partner",
+                "business_id": 1,
+                "name": "Caoimhe Bamber",
+                "email": "caoimhe@digmefitness.com",
+                "password": "geoff",
+                "is_super": true
+            },
+            {
+                "source": "partner",
+                "business_id": 1,
+                "name": "Debbie Alberto",
+                "email": "debbie@digmefitness.com",
+                "password": "debbie",
+                "is_super": false
+            },
+            {
+                "source": "partner",
+                "business_id": 1,
+                "name": "Rebecca Terrell",
+                "email": "rebecca@digmefitness.com",
+                "password": "debbie",
+                "is_super": false
+            }
+        ]
+    },
+    {
+        "source": "partner",
+        "name": "Demo Partner2",
+        "email": "dummy2@fittr.tech",
+        "password": "dummy2"
+    },
+
+
+    {
         "source": "admin",
         "name": "Default Administrator",
         "email": "support@fittr.tech",
@@ -34,25 +99,5 @@
         "name": "Amir",
         "email": "softwareengr.1@gmail.com",
         "password": "amir"
-    },
-    {
-        "source": "partner",
-        "name": "Demo Partner1",
-        "email": "dummy1@fittr.tech",
-        "password": "dummy1",
-        "stripe_account_id": "acct_1MlaLVFZgNT1PRCW"
-    },
-    {
-        "source": "partner",
-        "name": "Demo Partner2",
-        "email": "dummy2@fittr.tech",
-        "password": "dummy2",
-        "stripe_account_id": "acct_1MlpPN2ZUYnPPk7a"
-    },
-    {
-        "source": "partner",
-        "name": "Demo Partner3",
-        "email": "dummy3@fittr.tech",
-        "password": "dummy3"
     }
 ]

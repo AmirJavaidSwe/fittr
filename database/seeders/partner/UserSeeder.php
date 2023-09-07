@@ -18,6 +18,9 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
+        $business_id = config('database.connections.mysql_partner.business_id');
+        dump('seeding members (fittr admins - are regular members here)');
+
         if (!Storage::disk('seeders')->exists('/partner/data/users.json')) {
             dump('/partner/data/users.json file does not exist!');
             return;
@@ -37,6 +40,7 @@ class UserSeeder extends Seeder
             ]);
         }
 
+        dump('seeding instructors');
         $instructors = json_decode(Storage::disk('seeders')->get('/partner/data/instructors.json'));
 
         foreach ($instructors as $instructor) {
@@ -52,6 +56,6 @@ class UserSeeder extends Seeder
             ]);
         }
 
-        User::factory()->count(5)->create();
+        // User::factory()->count(5)->create();
     }
 }

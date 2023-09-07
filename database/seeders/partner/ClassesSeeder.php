@@ -15,12 +15,17 @@ class ClassesSeeder extends Seeder
      */
     public function run()
     {
+        dump('seeding classes');
+
         ClassLesson::factory()->count(20)->create();
 
         $classes = ClassLesson::get();
-        foreach($classes as $k => $v) {
-            $instructors = User::instructor()->inRandomOrder()->take(2)->pluck('id')->toArray();
-            $v->instructor()->sync($instructors);
+        foreach($classes as $class) {
+            $instructors = User::instructor()->inRandomOrder()->take(rand(1, 3))->pluck('id')->toArray();
+            $class->instructor()->sync($instructors);
+            $class->update([
+                'title' => ucfirst($class->classType->title).' '.$class->duration,
+            ]);
         }
     }
 }
