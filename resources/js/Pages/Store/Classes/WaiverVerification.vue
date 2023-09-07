@@ -3,7 +3,7 @@ import Section from "@/Components/Section.vue";
 import { ref, computed } from "vue";
 import FormSection from "@/Components/FormSection.vue";
 import InputLabel from "@/Components/InputLabel.vue";
-import Textarea from "@/Components/Textarea.vue";
+import TextArea from "@/Components/TextArea.vue";
 import Radio from "@/Components/Radio.vue";
 import Checkbox from "@/Components/Checkbox.vue";
 import SignaturePad from "@/Components/SignaturePad.vue";

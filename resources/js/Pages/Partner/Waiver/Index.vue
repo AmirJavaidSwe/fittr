@@ -18,8 +18,6 @@ import DeleteIcon from "@/Icons/Delete.vue";
 import DateValue from "@/Components/DataTable/DateValue.vue";
 import Avatar from "@/Components/Avatar.vue";
 import Search from "@/Components/DataTable/Search.vue";
-import Dropdown from "@/Components/Dropdown.vue";
-import DropdownLink from "@/Components/DropdownLink.vue";
 import SideModal from "@/Components/SideModal.vue";
 import CloseModal from "@/Components/CloseModal.vue";
 import uniqBy from "lodash/uniqBy";
@@ -28,6 +26,7 @@ import ActionsIcon from "@/Icons/ActionsIcon.vue";
 import StatusLabel from "@/Components/StatusLabel.vue";
 import Modal from "@/Components/Modal.vue";
 import CardBasic from "@/Components/CardBasic.vue";
+import { hideAllPoppers } from 'floating-vue';
 
 import {
     faPencil,
@@ -60,6 +59,7 @@ const helpers = WaiverHelpers();
 const itemDeleting = ref(false);
 const itemIdDeleting = ref(null);
 const confirmDeletion = (id) => {
+    hideAllPoppers();
     itemIdDeleting.value = id;
     itemDeleting.value = true;
 };
@@ -195,47 +195,31 @@ const showQuestion = (id) => {
                     >
                 </table-data>
                 <TableData class="text-right">
-                    <Dropdown
-                        align="right"
-                        width="48"
-                        :top="index > waivers.length - 3"
-                        :content-classes="['bg-white']"
-                    >
-                        <template #trigger>
-                            <button class="text-dark text-lg">
-                                <ActionsIcon />
-                            </button>
-                        </template>
-
-                        <template #content>
-                            <DropdownLink
-                                as="button"
-                                @click="
-                                    $inertia.visit(
-                                        route('partner.waivers.edit', {
-                                            id: obj.id,
-                                        })
-                                    )
-                                "
-                            >
-                                <EditIcon
-                                    class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
-                                />
-                                Edit
-                            </DropdownLink>
-                            <DropdownLink
-                                as="button"
-                                @click="confirmDeletion(obj.id)"
-                            >
-                                <span class="text-danger-500 flex items-center">
-                                    <DeleteIcon
-                                        class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
-                                    />
+                    <VDropdown placement="bottom-end">
+                        <button><ActionsIcon /></button>
+                        <template #popper>
+                            <div class="p-2 w-40 space-y-4">
+                                <ButtonLink
+                                    styling="blank"
+                                    size="small"
+                                    class="w-full flex justify-between hover:bg-gray-100"
+                                    @click="$inertia.visit( route('partner.waivers.edit', {id: obj.id}) )"
+                                    >
+                                    <EditIcon class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2" />
+                                    <span> Edit </span>
+                                </ButtonLink>
+                                <ButtonLink
+                                    styling="transparent"
+                                    size="small"
+                                    class="w-full flex justify-between text-danger-500 hover:text-danger-700 hover:bg-gray-100"
+                                    @click="confirmDeletion(obj.id)"
+                                    >
+                                    <DeleteIcon class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2" />
                                     <span> Delete </span>
-                                </span>
-                            </DropdownLink>
+                                </ButtonLink>
+                            </div>
                         </template>
-                    </Dropdown>
+                    </VDropdown>
                 </TableData>
             </tr>
         </template>
