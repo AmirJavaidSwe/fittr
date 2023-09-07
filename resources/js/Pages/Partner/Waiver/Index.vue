@@ -171,12 +171,12 @@ const showQuestion = (id) => {
                 <table-data>
                     <span
                         v-if="obj.description.length > 25"
-                        v-tooltip="obj.description"
+                        v-tooltip="{ content: obj.description, html: true }"
                     >
-                        {{ obj.description.substring(0, 25) }}...
+                        <span v-html="obj.description.substring(0, 25)+'...'"></span>
                     </span>
                     <span v-else>
-                        {{ obj.description }}
+                        <span v-html="obj.description"></span>
                     </span>
                 </table-data>
                 <table-data>
@@ -203,7 +203,13 @@ const showQuestion = (id) => {
                                     styling="blank"
                                     size="small"
                                     class="w-full flex justify-between hover:bg-gray-100"
-                                    @click="$inertia.visit( route('partner.waivers.edit', {id: obj.id}) )"
+                                    @click="
+                                    $inertia.visit(
+                                        route('partner.waivers.edit', {
+                                            id: obj.id,
+                                        })
+                                    )
+                                "
                                     >
                                     <EditIcon class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2" />
                                     <span> Edit </span>
@@ -285,7 +291,7 @@ const showQuestion = (id) => {
                         <table-head title="Question Type" />
                     </template>
                     <template #tableData>
-                        <tr v-for="(obj, index) in singleWaiver.questions">
+                        <tr v-for="(obj, index) in singleWaiver.questions" :key="index">
                             <table-data>{{ obj.question }}</table-data>
                             <table-data>{{
                                 obj.selectedQuestionType
