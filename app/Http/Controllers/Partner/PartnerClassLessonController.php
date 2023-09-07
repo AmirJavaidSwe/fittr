@@ -148,7 +148,14 @@ class PartnerClassLessonController extends Controller
             'statuses' => ClassStatus::labels(),
             'instructors' => Instructor::pluck('name', 'id'),
             'classtypes' => ClassType::pluck('title', 'id'),
-            'studios' => Studio::with('class_type_studios')->select('id', 'title')->orderBy('title', 'asc')->get(),
+            'studios' => Studio::with(['class_type_studios', 'location'])
+                ->select('id', 'title', 'location_id')
+                ->orderBy('title', 'asc')
+                ->get()
+                ->map(function ($item) {
+                    $item->title = $item->location?->title .' / '. $item->title;
+                    return $item;
+                }),
             'roles' => Role::select('id', 'title')->where('source', auth()->user()->source)->where('business_id', auth()->user()->business_id)->get(),
             'users' => User::select('id', 'name', 'email')->partner()->where('business_id', auth()->user()->business_id)->get(),
             'locations' => Location::select('id', 'title')->get(),
@@ -191,7 +198,14 @@ class PartnerClassLessonController extends Controller
             'locations' => Location::latest('id')->pluck('title', 'id'),
             'roles' => Role::latest('id')->pluck('title', 'id')->where('source', auth()->user()->source)->where('business_id', auth()->user()->business_id)->pluck('title', 'id'),
             'users' => User::select('id', 'name', 'email')->partner()->where('business_id', auth()->user()->business_id)->get(),
-            'studios' => Studio::with('class_type_studios')->select('id', 'title')->orderBy('title', 'asc')->get(),
+            'studios' => Studio::with(['class_type_studios', 'location'])
+                ->select('id', 'title', 'location_id')
+                ->orderBy('title', 'asc')
+                ->get()
+                ->map(function ($item) {
+                    $item->title = $item->location?->title .' / '. $item->title;
+                    return $item;
+                }),
         ]);
     }
 
@@ -361,7 +375,14 @@ class PartnerClassLessonController extends Controller
             'statuses' => ClassStatus::labels(),
             'instructors' => Instructor::orderBy('id', 'desc')->pluck('name', 'id'),
             'classtypes' => ClassType::orderBy('id', 'desc')->pluck('title', 'id'),
-            'studios' => Studio::with('class_type_studios')->select('id', 'title')->orderBy('title', 'asc')->get(),
+            'studios' => Studio::with(['class_type_studios', 'location'])
+                ->select('id', 'title', 'location_id')
+                ->orderBy('title', 'asc')
+                ->get()
+                ->map(function ($item) {
+                    $item->title = $item->location?->title .' / '. $item->title;
+                    return $item;
+                }),
         ]);
     }
 
