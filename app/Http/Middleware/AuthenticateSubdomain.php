@@ -15,6 +15,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AuthenticateSubdomain
 {
+    public $business_settings_service;
+    public $cache;
     public function __construct(BusinessSettingService $business_settings_service, CacheMasterService $cache)
     {
         $this->business_settings_service = $business_settings_service;

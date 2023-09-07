@@ -47,7 +47,7 @@ class StoreBookingCancellationService
             event(new BookingConfirmation($waitlist));
         }
 
-        return $this->redirectBackSuccessWithSubdomain(__('The booking has been cancelled.'), 'ss.member.bookings.index');
+        return $this->redirectBackSuccess(__('The booking has been cancelled.'));
 
     }
 

@@ -29,6 +29,11 @@ trait GenericHelper
         ->with('flash_type', 'success')->with('flash_message', __($msg ?? 'Success'))->with('flash_timestamp', time());
     }
 
+    public function redirectBackErrorWithSubdomain($msg = null, $route)
+    {
+        return redirect(route($route, ["subdomain" => request()->session()->get('business_settings')['subdomain']]))->with('flash_type', 'error')->with('flash_message', __($msg ?? 'Error'))->with('flash_timestamp', time())->withInput();
+    }
+
     public static function isMainDomain(): bool
     {
         $host = request()->host();

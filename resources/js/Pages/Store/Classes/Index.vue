@@ -523,7 +523,7 @@ const alreadyBooked = (isParent, id) => {
                 gap: '1rem',
                 isNavigation: true,
             }" ref="timetableEl" @splide:moved="handleMoved">
-                <SplideSlide v-for="(time, index) in timetable"
+                <SplideSlide v-for="(time, index) in timetable" :key="index"
                     class="inline-flex shrink-0 py-2 px-3 rounded-lg justify-center bg-white" :class="{
                         'bg-yellow-500':
                             (!form.date && index == 0) ||
@@ -563,7 +563,7 @@ const alreadyBooked = (isParent, id) => {
                     <div v-if="!classes[time.toSQLDate()]" class="flex flex-col">
                         &nbsp;
                     </div>
-                    <div v-else v-for="(item, index) in classes[time.toSQLDate()]"
+                    <div v-else v-for="(item, index) in classes[time.toSQLDate()]" :key="index"
                         class="cursor-pointer bg-white relative rounded-md p-3 mb-3" @click="showModal(item)" :class="{
                             hidden:
                                 form.is_off_peak &&
@@ -644,6 +644,9 @@ const alreadyBooked = (isParent, id) => {
     <!-- Class detail Modal -->
     <SideModal :show="modal" @close="closeModal">
         <template #title>Details</template>
+        <template #close>
+            <CloseModal @click="closeModal" />
+        </template>
         <template #content>
             <div class="w-full mb-4">
                 <img class="w-full rounded-md" v-if="classDetails.studio?.location?.images?.length"
@@ -791,7 +794,7 @@ const alreadyBooked = (isParent, id) => {
                     </div>
                 </div>
                 <hr />
-                <template v-for="(familyMember, index) in user.family">
+                <template v-for="(familyMember, index) in user.family" :key="index">
                     <div class="flex items-center justify-between my-4 mx-4">
                         <div class="flex items-center">
                             <img :src="familyMember.profile_photo_url" :alt="familyMember.name"
@@ -850,7 +853,7 @@ const alreadyBooked = (isParent, id) => {
                     </div>
                 </div>
                 <hr />
-                <template v-for="(familyMember, index) in user.family">
+                <template v-for="(familyMember, index) in user.family" :key="index">
                     <div class="flex items-center justify-between my-4 mx-4">
                         <div class="flex items-center">
                             <img :src="familyMember.profile_photo_url" :alt="familyMember.name"
@@ -908,7 +911,7 @@ const alreadyBooked = (isParent, id) => {
                     </div>
                 </div>
                 <hr />
-                <template v-for="(familyMember, index) in user.family">
+                <template v-for="(familyMember, index) in user.family" :key="index">
                     <div class="flex items-center justify-between my-4 mx-4">
                         <div class="flex items-center">
                             <img :src="familyMember.profile_photo_url" :alt="familyMember.name"

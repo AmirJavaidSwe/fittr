@@ -12,6 +12,7 @@ import { useForm, usePage } from "@inertiajs/vue3";
 import InputError from "@/Components/InputError.vue";
 
 
+
 const signaturePad = ref(null);
 
 const props = defineProps({
@@ -24,8 +25,14 @@ const props = defineProps({
         required: true,
     },
     waiver: Object,
-    createForm: Object,
-    editForm: Object,
+    createForm: {
+        type: Object,
+        default: {}
+    },
+    editForm: {
+        type: Object,
+        default: {}
+    },
 });
 
 const onSignatureUpdate = ($event) => {
@@ -141,8 +148,7 @@ const signatureError = computed(() => {
                 size="default"
                 type="submit"
             >
-                <span v-if="!editForm.id">Add Family Member</span>
-                <span v-else>Save Changes</span>
+                <span>Save</span>
             </ButtonLink>
         </template>
     </FormSection>

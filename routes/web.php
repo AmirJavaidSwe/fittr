@@ -3,28 +3,26 @@
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DemoController;
+use App\Http\Controllers\Shared\RoleController;
 use App\Http\Controllers\Admin\PackageController;
 use App\Http\Controllers\Admin\PartnerController;
 use App\Http\Controllers\Admin\InstanceController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Store\StorePackController;
+use App\Http\Controllers\Store\StoreClassController;
+use App\Http\Controllers\Store\StoreOrderController;
 use App\Http\Controllers\Admin\StripeEventController;
 use App\Http\Controllers\Store\StorePublicController;
-use App\Http\Controllers\Shared\RoleController;
-use App\Http\Controllers\Partner\PartnerMembershipController;
-use App\Http\Controllers\Partner\PartnerOrderController;
 use App\Http\Controllers\Partner\PartnerTaxController;
 use App\Http\Controllers\Shared\UserProfileController;
 use App\Http\Controllers\Store\FamilyMemberController;
 use App\Http\Controllers\Store\StoreBookingController;
-use App\Http\Controllers\Store\StoreClassController;
-use App\Http\Controllers\Store\StoreMembershipController;
-use App\Http\Controllers\Store\StoreOrderController;
-use App\Http\Controllers\Store\StorePackController;
 use App\Http\Controllers\Store\StorePaymentController;
 use App\Http\Controllers\Partner\PartnerPackController;
 use App\Http\Controllers\Partner\PartnerUserController;
 use App\Http\Controllers\Store\StoreLocationController;
+use App\Http\Controllers\Partner\PartnerOrderController;
 use App\Http\Controllers\Shared\StripeWebhookController;
 use App\Http\Controllers\Partner\PartnerChargeController;
 use App\Http\Controllers\Partner\PartnerExportController;
@@ -33,16 +31,19 @@ use App\Http\Controllers\Partner\PartnerOnTheFlyResource;
 use App\Http\Controllers\Partner\PartnerStudioController;
 use App\Http\Controllers\Partner\PartnerWaiverController;
 use App\Http\Controllers\Store\MemberDashboardController;
+use App\Http\Controllers\Store\StoreInstructorController;
+use App\Http\Controllers\Store\StoreMembershipController;
 
 // Service store area, partner subdomains:
-use App\Http\Controllers\Store\StoreInstructorController;
 use App\Http\Controllers\Partner\PartnerAmenityController;
 use App\Http\Controllers\Partner\PartnerOnboardController;
 use App\Http\Controllers\Partner\BusinessSettingController;
 use App\Http\Controllers\Partner\PartnerLocationController;
 use App\Http\Controllers\Partner\PartnerClassTypeController;
 use App\Http\Controllers\Partner\PartnerDashboardController;
+use App\Http\Controllers\Store\WaiverVerificationController;
 use App\Http\Controllers\Partner\PartnerInstructorController;
+use App\Http\Controllers\Partner\PartnerMembershipController;
 use App\Http\Controllers\Store\InstructorDashboardController;
 use App\Http\Controllers\Partner\PartnerClassLessonController;
 use App\Http\Controllers\Partner\PartnerServiceTypeController;
@@ -234,7 +235,10 @@ Route::domain('{subdomain}.'.$domain)->middleware(['auth.subdomain'])->name('ss.
     // google auth
     Route::post('/auth/google-callback', [UserProfileController::class, 'processSubdomainRequest']);
 
-    Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
+    Route::get('/waiver-verification', [WaiverVerificationController::class, 'index'])->name('waiver-verification');
+    Route::post('/waiver-verification', [WaiverVerificationController::class, 'store'])->name('store.waiver-verification');
+
+    Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified', 'waiver-verified'])->group(function () {
 
         // MEMBER
         Route::middleware(['auth.role:member'])->name('member.')->group(function () {

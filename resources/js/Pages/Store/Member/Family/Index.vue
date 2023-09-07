@@ -6,7 +6,7 @@ import { useForm, usePage } from "@inertiajs/vue3";
 import CloseModal from "@/Components/CloseModal.vue";
 import SideModal from "@/Components/SideModal.vue";
 import Form from "./Form.vue";
-import WaiverForm from "./WaiverForm.vue";
+import WaiverForm from "../../WaiverForm.vue";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import DateValue from "@/Components/DataTable/DateValue.vue";
 import { DateTime } from "luxon";
