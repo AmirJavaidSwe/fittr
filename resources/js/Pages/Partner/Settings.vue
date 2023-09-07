@@ -171,7 +171,7 @@ import GeneralIcon from "@/Icons/GeneralIcon.vue";
                     </template>
                 </CardIcon>
 
-                <CardIcon card-link="#">
+                <CardIcon :card-link="route('partner.notification-templates.index')">
                     <template #icon>
                         <NotificationsIcon />
                     </template>
@@ -318,7 +318,7 @@ import GeneralIcon from "@/Icons/GeneralIcon.vue";
                     </template>
                 </CardIcon>
             </div>
-            
+
             <div class="space-y-4">
                 <div class="text-xl font-bold tracking-tight text-gray-900">
                     Memberships
@@ -353,7 +353,7 @@ import GeneralIcon from "@/Icons/GeneralIcon.vue";
                 </CardIcon>
 
             </div>
-            
+
         </div>
     </Section>
 </template>

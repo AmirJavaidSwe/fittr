@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             LocationSeeder::class, //Studios added via Location
             PackSeeder::class,
             RoleSeeder::class,
+            NotificationTemplateSeeder::class,
         ]);
     }
 }

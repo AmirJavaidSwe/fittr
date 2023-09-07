@@ -7,6 +7,8 @@ import { DateTime } from "luxon";
 import BookingList from "./BookingList.vue";
 import { watch } from "vue";
 import StatusLabel from "@/Components/StatusLabel.vue";
+import EmailClass from "./EmailClass.vue";
+import { ref } from "vue";
 
 const props = defineProps({
     class_lesson: {
@@ -64,6 +66,14 @@ const runSearch = (form) => {
     });
 };
 
+const showEmailClass = ref(false);
+const emailClassData = ref({});
+
+const emailClass = (classLesson) => {
+    emailClassData.value = { ...classLesson };
+    showEmailClass.value = true;
+};
+
 </script>
 <template>
     <single-view
@@ -71,7 +81,16 @@ const runSearch = (form) => {
         description="Here is the full details of the class"
     >
         <template #head>
-            <div class="flex flex-row items-center mr-10">
+            <div class="flex flex-row shrink-0 items-center mr-10">
+                <ButtonLink
+                    size="default"
+                    styling="secondary"
+                    @click="emailClass(class_lesson)"
+                    class="mr-3"
+                >
+                    Email class
+                </ButtonLink>
+
                 <ButtonLink
                     size="default"
                     styling="primary"
@@ -213,4 +232,10 @@ const runSearch = (form) => {
             </div>
         </template>
     </single-view>
+    <EmailClass
+        :show="showEmailClass"
+        :classDetails="emailClassData"
+        :business_settings="business_settings"
+        @close="showEmailClass = false"
+    />
 </template>

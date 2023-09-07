@@ -5,17 +5,21 @@ namespace App\Providers;
 use App\Events\BookingCancellation;
 use App\Events\BookingConfirmation;
 use App\Events\BusinessSettingUpdated;
+use App\Events\ClassParticipant;
 use App\Events\SubscriptionCancelled;
 use App\Events\SubscriptionChanged;
 use App\Events\SubscriptionStarted;
 use App\Events\OrderPaid;
+use App\Events\TestTemplateNotification;
 use App\Listeners\BookingCancellationListener;
 use App\Listeners\BookingConfirmationListener;
 use App\Listeners\BusinessSettingUpdatedListener;
+use App\Listeners\ClassParticipantListener;
 use App\Listeners\SubscriptionCancelledListener;
 use App\Listeners\SubscriptionChangedListener;
 use App\Listeners\SubscriptionStartedListener;
 use App\Listeners\OrderPaidListener;
+use App\Listeners\TestTemplateNotificationListener;
 use App\Models\Partner\ClassLesson;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -54,6 +58,12 @@ class EventServiceProvider extends ServiceProvider
         ],
         OrderPaid::class => [
             OrderPaidListener::class,
+        ],
+        TestTemplateNotification::class => [
+            TestTemplateNotificationListener::class,
+        ],
+        ClassParticipant::class => [
+            ClassParticipantListener::class,
         ],
     ];
 

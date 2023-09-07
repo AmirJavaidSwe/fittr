@@ -38,6 +38,7 @@ import InputError from "@/Components/InputError.vue";
 import TextInput from "@/Components/TextInput.vue";
 import OnTheFlyResourceCreate from "@/Components/OnTheFlyResourceCreate.vue";
 import { hideAllPoppers } from 'floating-vue';
+import EmailClass from "./EmailClass.vue";
 
 const props = defineProps({
     disableSearch: {
@@ -542,6 +543,13 @@ const closePreviewModal = () => {
     previewClassDetails.value = {};
 };
 
+const showEmailClass = ref(false);
+const emailClassData = ref({});
+
+const emailClass = (classLesson) => {
+    emailClassData.value = { ...classLesson };
+    showEmailClass.value = true;
+};
 
 </script>
 <template>
@@ -1096,6 +1104,13 @@ const closePreviewModal = () => {
         :classDetails="previewClassDetails"
         :business_settings="business_settings"
         @close="closePreviewModal"
+    />
+
+    <EmailClass
+        :show="showEmailClass"
+        :classDetails="emailClassData"
+        :business_settings="business_settings"
+        @close="showEmailClass = false"
     />
 
 </template>

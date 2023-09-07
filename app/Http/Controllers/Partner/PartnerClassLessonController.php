@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Partner;
 
 // use App\Http\Requests\ImportFile;
 use App\Enums\ClassStatus;
+use App\Events\ClassParticipant;
 use App\Http\Controllers\Controller;
 use App\Models\Country;
 use App\Models\Role;
@@ -16,6 +17,7 @@ use App\Models\Partner\Instructor;
 use App\Models\Partner\Location;
 use App\Models\Partner\Studio;
 use App\Http\Requests\Partner\ClassFormRequest;
+use App\Models\Partner\NotificationTemplate;
 use App\Rules\ArrayFieldExistsInDatabase;
 use App\Rules\UserPasswordMatch;
 use Illuminate\Http\JsonResponse;
@@ -614,5 +616,28 @@ class PartnerClassLessonController extends Controller
         $noun = Str::of('class')->plural($this->copied_classes_count);
 
         return $this->redirectBackSuccess(__(':count new :noun have been created.', ['count' => $this->copied_classes_count, 'noun' => $noun ]), 'partner.classes.index');
+    }
+
+    public function participants(Request $request, ClassLesson $class)
+    {
+        $class->load(['bookings' => fn ($query) => $query->with('user')->active()]);
+        $template = NotificationTemplate::where('key', 'CLASS_PARTICIPANTS')->first();
+
+        return response()->json(['participants' => $class->bookings, 'template' => $template]);
+    }
+
+    public function emailClass(Request $request, ClassLesson $class)
+    {
+        $class->load([
+            'classType', 'studio.location',
+            'bookings' => function ($query) use($request) {
+                $query->with('user')
+                    ->active()
+                    ->whereHas('user', fn ($subQuery) => $subQuery->whereIn('id', $request->ids));
+            },
+        ]);
+
+        event(new ClassParticipant($class, $request->all()));
+        return $this->redirectBackSuccess('The email has been sent to the selected participants.');
     }
 }
