@@ -21,6 +21,8 @@ import CloseModal from "@/Components/CloseModal.vue";
 import CardBasic from "@/Components/CardBasic.vue";
 import WaitlistModal from "./Partials/WaitlistModal.vue";
 import DateValue from "@/Components/DataTable/DateValue.vue";
+import ArrowLeft from '@/Components/ArrowLeft.vue';
+import ArrowRight from '@/Components/ArrowRight.vue';
 
 const props = defineProps({
     classes: {
@@ -229,13 +231,13 @@ const { screen } = useWindowSize();
 const calendarPerPage = computed(() => {
     switch (true) {
         case screen.value == "2xl":
-            return 7;
-        case screen.value == "xl":
             return 6;
-        case screen.value == "lg":
+        case screen.value == "xl":
             return 5;
-        case screen.value == "md":
+        case screen.value == "lg":
             return 4;
+        case screen.value == "md":
+            return 3;
         case screen.value == "sm":
             return 2;
         default:
@@ -246,13 +248,13 @@ const calendarPerPage = computed(() => {
 const classesPerPage = computed(() => {
     switch (true) {
         case screen.value == "2xl":
-            return 7;
-        case screen.value == "xl":
             return 6;
-        case screen.value == "lg":
+        case screen.value == "xl":
             return 5;
-        case screen.value == "md":
+        case screen.value == "lg":
             return 4;
+        case screen.value == "md":
+            return 3;
         case screen.value == "sm":
             return 2;
         default:
@@ -263,6 +265,14 @@ const classesPerPage = computed(() => {
 const handleMoved = (splide, index, prevIndex) => {
     const date = timetable.value[index].toSQLDate();
     form.date = date;
+};
+
+const handlePrev = () => {
+    classesEl.value.go('<');
+};
+
+const handleNext = () => {
+    classesEl.value.go('>');
 };
 
 const showFamilyBookingModal = ref(false);
@@ -457,189 +467,214 @@ const alreadyBooked = (isParent, id) => {
         return filtered.length ? true : false
     }
 }
+
+const isBookable = (time) => {
+    time = DateTime.fromISO(time, {zone: props.business_settings.timezone});
+    const interval = time.diff(DateTime.now().setZone(props.business_settings.timezone), 'minutes');
+    return interval.minutes > 0;
+};
+
 </script>
 
 <template>
-    <div class="container mx-auto">
-        <Section bg="bg-transparent" class="flex flex-col">
-            <!-- <div class="text-xl mb-4">
-                Active classes list
-            </div> -->
-            <div class="flex flex-wrap gap-4 mb-3">
-                <div class="w-full md:flex-1">
-                    <InputLabel value="Class Type" for="class_type" />
-                    <Multiselect v-model="form.class_type" :options="class_types" :searchable="true" :close-on-select="true"
-                        :show-labels="true" placeholder="Select Class Type" mode="tags"
-                        :style="{ height: 'auto', padding: 0 }">
-                        <template v-slot:singlelabel="{ value }">
-                            <div class="multiselect-single-label flex items-center">
-                                <ColoredValue color="#ddd" :title="value.label" />
-                            </div>
-                        </template>
+    <Section bg="bg-transparent" class="flex flex-col">
+        <!-- <div class="text-xl mb-4">
+            Active classes list
+        </div> -->
+        <div class="flex flex-wrap gap-4 flex-1 mb-4">
+            <div class="w-full md:flex-1">
+                <InputLabel value="Class Type" for="class_type" />
+                <Multiselect v-model="form.class_type" :options="class_types" :searchable="true" :close-on-select="true"
+                    :show-labels="true" placeholder="Select Class Type" mode="tags"
+                    :style="{ height: 'auto', padding: 0 }">
+                    <template v-slot:singlelabel="{ value }">
+                        <div class="multiselect-single-label flex items-center">
+                            <ColoredValue color="#ddd" :title="value.label" />
+                        </div>
+                    </template>
 
-                        <template v-slot:option="{ option }">
-                            <ColoredValue color="#ddd" :title="option.label" />
-                        </template>
-                    </Multiselect>
-                </div>
-                <div class="w-full md:flex-1">
-                    <InputLabel value="Instructor" for="instructor" />
-                    <Multiselect v-model="form.instructor" :options="instructors" :searchable="true" :close-on-select="true"
-                        :show-labels="true" placeholder="Select Instructor" mode="tags"
-                        :style="{ height: 'auto', padding: 0 }">
-                        <template v-slot:singlelabel="{ value }">
-                            <div class="multiselect-single-label flex items-center">
-                                <Avatar size="small" :title="value.label" />
-                                <span class="ml-2">{{ value.label }}</span>
-                            </div>
-                        </template>
-
-                        <template v-slot:option="{ option }">
-                            <Avatar size="small" :title="option.label" />
-                            <span class="ml-2">{{ option.label }}</span>
-                        </template>
-                    </Multiselect>
-                </div>
-                <div class="w-full md:flex-1">
-                    <InputLabel value="Peak/Off Peak" for="is_off_peak" />
-                    <Multiselect id="is_off_peak" v-model="form.is_off_peak" :options="[
-                        { value: '0', label: 'Peak' },
-                        { value: '1', label: 'Off Peak' },
-                    ]" :searchable="true" class="mt-1" placeholder="Select Peak/Off Peak"
-                        :style="{ height: 'auto', padding: 0 }" />
-                </div>
-                <ButtonLink class="self-end" styling="primary" size="default" @click="(e) => {
-                        form.class_type = [];
-                        form.instructor = [];
-                        form.is_off_peak = '';
-                    }
-                    ">Reset</ButtonLink>
+                    <template v-slot:option="{ option }">
+                        <ColoredValue color="#ddd" :title="option.label" />
+                    </template>
+                </Multiselect>
             </div>
-            <Splide class="classes-timetable" :options="{
-                perPage: calendarPerPage,
-                perMove: 1,
-                arrows: false,
-                pagination: false,
-                gap: '1rem',
-                isNavigation: true,
-            }" ref="timetableEl" @splide:moved="handleMoved">
-                <SplideSlide v-for="(time, index) in timetable"
-                    class="inline-flex shrink-0 py-2 px-3 rounded-lg justify-center bg-white" :class="{
-                        'bg-yellow-500':
-                            (!form.date && index == 0) ||
-                            time.toSQLDate() == form.date,
-                        'mr-3': index < timetable.length - 1,
-                    }">
-                    <div class="flex flex-col md:flex-row" :class="{
-                        'text-white':
-                            (!form.date && index == 0) ||
-                            time.toSQLDate() == form.date,
-                        'text-black': time.toSQLDate() != form.date,
-                    }">
-                        <div class="text-2xl font-bold mr-2 self-center">
-                            {{ time.toFormat("d") }}
+            <div class="w-full md:flex-1">
+                <InputLabel value="Instructor" for="instructor" />
+                <Multiselect v-model="form.instructor" :options="instructors" :searchable="true" :close-on-select="true"
+                    :show-labels="true" placeholder="Select Instructor" mode="tags"
+                    :style="{ height: 'auto', padding: 0 }">
+                    <template v-slot:singlelabel="{ value }">
+                        <div class="multiselect-single-label flex items-center">
+                            <Avatar size="small" :title="value.label" />
+                            <span class="ml-2">{{ value.label }}</span>
                         </div>
-                        <div class="flex flex-row md:flex-col justify-center">
-                            <div class="text-xs">
-                                {{ time.toFormat("MMM") }}
-                            </div>
-                            <div class="text-xs md:hidden mx-1">/</div>
-                            <div class="text-xs">
-                                {{ time.toFormat("EEE") }}
-                            </div>
-                        </div>
-                    </div>
-                </SplideSlide>
-            </Splide>
+                    </template>
 
-            <Splide class="mt-3" :options="{
-                perPage: classesPerPage,
-                perMove: 1,
-                arrows: false,
-                pagination: false,
-                gap: '1rem',
-            }" ref="classesEl">
-                <SplideSlide v-for="(time, index) in timetable" :key="index">
-                    <div v-if="!classes[time.toSQLDate()]" class="flex flex-col">
-                        &nbsp;
-                    </div>
-                    <div v-else v-for="(item, index) in classes[time.toSQLDate()]"
-                        class="cursor-pointer bg-white relative rounded-md p-3 mb-3" @click="showModal(item)" :class="{
-                            hidden:
-                                form.is_off_peak &&
-                                item.is_off_peak != form.is_off_peak,
-                            'bg-yellow-300':
-                                classDetails.id == item.id || item.is_booked,
-                        }">
-                        <div v-if="item.is_booked"
-                            class="absolute bg-secondary-300/80 flex inset-0 items-center justify-center text-4xl">
-                            Booked
+                    <template v-slot:option="{ option }">
+                        <Avatar size="small" :title="option.label" />
+                        <span class="ml-2">{{ option.label }}</span>
+                    </template>
+                </Multiselect>
+            </div>
+            <div class="w-full md:flex-1">
+                <InputLabel value="Peak/Off Peak" for="is_off_peak" />
+                <Multiselect id="is_off_peak" v-model="form.is_off_peak" :options="[
+                    { value: '0', label: 'Peak' },
+                    { value: '1', label: 'Off Peak' },
+                ]" :searchable="true" class="mt-1" placeholder="Select Peak/Off Peak"
+                    :style="{ height: 'auto', padding: 0 }" />
+            </div>
+            <ButtonLink class="self-end" styling="primary" size="default" @click="(e) => {
+                    form.class_type = [];
+                    form.instructor = [];
+                    form.is_off_peak = '';
+                }
+                ">Reset</ButtonLink>
+        </div>
+        <div class="border border-t border-gray-200 mb-4"></div>
+        <div class="flex mb-4">
+            <div class="flex flex-grow justify-start">
+                <ArrowLeft class="cursor-pointer" @click="handlePrev" />
+            </div>
+            <div class="flex flex-grow justify-end">
+                <ArrowRight class="cursor-pointer" @click="handleNext" />
+            </div>
+        </div>
+        <Splide class="classes-timetable" :options="{
+            perPage: calendarPerPage,
+            perMove: 1,
+            arrows: false,
+            pagination: false,
+            gap: '1rem',
+            isNavigation: true,
+        }" ref="timetableEl" @splide:moved="handleMoved">
+            <SplideSlide v-for="(time, index) in timetable"
+                class="inline-flex py-2 px-3 rounded-lg justify-center bg-white" :class="{
+                    'bg-yellow-500':
+                        (!form.date && index == 0) ||
+                        time.toSQLDate() == form.date,
+                    // 'mr-3': index < timetable.length - 1,
+                }">
+                <div class="flex flex-col" :class="{
+                    'text-white':
+                        (!form.date && index == 0) ||
+                        time.toSQLDate() == form.date,
+                    'text-black': time.toSQLDate() != form.date,
+                }">
+                    <div class="flex flex-row md:flex-col justify-center">
+                        <div class="text-xs text-center">
+                            {{ time.toFormat("MMM") }} {{ time.toFormat("d") }}
                         </div>
-                        <div class="flex justify-between mb-4">
-                            <div class="text-xl font-medium self-center" v-tooltip="DateTime.fromISO(item.start_date)
+                    </div>
+                    <div class="text-2xl font-bold text-center">
+                        {{ time.toFormat("EEE") }}
+                    </div>
+                </div>
+            </SplideSlide>
+        </Splide>
+
+        <Splide class="mt-3" :options="{
+            perPage: classesPerPage,
+            perMove: 1,
+            arrows: false,
+            pagination: false,
+            gap: '1rem',
+        }" ref="classesEl">
+            <SplideSlide v-for="(time, index) in timetable" :key="index">
+                <div v-if="!classes[time.toSQLDate()]" class="flex flex-col">
+                    &nbsp;
+                </div>
+                <div v-else v-for="(item, index) in classes[time.toSQLDate()]"
+                    class="cursor-pointer relative rounded-md p-3 mb-3" @click="showModal(item)" :class="{
+                        hidden:
+                            form.is_off_peak &&
+                            item.is_off_peak != form.is_off_peak,
+                        'border border-blue-500 bg-gray-200':
+                            classDetails.id == item.id && !item.on_waitlist && !item.is_booked,
+                        'opacity-30': !isBookable(item.end_date),
+                        'border border-black hover:border-blue-500 bg-white':
+                            !item.on_waitlist && !item.is_booked && classDetails.id != item.id,
+                        'shadow-md': item.is_booked || item.on_waitlist,
+                    }" :style="{
+                        backgroundColor: item.is_booked ? 'rgba(41, 181, 128, 0.5)'
+                        : (item.on_waitlist ? 'rgba(232, 168, 56, 0.5)' : ''),
+                    }">
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="text-2xl font-bold self-center" v-tooltip="DateTime.fromISO(item.start_date)
+                                .setZone(business_settings.timezone)
+                                .toFormat(
+                                    business_settings.date_format
+                                        .format_js +
+                                    ' ' +
+                                    business_settings.time_format
+                                        .format_js
+                                )
+                            ">
+                            {{
+                                DateTime.fromISO(item.start_date)
                                     .setZone(business_settings.timezone)
                                     .toFormat(
-                                        business_settings.date_format
-                                            .format_js +
-                                        ' ' +
                                         business_settings.time_format
                                             .format_js
                                     )
-                                ">
-                                {{
-                                    DateTime.fromISO(item.start_date)
-                                        .setZone(business_settings.timezone)
-                                        .toFormat(
-                                            business_settings.time_format
-                                                .format_js
-                                        )
-                                }}
-                            </div>
-                            <div class="flex flex-row rounded-lg text-green-800 px-2 py-1 h-8 items-center"
-                                style="background: rgba(66, 112, 95, 0.2)">
-                                <div class="mr-1">
-                                    <ClockIcon />
-                                </div>
-                                <div class="text-base font-semibold">
-                                    {{ item.duration }}
-                                </div>
-                            </div>
+                            }}
                         </div>
-                        <div class="flex mb-4 pt-4 border-t-2 border-gray-300 items-center">
-                            <div class="flex mr-2 w-7 h-7 justify-center items-center">
-                                <span class="inline-flex rounded-xl w-3 h-3 bg-red-500"></span>
+                        <div class="flex flex-row rounded-lg text-green-800 px-2 py-1 items-center justify-center"
+                            style="background: rgba(66, 112, 95, 0.2)">
+                            <div class="mr-1">
+                                <ClockIcon />
                             </div>
-                            <div class="flex-grow uppercase font-medium">
-                                {{ item.class_type?.title }}
-                            </div>
-                        </div>
-                        <div class="flex mb-4 items-center">
-                            <div class="flex mr-2 w-7 h-7">
-                                <template v-if="item?.instructor.length">
-                                    <template v-for="(
-                                            instructor, ins
-                                        ) in item?.instructor" :key="ins">
-                                        <AvatarValue
-                                            class="cursor-pointer inline-flex justify-center mr-1 text-center items-center"
-                                            :onlyTooltip="true" :title="instructor?.name ?? 'Demo Ins'
-                                                " />
-                                    </template>
-                                </template>
-                            </div>
-                        </div>
-                        <div class="flex justify-between pt-4 border-t-2 border-gray-300">
-                            <div class="flex mr-2">
-                                <LocationIcon />
-                            </div>
-                            <div class="flex-grow font-medium text-green-700">
-                                {{ item.studio?.location?.title }}
+                            <div class="text-sm font-semibold mt-[1px]">
+                                {{ item.duration }}
                             </div>
                         </div>
                     </div>
-                </SplideSlide>
-            </Splide>
-        </Section>
-    </div>
+                    <div class="flex mb-4 pt-4 border-t border-gray-300 items-center">
+                        <div class="flex-grow uppercase font-semibold">
+                            {{ item.class_type?.title }}
+                        </div>
+                    </div>
+                    <div class="flex mb-4 items-center">
+                        <div class="flex mr-2 w-7 h-7">
+                            <template v-if="item?.instructor?.length">
+                                <template v-for="(
+                                        instructor, ins
+                                    ) in item?.instructor" :key="ins">
+                                    <AvatarValue
+                                        class="cursor-pointer inline-flex justify-center mr-1 text-center items-center"
+                                        :onlyTooltip="true" :title="instructor?.name ?? 'Demo Ins'
+                                            " />
+                                </template>
+                            </template>
+                        </div>
+                    </div>
+                    <div v-if="!item.is_booked && !item.on_waitlist" class="border-t border-gray-300"></div>
+                    <div class="flex my-4 items-center">
+                        <div class="mr-2">
+                            <LocationIcon />
+                        </div>
+                        <div class="text-base text-green-700 uppercase">
+                            <span class="mt-[1px]">{{ item.studio?.location?.title }}</span>
+                        </div>
+                    </div>
+                    <template v-if="item.is_booked">
+                        <div class="border-t border-gray-300"></div>
+                        <div class="flex mt-4 items-center justify-center text-xl text-white font-bold uppercase">
+                            Booked
+                        </div>
+                    </template>
+                    <template v-else-if="item.on_waitlist">
+                        <div class="border-t border-gray-300"></div>
+                        <div class="flex mt-4 items-center justify-center text-xl text-white font-bold uppercase">
+                            On Waitlist
+                        </div>
+                    </template>
+                </div>
+            </SplideSlide>
+        </Splide>
+    </Section>
+    <!-- <div class="container mx-auto">
+    </div> -->
 
     <!-- Class detail Modal -->
     <SideModal :show="modal" @close="closeModal">

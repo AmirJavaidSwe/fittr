@@ -39,6 +39,7 @@ import TextInput from "@/Components/TextInput.vue";
 import OnTheFlyResourceCreate from "@/Components/OnTheFlyResourceCreate.vue";
 import { hideAllPoppers } from 'floating-vue';
 import EmailClass from "./EmailClass.vue";
+import EmailClass from "./EmailClass.vue";
 
 const props = defineProps({
     disableSearch: {
@@ -819,6 +820,18 @@ const emailClass = (classLesson) => {
                                     >
                                     <DuplicateIcon class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2" />
                                     <span> Duplicate </span>
+                                </ButtonLink>
+                                <ButtonLink
+                                    styling="transparent"
+                                    size="small"
+                                    class="w-full flex justify-between hover:bg-gray-100"
+                                    @click="emailClass(class_lesson)"
+                                    >
+                                    <font-awesome-icon
+                                        class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
+                                        :icon="faEnvelopesBulk"
+                                    />
+                                    <span> Email class </span>
                                 </ButtonLink>
                                 <ButtonLink
                                     styling="transparent"

@@ -42,6 +42,7 @@ class ClassLesson extends Model
         'spaces_booked',
         'spaces_left',
         'is_booked',
+        'on_waitlist',
         'user_bookings',
     ];
 
@@ -125,6 +126,14 @@ class ClassLesson extends Model
 
         return $this->bookings->where('status', BookingStatus::get('active'))->contains('user_id', auth()->user()?->id);
     }
+
+    public function getOnWaitlistAttribute(): bool
+    {
+        if(!$this->relationLoaded('waitlists')) return false;
+
+        return $this->waitlists->contains('user_id', auth()->user()?->id);
+    }
+
     public function getUserBookingsAttribute()
     {
         if(!$this->relationLoaded('bookings')) return [];
