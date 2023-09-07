@@ -2,61 +2,61 @@
 
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DemoController;
-use App\Http\Controllers\Shared\RoleController;
+use App\Http\Controllers\Admin\InstanceController;
 use App\Http\Controllers\Admin\PackageController;
 use App\Http\Controllers\Admin\PartnerController;
-use App\Http\Controllers\Admin\InstanceController;
 use App\Http\Controllers\Admin\SettingsController;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Store\StorePackController;
-use App\Http\Controllers\Store\StoreClassController;
-use App\Http\Controllers\Store\StoreOrderController;
 use App\Http\Controllers\Admin\StripeEventController;
-use App\Http\Controllers\Store\StorePublicController;
-use App\Http\Controllers\Partner\PartnerTaxController;
-use App\Http\Controllers\Shared\UserProfileController;
-use App\Http\Controllers\Store\FamilyMemberController;
-use App\Http\Controllers\Store\StoreBookingController;
-use App\Http\Controllers\Store\StorePaymentController;
-use App\Http\Controllers\Partner\PartnerPackController;
-use App\Http\Controllers\Partner\PartnerUserController;
-use App\Http\Controllers\Store\StoreLocationController;
-use App\Http\Controllers\Partner\PartnerOrderController;
+
+use App\Http\Controllers\Shared\RoleController;
 use App\Http\Controllers\Shared\StripeWebhookController;
+use App\Http\Controllers\Shared\UserProfileController;
+
+use App\Http\Controllers\Partner\BusinessSettingController;
+use App\Http\Controllers\Partner\PartnerAmenityController;
 use App\Http\Controllers\Partner\PartnerChargeController;
+use App\Http\Controllers\Partner\PartnerClassLessonController;
+use App\Http\Controllers\Partner\PartnerClassTypeController;
+use App\Http\Controllers\Partner\PartnerDashboardController;
 use App\Http\Controllers\Partner\PartnerExportController;
+use App\Http\Controllers\Partner\PartnerInstructorController;
+use App\Http\Controllers\Partner\PartnerLocationController;
 use App\Http\Controllers\Partner\PartnerMemberController;
 use App\Http\Controllers\Partner\PartnerMembershipController;
 use App\Http\Controllers\Partner\PartnerNotificationTemplateController;
 use App\Http\Controllers\Partner\PartnerOnboardController;
 use App\Http\Controllers\Partner\PartnerOnTheFlyResource;
+use App\Http\Controllers\Partner\PartnerOrderController;
+use App\Http\Controllers\Partner\PartnerPackController;
+use App\Http\Controllers\Partner\PartnerServiceTypeController;
 use App\Http\Controllers\Partner\PartnerStudioController;
+use App\Http\Controllers\Partner\PartnerSubscriptionController;
+use App\Http\Controllers\Partner\PartnerTaxController;
+use App\Http\Controllers\Partner\PartnerUserController;
 use App\Http\Controllers\Partner\PartnerWaiverController;
-use App\Http\Controllers\Store\MemberDashboardController;
-use App\Http\Controllers\Store\StoreInstructorController;
-use App\Http\Controllers\Store\StoreMembershipController;
 
 // Service store area, partner subdomains:
-use App\Http\Controllers\Partner\PartnerAmenityController;
-use App\Http\Controllers\Partner\PartnerOnboardController;
-use App\Http\Controllers\Partner\BusinessSettingController;
-use App\Http\Controllers\Partner\PartnerLocationController;
-use App\Http\Controllers\Partner\PartnerClassTypeController;
-use App\Http\Controllers\Partner\PartnerDashboardController;
-use App\Http\Controllers\Store\WaiverVerificationController;
-use App\Http\Controllers\Partner\PartnerInstructorController;
-use App\Http\Controllers\Partner\PartnerMembershipController;
 use App\Http\Controllers\Store\InstructorDashboardController;
-use App\Http\Controllers\Partner\PartnerClassLessonController;
-use App\Http\Controllers\Partner\PartnerServiceTypeController;
-use App\Http\Controllers\Partner\PartnerSubscriptionController;
+use App\Http\Controllers\Store\MemberDashboardController;
+use App\Http\Controllers\Store\FamilyMemberController;
+use App\Http\Controllers\Store\StoreBookingController;
+use App\Http\Controllers\Store\StoreClassController;
+use App\Http\Controllers\Store\StoreInstructorController;
+use App\Http\Controllers\Store\StoreMembershipController;
+use App\Http\Controllers\Store\StoreLocationController;
+use App\Http\Controllers\Store\StoreOrderController;
+use App\Http\Controllers\Store\StorePackController;
+use App\Http\Controllers\Store\StorePaymentController;
+use App\Http\Controllers\Store\StorePublicController;
 
 Route::get('/auth/google', [UserProfileController::class, 'googleRedirect'])->middleware(['guest:'.config('fortify.guard')])->name('auth.google');
 Route::get('/auth/google-callback', [UserProfileController::class, 'googleAuth']);
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'webhook']);
 
-// Routes to complete partner onboarding. Accessible and auto-redirected to from 'ConnectPartnerDatabase' middleware when user has no business relation.
+//Routes to complete partner onboarding. Accessible and auto-redirected to from 'ConnectPartnerDatabase' middleware when user has no business relation.
 Route::middleware(['auth', 'auth.source:partner', 'verified'])->name('partner.onboarding.')->group(function () {
     Route::get('/onboarding', [PartnerOnboardController::class, 'index'])->name('index');
     Route::post('/onboarding', [PartnerOnboardController::class, 'update'])->name('update');
