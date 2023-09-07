@@ -27,10 +27,8 @@ const waiverFormData = useForm({
     sign: props?.user_waiver?.length ? props?.user_waiver?.signature : null,
 });
 
-watch(waiverFormData, (newVal, oldVal) => {
-    console.log(newVal)
-})
 const waiverQandData = () => {
+    waiverFormData.waiverQandA = []
     if (props.waiver) {
         for (let i = 0; i < props.waiver.questions.length; i++) {
             waiverFormData.waiverQandA.push({
@@ -47,6 +45,7 @@ const waiverQandData = () => {
 const showCreateModal = ref(false);
 const showEditModal = ref(false);
 const showWaiverModal = ref(false);
+
 const closeCreateModal = () => {
     showCreateModal.value = false;
     CreateForm.reset().clearErrors();
@@ -76,16 +75,8 @@ const EditForm = useForm({
     has_image: false,
 });
 
-const questionsData = ref([
-    {
-        question: "",
-        selectedQuestionType: null,
-    },
-]);
 
 const storeFamilyMember = () => {
-    // check if waiver is not null then show waiver modal
-
     if (props.waiver !== null) {
         if(!showWaiverModal.value) {
             showWaiverModal.value = true;
@@ -125,15 +116,13 @@ const storeFamilyMember = () => {
         }
     };
 
-    const showCreateFamily = () => {
+const showCreateFamily = () => {
     showCreateModal.value = true;
+    CreateForm.reset().clearErrors();
     waiverFormData.reset().clearErrors();
     waiverQandData();
-
 }
 const editMember = (member) => {
-    console.log(props.user_waiver)
-    console.log(member.id)
     EditForm.reset().clearErrors();
     EditForm.id = member.id;
     EditForm.name = member.name;
@@ -142,27 +131,29 @@ const editMember = (member) => {
     EditForm.profile_photo_path = member.profile_photo_path;
     EditForm.profile_photo_url =
     member.profile_photo_path !== null ? member.profile_photo_url : null;
-    // EditForm.has_image = member.profile_photo_path !== null ? true : false;
     EditForm.has_image = !!member.profile_photo_path;
     showEditModal.value = true;
     waiverFormData.reset().clearErrors();
     waiverQandData();
 };
 
-const updateMember = () => {
-    // check if waiver is not null then show waiver modal
+const checkForWaiverValidation = computed(() => {
+    if ((props.waiver !== null && props.waiver.sign_again && !props?.user_waiver?.length) || (props.waiver !== null && props.waiver.sign_again && props?.user_waiver?.length) && (!props.user_waiver.includes(EditForm.id))) {
+        return true
+    }
+    return false
+})
 
-    if ((props.waiver !== null && !props?.user_waiver?.length) || (props.waiver !== null || props?.user_waiver?.length) && (!props.user_waiver.includes(EditForm.id))) {
-        if(!showWaiverModal.value) {
-            showWaiverModal.value = true;
-            return;
-        }
+const updateMember = () => {
+    if (checkForWaiverValidation.value && !showWaiverModal.value) {
+        showWaiverModal.value = true;
+        return;
     }
     EditForm.transform((data) => ({
         ...data,
         _method: "put",
-        waiver_id: ((props.waiver !== null && !props?.user_waiver?.length) || (props.waiver !== null || props?.user_waiver?.length) && (!props.user_waiver.includes(EditForm.id))) ? props.waiver_id : null,
-        waiver_data: props.waiver !== null  ? {
+        waiver_id: checkForWaiverValidation.value ? props.waiver.id : null,
+        waiver_data: props.waiver !== null ? {
             data: waiverFormData.waiverQandA,
             signature: waiverFormData.sign,
         } : {},

@@ -24,8 +24,8 @@ const form = useForm({
     title: "",
     description: "",
     show_at: "",
-    is_signature_needed : false,
     is_active : false,
+    is_signature_needed : false,
     sign_again : false,
 });
 
@@ -205,7 +205,6 @@ const moveUp = (index) => {
                 </label>
             </div>
 
-            <!-- Off-peak -->
             <div>
                 <Switcher
                     v-model="form.is_active"
@@ -214,20 +213,18 @@ const moveUp = (index) => {
                     :show-labels="['No', 'Yes']"
                 />
             </div>
-            <!-- Off-peak -->
-            <div>
+            <div v-if="form.is_active">
                 <Switcher
-                    v-model="form.sign_again"
-                    title="Old users need to sign this?"
+                    v-model="form.is_signature_needed"
+                    title="Signature Needed?"
                     description=""
                     :show-labels="['No', 'Yes']"
                 />
             </div>
-            <!-- Off-peak -->
-            <div>
+            <div v-if="form.is_signature_needed">
                 <Switcher
-                    v-model="form.is_signature_needed"
-                    title="Signature Needed?"
+                    v-model="form.sign_again"
+                    title="Old users need to sign this?"
                     description=""
                     :show-labels="['No', 'Yes']"
                 />

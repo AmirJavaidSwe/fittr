@@ -10,7 +10,7 @@ use App\Models\Partner\FamilyMember;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\Partner\FamilyMemberRequest;
 use App\Http\Requests\Partner\FamilyWaiverValidation;
-use App\Models\Partner\FamilyMemberWaiver;
+use App\Models\Partner\UserWaiver;
 
 class FamilyMemberController extends Controller
 {
@@ -19,7 +19,7 @@ class FamilyMemberController extends Controller
     {
         $waiver = Waiver::where('show_at', 'family-add')->where('is_active', 1)->first();
         if($waiver) {
-            $user_waiver = FamilyMemberWaiver::where('user_id', auth()->user()->id)
+            $user_waiver = UserWaiver::where('user_id', auth()->user()->id)
             ->where('waiver_id', $waiver->id)
             ->pluck('family_member_id')->toArray();
         }
@@ -63,7 +63,7 @@ class FamilyMemberController extends Controller
         $member = FamilyMember::findOrFail($id);
         $member->update($request->validated());
 
-        if(!(FamilyMemberWaiver::where('family_member_id', $member->id)->where('user_id', auth()->user()->id)->exists())) {
+        if(!(UserWaiver::where('family_member_id', $member->id)->where('user_id', auth()->user()->id)->exists())) {
             $this->saveWaiverAcceptanceData($member->id);
         }
 
@@ -93,7 +93,6 @@ class FamilyMemberController extends Controller
     public function validateIfHasWaiver()
     {
         $request = request();
-
         $waiver = null;
 
         if(request()->waiver_id) {
@@ -101,25 +100,21 @@ class FamilyMemberController extends Controller
         }
 
         if($waiver) {
-            // dd(collect(request()->waiver_data['data']));
+            $rules = [];
+            $messages = [];
             $answers = collect(request()->waiver_data['data'])->whereNotNull('answer')
-            // ->whereNotIn('answer', [false, 'false', 'undefined', null, 'null'])
             ->pluck('answer')->toArray();
             if((!(count($waiver->questions) == count($answers))) || ($waiver->is_signature_needed && !request()->waiver_data['signature'])) {
-                $rules = [];
-                $rules =  [
-                    'waiver_data.data.*.answer' => 'required',
-                ];
-                $waiver = Waiver::find($request->waiver_id);
-
-                if ($waiver->is_signature_needed && !request()->waiver_data['signature']) {
-                    $rules['signature'] = ['required'];
+                if(!(count($waiver->questions) == count($answers))) {
+                    $rules =  [
+                        'waiver_data.data.*.answer' => 'required',
+                    ];
+                    $messages['waiver_data.data.*.answer.required'] = __('The answers to all waiver questions are required.');
                 }
-
-                $messages = [
-                    'waiver_data.data.*.answer.required' => __('The answers to all waiver questions are required.'),
-                    'signature.required' => __('Please provide your signature.'),
-                ];
+                if ($waiver->is_signature_needed && (!isset(request()->waiver_data['signature']) || !request()->waiver_data['signature'])) {
+                    $rules['signature'] = ['required'];
+                    $messages['signature.required'] = __('Please provide your signature.');
+                }
 
                 $validator = Validator::make($request->all(), $rules, $messages);
 
@@ -160,18 +155,21 @@ class FamilyMemberController extends Controller
         return $errorMessages;
     }
 
-    public function saveWaiverAcceptanceData($family_member_id) {
+    public function saveWaiverAcceptanceData($family_member_id)
+    {
 
-        FamilyMemberWaiver::where('user_id', auth()->user()->id)
-        ->where('waiver_id', request()->waiver_id)
-        ->where('family_member_id', $family_member_id)
-        ->delete();
-        return FamilyMemberWaiver::create([
-            'user_id' => auth()->user()->id,
-            'waiver_id' => request()->waiver_id,
-            'family_member_id' => $family_member_id,
-            'user_waiver_accepted_data' => request()->waiver_data['data'],
-            'signature' => request()->waiver_data['signature'],
-        ]);
+        if(request()->waiver_id) {
+            UserWaiver::where('user_id', auth()->user()->id)
+            ->where('waiver_id', request()->waiver_id)
+            ->where('family_member_id', $family_member_id)
+            ->delete();
+            return UserWaiver::create([
+                'user_id' => auth()->user()->id,
+                'waiver_id' => request()->waiver_id,
+                'family_member_id' => $family_member_id,
+                'user_waiver_accepted_data' => request()->waiver_data['data'],
+                'signature' => request()->waiver_data['signature'],
+            ]);
+        }
     }
 }

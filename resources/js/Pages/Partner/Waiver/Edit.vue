@@ -29,9 +29,9 @@ const form = useForm({
     title: props.editWaiver.title,
     description: props.editWaiver.description,
     show_at: props.editWaiver.show_at,
-    is_signature_needed: props.editWaiver.is_signature_needed,
-    is_active : props.editWaiver.is_active,
-    sign_again : props.editWaiver.sign_again,
+    is_active : props.editWaiver.is_active ?? false,
+    is_signature_needed: (props.editWaiver.is_active && props.editWaiver.is_signature_needed) ?? false,
+    sign_again : (props.editWaiver.is_active && props.editWaiver.is_signature_needed && props.editWaiver.sign_again) ?? false,
 });
 
 const helpers = WaiverHelpers();
@@ -209,39 +209,30 @@ const moveUp = (index) => {
                         Add Question
                     </label>
                 </div>
-                <div class="flex flex-col space-y-2">
-                    <Switcher
-                        :class="{
-                            'border-red-500': form.errors.is_signature_needed,
-                        }"
-                        v-model="form.is_signature_needed"
-                        title="Signature Needed?"
-                        :show-labels="['No', 'Yes']"
-                    />
-                    <InputError :message="form.errors.is_signature_needed" />
-                </div>
-                <div class="flex flex-col space-y-2">
-                    <Switcher
-                        :class="{
-                            'border-red-500': form.errors.is_active,
-                        }"
-                        v-model="form.is_active"
-                        title="Active?"
-                        :show-labels="['No', 'Yes']"
-                    />
-                    <InputError :message="form.errors.is_active" />
-                </div>
-                <div class="flex flex-col space-y-2">
-                    <Switcher
-                        :class="{
-                            'border-red-500': form.errors.sign_again,
-                        }"
-                        v-model="form.sign_again"
-                        title="Old users need to sign this?"
-                        :show-labels="['No', 'Yes']"
-                    />
-                    <InputError :message="form.errors.sign_again" />
-                </div>
+                <div>
+                <Switcher
+                    v-model="form.is_active"
+                    title="Active"
+                    description=""
+                    :show-labels="['No', 'Yes']"
+                />
+            </div>
+            <div v-if="form.is_active">
+                <Switcher
+                    v-model="form.is_signature_needed"
+                    title="Signature Needed?"
+                    description=""
+                    :show-labels="['No', 'Yes']"
+                />
+            </div>
+            <div v-if="form.is_signature_needed">
+                <Switcher
+                    v-model="form.sign_again"
+                    title="Old users need to sign this?"
+                    description=""
+                    :show-labels="['No', 'Yes']"
+                />
+            </div>
             </div>
         </template>
         <template #actions>

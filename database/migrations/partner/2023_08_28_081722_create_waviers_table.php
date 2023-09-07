@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('show_at')->nullable();
             $table->boolean('is_signature_needed')->default(0);
             $table->json('questions')->nullable();
+            $table->boolean('is_active')->default(false);
+            $table->boolean('sign_again')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });

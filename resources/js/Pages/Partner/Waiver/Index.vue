@@ -155,13 +155,15 @@ const showQuestion = (id) => {
                 :currentSort="form.order_by === 'show_at'"
             />
             <table-head title="Description" />
+            <table-head title="Active" />
             <table-head title="Sign Needed?" />
+            <table-head title="Old User Should Sign Again" />
             <table-head title="Questions" />
             <table-head title="Action" class="flex justify-end" />
         </template>
 
         <template #tableData>
-            <tr v-for="(obj, index) in waivers">
+            <tr v-for="(obj, index) in waivers" :key="index">
                 <table-data>{{ obj.title }}</table-data>
                 <table-data>{{
                     helpers.getShowAtValue(obj.show_at).label
@@ -178,7 +180,13 @@ const showQuestion = (id) => {
                     </span>
                 </table-data>
                 <table-data>
+                    {{ obj.is_active ? "Yes" : "No" }}
+                </table-data>
+                <table-data>
                     {{ obj.is_signature_needed ? "Yes" : "No" }}
+                </table-data>
+                <table-data>
+                    {{ obj.sign_again ? "Yes" : "No" }}
                 </table-data>
 
                 <table-data>
