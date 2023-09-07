@@ -756,9 +756,9 @@ const emailClass = (classLesson) => {
                     <div
                         class="inline-flex text-sm font-normal rounded-full text-white p-1 px-2 justify-center"
                         :class="{'bg-danger-600': !class_lesson.spaces_left, 'bg-gray-500': class_lesson.spaces_left}"
-                        v-tooltip="class_lesson.spaces_booked + ' booked out of ' + class_lesson.spaces + ' total spaces'"
+                        v-tooltip="class_lesson.spaces_booked + ' booked out of ' + (class_lesson.spaces ?? class_lesson.default_spaces) + ' total spaces'"
                     >
-                    {{ class_lesson.spaces_booked }} / {{ class_lesson.spaces }}
+                    {{ class_lesson.spaces_booked }} / {{ class_lesson.spaces ?? class_lesson.default_spaces }}
                     </div>
                 </TableData>
 
