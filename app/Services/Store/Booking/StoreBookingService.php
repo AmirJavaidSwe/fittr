@@ -2,9 +2,12 @@
 
 namespace App\Services\Store\Booking;
 
+use Carbon\Carbon;
 use App\Enums\BookingStatus;
 use App\Traits\GenericHelper;
+use App\Models\Partner\Waiver;
 use App\Models\Partner\Booking;
+use App\Models\Partner\UserWaiver;
 use App\Events\BookingConfirmation;
 use App\Models\Partner\ClassLesson;
 
@@ -12,16 +15,15 @@ class StoreBookingService
 {
     use GenericHelper;
 
-
     public function store() {
 
-        $request = request();
+        $request = collect(request()->request_data);
 
         $class = ClassLesson::with(['bookings' => function ($query) {
             $query->where('user_id', auth()->user()?->id)->active();
         }])
         ->active()
-        ->find($request->class_id);
+        ->find($request->get('class_id'));
 
         $maxDaysBooking = session('business_settings.days_max_booking');
 
@@ -33,7 +35,9 @@ class StoreBookingService
         $maxBookingStart = $maxBookingStart->utc();
 
         if(!$class) {
-            return $this->redirectBackError(__('The class does not exist.'));
+
+            return $this->redirectBackErrorWithSubdomain(__('The class does not exist.'), (request()->returnTo ?? 'ss.classes.index'));
+            // return $this->redirectBackError(__('The class does not exist.'));
         }
 
         if(
@@ -43,16 +47,19 @@ class StoreBookingService
                 && $maxBookingEnd->gte($class->end_date)
             )
         ) {
-            return $this->redirectBackError(__('The class cannot be booked.'));
+            return $this->redirectBackErrorWithSubdomain(__('The class cannot be booked.'), (request()->returnTo ?? 'ss.classes.index'));
+            // return $this->redirectBackError(__('The class cannot be booked.'));
         }
 
         if($class->bookings->count()) {
-            return $this->redirectBackError(__('The class cannot be booked again.'));
+            return $this->redirectBackErrorWithSubdomain(__('The class cannot be booked again.'), (request()->returnTo ?? 'ss.classes.index'));
+            // return $this->redirectBackError(__('The class cannot be booked again.'));
         }
 
         //allow late booking, up to the end of class (TBD)
         if (now()->greaterThan($class->end_date)) {
-            return $this->redirectBackError(__('This class can no longer be booked.'));
+            return $this->redirectBackErrorWithSubdomain(__('This class can no longer be booked.'), (request()->returnTo ?? 'ss.classes.index'));
+            // return $this->redirectBackError(__('This class can no longer be booked.'));
         }
 
 
@@ -62,31 +69,32 @@ class StoreBookingService
         // going forward we will add another step for member selecting the seat or space and any other extras before we save the model
 
 
-        if(!$this->classHasSpaceLeft($request->class_id)) {
-            return $this->redirectBackError(__('This class can no longer be booked because it doesn\'t have required spaces left.'));
+        if(!$this->classHasSpaceLeft($request->get('class_id'))) {
+            return $this->redirectBackErrorWithSubdomain(__('This class can no longer be booked because it doesn\'t have required spaces left.'), (request()->returnTo ?? 'ss.classes.index'));
+            // return $this->redirectBackError(__('This class can no longer be booked because it doesn\'t have required spaces left.'));
         }
 
-        if($request->is_family_booking && count($request->familyBooking['family_member']['ids'])) {
-            $familyDetails = $request->familyBooking;
+        if($request->get('is_family_booking') && count($request->get('familyBooking')['family_member']['ids'])) {
+            $familyDetails = $request->get('familyBooking');
             if($familyDetails['user_id'] != null) {
                 $booking = Booking::create([
-                    'class_id' => $request->class_id,
-                    'user_id' => $request->user()->id,
-                    'is_family_booking' => ($request->is_family_booking) ? 1 : 0,
+                    'class_id' => $request->get('class_id'),
+                    'user_id' => auth()->user()->id,
+                    'is_family_booking' => ($request->get('is_family_booking')) ? 1 : 0,
                 ]);
             }
-            foreach($request->familyBooking['family_member']['ids'] as $id) {
+            foreach($request->get('familyBooking')['family_member']['ids'] as $id) {
                 $booking = Booking::create([
-                    'class_id' => $request->class_id,
-                    'user_id' => $request->user()->id,
-                    'is_family_booking' => ($request->is_family_booking) ? 1 : 0,
+                    'class_id' => $request->get('class_id'),
+                    'user_id' => auth()->user()->id,
+                    'is_family_booking' => ($request->get('is_family_booking')) ? 1 : 0,
                     'family_member_id' => $id,
                 ]);
             }
         } else {
             $booking = Booking::create([
-                'class_id' => $request->class_id,
-                'user_id' => $request->user()->id,
+                'class_id' => $request->get('class_id'),
+                'user_id' => auth()->user()->id,
             ]);
         }
 
@@ -99,28 +107,30 @@ class StoreBookingService
 
     public function bookForOtherFamly() {
 
-        $request = request();
+        $request = collect(request()->request_data);
 
-        if(!$this->classHasSpaceLeft($request->class_id)) {
+        if(!$this->classHasSpaceLeft($request->get('class_id'))) {
             return $this->redirectBackError(__('This class can no longer be booked because it doesn\'t have required spaces left.'));
         }
 
-        foreach($request->members as $member) {
+        foreach($request->get('members') as $member) {
             $booking = Booking::create([
-                'class_id' => $request->class_id,
-                'user_id' => $request->user()->id,
+                'class_id' => $request->get('class_id'),
+                'user_id' => auth()->user()->id,
                 'is_family_booking' => 1,
                 'family_member_id' => $member['is_parent'] == false ? $member['id'] : null,
             ]);
         }
-        Booking::where('user_id', $request->user()->id)->where('class_id', $request->class_id)->active()->update(['is_family_booking' => 1]);
+        Booking::where('user_id', auth()->user()->id)->where('class_id', $request->get('class_id'))->active()->update(['is_family_booking' => 1]);
 
         return $this->redirectBackSuccessWithSubdomain('', 'ss.classes.index');
 
     }
 
     public function classHasSpaceLeft($id) {
-        $request = request();
+
+        $request = collect(request()->request_data);
+
         $class = ClassLesson::with(['bookings' => function ($query) {
             $query->active();
         }])
@@ -132,17 +142,35 @@ class StoreBookingService
 
         $bookingFor = 0;
 
-        if($request->is_family_booking && count($request->familyBooking['family_member']['ids'])) {
-            $bookingFor += count($request->familyBooking['family_member']['ids']);
-            if($request->familyBooking['user_id']) {
+        if($request->get('is_family_booking') && count($request->get('familyBooking')['family_member']['ids'])) {
+            $bookingFor += count($request->get('familyBooking')['family_member']['ids']);
+            if($request->get('familyBooking')['user_id']) {
                 $bookingFor++;
             }
         }
-        if($request->has('is_new_family_booking') && count($request->members)) {
-            $bookingFor = count($request->members);
+        if($request->has('is_new_family_booking') && count($request->get('members'))) {
+            $bookingFor = count($request->get('members'));
         }
 
         return (($bookingsCount + $bookingFor) > $spaces) ? false : true;
+    }
+
+    public function waiverSignNeeded() {
+        $waiver = Waiver::where('show_at', 'checkout')->where('is_active', 1)->first();
+        if($waiver) {
+            $user_waiver = UserWaiver::where('user_id', auth()->user()->id)
+            ->where('waiver_id', $waiver->id)->first();
+            if($user_waiver) {
+                return [];
+            }
+            if((!($waiver->sign_again)) && Carbon::parse($waiver->created_at) > Carbon::parse(auth()->user()->created_at)) {
+                return [];
+            }
+        }
+        $waiver_sign_needed = [];
+        $waiver_sign_needed['waiver_sign_needed'] = true;
+        $waiver_sign_needed['waiver'] = $waiver;
+        return $waiver_sign_needed;
     }
 
 }

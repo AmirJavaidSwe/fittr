@@ -679,6 +679,9 @@ const isBookable = (time) => {
     <!-- Class detail Modal -->
     <SideModal :show="modal" @close="closeModal">
         <template #title>Details</template>
+        <template #close>
+            <CloseModal @click="closeModal" />
+        </template>
         <template #content>
             <div class="w-full mb-4">
                 <img class="w-full rounded-md" v-if="classDetails.studio?.location?.images?.length"
@@ -826,7 +829,7 @@ const isBookable = (time) => {
                     </div>
                 </div>
                 <hr />
-                <template v-for="(familyMember, index) in user.family">
+                <template v-for="(familyMember, index) in user.family" :key="index">
                     <div class="flex items-center justify-between my-4 mx-4">
                         <div class="flex items-center">
                             <img :src="familyMember.profile_photo_url" :alt="familyMember.name"
@@ -885,7 +888,7 @@ const isBookable = (time) => {
                     </div>
                 </div>
                 <hr />
-                <template v-for="(familyMember, index) in user.family">
+                <template v-for="(familyMember, index) in user.family" :key="index">
                     <div class="flex items-center justify-between my-4 mx-4">
                         <div class="flex items-center">
                             <img :src="familyMember.profile_photo_url" :alt="familyMember.name"
@@ -943,7 +946,7 @@ const isBookable = (time) => {
                     </div>
                 </div>
                 <hr />
-                <template v-for="(familyMember, index) in user.family">
+                <template v-for="(familyMember, index) in user.family" :key="index">
                     <div class="flex items-center justify-between my-4 mx-4">
                         <div class="flex items-center">
                             <img :src="familyMember.profile_photo_url" :alt="familyMember.name"

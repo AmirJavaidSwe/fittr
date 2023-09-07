@@ -33,6 +33,7 @@
         "intl-tel-input": "^18.1.8",
         "libphonenumber-js": "^1.10.37",
         "luxon": "^3.3.0",
+        "signature_pad": "^4.1.6",
         "sweetalert2": "^11.4.8",
         "vue3-dropzone": "^2.0.1"
     }

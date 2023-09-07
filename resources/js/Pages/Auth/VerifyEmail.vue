@@ -1,5 +1,5 @@
 <script setup>
-import { router, Head, useForm } from '@inertiajs/vue3';
+import { Head, useForm } from '@inertiajs/vue3';
 import AuthenticationCard from '@/Components/AuthenticationCard.vue';
 import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
 import InputError from '@/Components/InputError.vue';
@@ -45,7 +45,7 @@ const logout = () => {
                 </div>
 
                 <form @submit.prevent="submit">
-                    <ButtonLink 
+                    <ButtonLink
                         styling="primary"
                         size="default"
                         class="w-full justify-center"
@@ -60,16 +60,16 @@ const logout = () => {
                         <div class="flex-grow bg bg-gray-400 h-px"></div>
                     </div>
                     <div class="flex justify-between">
-                        <ButtonLink 
+                        <ButtonLink
                             styling="default"
                             size="default"
                             :href="route('profile.show')">
                             Edit Profile
                         </ButtonLink>
-                        <ButtonLink 
+                        <ButtonLink
                             styling="secondary"
                             size="default"
-                            :type="button"
+                            type="button"
                             @click="logout">
                             Log Out
                         </ButtonLink>

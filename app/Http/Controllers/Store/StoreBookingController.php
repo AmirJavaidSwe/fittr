@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Store;
 
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use App\Models\Partner\Waiver;
 use App\Models\Partner\Booking;
 use App\Http\Controllers\Controller;
 use App\Services\Store\Booking\StoreBookingService;
-use App\Services\Store\Booking\StoreBookingCancellationService;
 use App\Services\Store\Waitlist\StoreWaitlistService;
+use App\Services\Partner\WaiverValidationAndSaveService;
+use App\Services\Store\Booking\StoreBookingCancellationService;
 
 class StoreBookingController extends Controller
 {
@@ -63,13 +65,41 @@ class StoreBookingController extends Controller
 
     public function store(Request $request)
     {
+        if(!request()->has('request_data')) {
+            request()->merge([
+                'request_data' => request()->all()
+            ]);
+        }
+
         $storeBookingService = new StoreBookingService;
+
+        $waiverValidation = WaiverValidationAndSaveService::validateIfHasWaiver();
+
+        $waiverSignNeeded = $storeBookingService->waiverSignNeeded();
+
+        if(!empty($waiverValidation) || (!(request()->has('waiver_id')) && isset($waiverSignNeeded['waiver_sign_needed']))) {
+            return Inertia::render('Store/Classes/WaiverVerification', [
+                "form_data" => request()->request_data,
+                "waiver" => $waiverSignNeeded['waiver'],
+                'submit_to_route' => 'ss.member.bookings.store',
+                'page_title' => __('Waiver Verification Required'),
+                'errors' => $waiverValidation
+            ]);
+        }
+
+        WaiverValidationAndSaveService::saveWaiverAcceptanceData();
 
         return $storeBookingService->store();
     }
 
     public function cancel()
     {
+        if(!request()->has('request_data')) {
+            request()->merge([
+                'request_data' => request()->all()
+            ]);
+        }
+
         $storeBookingCancellationService = new StoreBookingCancellationService;
 
         return $storeBookingCancellationService->cancel();
@@ -78,6 +108,12 @@ class StoreBookingController extends Controller
 
     public function addToWaitlist()
     {
+        if(!request()->has('request_data')) {
+            request()->merge([
+                'request_data' => request()->all()
+            ]);
+        }
+
         $storeWaitlistService = new StoreWaitlistService;
         return $storeWaitlistService->addToWaitlist();
     }
@@ -91,14 +127,42 @@ class StoreBookingController extends Controller
 
     public function bookForOtherFamly(Request $request) {
 
-
         $storeBookingService = new StoreBookingService;
+
+        if(!request()->has('request_data')) {
+            request()->merge([
+                'request_data' => request()->all()
+            ]);
+        }
+
+        $waiverValidation = WaiverValidationAndSaveService::validateIfHasWaiver();
+
+        $waiverSignNeeded = $storeBookingService->waiverSignNeeded();
+
+        if(!empty($waiverValidation) || (!(request()->has('waiver_id')) && isset($waiverSignNeeded['waiver_sign_needed']))) {
+
+            return Inertia::render('Store/Classes/WaiverVerification', [
+                "form_data" => request()->request_data,
+                "waiver" => $waiverSignNeeded['waiver'],
+                'page_title' => __('Waiver Verification Required'),
+                'submit_to_route' => 'ss.member.bookings.other-famly',
+                'errors' => $waiverValidation
+            ]);
+        }
+
+        WaiverValidationAndSaveService::saveWaiverAcceptanceData();
 
         return $storeBookingService->bookForOtherFamly();
 
     }
 
     public function cancelForAllOrSelected(Request $request) {
+
+        if(!request()->has('request_data')) {
+            request()->merge([
+                'request_data' => request()->all()
+            ]);
+        }
 
         $storeBookingCancellationService = new StoreBookingCancellationService;
 

@@ -17,8 +17,7 @@ import {
     // faDoorOpen,
     // faGamepad,
     // faWandMagicSparkles,
-    faLocationPinLock,
-    faBellConcierge,
+    faLocationPinLock
 } from '@fortawesome/free-solid-svg-icons';
 import Section from '@/Components/Section.vue';
 import CardIcon from '@/Components/CardIcon.vue';
@@ -29,6 +28,8 @@ import WidgetIcon from "@/Icons/Widget.vue";
 import PaymentIcon from "@/Icons/Payment.vue";
 import RolesIcon from "@/Icons/Shield.vue";
 import WaviersIcon from "@/Icons/Waviers.vue";
+import FairAccessPolicy from "@/Icons/FairAccessPolicyIcon.vue";
+import ServiceTypes from "@/Icons/ServiceTypesIcon.vue";
 import InvoicesIcon from "@/Icons/Invoices.vue";
 import NotificationsIcon from "@/Icons/Bell.vue";
 import LocationIcon from "@/Icons/Location.vue";
@@ -78,7 +79,7 @@ import GeneralIcon from "@/Icons/GeneralIcon.vue";
                         Manage service store widgets for your websites
                     </template>
                 </CardIcon>
-                <CardIcon :card-link="route('partner.settings.service-store-waivers')">
+                <CardIcon :card-link="route('partner.waivers.index')">
                     <template #icon>
                         <WaviersIcon />
                     </template>
@@ -241,7 +242,7 @@ import GeneralIcon from "@/Icons/GeneralIcon.vue";
                     <!-- TODO: -->
                     <!-- v-can="{ module: 'studio-service-type', roles: $page.props.user.user_roles, permission: 'viewAny', 'user': $page.props.user }" -->
                     <template #icon>
-                        <font-awesome-icon :icon="faBellConcierge" class="text-primary-500 h-8 w-8" />
+                        <ServiceTypes />
                     </template>
 
                     <template #title>
@@ -340,7 +341,7 @@ import GeneralIcon from "@/Icons/GeneralIcon.vue";
 
                 <CardIcon :card-link="route('partner.settings.fap')">
                     <template #icon>
-                        <font-awesome-icon :icon="faLocationPinLock" class="text-primary-500 h-8 w-8" />
+                        <FairAccessPolicy />
                     </template>
 
                     <template #title>

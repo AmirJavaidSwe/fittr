@@ -2,11 +2,11 @@
 
 namespace App\Console\Commands;
 
-use DB;
 use App\Models\Business;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Artisan;
 
 class ParnerMigrateRollback extends Command
@@ -58,7 +58,7 @@ class ParnerMigrateRollback extends Command
             DB::purge('mysql_partner'); //Disconnect from the given database and remove from local cache.
             DB::setDefaultConnection('mysql_partner');
 
-            //run migrations on currently connected partner database:
+            //run running rollback migrations on currently connected partner database:
             Artisan::call('migrate:rollback', ['--path' => 'database/migrations/partner', '--force' => true]);
 
             dump('running rollback migrations on partner db: '.$db_name);
