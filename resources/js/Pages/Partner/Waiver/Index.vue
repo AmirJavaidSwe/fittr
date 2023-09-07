@@ -18,8 +18,6 @@ import DeleteIcon from "@/Icons/Delete.vue";
 import DateValue from "@/Components/DataTable/DateValue.vue";
 import Avatar from "@/Components/Avatar.vue";
 import Search from "@/Components/DataTable/Search.vue";
-import Dropdown from "@/Components/Dropdown.vue";
-import DropdownLink from "@/Components/DropdownLink.vue";
 import SideModal from "@/Components/SideModal.vue";
 import CloseModal from "@/Components/CloseModal.vue";
 import uniqBy from "lodash/uniqBy";
@@ -28,6 +26,7 @@ import ActionsIcon from "@/Icons/ActionsIcon.vue";
 import StatusLabel from "@/Components/StatusLabel.vue";
 import Modal from "@/Components/Modal.vue";
 import CardBasic from "@/Components/CardBasic.vue";
+import { hideAllPoppers } from 'floating-vue';
 
 import {
     faPencil,
@@ -60,6 +59,7 @@ const helpers = WaiverHelpers();
 const itemDeleting = ref(false);
 const itemIdDeleting = ref(null);
 const confirmDeletion = (id) => {
+    hideAllPoppers();
     itemIdDeleting.value = id;
     itemDeleting.value = true;
 };
@@ -291,7 +291,7 @@ const showQuestion = (id) => {
                         <table-head title="Question Type" />
                     </template>
                     <template #tableData>
-                        <tr v-for="(obj, index) in singleWaiver.questions">
+                        <tr v-for="(obj, index) in singleWaiver.questions" :key="index">
                             <table-data>{{ obj.question }}</table-data>
                             <table-data>{{
                                 obj.selectedQuestionType
