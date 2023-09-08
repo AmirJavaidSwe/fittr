@@ -111,7 +111,7 @@ class PartnerServiceTypeController extends Controller
             return redirect()->route(request()->returnTo);
         }
 
-        return $this->redirectBackSuccess(__('Service type created successfully'), 'partner.servicetypes.index');
+        return $this->redirectBackSuccess(__('Service type created successfully'));
     }
 
     /**
@@ -212,6 +212,6 @@ class PartnerServiceTypeController extends Controller
     {
         $servicetype->delete();
 
-        return $this->redirectBackSuccess(__('Service type deleted successfully'), 'partner.servicetypes.index');
+        return $this->redirectBackSuccess(__('Service type deleted successfully'));
     }
 }

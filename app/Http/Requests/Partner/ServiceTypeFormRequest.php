@@ -26,7 +26,7 @@ class ServiceTypeFormRequest extends FormRequest
     public function rules()
     {
         $rules =  [
-            'title' => 'required|string|max:255',
+            'title' => 'required|string|max:255|unique:mysql_partner.service_types,title,'.$this->servicetype?->id,
             'description' => 'nullable|max:65355',
             'status' => ['required', new Enum(StateType::class)],
         ];
