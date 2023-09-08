@@ -11,12 +11,10 @@ use App\Models\Partner\UserWaiver;
 class PartnerWaiverController extends Controller
 
 {
-
     public $search;
     public $per_page;
     public $order_by;
     public $order_dir;
-
 
     /**
      * Display a listing of the resource.
@@ -36,6 +34,14 @@ class PartnerWaiverController extends Controller
             'page_title' => __('Waivers'),
             'header' => array(
                 [
+                    'title' => __('Settings'),
+                    'link' => route('partner.settings.index'),
+                ],
+                [
+                    'title' => '/',
+                    'link' => null,
+                ],
+                [
                     'title' => __('Waivers'),
                     'link' => route('partner.waivers.index'),
                 ]
@@ -53,6 +59,14 @@ class PartnerWaiverController extends Controller
             'page_title' => __('Create New Waiver'),
             'header' => array(
                 [
+                    'title' => __('Settings'),
+                    'link' => route('partner.settings.index'),
+                ],
+                [
+                    'title' => '/',
+                    'link' => null,
+                ],
+                [
                     'title' => __('Waivers'),
                     'link' => route('partner.waivers.index'),
                 ],
@@ -61,7 +75,7 @@ class PartnerWaiverController extends Controller
                     'link' => null,
                 ],
                 [
-                    'title' => __('Create New Waiver'),
+                    'title' => __('Create New'),
                     'link' => null,
                 ],
             ),
@@ -95,6 +109,14 @@ class PartnerWaiverController extends Controller
             'page_title' => __('Edit Waiver'),
             'header' => array(
                 [
+                    'title' => __('Settings'),
+                    'link' => route('partner.settings.index'),
+                ],
+                [
+                    'title' => '/',
+                    'link' => null,
+                ],
+                [
                     'title' => __('Waivers'),
                     'link' => route('partner.waivers.index'),
                 ],
@@ -103,7 +125,7 @@ class PartnerWaiverController extends Controller
                     'link' => null,
                 ],
                 [
-                    'title' => __('Edit Waiver'),
+                    'title' => __('Edit'),
                     'link' => null,
                 ],
             ),

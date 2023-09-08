@@ -139,7 +139,31 @@ router.on("navigate", (event) => {
         </NavLink>
         <NavLink
             :href="route('partner.settings.index')"
-            :active="active_route.name == 'partner.settings.index'"
+            :active="[
+                'partner.settings.index',
+                'partner.amenity.index',
+                'partner.classtypes.index',
+                'partner.locations.index',
+                'partner.notification-templates.index',
+                'partner.packs.index',
+                'partner.roles.index',
+                'partner.servicetypes.index',
+                'partner.studios.index',
+                'partner.taxes.index',
+                'partner.users.index',
+                'partner.waivers.index',
+                'partner.settings.fap',
+                'partner.settings.integrations',
+                'partner.settings.service-store-general',
+                'partner.settings.service-store-header',
+                'partner.settings.service-store-seo',
+                'partner.settings.service-store-code',
+                'partner.settings.bookings',
+                'partner.settings.payments',
+                'partner.settings.general-details',
+                'partner.settings.general-address',
+                'partner.settings.general-formats',
+            ].includes(active_route.name)"
             v-can="{
                 module: 'partner-settings',
                 roles: $page.props.user.user_roles,
