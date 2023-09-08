@@ -10,13 +10,14 @@ import TableHead from "@/Components/DataTable/TableHead.vue";
 import TableData from "@/Components/DataTable/TableData.vue";
 import DataTableLayout from "@/Components/DataTable/Layout.vue";
 import ConfirmationModal from "@/Components/ConfirmationModal.vue";
+import CloseModal from "@/Components/CloseModal.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
-import EditIcon from "@/Icons/Edit.vue";
-import DeleteIcon from "@/Icons/Delete.vue";
 import { faCog, faPlus } from "@fortawesome/free-solid-svg-icons";
 import DateValue from "../../../Components/DataTable/DateValue.vue";
 import ActionsIcon from '@/Icons/ActionsIcon.vue';
-import CloseModal from "@/Components/CloseModal.vue";
+import EditIcon from "@/Icons/Edit.vue";
+import DeleteIcon from "@/Icons/Delete.vue";
+import DuplicateIcon from "@/Icons/Duplicate.vue";
 import StatusLabel from "@/Components/StatusLabel.vue";
 import { hideAllPoppers } from 'floating-vue';
 
@@ -76,12 +77,13 @@ let form_new = useForm({
 const showCreateModal = ref(false);
 const closeCreateModal = () => {
     showCreateModal.value = false;
+    form_new.reset().clearErrors();
 };
 
 const storeItem = () => {
     form_new.post(route("partner.classtypes.store"), {
         preserveScroll: true,
-        onSuccess: () => form_new.reset(),
+        onSuccess: () => closeCreateModal()
     });
 };
 
@@ -95,6 +97,7 @@ let form_edit = useForm({
 const showEditModal = ref(false);
 const closeEditModal = () => {
     showEditModal.value = false;
+    form_edit.clearErrors();
 };
 
 const handleUpdateForm = (data) => {
@@ -109,10 +112,31 @@ const handleUpdateForm = (data) => {
 const updateItem = () => {
     form_edit.put(route("partner.classtypes.update", form_edit), {
         preserveScroll: true,
+        onSuccess: () => closeEditModal()
     });
 };
 
-//delete confiramtion modal:
+//duplication modal:
+const showDuplicateModal = ref(false);
+const handleDuplicateForm = (data) => {
+    hideAllPoppers();
+    showDuplicateModal.value = true;
+    form_new.status = data.status;
+    form_new.title = data.title;
+    form_new.description = data.description;
+};
+const closeDuplicateModal = () => {
+    showDuplicateModal.value = false;
+    form_new.reset().clearErrors();
+};
+const storeDuplicate = () => {
+    form_new.post(route("partner.classtypes.store"), {
+        preserveScroll: true,
+        onSuccess: () => closeDuplicateModal(),
+    });
+};
+
+//delete confirmation modal:
 const itemDeleting = ref(false);
 const itemIdDeleting = ref(null);
 const confirmDeletion = (id) => {
@@ -255,6 +279,15 @@ const deleteItem = () => {
                                     <span> Edit </span>
                                 </ButtonLink>
                                 <ButtonLink
+                                    styling="blank"
+                                    size="small"
+                                    class="w-full flex justify-between hover:bg-gray-100"
+                                    @click="handleDuplicateForm(classtype)"
+                                    >
+                                    <DuplicateIcon class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2" />
+                                    <span> Duplicate </span>
+                                </ButtonLink>
+                                <ButtonLink
                                     styling="transparent"
                                     size="small"
                                     class="w-full flex justify-between text-danger-500 hover:text-danger-700 hover:bg-gray-100"
@@ -296,7 +329,7 @@ const deleteItem = () => {
 
     <!-- Update classtype Modal -->
     <SideModal :show="showEditModal" @close="closeEditModal">
-        <template #title> Update classtype </template>
+        <template #title> Update class type </template>
 
         <template #close>
             <CloseModal @click="closeEditModal" />
@@ -304,6 +337,23 @@ const deleteItem = () => {
 
         <template #content>
             <Form :form="form_edit" :submitted="updateItem" modal :statuses="statuses" />
+        </template>
+    </SideModal>
+
+    <!-- Duplicate Modal -->
+    <SideModal :show="showDuplicateModal" @close="closeDuplicateModal">
+        <template #title> Duplicate class type </template>
+
+        <template #close>
+            <CloseModal @click="closeDuplicateModal" />
+        </template>
+
+        <template #content>
+            <Form
+                :form="form_new"
+                :submitted="storeDuplicate"
+                :statuses="statuses" 
+            />
         </template>
     </SideModal>
 

@@ -112,7 +112,7 @@ class PartnerClassTypeController extends Controller
             return redirect()->route(request()->returnTo);
         }
 
-        return $this->redirectBackSuccess(__('Class Type created successfully'), 'partner.classtypes.index');
+        return $this->redirectBackSuccess(__('Class Type created successfully'));
     }
 
     /**
@@ -213,6 +213,6 @@ class PartnerClassTypeController extends Controller
     {
         $classtype->delete();
 
-        return $this->redirectBackSuccess(__('Class Type deleted successfully'), 'partner.classtypes.index');
+        return $this->redirectBackSuccess(__('Class Type deleted successfully'));
     }
 }

@@ -26,7 +26,7 @@ class ClasstypeFormRequest extends FormRequest
     public function rules()
     {
         $rules =  [
-            'title' => 'required|string|max:255',
+            'title' => 'required|string|max:255|unique:mysql_partner.class_types,title,'.$this->classtype?->id,
             'description' => 'nullable|max:65355',
             'status' => ['required', new Enum(StateType::class)],
         ];
