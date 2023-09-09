@@ -13,7 +13,7 @@ import ConfirmationModal from "@/Components/ConfirmationModal.vue";
 import CloseModal from "@/Components/CloseModal.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
 import { faCog, faPlus } from "@fortawesome/free-solid-svg-icons";
-import DateValue from "../../../Components/DataTable/DateValue.vue";
+import DateValue from "@/Components/DataTable/DateValue.vue";
 import ActionsIcon from '@/Icons/ActionsIcon.vue';
 import EditIcon from "@/Icons/Edit.vue";
 import DeleteIcon from "@/Icons/Delete.vue";

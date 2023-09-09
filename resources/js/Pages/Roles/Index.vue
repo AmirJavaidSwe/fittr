@@ -19,7 +19,7 @@ import {
     faEye,
     faCog,
 } from "@fortawesome/free-solid-svg-icons";
-import DateValue from "../../Components/DataTable/DateValue.vue";
+import DateValue from "@/Components/DataTable/DateValue.vue";
 import { hideAllPoppers } from 'floating-vue';
 
 const props = defineProps({

@@ -25,7 +25,7 @@ const sideModalZIndex = computed(() => {
 const sideModalOverLayZIndex = computed(() => {
     const elementsWithClass = document.querySelectorAll(".sideModalOpened");
     const lengthOfClassElements = elementsWithClass.length;
-    return "z-index: " + (parseInt(1000) + parseInt(lengthOfClassElements));
+    return {'z-index': 1000 + parseInt(lengthOfClassElements)};
 })
 
 const closeOnEscape = (e) => {
@@ -51,6 +51,7 @@ const close = () => {
         >
             <div
                 v-if="show"
+                @click="$emit('close')"
                 class="fixed inset-0 transform transition-all" :style="sideModalOverLayZIndex"
             >
                 <div class="absolute inset-0 bg-gray-500 opacity-75" />

@@ -15,7 +15,7 @@ import ButtonLink from "@/Components/ButtonLink.vue";
 import EditIcon from "@/Icons/Edit.vue";
 import { faCog, faPlus } from "@fortawesome/free-solid-svg-icons";
 import DeleteIcon from "@/Icons/Delete.vue";
-import DateValue from "../../../Components/DataTable/DateValue.vue";
+import DateValue from "@/Components/DataTable/DateValue.vue";
 import ActionsIcon from '@/Icons/ActionsIcon.vue';
 import DuplicateIcon from "@/Icons/Duplicate.vue";
 import StatusLabel from "@/Components/StatusLabel.vue";
