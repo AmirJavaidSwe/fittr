@@ -11,16 +11,14 @@ import { DateTime, Duration, Interval } from 'luxon';
 import Avatar from '@/Components/Avatar.vue';
 import ColoredValue from '@/Components/DataTable/ColoredValue.vue';
 import { computed, onBeforeMount, onMounted, ref, watch } from 'vue';
-import SideModal from '@/Components/SideModal.vue';
 import { Splide, SplideSlide } from '@splidejs/vue-splide';
 import { useWindowSize } from '@/Composables/window_size';
-import { useSwal } from '@/Composables/swal';
 import AvatarValue from "@/Components/DataTable/AvatarValue.vue";
-import Modal from "@/Components/Modal.vue";
-import CloseModal from "@/Components/CloseModal.vue";
-import CardBasic from "@/Components/CardBasic.vue";
 import WaitlistModal from "./Partials/WaitlistModal.vue";
-import DateValue from "@/Components/DataTable/DateValue.vue";
+import FamilyBooking from "./Partials/FamilyBooking.vue";
+import OtherFamilyMembersBooking from "./Partials/OtherFamilyMembersBooking.vue";
+import CancelBooking from "./Partials/CancelBooking.vue";
+import ClassDetail from "./Partials/ClassDetail.vue";
 import ArrowLeft from '@/Components/ArrowLeft.vue';
 import ArrowRight from '@/Components/ArrowRight.vue';
 
@@ -132,9 +130,15 @@ const showModal = (data) => {
     classDetails.value.is_waiting = typeof classDetails.value.waitlists?.filter(item => item.user_id === user_id)[0] !== 'undefined';
 }
 
+const resetFamilyBookingDetails = () => {
+    selectedFamilyMembers.value.user_id = user?.value?.id
+    selectedFamilyMembers.value.family_member.ids = []
+}
+
 const closeModal = () => {
     modal.value = false;
     classDetails.value = {};
+    resetFamilyBookingDetails()
 };
 
 const bookingForm = useForm({ class_id: "" });
@@ -161,7 +165,7 @@ const handleBooking = () => {
 };
 
 
-const showCacnelBookingModal = ref(false)
+const showCancelBookingModal = ref(false)
 const cancelBookingAll = () => {
 
     bookingForm.transform((data) => ({
@@ -176,7 +180,7 @@ const cancelBookingAll = () => {
                 if (res.props.flash.type === "success") {
                     idsCancellation.value = null
                     bookForOtherClass.value = null
-                    showCacnelBookingModal.value = false
+                    showCancelBookingModal.value = false
                     modal.value = false
                 }
             },
@@ -185,13 +189,14 @@ const cancelBookingAll = () => {
 }
 const cancelBooking = () => {
     let filtered;
-    if(classDetails.value.user_bookings.length) {
+    if (classDetails.value.user_bookings.length) {
         filtered = classDetails.value.user_bookings.filter(item => (item.user_id == user.value.id && item.is_family_booking == 1 && item.family_member_id != null))
     }
-    if(filtered.length) {
+
+    if (filtered.length) {
         idsCancellation.value = null
         bookForOtherClass.value = classDetails.value
-        showCacnelBookingModal.value = true
+        showCancelBookingModal.value = true
         return;
     }
     bookingForm.class_id = classDetails.value.id;
@@ -278,10 +283,13 @@ const handleNext = () => {
 const showFamilyBookingModal = ref(false);
 const is_family_booking = ref(1);
 
-const isFamilyBooking = () => {
-    if (is_family_booking.value == 2) {
+const isFamilyBooking = ($event) => {
+    console.log($event)
+    if ($event.is_family_booking == 2) {
+        is_family_booking.value = 2
         showFamilyBookingModal.value = true;
     } else {
+        is_family_booking.value = 1
         showFamilyBookingModal.value = false;
         selectedFamilyMembers.value.user_id = user?.value?.id
         selectedFamilyMembers.value.family_member.ids = []
@@ -313,28 +321,23 @@ const addRemoveFamilyMember = (isParent, id) => {
     }
 }
 
-const checkSelectedFamilyMembers = (id) => {
-    const filtered = selectedFamilyMembers.value.family_member.ids.filter((item) => item == id)
-    return filtered.length ? true : false
-}
-
 const isCancelAbleBooking = (classDetails) => {
-    if(classDetails.is_booked && user?.value?.id && (/* !classDetails.spaces_left || */ (classDetails.user_bookings.length == (user.value?.family?.length + 1)))) {
+    if (classDetails.is_booked && user?.value?.id && (/* !classDetails.spaces_left || */ (classDetails.user_bookings.length == (user.value?.family?.length + 1)))) {
         return true
     }
     return false
 }
 
-const showbookForOtherFamilyMembersModal = ref(false)
+const showBookForOtherFamilyMembersModal = ref(false)
 const bookForOtherClass = ref(null)
 const otherFamilyMemberBookingIds = ref(null)
 const bookForOtherFamilyMembers = (classDetails) => {
-    showbookForOtherFamilyMembersModal.value = true
+    showBookForOtherFamilyMembersModal.value = true
     bookForOtherClass.value = classDetails
 }
 const closeBookForOtherFamilyMembersModal = (param) => {
-    if(!param) {
-        showbookForOtherFamilyMembersModal.value = false
+    if (!param) {
+        showBookForOtherFamilyMembersModal.value = false
         bookForOtherClass.value = null
         otherFamilyMemberBookingIds.value = null
     } else {
@@ -375,10 +378,10 @@ const closeAddFamilyModal = (param) => {
 };
 const idsCancellation = ref(null)
 const addRemoveMemberForCancellation = (isParent, id) => {
-    if(idsCancellation.value == null) {
+    if (idsCancellation.value == null) {
         idsCancellation.value = []
     }
-    if(isParent) {
+    if (isParent) {
         const filtered = idsCancellation.value.filter((item) => {
             return item.is_parent && item.id == id
         })
@@ -409,15 +412,15 @@ const addRemoveMemberForCancellation = (isParent, id) => {
             })
         }
     }
-    if(!idsCancellation.value.length) {
+    if (!idsCancellation.value.length) {
         idsCancellation.value = null
     }
 }
 const addRemoveFamilyMemberForOtherBookings = (isParent, id) => {
-    if(otherFamilyMemberBookingIds.value == null) {
+    if (otherFamilyMemberBookingIds.value == null) {
         otherFamilyMemberBookingIds.value = []
     }
-    if(isParent) {
+    if (isParent) {
         const filtered = otherFamilyMemberBookingIds.value.filter((item) => {
             return item.is_parent && item.id == id
         })
@@ -448,28 +451,12 @@ const addRemoveFamilyMemberForOtherBookings = (isParent, id) => {
             })
         }
     }
-    if(!otherFamilyMemberBookingIds.value.length) {
+    if (!otherFamilyMemberBookingIds.value.length) {
         otherFamilyMemberBookingIds.value = null
     }
 }
-const alreadyBooked = (isParent, id) => {
-    if (isParent) {
-        const classDetail = bookForOtherClass.value
-        const filtered = classDetail.user_bookings.filter((item) => {
-            return item.user_id == id && item.family_member_id == null
-        })
-        return filtered.length ? true : false
-    } else if (!isParent) {
-        const classDetail = bookForOtherClass.value
-        const filtered = classDetail.user_bookings.filter((item) => {
-            return item.user_id == user.value.id && item.family_member_id == id
-        })
-        return filtered.length ? true : false
-    }
-}
-
 const isBookable = (time) => {
-    time = DateTime.fromISO(time, {zone: props.business_settings.timezone});
+    time = DateTime.fromISO(time, { zone: props.business_settings.timezone });
     const interval = time.diff(DateTime.now().setZone(props.business_settings.timezone), 'minutes');
     return interval.minutes > 0;
 };
@@ -485,8 +472,7 @@ const isBookable = (time) => {
             <div class="w-full md:flex-1">
                 <InputLabel value="Class Type" for="class_type" />
                 <Multiselect v-model="form.class_type" :options="class_types" :searchable="true" :close-on-select="true"
-                    :show-labels="true" placeholder="Select Class Type" mode="tags"
-                    :style="{ height: 'auto', padding: 0 }">
+                    :show-labels="true" placeholder="Select Class Type" mode="tags" :style="{ height: 'auto', padding: 0 }">
                     <template v-slot:singlelabel="{ value }">
                         <div class="multiselect-single-label flex items-center">
                             <ColoredValue color="#ddd" :title="value.label" />
@@ -501,8 +487,7 @@ const isBookable = (time) => {
             <div class="w-full md:flex-1">
                 <InputLabel value="Instructor" for="instructor" />
                 <Multiselect v-model="form.instructor" :options="instructors" :searchable="true" :close-on-select="true"
-                    :show-labels="true" placeholder="Select Instructor" mode="tags"
-                    :style="{ height: 'auto', padding: 0 }">
+                    :show-labels="true" placeholder="Select Instructor" mode="tags" :style="{ height: 'auto', padding: 0 }">
                     <template v-slot:singlelabel="{ value }">
                         <div class="multiselect-single-label flex items-center">
                             <Avatar size="small" :title="value.label" />
@@ -525,10 +510,10 @@ const isBookable = (time) => {
                     :style="{ height: 'auto', padding: 0 }" />
             </div>
             <ButtonLink class="self-end" styling="primary" size="default" @click="(e) => {
-                    form.class_type = [];
-                    form.instructor = [];
-                    form.is_off_peak = '';
-                }
+                form.class_type = [];
+                form.instructor = [];
+                form.is_off_peak = '';
+            }
                 ">Reset</ButtonLink>
         </div>
         <div class="border border-t border-gray-200 mb-4"></div>
@@ -548,7 +533,7 @@ const isBookable = (time) => {
             gap: '1rem',
             isNavigation: true,
         }" ref="timetableEl" @splide:moved="handleMoved">
-            <SplideSlide v-for="(time, index) in timetable"
+            <SplideSlide v-for="(time, index) in timetable" :key="index"
                 class="inline-flex py-2 px-3 rounded-lg justify-center bg-white" :class="{
                     'bg-yellow-500':
                         (!form.date && index == 0) ||
@@ -580,11 +565,11 @@ const isBookable = (time) => {
             pagination: false,
             gap: '1rem',
         }" ref="classesEl">
-            <SplideSlide v-for="(time, index) in timetable" :key="index">
+            <SplideSlide v-for="(time, tIndex) in timetable" :key="tIndex">
                 <div v-if="!classes[time.toSQLDate()]" class="flex flex-col">
                     &nbsp;
                 </div>
-                <div v-else v-for="(item, index) in classes[time.toSQLDate()]"
+                <div v-else v-for="(item, index1) in classes[time.toSQLDate()]" :key="index1"
                     class="cursor-pointer relative rounded-md p-3 mb-3" @click="showModal(item)" :class="{
                         hidden:
                             form.is_off_peak &&
@@ -596,19 +581,19 @@ const isBookable = (time) => {
                             !item.on_waitlist && !item.is_booked && classDetails.id != item.id,
                         'shadow-md': item.is_booked || item.on_waitlist,
                     }" :style="{
-                        backgroundColor: item.is_booked ? 'rgba(41, 181, 128, 0.5)'
-                        : (item.on_waitlist ? 'rgba(232, 168, 56, 0.5)' : ''),
-                    }">
+    backgroundColor: item.is_booked ? 'rgba(41, 181, 128, 0.5)'
+        : (item.on_waitlist ? 'rgba(232, 168, 56, 0.5)' : ''),
+}">
                     <div class="flex justify-between items-center mb-4">
                         <div class="text-2xl font-bold self-center" v-tooltip="DateTime.fromISO(item.start_date)
-                                .setZone(business_settings.timezone)
-                                .toFormat(
-                                    business_settings.date_format
-                                        .format_js +
-                                    ' ' +
-                                    business_settings.time_format
-                                        .format_js
-                                )
+                            .setZone(business_settings.timezone)
+                            .toFormat(
+                                business_settings.date_format
+                                    .format_js +
+                                ' ' +
+                                business_settings.time_format
+                                    .format_js
+                            )
                             ">
                             {{
                                 DateTime.fromISO(item.start_date)
@@ -677,304 +662,35 @@ const isBookable = (time) => {
     </div> -->
 
     <!-- Class detail Modal -->
-    <SideModal :show="modal" @close="closeModal">
-        <template #title>Details</template>
-        <template #close>
-            <CloseModal @click="closeModal" />
-        </template>
-        <template #content>
-            <div class="w-full mb-4">
-                <img class="w-full rounded-md" v-if="classDetails.studio?.location?.images?.length"
-                    :src="classDetails.studio?.location?.images[0].url" :alt="classDetails.studio?.location?.images[0]
-                            .original_filename
-                        " />
-            </div>
-            <div class="flex flex-col">
-                <div class="flex text-3xl font-bold mb-4 items-center">
-                    <div class="flex flex-grow mr-4">{{ classDetails.title }}</div>
-                    <div class="flex flex-col shrink-0">
-                        <div
-                            class="inline-flex text-sm font-normal rounded-lg bg-green-500 text-white p-2 justify-center mb-2">
-                            Free</div>
-                        <div class="inline-flex text-sm font-normal rounded-lg text-white p-2 justify-center"
-                            :class="{ 'bg-danger-600': !classDetails.spaces_left, 'bg-gray-500': classDetails.spaces_left }">
-                            {{ classDetails.spaces_left > 0 ? 'Not Full' : 'Full' }}</div>
-                    </div>
-                </div>
+    <ClassDetail :business_settings="business_settings" :class_types="class_types" :instructors="instructors" :show="modal"
+        :selected_family_members="selectedFamilyMembers" :other_family_member_booking_ids="otherFamilyMemberBookingIds"
+        :is_cancel_able_booking="isCancelAbleBooking(classDetails)" :classDetails='classDetails' :user="user"
+        :is_family_booking="is_family_booking" :bookingForm="bookingForm" @handleBooking="handleBooking"
+        @addRemoveFromWaitlist="addRemoveFromWaitlist" @bookForOtherFamilyMembers="bookForOtherFamilyMembers"
+        @isFamilyBooking="isFamilyBooking" @close="closeModal" @cancelBooking="cancelBooking" />
 
-                <div class="flex flex-row mb-4">
-                    <div class="flex flex-row">
-                        <div class="flex mr-2">
-                            <!-- <img src="" class="inline-block rounded-xl w-full h-full bg-gray-500" alt="User" /> -->
-                            <template v-if="classDetails?.instructor.length">
-                                <template v-for="(
-                                        instructor, ins
-                                    ) in classDetails?.instructor" :key="ins">
-                                    <AvatarValue
-                                        class="cursor-pointer inline-flex justify-center mr-1 text-center items-center"
-                                        :onlyTooltip="true" :title="instructor?.name ?? 'Demo Ins'" />
-                                </template>
-                            </template>
-                        </div>
-                    </div>
-                </div>
+    <!-- Family Booking Modal -->
+    <FamilyBooking :selected_family_members="selectedFamilyMembers" :show_family_booking_modal="showFamilyBookingModal"
+        :side_modal_opened="modal" :user="user" @closeAddFamilyModal="closeAddFamilyModal"
+        @addRemoveFamilyMember="addRemoveFamilyMember" />
 
-                <div class="flex flex-row mb-3">
-                    <div class="w-1/2 flex mr-2 items-center">Class Type:</div>
-                    <div class="flex w-1/2 justify-end font-bold">
-                        {{ classDetails.class_type?.title }}
-                    </div>
-                </div>
+    <!-- Other Family Member Booking Modal (which are not booked at first time booking) -->
+    <OtherFamilyMembersBooking :selected_family_members="selectedFamilyMembers"
+        :show_book_for_other_family_members_modal="showBookForOtherFamilyMembersModal" :side_modal_opened="modal"
+        :user="user" :current_class="classDetails" :other_family_member_booking_ids="otherFamilyMemberBookingIds"
+        :form="bookingForm" @closeBookForOtherFamilyMembersModal="closeBookForOtherFamilyMembersModal"
+        @addRemoveFamilyMemberForOtherBookings="addRemoveFamilyMemberForOtherBookings" />
 
-                <div class="flex flex-row mb-3">
-                    <div class="w-1/2 flex mr-2 items-center">Time:</div>
-                    <div class="flex w-1/2 justify-end font-bold">
-                        {{ classDetails.start_date?.toFormat("hh:mm a") }} -
-                        {{ classDetails.end_date?.toFormat("hh:mm a") }}
-                    </div>
-                </div>
+    <!-- Booking Cancellation Modal to choose from, When All members are booked -->
+    <CancelBooking :show_cancel_booking_modal="showCancelBookingModal" :side_modal_opened="modal" :user="user"
+        :current_class="classDetails" :ids_cancellation="idsCancellation" :booking_form="bookingForm"
+        @hideCancelBookingModal="showCancelBookingModal = false" @cancelBookingAll="cancelBookingAll"
+        @addRemoveMemberForCancellation="addRemoveMemberForCancellation" />
 
-                <div class="flex flex-row mb-3">
-                    <div class="w-1/2 flex mr-2 items-center">
-                        Lession Time:
-                    </div>
-                    <div class="flex w-1/2 justify-end font-bold">
-                        {{ classDetails.duration }} minutes
-                    </div>
-                </div>
-
-                <div class="flex flex-row mb-3">
-                    <div class="w-1/2 flex mr-2 items-center">Date:</div>
-                    <div class="flex w-1/2 justify-end font-bold">
-                        {{ classDetails.start_date?.toFormat(business_settings.date_format?.format_js) }}
-                    </div>
-                </div>
-
-                <div v-if="classDetails.waitlists?.length" class="flex flex-row mb-3">
-                    <div class="w-1/2 flex mr-2 items-center">
-                        Waiting list:
-                    </div>
-                    <div class="flex w-1/2 justify-end font-bold">
-                        {{ classDetails.waitlists?.length }}
-                    </div>
-                </div>
-            </div>
-            <div class="text-right" v-if="user?.family?.length">
-                <div class="relative inline-flex text-right items-center" v-if="!classDetails.is_booked">
-                    Booking for
-                    <select class="ml-5 border-0 focus:border-0 cursor-pointer mr-0 pr-7 text-primary-500"
-                        v-model="is_family_booking" @change="isFamilyBooking">
-                        <option value="1">Only Myself</option>
-                        <option value="2">Me and Others</option>
-                    </select>
-                </div>
-            </div>
-            <div class="mt-5 bg-mainbg border-rounded text-right border-gray p-4" v-if="user?.family?.length && !classDetails.is_booked">
-                <template v-if="is_family_booking == 2 && selectedFamilyMembers.family_member.ids.length">
-                    {{ parseInt(selectedFamilyMembers.family_member.ids.length) + 1 + " x Attendee(s) Selected" }}
-                </template>
-                <template v-else>
-                    {{ 1 + " x Attendee(s) Selected" }}
-                </template>
-            </div>
-            <div class="mt-5 bg-mainbg border-rounded text-right border-gray p-4" v-if="user?.family?.length && classDetails.is_booked && (classDetails.user_bookings.length != (user.family.length + 1))">
-                {{ parseInt(classDetails.user_bookings.length) + " out of " + (user.family.length + 1) + " Attendee(s) Selected" }}
-            </div>
-        </template>
-        <template #footer>
-            <ButtonLink class="mr-2" styling="default" size="default" @click="closeModal">Close</ButtonLink>
-
-            <ButtonLink v-if="!$page.props.user" styling="secondary" size="default" @click="handleBooking"
-                :disabled="bookingForm.processing">Sign in to Book</ButtonLink>
-            <ButtonLink v-else-if="isCancelAbleBooking(classDetails)" styling="secondary" size="default" @click="cancelBooking"
-                :disabled="bookingForm.processing">Cancel Booking</ButtonLink>
-            <div v-else-if="!classDetails.spaces_left" class="inline-flex">
-                <ButtonLink v-if="!classDetails.has_family && classDetails.is_waiting" styling="secondary" size="default" @click="addRemoveFromWaitlist(3)" :disable="disableButton"
-                    >Remove from waitlist</ButtonLink>
-                    <ButtonLink v-else-if="!classDetails.has_family && !classDetails.is_waiting" styling="secondary" size="default" @click="addRemoveFromWaitlist(1)" :disable="disableButton"
-                    >Add to waitlist</ButtonLink>
-                <ButtonLink v-else styling="secondary" size="default" @click="addRemoveFromWaitlist(2)" :disable="disableButton"
-                    >Add or Remove from waitlist</ButtonLink>
-            </div>
-            <ButtonLink v-else-if="!classDetails.is_booked" styling="secondary" size="default" @click="handleBooking" :disabled="bookingForm.processing">
-                Book</ButtonLink>
-            <ButtonLink v-else-if="!isCancelAbleBooking(classDetails)" styling="secondary" size="default" @click="bookForOtherFamilyMembers(classDetails)" :disabled="bookingForm.processing">
-                Book For Other Family Members</ButtonLink>
-        </template>
-    </SideModal>
-
-    <Modal :show="showFamilyBookingModal" :sideModalOpened="modal">
-        <CardBasic>
-            <template #header>
-                <div class="flex justify-between items-center">
-                    <div class="text-md mx-auto">Select Attendees</div>
-                    <div>
-                        <CloseModal @click="closeAddFamilyModal(false)" v-tooltip="'Cancel and Close'" />
-                    </div>
-                </div>
-            </template>
-            <template #default>
-                <div class="flex items-center justify-between my-4 mx-4">
-                    <div class="flex items-center">
-                        <img :src="user.profile_photo_url" :alt="user.name" class="rounded-full h-10 w-10 object-cover" />
-                        <div class="pl-2">
-                            <div class="block pl-2 font-semibold mb-2">
-                                {{ user.name }}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="inline-flex items-center justify-start mr-20">
-                        <input type="checkbox" @change="addRemoveFamilyMember(true, user.id)"
-                            :checked="selectedFamilyMembers.user_id !== null ? true : false">
-                    </div>
-                </div>
-                <hr />
-                <template v-for="(familyMember, index) in user.family" :key="index">
-                    <div class="flex items-center justify-between my-4 mx-4">
-                        <div class="flex items-center">
-                            <img :src="familyMember.profile_photo_url" :alt="familyMember.name"
-                                class="rounded-full h-10 w-10 object-cover" />
-                            <div class="pl-2">
-                                <div class="block pl-2 font-semibold mb-2">
-                                    {{ familyMember.name }}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="inline-flex items-center justify-start mr-20">
-                            <input type="checkbox" @change="addRemoveFamilyMember(false, familyMember.id)"
-                                :checked="checkSelectedFamilyMembers(familyMember.id)">
-                        </div>
-                    </div>
-                    <hr />
-                </template>
-            </template>
-            <template #footer>
-                <div class="text-right">
-                    <ButtonLink class="mr-2" styling="default" size="default" @click="closeAddFamilyModal(false)">Cancel &
-                        Close</ButtonLink>
-                    <ButtonLink styling="secondary" size="default" @click="closeAddFamilyModal(true)">Confirm & Close
-                    </ButtonLink>
-                </div>
-            </template>
-
-        </CardBasic>
-    </Modal>
-    <Modal :show="showbookForOtherFamilyMembersModal" :sideModalOpened="modal">
-        <CardBasic>
-            <template #header>
-                <div class="flex justify-between items-center">
-                    <div class="text-md mx-auto">Select Attendees</div>
-                    <div>
-                        <CloseModal @click="closeBookForOtherFamilyMembersModal(false)" v-tooltip="'Cancel and Close'" />
-                    </div>
-                </div>
-            </template>
-            <template #default>
-                <div class="flex items-center justify-between my-4 mx-4">
-                    <div class="flex items-center">
-                        <img :src="user.profile_photo_url" :alt="user.name" class="rounded-full h-10 w-10 object-cover" />
-                        <div class="pl-2">
-                            <div class="block pl-2 font-semibold mb-2">
-                                {{ user.name }}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="inline-flex items-center justify-start mr-20">
-                        <p class="mr-5 opacity-60 text-sm">
-                            {{ alreadyBooked(true, user.id) ? 'already booked' : '' }}
-                        </p>
-                        <input type="checkbox" :class="[alreadyBooked(true, user.id) && 'opacity-70']" @change="addRemoveFamilyMemberForOtherBookings(true, user.id)"
-                            :checked="alreadyBooked(true, user.id)" :disabled="alreadyBooked(true, user.id)">
-                    </div>
-                </div>
-                <hr />
-                <template v-for="(familyMember, index) in user.family" :key="index">
-                    <div class="flex items-center justify-between my-4 mx-4">
-                        <div class="flex items-center">
-                            <img :src="familyMember.profile_photo_url" :alt="familyMember.name"
-                                class="rounded-full h-10 w-10 object-cover" />
-                            <div class="pl-2">
-                                <div class="block pl-2 font-semibold mb-2">
-                                    {{ familyMember.name }}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="inline-flex items-center justify-start mr-20">
-                            <p class="mr-5 opacity-60 text-sm">
-                                {{ alreadyBooked(false, familyMember.id) ? 'already booked' : '' }}
-                            </p>
-                            <input type="checkbox" :class="[alreadyBooked(false, familyMember.id) && 'opacity-70']"  @change="addRemoveFamilyMemberForOtherBookings(false, familyMember.id)"
-                            :checked="alreadyBooked(false, familyMember.id)" :disabled="alreadyBooked(false, familyMember.id)">
-                        </div>
-                    </div>
-                    <hr />
-                </template>
-            </template>
-            <template #footer>
-                <div class="text-right">
-                    <ButtonLink class="mr-2" styling="default" size="default" @click="closeBookForOtherFamilyMembersModal(false)">Cancel &
-                        Close</ButtonLink>
-                    <ButtonLink :disabled="otherFamilyMemberBookingIds == null || bookingForm.processing" styling="secondary" size="default" @click="closeBookForOtherFamilyMembersModal(true)">Confirm & Book
-                    </ButtonLink>
-                </div>
-            </template>
-
-        </CardBasic>
-    </Modal>
-    <Modal :show="showCacnelBookingModal" :sideModalOpened="modal">
-        <CardBasic>
-            <template #header>
-                <div class="flex justify-between items-center">
-                    <div class="text-md mx-auto">Select Attendees for Cancellation</div>
-                    <div>
-                        <CloseModal @click="showCacnelBookingModal = false" v-tooltip="'Cancel and Close'" />
-                    </div>
-                </div>
-            </template>
-            <template #default>
-                <div class="flex items-center justify-between my-4 mx-4">
-                    <div class="flex items-center">
-                        <img :src="user.profile_photo_url" :alt="user.name" class="rounded-full h-10 w-10 object-cover" />
-                        <div class="pl-2">
-                            <div class="block pl-2 font-semibold mb-2">
-                                {{ user.name }}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="inline-flex items-center justify-start mr-20">
-                        <input type="checkbox" @change="addRemoveMemberForCancellation(true, user.id)">
-                    </div>
-                </div>
-                <hr />
-                <template v-for="(familyMember, index) in user.family" :key="index">
-                    <div class="flex items-center justify-between my-4 mx-4">
-                        <div class="flex items-center">
-                            <img :src="familyMember.profile_photo_url" :alt="familyMember.name"
-                                class="rounded-full h-10 w-10 object-cover" />
-                            <div class="pl-2">
-                                <div class="block pl-2 font-semibold mb-2">
-                                    {{ familyMember.name }}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="inline-flex items-center justify-start mr-20">
-                            <input type="checkbox" @change="addRemoveMemberForCancellation(false, familyMember.id)">
-                        </div>
-                    </div>
-                    <hr />
-                </template>
-            </template>
-            <template #footer>
-                <div class="text-right">
-                    <ButtonLink class="mr-2" styling="default" size="default" @click="showCacnelBookingModal = false">Cancel &
-                        Close</ButtonLink>
-                    <ButtonLink :disabled="idsCancellation == null || bookingForm.processing" styling="secondary" size="default" @click="cancelBookingAll">Confirm & Cancel
-                    </ButtonLink>
-                </div>
-            </template>
-
-        </CardBasic>
-    </Modal>
-
-    <WaitlistModal v-if="showWaitlistModal" :class-detail="classDetails" :modal="modal" :add-remove-users-to-waitlist="addRemoveUsersToWaitlist" @hide-both=";[showWaitlistModal = false, modal = false, addRemoveUsersToWaitlist = 0]" :business-settings="business_settings" @hide=";[showWaitlistModal = false, addRemoveUsersToWaitlist = 0]" @disable-button=";[disableButton = true]" @enable-button=";[disableButton = false]" />
+    <!-- Waitlist Modal to choose from, When All members are booked -->
+    <WaitlistModal v-if="showWaitlistModal" :class-detail="classDetails" :modal="modal"
+        :add-remove-users-to-waitlist="addRemoveUsersToWaitlist"
+        @hide-both=";[showWaitlistModal = false, modal = false, addRemoveUsersToWaitlist = 0]"
+        :business-settings="business_settings" @hide=";[showWaitlistModal = false, addRemoveUsersToWaitlist = 0]"
+        @disable-button=";[disableButton = true]" @enable-button=";[disableButton = false]" />
 </template>

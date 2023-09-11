@@ -156,20 +156,22 @@ class StoreBookingService
     }
 
     public function waiverSignNeeded() {
+        $waiver_sign_needed = [];
+        $waiver_sign_needed['waiver_sign_needed'] = false;
+        $waiver_sign_needed['waiver'] = null;
         $waiver = Waiver::where('show_at', 'checkout')->where('is_active', 1)->first();
         if($waiver) {
             $user_waiver = UserWaiver::where('user_id', auth()->user()->id)
             ->where('waiver_id', $waiver->id)->first();
             if($user_waiver) {
-                return [];
+                return $waiver_sign_needed;
             }
             if((!($waiver->sign_again)) && Carbon::parse($waiver->created_at) > Carbon::parse(auth()->user()->created_at)) {
-                return [];
+                return $waiver_sign_needed;
             }
+            $waiver_sign_needed['waiver_sign_needed'] = true;
+            $waiver_sign_needed['waiver'] = $waiver;
         }
-        $waiver_sign_needed = [];
-        $waiver_sign_needed['waiver_sign_needed'] = true;
-        $waiver_sign_needed['waiver'] = $waiver;
         return $waiver_sign_needed;
     }
 

@@ -77,7 +77,7 @@ class StoreBookingController extends Controller
 
         $waiverSignNeeded = $storeBookingService->waiverSignNeeded();
 
-        if(!empty($waiverValidation) || (!(request()->has('waiver_id')) && isset($waiverSignNeeded['waiver_sign_needed']))) {
+        if(!empty($waiverValidation) || ($waiverSignNeeded['waiver'] != null && $waiverSignNeeded['waiver_sign_needed'] === true)) {
             return Inertia::render('Store/Classes/WaiverVerification', [
                 "form_data" => request()->request_data,
                 "waiver" => $waiverSignNeeded['waiver'],
@@ -139,7 +139,7 @@ class StoreBookingController extends Controller
 
         $waiverSignNeeded = $storeBookingService->waiverSignNeeded();
 
-        if(!empty($waiverValidation) || (!(request()->has('waiver_id')) && isset($waiverSignNeeded['waiver_sign_needed']))) {
+        if(!empty($waiverValidation) || ($waiverSignNeeded['waiver'] != null && $waiverSignNeeded['waiver_sign_needed'] === true)) {
 
             return Inertia::render('Store/Classes/WaiverVerification', [
                 "form_data" => request()->request_data,
