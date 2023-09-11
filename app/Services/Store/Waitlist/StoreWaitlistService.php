@@ -11,7 +11,7 @@ class StoreWaitlistService
 {
     use GenericHelper;
     public function addToWaitlist() {
-
+        // dd(request());
         $request = request();
 
         $class = ClassLesson::with(['waitlists' => function ($query) {
@@ -55,9 +55,11 @@ class StoreWaitlistService
         }
 
         Booking::where(['status' => BookingStatus::get('waitlisted'),'user_id' => $request->user()->id,])->delete();
-
-        if(isset(request()->members) && count(request()->members)) {
+        // dd($waitlists);
+        // dd(count(request()->members));
+        if(isset(request()->members) && count(request()->members) > 0) {
             foreach(request()->members as $k => $member) {
+                // dd($member);
                 Booking::create([
                     'class_id' => $request->class_id,
                     'user_id' => $request->user()->id,
@@ -67,11 +69,13 @@ class StoreWaitlistService
             }
             return $this->redirectBackSuccessWithSubdomain('The class waiting list for you has been updated as per your choosen options.',  'ss.classes.index');
         } else {
-            Booking::create([
-                'class_id' => $request->class_id,
-                'user_id' => $request->user()->id,
-                'status' => BookingStatus::get('waitlisted'),
-            ]);
+            if(count(request()->members) > 0){
+                Booking::create([
+                    'class_id' => $request->class_id,
+                    'user_id' => $request->user()->id,
+                    'status' => BookingStatus::get('waitlisted'),
+                ]);
+            }
             return $this->redirectBackSuccessWithSubdomain('The class has been added to waitlist.',  'ss.classes.index');
 
         }

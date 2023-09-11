@@ -33,7 +33,7 @@ watch(selectedValue, (newVal) => {
             </select>
         </div>
         <br />
-        <small>
+        <small v-if="!props.current_class.is_booked">
             <template v-if="selectedValue == 2">
                 <span
                     class="cursor-pointer text-primary-500 pr-7"

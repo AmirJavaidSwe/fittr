@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import FormSection from "@/Components/FormSection.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import InputError from "@/Components/InputError.vue";
+import ConfirmationModal from "@/Components/ConfirmationModal.vue";
 import TextInput from "@/Components/TextInput.vue";
 import ActionMessage from "@/Components/ActionMessage.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
@@ -235,5 +236,31 @@ const moveUp = (index) => {
             </ButtonLink>
         </template>
     </FormSection>
+        <ConfirmationModal :show="form.sign_again" @close="form.sign_again = false ">
+            <template #title> Confirmation required </template>
+
+            <template #content>
+                Are you sure you would like to delete all previous users waivers?
+            </template>
+
+            <template #footer>
+                <ButtonLink
+                    size="default"
+                    styling="default"
+                    @click="form.sign_again = false"
+                >
+                    Cancel
+                </ButtonLink>
+
+                <ButtonLink
+                    size="default"
+                    styling="danger"
+                    class="ml-3"
+
+                >
+                    Delete
+                </ButtonLink>
+            </template>
+        </ConfirmationModal>
 </template>
 <style src="@vueform/multiselect/themes/tailwind.css"></style>

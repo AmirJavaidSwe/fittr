@@ -16,7 +16,10 @@ class StoreBookingCancellationService
 
         $request = request();
 
-        $booking = Booking::with(['user', 'class.classType', 'class.instructor', 'class.studio.location'])->where('class_id', $request->class_id)->where('user_id', auth()->user()?->id)->active()->first();
+        $booking = Booking::with(['user', 'class.classType', 'class.instructor', 'class.studio.location'])
+                   ->where('class_id', $request->class_id)
+                   ->where('user_id', auth()->user()?->id)
+                   ->where('id',$request->id)->active()->first();
 
         if(!$booking) {
             return $this->redirectBackError('The booking not found.');
@@ -29,6 +32,7 @@ class StoreBookingCancellationService
         if($booking->status == BookingStatus::get('cancelled')) {
             return $this->redirectBackError('The booking cannot be cancelled again.');
         }
+
 
         $booking->update([
             'status' => BookingStatus::get('cancelled'),
