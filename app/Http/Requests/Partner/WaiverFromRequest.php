@@ -30,12 +30,8 @@ class WaiverFromRequest extends FormRequest
             "questions" => "required|array",
             "questions.*.question" => "required|string|max:255",
             "questions.*.selectedQuestionType" => "required",
+            "show_at" => "required",
         ];
-        if(request()->method == "PUT") {
-            $rules['show_at'] = ['required', Rule::unique('mysql_partner.waivers', 'show_at')->ignore($this->route('waiver'))];
-        } else {
-            $rules['show_at'] = ['required', Rule::unique('mysql_partner.waivers', 'show_at')];
-        }
         return $rules;
     }
 

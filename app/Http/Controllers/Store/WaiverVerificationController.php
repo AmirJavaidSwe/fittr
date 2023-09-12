@@ -14,20 +14,33 @@ class WaiverVerificationController extends Controller
 {
     public function index(Request $request)
     {
-        $waiver = Waiver::where('show_at', 'sign-up')->where('is_active', 1)->first();
-        if(!$waiver) {
+        $waivers = Waiver::where('show_at', 'sign-up')->where('is_active', 1)->get();
+
+        if ($waivers->isEmpty()) {
             return redirect(route('ss.member.dashboard', ["subdomain" => request()->session()->get('business_settings')['subdomain']]));
         }
-        if($waiver) {
-            $user_waiver = UserWaiver::where('user_id', auth()->user()->id)
-            ->where('waiver_id', $waiver->id)->first();
-            if($user_waiver) {
-                return redirect(route('ss.member.dashboard', ["subdomain" => request()->session()->get('business_settings')['subdomain']]));
+
+        $user = auth()->user();
+        $userHasAcceptedAnyWaiver = false;
+
+        foreach ($waivers as $waiver) {
+            $user_waiver = UserWaiver::where('user_id', $user->id)
+                ->where('waiver_id', $waiver->id)
+                ->first();
+
+            if ($user_waiver) {
+                $userHasAcceptedAnyWaiver = true;
+                break;
             }
         }
+        if ($userHasAcceptedAnyWaiver) {
+            return redirect(route('ss.member.dashboard', ["subdomain" => request()->session()->get('business_settings')['subdomain']]));
+        }
+
         return Inertia::render('Store/WaiverVerification', [
             'page_title' => __('Waiver Verification'),
-            'waiver' => $waiver,
+            'waivers' => $waivers,
+            'user' => $user,
         ]);
     }
     public function store(Request $request)
