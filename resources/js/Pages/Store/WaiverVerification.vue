@@ -8,7 +8,7 @@ import Radio from "@/Components/Radio.vue";
 import Checkbox from "@/Components/Checkbox.vue";
 import SignaturePad from "@/Components/SignaturePad.vue";
 import ActionMessage from "@/Components/ActionMessage.vue";
-
+import DialogModal from '@/Components/DialogModal.vue';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue';
 import ButtonLink from "@/Components/ButtonLink.vue";
 import WaiverAcceptCheck from "@/Icons/WaiverAcceptCheck.vue";
@@ -26,13 +26,19 @@ const props = defineProps({
     user:{
         type:Object,
         required:true,
+    },
+    user_waivers:{
+        type:Object,
+        required:false,
     }
 });
 const form = useForm({
     checkWaiver : false,
     waiver:'',
 });
-
+const closeModal = () => {
+    form.checkWaiver= false;
+};
 const submit = () => {
     form.transform((data) => ({
         ...data,
@@ -51,7 +57,8 @@ const submit = () => {
         {
             preserveScroll: true,
         }
-    );
+    )
+    form.checkWaiver = false;
 };
 
 const answerError = computed(() => {
@@ -76,6 +83,7 @@ const waiverFormData = useForm({
     sign: props?.user_waiver?.length ? props?.user_waiver?.signature : null,
 });
 
+
 const waiverQandData = (id) => {
     form.checkWaiver = true;
     form.waiver = props.waivers.find((item) => item.id == id);
@@ -90,7 +98,17 @@ const waiverQandData = (id) => {
         }
     }
 };
+const hasAcceptedWaiver = computed(() => {
+      return (
+        props.user_waivers &&
+        props.user_waivers.find((item) => item.waiver_id === form.waiver.id) !==
+          undefined
+      );
+    });
 
+const hasNotAcceptedWaiver = computed(() => {
+    return !hasAcceptedWaiver.value;
+});
 
 </script>
 
@@ -100,7 +118,11 @@ const waiverQandData = (id) => {
             <p class="text-3xl mb-4">Welcome <span class="font-bold">{{ props?.user?.name }}!</span></p>
             <p class="text-2xl mb-12">You just need to check out the following important documents in order to complete registration.</p>
             <div class="flex items-center mt-4" v-for="waiver in props.waivers" :key="waiver.id">
-                <WaiverNotAcceptedCheck />
+
+                <WaiverAcceptCheck  v-if="props?.user_waivers?.find((item) => item.waiver_id === waiver.id) !==
+                    undefined ? true : false "/>
+                <WaiverNotAcceptedCheck  v-if="props?.user_waivers?.find((item) => item.waiver_id === waiver.id) ==
+                    undefined ? true : false "/>
                 <span class="text-xl ml-4">{{ waiver.title }} Read and signed document</span>
                 <!-- <button class="ml-auto bg-[#E8A838] hover:bg-[#E8A838] text-white px-4 py-2 rounded focus:outline-none focus:ring focus:ring-[#F0F0F0]">view</button> -->
                 <ButtonLink
@@ -111,20 +133,45 @@ const waiverQandData = (id) => {
                 >
                 View
                </ButtonLink>
+               
             </div>
         </div>
+        <div class="flex justify-center space-x-4">
+            <ButtonLink
+              styling="secondary"
+              size="default"
+              class="mt-4"
+              href="/gotodashboard"
+            >
+              Go To Dashboard
+            </ButtonLink>
+            <ButtonLink
+              styling="secondary"
+              size="default"
+              class="mt-4"
+              :href="route('login')"
+            >
+              Go To Back
+            </ButtonLink>
+        </div>          
     </Section>
-    <ConfirmationModal :show="form.checkWaiver" @click="form.checkWaiver = false">
-        <template #title > <div class="w-[600px] h-[122px] p-4 gap-2 bg-[#42705F] text-2xl text-center text-white flex justify-center items-center">
-            {{ form.waiver?.title }}
-        </div></template>
+
+    <DialogModal :show="form.checkWaiver" @close="closeModal">
+        <template #title>
+            <div class="relative">
+                <button class="absolute top-0 right-0 mt-2 mr-2 text-white hover:text-gray-300" @click="closeModal">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+                <div class="w-[600px] h-[122px] p-4 gap-2 bg-[#42705F] text-2xl text-center text-white flex justify-center items-center">
+                    {{ form.waiver?.title }}
+                </div>
+            </div>
+        </template>
 
         <template #content>
-            <WaiverForm :form="waiverFormData" :create-form="form" :submitted="submit" :waiver="form.waiver" />
+            <WaiverForm :form="waiverFormData" :create-form="form" :submitted="submit" :waiver="form.waiver"  />
         </template>
-
-        <template #footer>
-
-        </template>
-    </ConfirmationModal>
+    </DialogModal>
 </template>

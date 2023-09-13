@@ -24,18 +24,18 @@ defineProps({
                 <div class="flex justify-center pt-8 sm:pt-0">
                     <LogoLetter fill="#000000" class="w-48 h-48" />
                 </div>
-            
+
                 <form action="#" class="w-64 xs:w-full block mx-auto max-[500px]:w-full">
                     <div class="h-px mt-4">
                         <div class="flex items-center justify-between gap-4">
-                            <ButtonLink 
+                            <ButtonLink
                                 styling="secondary"
                                 size="default"
                                 class="w-full justify-center"
                                 :href="route('login')">
                                 Log in
                             </ButtonLink>
-                            <ButtonLink 
+                            <ButtonLink
                                 styling="primary"
                                 size="default"
                                 class="w-full justify-center"
