@@ -98,11 +98,13 @@ watch(
 )
 
 const bookingForm = useForm({
-    class_id: ''
+    class_id: '',
+    id:''
 });
 
-const cancelBooking = (class_id) => {
+const cancelBooking = (class_id,id) => {
     bookingForm.class_id = class_id;
+    bookingForm.id = id;
 
     bookingForm.post(route('ss.member.bookings.cancel', {subdomain: props.business_settings.subdomain}), {
         onSuccess: (res) => {
@@ -261,7 +263,7 @@ const optionsList= computed(() => {
                             <template #content>
                                 <DropdownLink
                                     as="button"
-                                    @click="cancelBooking(booking.class?.id)"
+                                    @click="cancelBooking(booking.class?.id,booking?.id)"
                                 >
                                     <span class="text-danger-500 flex items-center">
                                         <!-- <DeleteIcon

@@ -216,7 +216,7 @@ console.log(waitlistIds.value)
                     </div>
                 </div>
                 <hr />
-                <template v-for="(familyMember, index) in user.family">
+                <template v-for="(familyMember, index) in user.family" :key="index">
                     <div class="flex items-center justify-between my-4 mx-4">
                         <div class="flex items-center">
                             <img

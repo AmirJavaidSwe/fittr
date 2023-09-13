@@ -3,6 +3,7 @@ import { ref, computed, onMounted, watch } from "vue";
 import { useForm } from "@inertiajs/vue3";
 import { WaiverHelpers } from "./WaiverHelpers/Index.js";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import ConfirmationModal from "@/Components/ConfirmationModal.vue";
 import FormSection from "@/Components/FormSection.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import InputError from "@/Components/InputError.vue";
@@ -34,6 +35,9 @@ const form = useForm({
 });
 
 const helpers = WaiverHelpers();
+const itemDeleting = ref(true);
+const itemIdDeleting = ref(null);
+
 
 const waiverShowPlaces = helpers.getShowPlaces();
 
@@ -76,6 +80,7 @@ const moveUp = (index) => {
         questionsData.value.splice(index - 1, 0, itemToMove); // Insert it one index up
     }
 };
+
 </script>
 
 <template>
@@ -226,6 +231,7 @@ const moveUp = (index) => {
             </div>
             </div>
         </template>
+
         <template #actions>
             <ActionMessage :on="form.recentlySuccessful" class="mr-3">
                 Update
@@ -239,6 +245,37 @@ const moveUp = (index) => {
                 Update
             </ButtonLink>
         </template>
+
+         <!-- Delete Confirmation Modal -->
     </FormSection>
+    <template>
+    <ConfirmationModal :show="form.sign_again" @close="form.sign_again = false ">
+        <template #title> Confirmation required </template>
+
+        <template #content>
+            Are you sure you would like to delete all previous users waivers?
+        </template>
+
+        <template #footer>
+            <ButtonLink
+                size="default"
+                styling="default"
+                @click="form.sign_again = false"
+            >
+                Cancel
+            </ButtonLink>
+
+            <ButtonLink
+                size="default"
+                styling="danger"
+                class="ml-3"
+
+            >
+                Delete
+            </ButtonLink>
+        </template>
+    </ConfirmationModal>
+    </template>
+
 </template>
 <style src="@vueform/multiselect/themes/tailwind.css"></style>

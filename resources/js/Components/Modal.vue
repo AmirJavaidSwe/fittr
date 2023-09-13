@@ -42,10 +42,10 @@ const closeOnEscape = (e) => {
     }
 };
 
-onMounted(() => document.addEventListener('keydown', closeOnEscape));
+// onMounted(() => document.addEventListener('keydown', closeOnEscape));
 
 onUnmounted(() => {
-    document.removeEventListener('keydown', closeOnEscape);
+    // document.removeEventListener('keydown', closeOnEscape);
     document.body.style.overflow = null;
 });
 

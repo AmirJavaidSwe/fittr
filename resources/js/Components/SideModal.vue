@@ -14,7 +14,7 @@ const slots = useSlots();
 const emit = defineEmits(["close"]);
 
 onMounted(() => {
-    document.addEventListener("keydown", closeOnEscape);
+    // document.addEventListener("keydown", closeOnEscape);
 });
 
 const sideModalZIndex = computed(() => {
@@ -51,7 +51,6 @@ const close = () => {
         >
             <div
                 v-if="show"
-                @click="$emit('close')"
                 class="fixed inset-0 transform transition-all" :style="sideModalOverLayZIndex"
             >
                 <div class="absolute inset-0 bg-gray-500 opacity-75" />
