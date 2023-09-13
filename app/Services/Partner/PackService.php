@@ -15,7 +15,7 @@ class PackService
             return true;
         }
         switch ($new_type) {
-            case PackType::default->name:
+            case PackType::location_pass->name:
                 return false;
             case PackType::corporate->name:
                 return false;
@@ -50,5 +50,111 @@ class PackService
         ->sortBy('label.order');
 
         return $packs;
+    }
+
+    public function normalizedPack($validated) : array
+    {
+        //INCOMPLETE
+        $pack_type = $validated['type'];
+
+        //clear private url, if pack is no longer private
+        if($validated['is_private'] === false){
+            $validated['private_url'] = null;
+        }
+
+        // clear existing restrictions when false
+        if($validated['is_restricted'] === false){
+            $validated['restrictions'] = null;
+        }
+
+        switch ($pack_type) {
+            // case PackType::creditable($pack->type):
+            case PackType::get('class_lesson'):
+                //turn off is_restricted if no restrictions set
+                if($validated['is_restricted'] === true){
+                    $offpeak = $validated['restrictions']['offpeak'];
+                    $classtypes = $validated['restrictions']['classtypes'];
+                    $validated['is_restricted'] = $offpeak !== false || !empty($classtypes);
+                }
+                break;
+
+            case PackType::get('service'):
+                //turn off is_restricted if no restrictions set
+                if($validated['is_restricted'] === true){
+                    $offpeak = $validated['restrictions']['offpeak'];
+                    $servicetypes = $validated['restrictions']['servicetypes'];
+                    $validated['is_restricted'] = $offpeak !== false || !empty($servicetypes);
+                }
+                break;
+
+            case PackType::get('hybrid'):
+                if($validated['is_restricted'] === true){
+                    $offpeak = $validated['restrictions']['offpeak'];
+                    $classtypes = $validated['restrictions']['classtypes'];
+                    $servicetypes = $validated['restrictions']['servicetypes'];
+                    $validated['is_restricted'] = $offpeak !== false || !empty($classtypes) || !empty($servicetypes);
+                }
+
+            case PackType::get('location_pass'):
+                if($validated['is_restricted'] === true){
+                    $validated['is_restricted'] = false;
+                }
+                $validated['restrictions'] = null;
+                break;
+
+            case PackType::get('corporate'):
+                if($validated['is_restricted'] === true){
+                    $validated['is_restricted'] = $validated['restrictions']['offpeak'] !== false;
+                }
+                break;
+        }
+
+        return $validated;
+    }
+
+    public function normalizedPrice(Pack $pack, $validated) : array
+    {
+        //INCOMPLETE
+        switch ($pack->type) {
+            case PackType::get('class_lesson'):
+                // Set sessions = 0 if type == recurring && is_unlimited == true
+                if($validated['type'] == 'recurring' && $validated['is_unlimited'] === true){
+                    $validated['sessions'] = 0;
+                }
+                break;
+
+            case PackType::get('service'):
+                // Set sessions = 0 if type == recurring && is_unlimited == true
+                if($validated['type'] == 'recurring' && $validated['is_unlimited'] === true){
+                    $validated['sessions'] = 0;
+                }
+                break;
+
+            case PackType::get('hybrid'):
+                // Set sessions = 0 if type == recurring && is_unlimited == true
+                if($validated['type'] == 'recurring' && $validated['is_unlimited'] === true){
+                    $validated['sessions'] = 0;
+                }
+                break;
+
+            case PackType::get('location_pass'):
+                // Set sessions = 0 if pass_mode === false
+                if($validated['pass_mode'] === false){
+                    $validated['sessions'] = 0;
+                    $validated['is_renewable'] = false;
+                }
+                // clear expiration periods
+                if($validated['is_expiring'] === false){
+                    $validated['expiration'] = null;
+                    $validated['expiration_period'] = null;
+                }
+                break;
+            case PackType::get('corporate'):
+                break;
+        }
+
+        unset($validated['pass_mode']);
+
+        return $validated;
     }
 }

@@ -33,19 +33,23 @@ const formPrice = useForm(props.price);
 
 const upsertPrice = () => {
     if(props.is_new_price){
-            formPrice.post(route('partner.packs.price.store', { pack : formPrice.priceable_id }), {
+            formPrice.transform((data) => ({
+                ...data,
+                pass_mode: pass_mode.value,
+            }))
+            .post(route('partner.packs.price.store', { pack : formPrice.priceable_id }), {
                 preserveScroll: true,
                 onSuccess: () => emit('created'),
             });
     } else {
         //props we need
-        // #1 default (Membership Type), one_time
+        // #1 location_pass (Membership Type), one_time
         //  is_renewable (is_renewable or is_intro but not both on)
         //  is_intro
         //  expiration (multiplier) 
         //  expiration_period (day, week, month, year) 
 
-        // #1.1 default (Membership Type), recurring
+        // #1.1 location_pass (Membership Type), recurring
         //  is_ongoing
         //  fixed_count
         //  expiration (multiplier) 
@@ -81,6 +85,7 @@ const upsertPrice = () => {
         .transform((data) => ({
             ...data,
             pack_type: props.pack_type,
+            pass_mode: pass_mode.value,
             action: 'edit',
         }))
         .put(route('partner.packs.price.update', { price: formPrice.id } ), {
@@ -91,12 +96,14 @@ const upsertPrice = () => {
 
 };
 
-const isDefaultType = computed(() => {
-  return props.pack_type == 'default';
+const isPassType = computed(() => {
+  return props.pack_type == 'location_pass';
 });
 const isCorporateType = computed(() => {
   return props.pack_type == 'corporate';
 });
+
+const pass_mode = ref(isPassType.value && formPrice.sessions > 0);
 
 // is_renewable and is_intro can't be ON at the same time
 const checkIntro = (el, v) => {
@@ -115,22 +122,62 @@ const isRecurring = computed(() => {
   return formPrice.type == 'recurring';
 });
 const showSessions = computed(() => {
-  return !isDefaultType.value && (!isRecurring.value || (isRecurring.value && !formPrice.is_unlimited));
+    if(isPassType.value){
+        return pass_mode.value === true;
+    }
+    if(isRecurring.value === false){
+        return true;
+    }
+    if(isRecurring.value && formPrice.is_unlimited === false){
+        return true;
+    }
+    return false;
 });
 const showUnlim = computed(() => {
-  return isRecurring.value && !isDefaultType.value && !isCorporateType.value;
+    return isRecurring.value && !isPassType.value && !isCorporateType.value;
 });
 const showFap = computed(() => {
-  return showUnlim.value && formPrice.is_unlimited;
+    return showUnlim.value && formPrice.is_unlimited;
 });
 const showFapValue = computed(() => {
-  return showFap.value && formPrice.is_fap;
+    return showFap.value && formPrice.is_fap;
 });
 const showRenewable = computed(() => {
-  return !isRecurring.value && !isDefaultType.value;
+    return !isRecurring.value && (isPassType.value && pass_mode.value);
 });
 const showIntro = computed(() => {
-  return !isRecurring.value && props.pack_type != 'corporate';
+    return !isRecurring.value && props.pack_type != 'corporate';
+});
+const expirationTitle = computed(() => {
+    let title = 'Session credits';
+    if(isPassType.value){
+        title = pass_mode.value === true ? 'Passes' : 'Membership';
+    }
+    return title + ' expiration';
+});
+const expirationDescription = computed(() => {
+    if(!isPassType.value){
+        return 'Session credits ' + (formPrice.is_expiring ? 'will' : 'never') + ' expire (since day of creation)';
+    }
+    // isPassType.value === true case
+    if(pass_mode.value === true){
+        if(formPrice.is_expiring){
+            return 'Unused passes will expire';
+        }
+        return isRecurring.value ? 
+            'Unused passes from each billing cycle will remain active and carried over':
+            'Unused passes will remain active indefinitely';
+    } 
+    if(pass_mode.value === false){
+        if(formPrice.is_expiring){
+            return isRecurring.value ? 
+            'Membership will expire on the next day of selected period':
+            'Membership will expire';
+        }
+        return isRecurring.value ? 
+            'Membership will expire on the next day of paid period':
+            'Membership will remain active indefinitely';
+    }
 });
 </script>
 
@@ -180,11 +227,27 @@ const showIntro = computed(() => {
                 <span v-if="formPrice.interval_count">&nbsp;{{formPrice.interval_human}}</span>
             </div>
 
+            <div v-if="isPassType">
+                <Switcher
+                    v-model="pass_mode"
+                    title="Pass mode"
+                    description="Should this membership provide unlimited passed while active or be based on fixed number of entrances"/>
+            </div>
+
             <!-- Sessions -->
             <div v-if="showSessions">
-                <InputLabel for="sessions" value="Session credits" />
-                <div v-if="isCorporateType" class="text-gray-500 text-xs">System will generate unique redemption code upon checkout. The code can be redeemed by anyone or be restricted by email domain. Everytime redemption occurs, single session credit will be deposited on members' account and can be then used to make a booking. Total number of code redemptions can't go over number below.</div>
-                <div v-else class="text-gray-500 text-xs">Member will receive this amount of session credits after the charge or checkout. Credits can be used to make bookings.</div>
+                <InputLabel for="sessions" :value="isPassType ? 'Passes' : 'Session credits'" />
+                <div class="text-gray-500 text-xs">
+                    <template v-if="isCorporateType">
+                    System will generate unique redemption code upon checkout. The code can be redeemed by anyone or be restricted by email domain. Everytime redemption occurs, single session credit will be deposited on members' account and can be then used to make a booking. Total number of code redemptions can't go over number below.
+                    </template>
+                    <template v-else-if="isPassType">
+                    Membership will provide a number of one-time location passes. Pass is used after each time member checks into premises.
+                    </template>
+                    <template v-else>
+                    Membership will provide a number of session credits. Credits can be used to make bookings for classes and/or services.
+                    </template>
+                </div>
                 <TextInput
                     id="sessions"
                     v-model="formPrice.sessions"
@@ -233,8 +296,8 @@ const showIntro = computed(() => {
             <div>
                 <Switcher
                     v-model="formPrice.is_expiring"
-                    :title="(isDefaultType ? 'Membership' : 'Session credits') + ' expiration'"
-                    :description="(isDefaultType ? 'Membership' : 'Session credits') +' '+ (formPrice.is_expiring ? 'will' : 'never') + ' expire (since day of creation)'"/>
+                    :title="expirationTitle"
+                    :description="expirationDescription"/>
                 <InputError :message="formPrice.errors.is_expiring" class="mt-2"/>
             </div>
 
@@ -264,9 +327,9 @@ const showIntro = computed(() => {
                 </div>
                 <div v-if="isCorporateType" class="text-gray-500 text-xs">Once code has been redeemed for session credit, it will expire after period of time specified above.</div>
                 <div v-else-if="isRecurring" class="text-gray-500 text-xs">
-                    You can match {{isDefaultType ? 'membership' : 'session credits'}} to be inline with your billing cycle or make them expire before/after next billing cycle.
+                    You can match {{isPassType ? 'membership' : 'session credits'}} to be inline with your billing cycle or make them expire before/after next billing cycle.
                 </div>
-                <div v-else-if="isDefaultType" class="text-gray-500 text-xs">Set the period for membership expiration.</div>
+                <div v-else-if="isPassType" class="text-gray-500 text-xs">Set the period for membership expiration.</div>
                 <div v-else class="text-gray-500 text-xs">Session credits will expire on next day of selected period. The lifecycle of session credit starts on the checkout day.</div>
                 <InputError :message="formPrice.errors.expiration" class="mt-2"/>
                 <InputError :message="formPrice.errors.expiration_period" class="mt-2"/>

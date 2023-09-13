@@ -25,8 +25,8 @@ const isUnlimited = computed(() => {
   return props.price.is_unlimited && props.price.type == 'recurring';
 });
 
-const isDefaultType = computed(() => {
-    return props.pack.type == 'default';
+const isPassType = computed(() => {
+    return props.pack.type == 'location_pass';
 });
 
 defineEmits(['priceSelected']);
@@ -49,8 +49,8 @@ defineEmits(['priceSelected']);
             </div>
             <span class="border"></span>
 
-            <!-- pack.type == 'default' -->
-            <template v-if="isDefaultType">
+            <!-- pack.type == 'location_pass' -->
+            <template v-if="isPassType">
             <!-- Show expiration period -->
 
             <span class="font-bold">

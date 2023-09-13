@@ -82,7 +82,7 @@ defineEmits(['cancel']);
                 'border-secondary-600': membership.type == 'class_lesson',
                 'border-blue-600': membership.type == 'service',
                 'border-secondary-100': membership.type == 'hybrid',
-                'border-primary-400': membership.type == 'default',
+                'border-primary-400': membership.type == 'location_pass',
                 'border-lime-600': membership.type == 'corporate',
             }">
         <div v-if="membership.type == 'hybrid'" class="absolute bg-gradient-to-r from-secondary-600 h-2 inset-x-0 top-[-8px] rounded-tl-md rounded-tr-md to-blue-600 w-full"></div>

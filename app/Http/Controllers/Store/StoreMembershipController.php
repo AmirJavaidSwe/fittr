@@ -24,10 +24,10 @@ class StoreMembershipController extends Controller
 
     public function index(Request $request, $subdomain)
     {
-        // Load active memberships (membership becomes inactive if cancelled/recurring subscription OR Expired/default type OR all credits used/expired)
+        // Load active memberships (membership becomes inactive if cancelled/recurring subscription OR Expired/location_pass type OR all credits used/expired)
         // Data to show:
-        // 1. Type default
-        //      one_time: time left to expiration;
+        // 1. Type location_pass
+        //      one_time: time left to expiration/remaining passes + exp;
         //      recuring: time left to exp for paid period, upcoming date of next charge
         // 2. Type corporate
         //      one_time:redemption code+usage so far+redemptions left;

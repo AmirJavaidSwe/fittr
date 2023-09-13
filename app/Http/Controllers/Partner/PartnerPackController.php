@@ -116,7 +116,8 @@ class PartnerPackController extends Controller
      */
     public function store(PackFormRequest $request)
     {
-        $pack = Pack::create($request->validated());
+        $data = $this->pack_service->normalizedPack($request->validated());
+        $pack = Pack::create($data);
         $result = $this->stripe_product_service->createOrUpdatePackProduct($this->connected_account_id, $pack);
 
         return $result->error ? $this->redirectBackError($result->error_message) : $this->redirectBackSuccess(__('Pack created successfully'), 'partner.packs.index');
@@ -228,9 +229,8 @@ class PartnerPackController extends Controller
             return $this->redirectBackError(__('Pack type can not be changed.'));
         }
 
-        //TODO Add method to normalize validated fields, e.g. if type is default, is_restricted = false, etc
-
-        $pack->update($request->validated());
+        $data = $this->pack_service->normalizedPack($request->validated());
+        $pack->update($data);
         $result = $this->stripe_product_service->createOrUpdatePackProduct($this->connected_account_id, $pack);
 
         return $result->error ? $this->redirectBackError($result->error_message) : $this->redirectBackSuccess(__('Pack updated successfully'));
@@ -296,16 +296,32 @@ class PartnerPackController extends Controller
             return $this->redirectBackError(__('Please, save the pack and then try again.'));
         }
 
+        $data = $this->pack_service->normalizedPrice($pack, $request->validated());
+
         $params = array(
             'pack' => $pack,
-            'validated_data' => $request->validated(),
+            'validated_data' => $data,
             'currency' => $this->business_settings['default_currency'] ?? null,
             'currency_symbol' => $this->business_settings['default_currency_symbol'] ?? null,
             'connected_account_id' => $this->connected_account_id,
         );
-        $result = $this->stripe_product_service->createPackPrice($params);
+        $stripe_price = $this->stripe_product_service->createPackPrice($params);
+        if($stripe_price->error){
+            return $this->redirectBackError($stripe_price->error_message);
+        }
 
-        return $result->error ? $this->redirectBackError($result->error_message) : $this->redirectBackSuccess(__('Pricing option created successfully'));
+        $model_data = [
+            'stripe_price_id' => $stripe_price->data?->id,
+            'unit_amount' => $data['price'] * 100,
+            'currency' => $params['currency'],
+            'currency_symbol' => $params['currency_symbol'],
+        ] + $data;
+        //create new price
+        $price = $pack->pack_prices()->create($model_data);
+        //sync location restrictions
+        $price->locations()->sync($validated_data['location_ids'] ?? []);
+
+        return $this->redirectBackSuccess(__('Pricing option created successfully'));
     }
 
     /**

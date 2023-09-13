@@ -111,24 +111,7 @@ class ProductService extends StripeService
             $price_data['recurring']['interval_count'] = $validated_data['interval_count'];
         }
 
-        $attempt = $this->createPrice($connected_account_id, $price_data);
-        if($attempt->error){
-            return $attempt;
-        }
-
-        //Create new model
-        $model_data = [
-            'stripe_price_id' => $attempt->data?->id,
-            'unit_amount' => $price_data['unit_amount'],
-            'currency' => $price_data['currency'],
-            'currency_symbol' => $currency_symbol,
-        ] + $validated_data;
-        //create new price
-        $price = $pack->pack_prices()->create($model_data);
-        //sync location restrictions
-        $price->locations()->sync($validated_data['location_ids'] ?? []);
-
-        return $attempt;
+        return $this->createPrice($connected_account_id, $price_data);
     }
 
     // API Method to create new Stripe price

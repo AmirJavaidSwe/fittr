@@ -105,14 +105,14 @@ const priceSelected = (pack_id, price_id) => {
             </div>
         </div>
 
-        <!-- DEFAULT MEMBERSHIP - no classes, general studio access or pass  -->
+        <!-- PASS MEMBERSHIP - no classes, general studio access or pass  -->
         <div class="text-xl font-bold">
-            {{locationTitle}} special passes.
+            {{locationTitle}} passes.
         </div>
         <div>Get unlimited access to your favourite areas. Enjoy the activity you love all day long for as long as pass is active.</div>
         <div class="flex flex-wrap gap-4 mt-4 mb-16">
             <PackCard 
-                v-for="pack in packs.filter(el => el.type == 'default')"
+                v-for="pack in packs.filter(el => el.type == 'location_pass')"
                 :key="pack.id"
                 :pack="pack"
                 :state_buttons="state_buttons"
