@@ -8,27 +8,37 @@ import Radio from "@/Components/Radio.vue";
 import Checkbox from "@/Components/Checkbox.vue";
 import SignaturePad from "@/Components/SignaturePad.vue";
 import ActionMessage from "@/Components/ActionMessage.vue";
+
+import ConfirmationModal from '@/Components/ConfirmationModal.vue';
 import ButtonLink from "@/Components/ButtonLink.vue";
+import WaiverAcceptCheck from "@/Icons/WaiverAcceptCheck.vue";
+import WaiverNotAcceptedCheck from "@/Icons/WaiverNotAcceptedCheck.vue";
 import { useForm, usePage } from "@inertiajs/vue3";
 import InputError from "@/Components/InputError.vue";
 import WaiverForm from "./WaiverForm.vue";
 
 const props = defineProps({
     business_settings: Object,
-    waiver: {
+    waivers: {
         type: Object,
         required: true,
     },
+    user:{
+        type:Object,
+        required:true,
+    }
 });
 const form = useForm({
+    checkWaiver : false,
+    waiver:'',
 });
 
 const submit = () => {
     form.transform((data) => ({
         ...data,
-        waiver_id: props.waiver !== null ? props.waiver.id : null,
+        waiver_id: form.waiver !== null ? form.waiver.id : null,
         waiver_data:
-            props.waiver !== null
+            props.form !== null
                 ? {
                     data: waiverFormData.waiverQandA,
                     signature: waiverFormData.sign ?? null,
@@ -66,27 +76,55 @@ const waiverFormData = useForm({
     sign: props?.user_waiver?.length ? props?.user_waiver?.signature : null,
 });
 
-const waiverQandData = () => {
+const waiverQandData = (id) => {
+    form.checkWaiver = true;
+    form.waiver = props.waivers.find((item) => item.id == id);
     waiverFormData.waiverQandA = [];
-    if (props.waiver) {
-        for (let i = 0; i < props.waiver.questions.length; i++) {
+    if (form.waiver) {
+        for (let i = 0; i < form.waiver.questions.length; i++) {
             waiverFormData.waiverQandA.push({
-                question: props.waiver.questions[i].question,
-                type: props.waiver.questions[i].selectedQuestionType,
+                question: form.waiver.questions[i].question,
+                type: form.waiver.questions[i].selectedQuestionType,
                 answer: null,
             });
         }
     }
 };
 
-waiverQandData();
+
 </script>
 
 <template>
-    <Section bg="bg-transparent">
-        <div class="text-xl mb-4">Waiver Verification</div>
-        <div class="w-1/2">
-            <WaiverForm :form="waiverFormData" :create-form="form" :submitted="submit" :waiver="props.waiver" />
+    <Section bg="bg-transparent" class="flex flex-col justify-center items-center text-center bg-transparent ">
+        <div class="bg-white rounded-lg shadow-md p-6 w-1/2">
+            <p class="text-3xl mb-4">Welcome <span class="font-bold">{{ props?.user?.name }}!</span></p>
+            <p class="text-2xl mb-12">You just need to check out the following important documents in order to complete registration.</p>
+            <div class="flex items-center mt-4" v-for="waiver in props.waivers" :key="waiver.id">
+                <WaiverNotAcceptedCheck />
+                <span class="text-xl ml-4">{{ waiver.title }} Read and signed document</span>
+                <!-- <button class="ml-auto bg-[#E8A838] hover:bg-[#E8A838] text-white px-4 py-2 rounded focus:outline-none focus:ring focus:ring-[#F0F0F0]">view</button> -->
+                <ButtonLink
+                styling="secondary"
+                size="default"
+                class="mt-4 ml-auto"
+                @click="waiverQandData(waiver?.id)"
+                >
+                View
+               </ButtonLink>
+            </div>
         </div>
     </Section>
+    <ConfirmationModal :show="form.checkWaiver" @click="form.checkWaiver = false">
+        <template #title > <div class="w-[600px] h-[122px] p-4 gap-2 bg-[#42705F] text-2xl text-center text-white flex justify-center items-center">
+            {{ form.waiver?.title }}
+        </div></template>
+
+        <template #content>
+            <WaiverForm :form="waiverFormData" :create-form="form" :submitted="submit" :waiver="form.waiver" />
+        </template>
+
+        <template #footer>
+
+        </template>
+    </ConfirmationModal>
 </template>

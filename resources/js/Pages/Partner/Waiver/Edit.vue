@@ -249,11 +249,11 @@ const moveUp = (index) => {
          <!-- Delete Confirmation Modal -->
     </FormSection>
     <template>
-    <ConfirmationModal :show="form.sign_again" @close="form.sign_again = false ">
-        <template #title> Confirmation required </template>
+    <!-- <ConfirmationModal :show="form.sign_again" @close="form.sign_again = false ">
+        <template #title> Are you sure you want to do this? </template>
 
         <template #content>
-            Are you sure you would like to delete all previous users waivers?
+            This will delete all previously signed waivers from users?
         </template>
 
         <template #footer>
@@ -269,12 +269,12 @@ const moveUp = (index) => {
                 size="default"
                 styling="danger"
                 class="ml-3"
-
+                @click="form.sign_again = true"
             >
                 Delete
             </ButtonLink>
         </template>
-    </ConfirmationModal>
+    </ConfirmationModal> -->
     </template>
 
 </template>

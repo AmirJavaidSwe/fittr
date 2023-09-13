@@ -47,8 +47,13 @@ const questionsData = ref([
     {
         question: "",
         selectedQuestionType: null,
+
     },
 ]);
+
+const changeSignAgain = (value) => {
+    form.sign_again = value;
+}
 
 const addQuestion = () => {
     questionsData.value.push({
@@ -236,7 +241,7 @@ const moveUp = (index) => {
             </ButtonLink>
         </template>
     </FormSection>
-        <ConfirmationModal :show="form.sign_again" @close="form.sign_again = false ">
+        <!-- <ConfirmationModal :show="form.sign_again" @close="form.sign_again = false ">
             <template #title> Confirmation required </template>
 
             <template #content>
@@ -247,7 +252,7 @@ const moveUp = (index) => {
                 <ButtonLink
                     size="default"
                     styling="default"
-                    @click="form.sign_again = false"
+                    @click="changeSignAgain(false)"
                 >
                     Cancel
                 </ButtonLink>
@@ -256,11 +261,11 @@ const moveUp = (index) => {
                     size="default"
                     styling="danger"
                     class="ml-3"
-
+                    @click="changeSignAgain(true)"
                 >
                     Delete
                 </ButtonLink>
             </template>
-        </ConfirmationModal>
+        </ConfirmationModal> -->
 </template>
 <style src="@vueform/multiselect/themes/tailwind.css"></style>
