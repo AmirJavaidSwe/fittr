@@ -14,11 +14,7 @@ const props = defineProps({
     state_buttons: {
         type: Object,
         required: true,
-    },
-    location: {
-        type: String,
-        required: true,
-    },
+    }
 });
 
 const isUnlimited = computed(() => {
@@ -36,7 +32,6 @@ defineEmits(['priceSelected']);
     <div 
         class="flex flex-wrap justify-between items-center mb-4 last:mb-0 border-b-2"
         :class="{'text-primary-400': state_buttons[pack.id] ? state_buttons[pack.id].selected_price_id == price.id : false}"
-        v-show="price.locations.length === 0 || price.locations.find(el => el.id == location)"
         >
         <div class="flex flex-wrap gap-2 pb-1">
             <div>

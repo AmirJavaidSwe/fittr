@@ -319,7 +319,7 @@ class PartnerPackController extends Controller
         //create new price
         $price = $pack->pack_prices()->create($model_data);
         //sync location restrictions
-        $price->locations()->sync($validated_data['location_ids'] ?? []);
+        $price->locations()->sync($data['location_ids'] ?? []);
 
         return $this->redirectBackSuccess(__('Pricing option created successfully'));
     }
@@ -359,7 +359,7 @@ class PartnerPackController extends Controller
                         'deleted_at' => $price->deleted_at,
                     ],
                 );
-                $msg = __('Price updated deleted.');
+                $msg = __('Price option deleted.');
                 break;
             default:
                 return $this->redirectBackError();

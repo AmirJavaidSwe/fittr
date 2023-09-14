@@ -10,11 +10,39 @@ class StorePackService
 {
     public function activePacks(): \Illuminate\Database\Eloquent\Collection
     {
-        return Pack::active()->public()->with(['pack_prices' => function (Builder $query) {
-            //keep only active prices
-            $query->where('is_active', true);
-        }, 'pack_prices.locations:id,title,status'
-        ])->get();
+        return Pack::active()
+            ->public()
+            //filter out packs without price options
+            ->whereHas('pack_prices', function (Builder $query) {
+                $query->where('is_active', true);
+            })
+            ->with([
+                'pack_prices' => function (Builder $query) {
+                    //include active prices only
+                    $query->where('is_active', true);
+                },
+                'pack_prices.locations'
+            ])
+        ->get()
+        ->map(function($pack) {
+            //copy related collection
+            $pack_prices = $pack->pack_prices;
+            //remove original related collection
+            unset($pack->pack_prices);
+            //inject new collection for related
+            $pack->pack_prices = $pack_prices->filter(function($pack_price){
+                if($pack_price->locations->isEmpty()){
+                    //keep location unrestricted prices
+                    return true;
+                }
+                //remove the price unless at least one location is active, pack_price locations will have full set, including inactive locations
+                return $pack_price->locations->where('status', true)->isNotEmpty();
+            })
+            //reset for json
+            ->values();
+
+            return $pack;
+        });
     }
 
     public function buttonsText(): array

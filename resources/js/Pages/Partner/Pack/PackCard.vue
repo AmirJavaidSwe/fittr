@@ -183,9 +183,9 @@ defineEmits(['copy', 'toggle', 'delete']);
                             <font-awesome-icon :icon="faLocationPinLock" />
                         </div>
                         <template #popper>
-                            <div class="w-72">
-                                <div>Location restricted option</div>
-                                <span v-for="restricted_location in pack_price.locations" :key="restricted_location.id" class="bg-red-100 font-semibold px-2 py-1 rounded-md text-red-800 text-xs mr-1">
+                            <div class="flex flex-wrap gap-1 w-72">
+                                <div class="w-full">Location restricted option</div>
+                                <span v-for="restricted_location in pack_price.locations" :key="restricted_location.id" class="bg-red-100 font-semibold px-2 py-1 rounded-md text-red-800 text-xs">
                                     {{restricted_location.title}}
                                 </span>
                             </div>

@@ -52,7 +52,7 @@ defineEmits(['toggle', 'edit', 'delete']);
         <div 
         class="flex font-medium items-center justify-between space-between"
         :class="{
-            'bg-opacity-10 bg-black': !price.is_active,
+            'bg-opacity-10': !price.is_active,
             'bg-primary-300': price.type == 'one_time',
             'bg-secondary-500': price.type == 'recurring',
             }"
@@ -93,8 +93,7 @@ defineEmits(['toggle', 'edit', 'delete']);
                 </template>
             </Dropdown>
         </div>
-        <div class="flex-grow p-2 space-y-2">
-            <!-- <div>ID: {{price.id}}</div> -->
+        <div class="flex-grow p-2 space-y-2" :class="{'bg-gray-100': !price.is_active}">
             <div> 
                 <span class="font-bold" :title="price.currency.toUpperCase()">{{price.price_formatted}}</span>
                 <span v-if="price.interval_count">&nbsp;{{price.interval_human}}</span>

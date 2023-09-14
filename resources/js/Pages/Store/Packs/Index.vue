@@ -106,6 +106,7 @@ const priceSelected = (pack_id, price_id) => {
         </div>
 
         <!-- PASS MEMBERSHIP - no classes, general studio access or pass  -->
+        <template v-if="packs.filter(el => el.type == 'location_pass').length">
         <div class="text-xl font-bold">
             {{locationTitle}} passes.
         </div>
@@ -117,6 +118,7 @@ const priceSelected = (pack_id, price_id) => {
                 :pack="pack"
                 :state_buttons="state_buttons"
                 :location="location"
+                :locations="locations"
                 :isLocked="isLocked"
                 class="bg-white rounded-md border-t-8 p-2 w-80 flex flex-col"
                 @priceSelected="(pack_id, price_id) => priceSelected(pack_id, price_id)"
@@ -124,8 +126,10 @@ const priceSelected = (pack_id, price_id) => {
                 >
             </PackCard>
         </div>
+        </template>
 
         <!-- CLASSES  -->
+        <template v-if="packs.filter(el => el.type == 'class_lesson').length">
         <div class="text-xl font-bold">
             {{locationTitle}} class packs
         </div>
@@ -137,6 +141,7 @@ const priceSelected = (pack_id, price_id) => {
                 :pack="pack"
                 :state_buttons="state_buttons"
                 :location="location"
+                :locations="locations"
                 :isLocked="isLocked"
                 :classtypes="classtypes"
                 class="bg-white rounded-md border-t-8 p-2 w-80 flex flex-col"
@@ -145,8 +150,10 @@ const priceSelected = (pack_id, price_id) => {
                 >
             </PackCard>
         </div>
+        </template>
 
         <!-- SERVICES  -->
+        <template v-if="packs.filter(el => el.type == 'service').length">
         <div class="text-xl font-bold">
             {{locationTitle}} service packs
         </div>
@@ -158,6 +165,7 @@ const priceSelected = (pack_id, price_id) => {
                 :pack="pack"
                 :state_buttons="state_buttons"
                 :location="location"
+                :locations="locations"
                 :isLocked="isLocked"
                 :servicetypes="servicetypes"
                 class="bg-white rounded-md border-t-8 p-2 w-80 flex flex-col"
@@ -166,8 +174,10 @@ const priceSelected = (pack_id, price_id) => {
                 >
             </PackCard>
         </div>
+        </template>
 
         <!-- CLASSES+SERVICES (hybrid) -->
+        <template v-if="packs.filter(el => el.type == 'hybrid').length">
         <div class="text-xl font-bold">
             {{locationTitle}} hybrid (class and service) packs
         </div>
@@ -179,6 +189,7 @@ const priceSelected = (pack_id, price_id) => {
                 :pack="pack"
                 :state_buttons="state_buttons"
                 :location="location"
+                :locations="locations"
                 :isLocked="isLocked"
                 :classtypes="classtypes"
                 :servicetypes="servicetypes"
@@ -188,8 +199,10 @@ const priceSelected = (pack_id, price_id) => {
                 >
             </PackCard>
         </div>
+        </template>
 
         <!-- CORPORATE -->
+        <template v-if="packs.filter(el => el.type == 'corporate').length">
         <div class="text-xl font-bold">
             {{locationTitle}} Corporate Memberships
         </div>
@@ -202,6 +215,7 @@ const priceSelected = (pack_id, price_id) => {
                 :pack="pack"
                 :state_buttons="state_buttons"
                 :location="location"
+                :locations="locations"
                 :isLocked="isLocked"
                 class="bg-white rounded-md border-t-8 p-2 w-80 flex flex-col"
                 @priceSelected="(pack_id, price_id) => priceSelected(pack_id, price_id)"
@@ -209,5 +223,6 @@ const priceSelected = (pack_id, price_id) => {
                 >
             </PackCard>
         </div>
+        </template>
     </Section>
 </template>
