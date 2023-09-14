@@ -28,7 +28,7 @@ class PackService
     public function getGroupedPacks()
     {
         $labels = PackType::labels();
-        $packs = Pack::with(['pack_prices'])
+        $packs = Pack::with(['pack_prices.locations'])
         ->withCount([
             'memberships',
             'memberships as active_memberships_count' => function (Builder $query) {
