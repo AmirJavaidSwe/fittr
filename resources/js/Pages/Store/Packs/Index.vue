@@ -61,7 +61,9 @@ const priceSelected = (pack_id, price_id) => {
         for (const property in state_buttons) {
             //packs with single price AND (unrestricted OR restricted location will be ON if location match)
             if( state_buttons[property][0].length == 1 ) {
-                let single_price_pass = state_buttons[property][0][0].locations.length == 0 || state_buttons[property][0][0].locations.includes(parseInt(location.value));
+                let single_price_pass = state_buttons[property][0][0].locations.length == 0 || //unrestricted
+                    state_buttons[property][0][0].locations.length == props.locations.length || // location restricted prices matched global active locations
+                    state_buttons[property][0][0].locations.includes(parseInt(location.value)); // or matched selected location
 
                 state_buttons[property].selected_price_id = single_price_pass ? state_buttons[property][0][0].id : null;
                 state_buttons[property].enabled = single_price_pass;

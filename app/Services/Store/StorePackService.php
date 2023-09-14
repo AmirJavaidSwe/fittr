@@ -3,6 +3,7 @@
 namespace App\Services\Store;
 
 use App\Enums\StripePriceType;
+use App\Models\Partner\Location;
 use App\Models\Partner\Pack;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
@@ -57,17 +58,19 @@ class StorePackService
 
     public function priceButtons($prices): \Illuminate\Support\Collection
     {
+        $active_locations = Location::active()->count();
+
         $price_buttons = $prices->map(function ($item) {
             return array(
                 'id' => $item->id,
                 'pack_id' => $item->priceable_id,
                 'type' => $item->type,
                 'text' => StripePriceType::button($item->type),
-                'locations' => $item->locations->pluck('id')->all(),
+                'locations' => $item->locations->where('status', true)->pluck('id')->all(),
             );
         })
         ->groupBy('pack_id')
-        ->map(function ($item) {
+        ->map(function ($item) use ($active_locations) {
             $button_text = __('Select an option');
             $selected_price_id = null;
             $enabled = false;
@@ -76,8 +79,12 @@ class StorePackService
                 $selected_price_id = $item->first()['id'];
                 $enabled = true;
             }
+            //single pack price that is restricted to active location
             if($item->count() == 1 && !empty($item->first()['locations'])){
-                $button_text = __('Not available');
+                //enable the option if number of global active locations === price restricted and active locations
+                $enabled = $active_locations === count($item->first()['locations']);
+                $button_text = $enabled ? $item->first()['text'] : __('Not available');
+                $selected_price_id = $enabled ? $item->first()['id'] : null;
             }
             return array(
                 'button_text' => $button_text,
