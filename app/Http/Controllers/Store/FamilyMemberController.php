@@ -17,17 +17,31 @@ class FamilyMemberController extends Controller
 
     public function index(Request $request)
     {
-        $waiver = Waiver::where('show_at', 'family-add')->where('is_active', 1)->first();
-        if($waiver) {
-            $user_waiver = UserWaiver::where('user_id', auth()->user()->id)
-            ->where('waiver_id', $waiver->id)
-            ->pluck('family_member_id')->toArray();
+        $waivers = Waiver::where('show_at', 'family-add')->where('is_active', 1)->get();
+        $user_waivers = UserWaiver::where('user_id', auth()->user()->id)->get();
+        if($waivers) {
+            $count = 0 ;
+            foreach($waivers as $waiver){
+                $user_waiver = UserWaiver::where('user_id', auth()->user()->id)
+                ->where('waiver_id', $waiver->id)
+                ->pluck('family_member_id')->toArray();
+                $count++;
+            }
+            if($count == count($waivers)){
+                return Inertia::render('Store/Member/Family/Index', [
+                    'family_members' => FamilyMember::where('user_id', auth()->user()->id)->get(),
+                    'page_title' => __('Family'),
+                    'waivers' => $waivers,
+                    'user_waivers' => $user_waivers ?? null
+                ]);
+            }
         }
         return Inertia::render('Store/Member/Family/Index', [
             'family_members' => FamilyMember::where('user_id', auth()->user()->id)->get(),
             'page_title' => __('Family'),
-            'waiver' => $waiver,
-            'user_waiver' => $user_waiver ?? null
+            'waivers' => $waivers,
+            'user_waivers' => $user_waivers ?? null,
+            'user' => auth()->user(),
         ]);
     }
 

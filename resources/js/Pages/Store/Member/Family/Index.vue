@@ -5,6 +5,8 @@ import ButtonLink from "@/Components/ButtonLink.vue";
 import { useForm, usePage } from "@inertiajs/vue3";
 import CloseModal from "@/Components/CloseModal.vue";
 import SideModal from "@/Components/SideModal.vue";
+import WaiverAcceptCheck from "@/Icons/WaiverAcceptCheck.vue";
+import WaiverNotAcceptedCheck from "@/Icons/WaiverNotAcceptedCheck.vue";
 import Form from "./Form.vue";
 import WaiverForm from "../../WaiverForm.vue";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -18,26 +20,36 @@ const props = defineProps({
     business_settings: Object,
     page_title: String,
     family_members: Object,
-    waiver: Object,
-    user_waiver: Object|null
+    waivers: Object,
+    user_waivers: Object|null,
+    user:Object,
 });
 
 const waiverFormData = useForm({
     waiverQandA: [],
-    sign: props?.user_waiver?.length ? props?.user_waiver?.signature : null,
+    sign: props?.user_waivers?.length ? props?.user_waivers?.signature : null,
 });
+const showWaiver = () => {
+    showWaivers.value = true;
+}
+const closedShowWaiver = () => {
+    showWaivers.value = false;
 
-const waiverQandData = () => {
+    waiverFormData.reset().clearErrors();
+}
+const waiverQandData = (id) => {
+    waiver.value = props.waivers.find((item) => item.id == id);
     waiverFormData.waiverQandA = []
-    if (props.waiver) {
-        for (let i = 0; i < props.waiver.questions.length; i++) {
+    if (waiver) {
+        for (let i = 0; i < waiver.value?.questions.length; i++) {
             waiverFormData.waiverQandA.push({
-                question: props.waiver.questions[i].question,
-                type: props.waiver.questions[i].selectedQuestionType,
+                question: waiver.value?.questions[i].question,
+                type: waiver.value?.questions[i].selectedQuestionType,
                 answer: null,
             });
         }
     }
+    showWaiver();
 };
 
 
@@ -45,6 +57,9 @@ const waiverQandData = () => {
 const showCreateModal = ref(false);
 const showEditModal = ref(false);
 const showWaiverModal = ref(false);
+const showWaivers = ref(false);
+let waiver = ref('');
+
 
 const closeCreateModal = () => {
     showCreateModal.value = false;
@@ -53,6 +68,7 @@ const closeCreateModal = () => {
 
 const closeEditModal = () => {
     showEditModal.value = false;
+    showWaiverModal.value = true;
     EditForm.reset().clearErrors();
 };
 
@@ -60,6 +76,7 @@ const closeWaiverModal = () => {
     showWaiverModal.value = false;
     waiverFormData.reset().clearErrors();
 };
+
 const CreateForm = useForm({
     name: null,
     date_of_birth: null,
@@ -85,8 +102,8 @@ const storeFamilyMember = () => {
     }
     CreateForm.transform((data) => ({
         ...data,
-        waiver_id: props.waiver !== null ? props.waiver.id : null,
-        waiver_data: props.waiver !== null  ? {
+        waiver_id: waiver !== null ? waiver.value?.id : null,
+        waiver_data: waiver !== null  ? {
             data: waiverFormData.waiverQandA,
             signature: waiverFormData.sign ?? null,
         } : {},
@@ -101,7 +118,8 @@ const storeFamilyMember = () => {
                 showWaiverModal.value = false;
                 waiverFormData.reset().clearErrors();
                 CreateForm.reset().clearErrors();
-                waiverQandData()
+                closedShowWaiver();
+                waiverQandData(waiver.value?.id);
             },
         }
         );
@@ -120,7 +138,6 @@ const showCreateFamily = () => {
     showCreateModal.value = true;
     CreateForm.reset().clearErrors();
     waiverFormData.reset().clearErrors();
-    waiverQandData();
 }
 const editMember = (member) => {
     EditForm.reset().clearErrors();
@@ -169,7 +186,6 @@ const updateMember = () => {
                 showEditModal.value = false;
                 showWaiverModal.value = false;
                 waiverFormData.reset().clearErrors();
-                waiverQandData()
             },
         }
         );
@@ -205,7 +221,6 @@ const updateMember = () => {
                     itemDeleting.value = false;
                     itemIdDeleting.value = null;
                     waiverFormData.reset().clearErrors();
-                    waiverQandData();
                 },
             }
             );
@@ -342,16 +357,16 @@ const updateMember = () => {
     </ConfirmationModal>
 
     <!-- Waiver Modal -->
-    <SideModal :show="showWaiverModal" @close="closeWaiverModal">
+    <SideModal :show="showWaivers" @close="showWaiver">
         <template #title>
             <div class="w-full">
-                You need to sign "{{ props.waiver.title }}" once before adding
+                You need to sign "{{waiver?.title}}" once before adding
                 family members
             </div>
         </template>
         <template #close>
             <div class="w-20 text-right">
-                <CloseModal @click="closeWaiverModal" />
+                <CloseModal @click="closedShowWaiver" />
             </div>
         </template>
 
@@ -361,9 +376,51 @@ const updateMember = () => {
                 :create-form="CreateForm"
                 :edit-form="EditForm"
                 :submitted="storeOrUpdateFamilyMember"
-                :waiver="props.waiver"
+                :waiver="waiver"
                 modal
             />
+        </template>
+    </SideModal>
+    <SideModal :show="showWaiverModal" @close="closeWaiverModal">
+        <template #title>
+            <div class="w-full mb-16">
+                <p class="text-xl mb-2">Welcome {{ props?.user?.name }}!<span class="font-bold">!</span></p>
+                <p class="text-xl mb-4">You just need to check out the following important documents in order to add Family Member.</p>
+            </div>
+        </template>
+        <template #close>
+            <div class="w-20 text-right">
+                <CloseModal @click="closeWaiverModal" />
+            </div>
+        </template>
+
+        <template #content>
+            <div class="flex items-center mt-2"  v-for="waiver in props.waivers" :key="waiver.id">
+                <WaiverAcceptCheck   v-if="props?.user_waivers?.find((item) => item.waiver_id === waiver.id) !==
+                    undefined ? true : false "/>
+                <WaiverNotAcceptedCheck  v-if="props?.user_waivers?.find((item) => item.waiver_id === waiver.id) ==
+                    undefined ? true : false "/>
+                <span class="text-xl ml-4">{{ waiver.title }} Read and signed document</span>
+                <!-- <button class="ml-auto bg-[#E8A838] hover:bg-[#E8A838] text-white px-4 py-2 rounded focus:outline-none focus:ring focus:ring-[#F0F0F0]">view</button> -->
+                <ButtonLink
+                styling="secondary"
+                size="default"
+                class="mt-4 ml-auto"
+                @click="waiverQandData(waiver?.id)"
+                >
+                View
+               </ButtonLink>
+            </div>
+            <div class="flex justify-center space-x-4">
+                <ButtonLink
+                  styling="secondary"
+                  size="default"
+                  class="mt-4"
+                  @click="closeWaiverModal"
+                >
+                  Go To Back
+                </ButtonLink>
+            </div>
         </template>
     </SideModal>
 </template>
