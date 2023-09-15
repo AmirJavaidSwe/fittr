@@ -286,6 +286,17 @@ const studioList = computed(() => {
                 />
             </div>
 
+            <!-- Free class -->
+            <div>
+                <Switcher
+                    v-model="form.is_free"
+                    title="Free class"
+                    :description="form.is_free ?
+                    'This class can be booked by anyone. No membership required to book.' :
+                    'Active membership required to book.'"
+                />
+            </div>
+
             <!-- repeat -->
             <div v-if="isNew || isDuplicate">
                 <Switcher

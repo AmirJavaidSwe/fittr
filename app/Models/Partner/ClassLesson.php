@@ -24,6 +24,7 @@ class ClassLesson extends Model
 
     protected $casts = [
         'is_off_peak' => 'boolean',
+        'is_free' => 'boolean',
         'start_date' => 'datetime',
         'end_date' => 'datetime',
         'deleted_at' => 'datetime',
