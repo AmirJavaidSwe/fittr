@@ -17,6 +17,8 @@ return new class extends Migration
             $table->enum('status', BookingStatus::all())->default(BookingStatus::get('active'));
             $table->unsignedBigInteger('class_id')->index('class_id');
             $table->unsignedBigInteger('user_id')->index('user_id');
+            $table->boolean('is_family_booking')->nullable()->comment('true if group');
+            $table->unsignedBigInteger('family_member_id')->nullable();
             $table->integer('space_number')->unsigned()->nullable();
             $table->timestamp('cancelled_at')->nullable();
             $table->timestamps();
