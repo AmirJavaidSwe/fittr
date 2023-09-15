@@ -36,6 +36,8 @@ const upsertPrice = () => {
             formPrice.transform((data) => ({
                 ...data,
                 pass_mode: pass_mode.value,
+                min_term: hasMinTerm.value ? data.min_term : null,
+                fixed_count: data.is_ongoing ? null : data.fixed_count,
             }))
             .post(route('partner.packs.price.store', { pack : formPrice.priceable_id }), {
                 preserveScroll: true,
@@ -86,6 +88,8 @@ const upsertPrice = () => {
             ...data,
             pack_type: props.pack_type,
             pass_mode: pass_mode.value,
+            min_term: hasMinTerm.value ? data.min_term : null,
+            fixed_count: data.is_ongoing ? null : data.fixed_count,
             action: 'edit',
         }))
         .put(route('partner.packs.price.update', { price: formPrice.id } ), {
@@ -179,6 +183,9 @@ const expirationDescription = computed(() => {
             'Membership will remain active indefinitely';
     }
 });
+
+const hasMinTerm = ref(isRecurring.value && formPrice.min_term > 0);
+
 </script>
 
 <template>
@@ -366,12 +373,39 @@ const expirationDescription = computed(() => {
                 <InputError :message="formPrice.errors.interval" class="mt-2"/>
             </div>
 
+            <!-- min_term/hasMinTerm ref -->
+            <div>
+                <Switcher
+                    v-model="hasMinTerm"
+                    title="Subscription min term"
+                    :description="hasMinTerm ? 
+                    'Member must complete min term, subscription charges will continue until min term is served' :
+                    'Member can cancel anytime'
+                    "/>
+            </div>
+            <!-- min_term -->
+            <div v-if="hasMinTerm">
+                <InputLabel for="min_term" value="Number of cycles"/>
+                <div class="text-gray-500 text-xs">Subscription will charge a customer set number of times before it may be cancelled.</div>
+                <TextInput
+                        id="min_term"
+                        v-model="formPrice.min_term"
+                        type="number"
+                        min="1"
+                        class="w-20"
+                        />
+                <InputError :message="formPrice.errors.min_term" class="mt-2"/>
+            </div>
+
             <!-- is_ongoing -->
             <div v-if="isRecurring">
                 <Switcher
                     v-model="formPrice.is_ongoing"
                     title="Subscription duration"
-                    :description="formPrice.is_ongoing ? 'Subscrption runs indefinitely, unless cancelled' : 'Subscrption should complete after specified number of billing cycles'"/>
+                    :description="formPrice.is_ongoing ?
+                    'Subscrption runs indefinitely, unless cancelled' :
+                    'Subscrption should complete after specified number of billing cycles. If min term is set, this number must be equal or greater than min term value.'
+                "/>
                 <InputError :message="formPrice.errors.is_ongoing" class="mt-2"/>
             </div>
 

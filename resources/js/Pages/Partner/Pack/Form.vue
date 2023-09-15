@@ -82,6 +82,7 @@ const default_price_fields = {
     expiration_period: null,
     interval: null,
     interval_count: null,
+    min_term: null,
     is_unlimited: false,
     is_fap: false,
     fap_value: null,

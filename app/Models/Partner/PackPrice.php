@@ -2,6 +2,7 @@
 
 namespace App\Models\Partner;
 
+use App\Enums\PackType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -75,8 +76,8 @@ class PackPrice extends Model
     // Accessors
     public function getTaxonomySessionsAttribute(): ?string
     {
-        //TODO add Taxonomy (terms) settings for partner to set: (Hardwired to class)
-        return Str::plural(__('class'), $this->sessions);
+        $type_label = PackType::label($this->priceable->type);
+        return Str::plural($type_label, $this->sessions);
     }
 
     public function getIntervalHumanAttribute(): ?string

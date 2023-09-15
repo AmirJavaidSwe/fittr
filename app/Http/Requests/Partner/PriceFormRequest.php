@@ -57,13 +57,19 @@ class PriceFormRequest extends FormRequest
                 'integer',
                 'min:1'
             ],
+            'min_term' => [
+                'exclude_if:type,'.StripePriceType::get('one_time'),
+                'nullable',
+                'integer',
+                'min:1'
+            ],
             'interval' => [
                 'required_if:type,'.StripePriceType::get('recurring'),
                 'exclude_if:type,'.StripePriceType::get('one_time'),
                 Rule::in(StripePeriod::all())
             ],
             'is_ongoing' => 'boolean|exclude_if:type,'.StripePriceType::get('one_time'),
-            'fixed_count' => 'required_if:is_ongoing,false|exclude_if:is_ongoing,true|exclude_without:is_ongoing|integer|min:1',
+            'fixed_count' => 'required_if:is_ongoing,false|exclude_if:is_ongoing,true|exclude_without:is_ongoing|integer|min:1|gte:min_term',
             'is_renewable' => [
                 'boolean',
                 Rule::excludeIf(
@@ -115,6 +121,7 @@ class PriceFormRequest extends FormRequest
             'fixed_count.required_if' => __('Please provide the number of billing cycles.'),
             'interval_count.required_if' => __('Please set interval value.'),
             'interval.required_if' => __('Please select interval period.'),
+            'fixed_count.gte' => __('Number of subscription cycles must be greater than or equal min term duration.'),
         ];
     }
 }

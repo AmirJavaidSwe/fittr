@@ -73,7 +73,13 @@ class PriceUpdateRequest extends FormRequest
                 'declined_if:is_renewable,true',
             ],
             'is_ongoing' => 'boolean|exclude_if:type,'.StripePriceType::get('one_time'),
-            'fixed_count' => 'required_if:is_ongoing,false|exclude_if:is_ongoing,true|exclude_without:is_ongoing|integer|min:1',
+            'fixed_count' => 'required_if:is_ongoing,false|exclude_if:is_ongoing,true|exclude_without:is_ongoing|integer|min:1|gte:min_term',
+            'min_term' => [
+                'exclude_if:type,'.StripePriceType::get('one_time'),
+                'nullable',
+                'integer',
+                'min:1'
+            ],
             'is_fap' => 'boolean|required_if:is_unlimited,true',
             'fap_value' => [
                 Rule::excludeIf($this->type == StripePriceType::get('one_time')),
@@ -102,6 +108,7 @@ class PriceUpdateRequest extends FormRequest
             'is_intro.declined_if' => __('One of the fields must be disabled.'),
             'is_unlimited.declined_if' => __('Unlimited option is not available for default type pack.'),
             'fixed_count.required_if' => __('Please provide the number of billing cycles.'),
+            'fixed_count.gte' => __('Number of subscription cycles must be greater than or equal min term duration.'),
         ];
     }
 }

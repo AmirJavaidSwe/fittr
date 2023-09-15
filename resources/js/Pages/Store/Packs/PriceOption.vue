@@ -46,19 +46,29 @@ defineEmits(['priceSelected']);
 
             <!-- pack.type == 'location_pass' -->
             <template v-if="isPassType">
-            <!-- Show expiration period -->
-
-            <span class="font-bold">
-                <template v-if="price.is_expiring">
-                    {{price.expiration}} {{price.expiration_period}} pass
+                <!-- Show number of passes -->
+                <template v-if="price.sessions > 0">
+                    <span class="font-bold text-3xl">{{price.sessions}}</span>
+                    <div class="leading-4">
+                        <div class="text-grey">{{price.taxonomy_sessions}}</div>
+                        <div v-if="price.is_renewable" class="border-b border-dashed text-grey">
+                            <VDropdown :popperTriggers="['hover']">
+                                <button>auto top-up</button>
+                                <template #popper>
+                                    <p class="p-2 w-80">When your {{price.taxonomy_sessions}} balance reaches zero, we will automatically top up your balance by purchasing this option for you.</p>
+                                </template>
+                            </VDropdown>
+                        </div>
+                    </div>
                 </template>
-                <!-- <template v-else>
-                    NO EXPIRATION
-                </template> -->
-            </span>
 
+                <!-- Show pass expiration period -->
+                <template v-else-if="price.is_expiring">
+                    <span class="font-bold">{{price.expiration}} {{price.expiration_period}} pass</span>
+                </template>
             </template>
 
+            <!-- pack.type != 'location_pass' -->
             <template v-else>
             <span class="font-bold text-3xl" v-if="isUnlimited">&infin;</span>
             <span class="font-bold text-3xl" v-else>{{price.sessions}}</span>
@@ -68,7 +78,7 @@ defineEmits(['priceSelected']);
                     <VDropdown :popperTriggers="['hover']">
                         <button>auto top-up</button>
                         <template #popper>
-                            <p class="p-2 w-80">When your session credit balance reaches zero, we will automatically top up your balance by purchasing this option for you.</p>
+                            <p class="p-2 w-80">When your {{price.taxonomy_sessions}} balance reaches zero, we will automatically top up your balance by purchasing this option for you.</p>
                         </template>
                     </VDropdown>
                 </div>

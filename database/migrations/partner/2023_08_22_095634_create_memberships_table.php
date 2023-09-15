@@ -41,6 +41,7 @@ return new class extends Migration
             $table->string('currency_symbol', 10)->nullable();
             $table->enum('interval', StripePeriod::all())->nullable()->comment('recurring only'); // Billing frequency. Either day, week, month or year. 1 year is max regardless
             $table->integer('interval_count')->unsigned()->nullable()->comment('recurring only'); // The number of intervals between subscription billings
+            $table->integer('min_term')->unsigned()->nullable()->comment('recurring only'); //The number of billing cycles that must be made for cancellation ability
             $table->boolean('is_unlimited')->default(false)->comment('bool'); //If true, plan does not produce any session/credits and subscriber can book sessions without limitations
             $table->boolean('is_fap')->default(false)->comment('bool'); //If true and is_unlimited is also true, bookings are limited by Fair access policy
             $table->integer('fap_value')->unsigned()->default(1)->comment('number'); // number of classes/services member can book for given day when on unlimited subscription
@@ -48,6 +49,8 @@ return new class extends Migration
             $table->integer('fixed_count')->unsigned()->nullable()->comment('recurring only'); // The number of billing cycles to complete before subscription termination
             $table->boolean('is_renewable')->default(false)->comment('bool'); //Auto purchase enabled (with saved card) when sessions ran out or expired (one_time only)
             $table->boolean('is_intro')->default(false)->comment('bool'); //Flag inherited from PackPrice
+            $table->timestamp('cancell_at')->nullable()->comment('recurring only'); //requested cancellation date. Membership is active until cancelled_at set, may be set to null if change mind
+            $table->timestamp('cancelled_at')->nullable()->comment('recurring only'); //actual date when subscription was cancelled
             $table->timestamps();
             $table->softDeletes();
         });

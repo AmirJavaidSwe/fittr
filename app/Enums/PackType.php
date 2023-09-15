@@ -36,6 +36,17 @@ enum PackType
         return self::from($case)->name;
     }
 
+    public static function label(string $case): string
+    {
+        return match(true) {
+            $case == 'class_lesson' => __('class'),
+            $case == 'service' => __('service'),
+            $case == 'hybrid' => __('hybrid'),
+            $case == 'location_pass' => __('pass'),
+            $case == 'corporate' => __('corporate'),
+        };
+    }
+
     public static function labels(): array
     {
         return array(

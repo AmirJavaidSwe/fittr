@@ -212,6 +212,7 @@ class FulfillmentService
                 'currency_symbol' => $pack_price->currency_symbol,
                 'interval' => $pack_price->interval,
                 'interval_count' => $pack_price->interval_count,
+                'min_term' => $pack_price->min_term,
                 'is_unlimited' => $pack_price->is_unlimited,
                 'is_fap' => $pack_price->is_fap,
                 'fap_value' => $pack_price->fap_value,
