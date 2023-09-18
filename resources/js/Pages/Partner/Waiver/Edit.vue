@@ -11,7 +11,7 @@ import TextInput from "@/Components/TextInput.vue";
 import ActionMessage from "@/Components/ActionMessage.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
 import Multiselect from "@vueform/multiselect";
-import RichTextInput from '@/Components/RichTextInput.vue';
+import RichTextInput from "@/Components/RichTextInput.vue";
 import {
     faPlus,
     faArrowUp,
@@ -24,20 +24,26 @@ const props = defineProps({
     editWaiver: Object,
 });
 
-
 const form = useForm({
     title: props.editWaiver.title,
     description: props.editWaiver.description,
     show_at: props.editWaiver.show_at,
-    is_active : props.editWaiver.is_active ?? false,
-    is_signature_needed: (props.editWaiver.is_active && props.editWaiver.is_signature_needed) ?? false,
-    sign_again : (props.editWaiver.is_active && props.editWaiver.is_signature_needed && props.editWaiver.sign_again) ?? false,
+    is_active: props.editWaiver.is_active ? true : false,
+    is_signature_needed:
+        props.editWaiver.is_active && props.editWaiver.is_signature_needed
+            ? true
+            : false,
+    sign_again:
+        props.editWaiver.is_active &&
+        props.editWaiver.is_signature_needed &&
+        props.editWaiver.sign_again
+            ? true
+            : false,
 });
 
 const helpers = WaiverHelpers();
 const itemDeleting = ref(true);
 const itemIdDeleting = ref(null);
-
 
 const waiverShowPlaces = helpers.getShowPlaces();
 
@@ -81,6 +87,22 @@ const moveUp = (index) => {
     }
 };
 
+const showConfitmationModal = ref(false);
+const closeConfitmationModal = (param) => {
+    if (param === false) {
+        form.sign_again = false;
+    }
+    showConfitmationModal.value = false;
+};
+
+watch(
+    () => form.sign_again,
+    (newVal, oldVal) => {
+        if (newVal !== oldVal && newVal === true) {
+            showConfitmationModal.value = true;
+        }
+    }
+);
 </script>
 
 <template>
@@ -146,8 +168,12 @@ const moveUp = (index) => {
                     v-for="(options, i) in questionsData"
                     :key="i"
                 >
-                    <div class="w-4 pr-1" v-if="i != questionsData.length - 1" @click="moveDown(i)">
-                        <span  class="cursor-pointer">
+                    <div
+                        class="w-4 pr-1"
+                        v-if="i != questionsData.length - 1"
+                        @click="moveDown(i)"
+                    >
+                        <span class="cursor-pointer">
                             <font-awesome-icon
                                 :icon="faArrowDown"
                                 style="color: #333"
@@ -206,29 +232,30 @@ const moveUp = (index) => {
                     </label>
                 </div>
                 <div>
-                <Switcher
-                    v-model="form.is_active"
-                    title="Active"
-                    description=""
-                    :show-labels="['No', 'Yes']"
-                />
-            </div>
-            <div v-if="form.is_active">
-                <Switcher
-                    v-model="form.is_signature_needed"
-                    title="Signature Needed?"
-                    description=""
-                    :show-labels="['No', 'Yes']"
-                />
-            </div>
-            <div v-if="form.is_signature_needed">
-                <Switcher
-                    v-model="form.sign_again"
-                    title="Old users need to sign this?"
-                    description=""
-                    :show-labels="['No', 'Yes']"
-                />
-            </div>
+                    <Switcher
+                        v-model="form.is_active"
+                        title="Active"
+                        description=""
+                        :show-labels="['No', 'Yes']"
+                    />
+                </div>
+                <div v-if="form.is_active">
+                    <Switcher
+                        v-model="form.is_signature_needed"
+                        title="Signature Needed?"
+                        description=""
+                        :show-labels="['No', 'Yes']"
+                    />
+                </div>
+                {{ form.sign_again }}
+                <div v-if="form.is_signature_needed">
+                    <Switcher
+                        v-model="form.sign_again"
+                        title="Old users need to sign this?"
+                        description=""
+                        :show-labels="['No', 'Yes']"
+                    />
+                </div>
             </div>
         </template>
 
@@ -245,37 +272,38 @@ const moveUp = (index) => {
                 Update
             </ButtonLink>
         </template>
-
-         <!-- Delete Confirmation Modal -->
     </FormSection>
     <template>
-    <!-- <ConfirmationModal :show="form.sign_again" @close="form.sign_again = false ">
-        <template #title> Are you sure you want to do this? </template>
+        <!-- Confirmation Modal -->
+        <ConfirmationModal
+            :show="showConfitmationModal"
+            @close="closeConfitmationModal(false)"
+        >
+            <template #title> Are you sure you want to do this? </template>
 
-        <template #content>
-            This will delete all previously signed waivers from users?
-        </template>
+            <template #content>
+                This will delete all previously signed waivers from all users?
+            </template>
 
-        <template #footer>
-            <ButtonLink
-                size="default"
-                styling="default"
-                @click="form.sign_again = false"
-            >
-                Cancel
-            </ButtonLink>
+            <template #footer>
+                <ButtonLink
+                    size="default"
+                    styling="default"
+                    @click="closeConfitmationModal(false)"
+                >
+                    Cancel
+                </ButtonLink>
 
-            <ButtonLink
-                size="default"
-                styling="danger"
-                class="ml-3"
-                @click="form.sign_again = true"
-            >
-                Delete
-            </ButtonLink>
-        </template>
-    </ConfirmationModal> -->
+                <ButtonLink
+                    size="default"
+                    styling="danger"
+                    class="ml-3"
+                    @click="closeConfitmationModal(true)"
+                >
+                    Yes, Do it.
+                </ButtonLink>
+            </template>
+        </ConfirmationModal>
     </template>
-
 </template>
 <style src="@vueform/multiselect/themes/tailwind.css"></style>
