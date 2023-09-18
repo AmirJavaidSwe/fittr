@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('stripe_payment_intent_id')->nullable(); //The PaymentIntent associated with this invoice, generated when the invoice is finalized, and can then be used to pay the invoice. 
             $table->enum('stripe_status', StripeInvoiceStatus::all()); //one of draft, open, paid, uncollectible, or void
             $table->string('currency', 3)->nullable(); // Three-letter ISO currency code, in lowercase. Must be a supported currency.
+            $table->string('currency_symbol', 10)->nullable();
             $table->integer('amount_due')->unsigned()->default(0); //stripe integer
             $table->integer('amount_paid')->unsigned()->default(0);
             $table->integer('amount_remaining')->unsigned()->default(0);

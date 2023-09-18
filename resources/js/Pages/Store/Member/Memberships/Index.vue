@@ -1,16 +1,6 @@
 <script setup>
-import { ref, watch } from "vue";
-import { useForm, usePage } from "@inertiajs/vue3";
-import { DateTime } from "luxon";
-import ActionsIcon from "@/Icons/ActionsIcon.vue";
-import {
-    faPencil,
-    faChevronRight,
-    faPlus,
-    faEye,
-    faCog,
-} from "@fortawesome/free-solid-svg-icons";
-import DateValue from "@/Components/DataTable/DateValue.vue";
+import { ref } from "vue";
+import { router } from "@inertiajs/vue3";
 import MembershipCard from "@/Pages/Store/Member/Memberships/MembershipCard.vue";
 
 const props = defineProps({
@@ -24,6 +14,10 @@ const props = defineProps({
     business_settings: Object,
 });
 
+const tryCancel = (membership) => {
+    router.put(route('ss.member.memberships.cancel', { subdomain: props.business_settings.subdomain, membership: membership.id } ));
+};
+
 </script>
 <template>
     <div class="space-y-8">
@@ -35,6 +29,7 @@ const props = defineProps({
             :servicetypes="servicetypes"
             :locations="locations"
             :business_settings="business_settings"
+            @cancel="tryCancel"
             class="bg-white border-t-8 rounded-md shadow"
         />
     </div>

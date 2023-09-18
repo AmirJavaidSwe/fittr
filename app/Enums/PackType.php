@@ -7,7 +7,7 @@ enum PackType
     case class_lesson;
     case service;
     case hybrid;
-    case default;
+    case location_pass;
     case corporate;
 
     public static function all(): array
@@ -17,7 +17,7 @@ enum PackType
 
     public static function creditTypes(): array
     {
-        return array_column(array(static::class_lesson, static::service, static::hybrid), 'name');
+        return array_column(array(static::class_lesson, static::service, static::hybrid, static::location_pass), 'name');
     }
 
     public static function from(string $case)
@@ -26,7 +26,7 @@ enum PackType
             $case == 'class_lesson' => static::class_lesson,
             $case == 'service' => static::service,
             $case == 'hybrid' => static::hybrid,
-            $case == 'default' => static::default,
+            $case == 'location_pass' => static::location_pass,
             $case == 'corporate' => static::corporate,
         };
     }
@@ -34,6 +34,17 @@ enum PackType
     public static function get(string $case): string
     {
         return self::from($case)->name;
+    }
+
+    public static function label(string $case): string
+    {
+        return match(true) {
+            $case == 'class_lesson' => __('class'),
+            $case == 'service' => __('service'),
+            $case == 'hybrid' => __('hybrid'),
+            $case == 'location_pass' => __('pass'),
+            $case == 'corporate' => __('corporate'),
+        };
     }
 
     public static function labels(): array
@@ -57,14 +68,14 @@ enum PackType
                 'label' => __('Hybrid'),
                 'label_plural' => __('Hybrids'),
                 'value' => self::hybrid->name,
-                'description' => __('Plan provides fixed or unlimited number of sessions to both, classes and services.'),
+                'description' => __('Plan provides fixed or unlimited number of sessions for classes and/or services.'),
                 'order' => 4,
             ],
             [
                 'label' => __('Pass'),
                 'label_plural' => __('Passes'),
-                'value' => self::default->name,
-                'description' => __('Plan provides general access or pass to studio only. This type will not generate any session credits.'),
+                'value' => self::location_pass->name,
+                'description' => __('Plan provides general access/pass to location only. Membership may provide unlimited passes while active or be based on fixed number of entrances.'),
                 'order' => 1,
             ],
             [
@@ -77,14 +88,14 @@ enum PackType
         );
     }
 
-    // Existing pack type can only be one of 'class_lesson, service, hybrid' or 'default' or 'corporate': ('default' and 'corporate' can't be chaged to any other type)
+    // Existing pack type can only be one of 'class_lesson, service, hybrid' or 'location_pass' or 'corporate': ('location_pass' and 'corporate' can't be chaged to any other type)
     public static function labelsForExisting($for = null): array
     {
         $grouped = [self::class_lesson->name, self::service->name, self::hybrid->name];
 
         $filtered = array_filter(self::labels(), function($item) use ($for, $grouped) {
             switch ($for) {
-                case self::default->name:
+                case self::location_pass->name:
                     return $for === $item['value'];
                 case self::class_lesson->name:
                     return in_array($item['value'], $grouped);
@@ -104,7 +115,7 @@ enum PackType
     public static function creditable($value): bool
     {
         return match($value) {
-            'class_lesson', 'service', 'hybrid' => true,
+            'class_lesson', 'service', 'hybrid', 'location_pass' => true,
             default => false,
         };
     }

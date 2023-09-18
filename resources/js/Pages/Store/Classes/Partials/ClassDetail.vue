@@ -44,9 +44,7 @@ const emit = defineEmits(['close', 'isFamilyBooking', 'bookForOtherFamilyMembers
                 <div class="flex text-3xl font-bold mb-4 items-center">
                     <div class="flex flex-grow mr-4">{{ props.classDetails.title }}</div>
                     <div class="flex flex-col shrink-0">
-                        <div
-                            class="inline-flex text-sm font-normal rounded-lg bg-green-500 text-white p-2 justify-center mb-2">
-                            Free</div>
+                        <div v-if="classDetails.is_free" class="inline-flex text-sm font-normal rounded-lg bg-green-500 text-white p-2 justify-center mb-2">Free</div>
                         <div class="inline-flex text-sm font-normal rounded-lg text-white p-2 justify-center"
                             :class="{ 'bg-danger-600': !props.classDetails.spaces_left, 'bg-gray-500': props.classDetails.spaces_left }">
                             {{ props.classDetails.spaces_left > 0 ? 'Not Full' : 'Full' }}</div>

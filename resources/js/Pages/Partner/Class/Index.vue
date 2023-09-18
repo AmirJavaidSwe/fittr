@@ -86,6 +86,7 @@ const form_class = useForm({
     studio_id: null,
     file_type: "csv",
     is_off_peak: false,
+    is_free: false,
     does_repeat: false,
     repeat_end_date: null,
     week_days: [],
@@ -102,6 +103,7 @@ const duplicateClassForm = useForm({
     studio_id: null,
     file_type: "csv",
     is_off_peak: false,
+    is_free: false,
     does_repeat: false,
     repeat_end_date: null,
     week_days: [],
@@ -222,6 +224,7 @@ let formEdit = useForm({
     class_type_id: null,
     studio_id: null,
     is_off_peak: null,
+    is_free: false,
     use_defaults: false,
     spaces: null,
     default_spaces: null,
@@ -238,6 +241,7 @@ const handleUpdateForm = (data) => {
     formEdit.class_type_id = data.class_type_id;
     formEdit.studio_id = data.studio_id;
     formEdit.is_off_peak = data.is_off_peak;
+    formEdit.is_free = data.is_free;
     formEdit.use_defaults = data.spaces ? false : true;
     formEdit.spaces = data.spaces;
     formEdit.default_spaces = data.default_spaces;
@@ -253,6 +257,7 @@ const handleDuplicateForm = (data) => {
     duplicateClassForm.class_type_id = data.class_type_id;
     duplicateClassForm.studio_id = data.studio_id;
     duplicateClassForm.is_off_peak = data.is_off_peak;
+    duplicateClassForm.is_free = data.is_free;
     duplicateClassForm.use_defaults = data.spaces ? false : true;
     duplicateClassForm.spaces = data.spaces;
     duplicateClassForm.default_spaces = data.default_spaces;

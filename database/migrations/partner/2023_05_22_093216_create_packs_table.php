@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('packs', function (Blueprint $table) {
             $table->id();
-            $table->enum('type', PackType::all())->default(PackType::default->name)->comment('enum');
+            $table->enum('type', PackType::all())->comment('enum');
             $table->string('title', 255);
             $table->string('sub_title', 255)->nullable();
             $table->text('description')->nullable();

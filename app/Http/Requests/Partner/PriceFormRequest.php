@@ -31,53 +31,66 @@ class PriceFormRequest extends FormRequest
             'type' => ['required', Rule::in(StripePriceType::all())],
             'is_active' => 'required|boolean',
             'price' => 'required|numeric|min:0',
+            'pass_mode' => 'boolean',
             'sessions' => [
                 Rule::excludeIf(
-                    $this->pack->type == PackType::default->name ||
+                    ($this->pack->type == PackType::get('location_pass') && $this->pass_mode === false) ||
                     //class, service or hybrid && recurring && unlimited
-                    ($this->pack->type != PackType::default->name && $this->type == StripePriceType::recurring->name && $this->is_unlimited == true)
+                    ($this->type == StripePriceType::get('recurring') && $this->is_unlimited == true)
                 ),
-                Rule::requiredIf($this->pack->type != PackType::default->name),
+                Rule::requiredIf(
+                    ($this->pack->type == PackType::get('location_pass') && $this->pass_mode === true) ||
+                    ($this->pack->type != PackType::get('location_pass') && $this->type == StripePriceType::get('recurring') && $this->is_unlimited == true)
+                ),
                 'integer',
                 'min:1'
             ],
             'is_expiring' => [
                 'boolean',
-                // Rule::excludeIf($this->pack->type == PackType::default->name),
+                // Rule::excludeIf($this->pack->type == PackType::location_pass->name),
             ],
             'expiration' => 'required_if:is_expiring,true|exclude_without:is_expiring|exclude_if:is_expiring,false|integer|min:1',
             'expiration_period' => ['required_if:is_expiring,true', 'exclude_without:is_expiring', 'exclude_if:is_expiring,false', Rule::in(StripePeriod::all())],
             'interval_count' => [
-                'required_if:type,'.StripePriceType::recurring->name,
-                'exclude_if:type,'.StripePriceType::one_time->name,
+                'required_if:type,'.StripePriceType::get('recurring'),
+                'exclude_if:type,'.StripePriceType::get('one_time'),
+                'integer',
+                'min:1'
+            ],
+            'min_term' => [
+                'exclude_if:type,'.StripePriceType::get('one_time'),
+                'nullable',
                 'integer',
                 'min:1'
             ],
             'interval' => [
-                'required_if:type,'.StripePriceType::recurring->name,
-                'exclude_if:type,'.StripePriceType::one_time->name,
+                'required_if:type,'.StripePriceType::get('recurring'),
+                'exclude_if:type,'.StripePriceType::get('one_time'),
                 Rule::in(StripePeriod::all())
             ],
-            'is_ongoing' => 'boolean|exclude_if:type,'.StripePriceType::one_time->name,
-            'fixed_count' => 'required_if:is_ongoing,false|exclude_if:is_ongoing,true|exclude_without:is_ongoing|integer|min:1',
+            'is_ongoing' => 'boolean|exclude_if:type,'.StripePriceType::get('one_time'),
+            'fixed_count' => 'required_if:is_ongoing,false|exclude_if:is_ongoing,true|exclude_without:is_ongoing|integer|min:1|gte:min_term',
             'is_renewable' => [
                 'boolean',
-                Rule::excludeIf($this->type != StripePriceType::one_time->name || $this->pack->type == PackType::default->name),
+                Rule::excludeIf(
+                    $this->type == StripePriceType::get('recurring') ||
+                    ($this->pack->type == PackType::get('location_pass') && $this->pass_mode === false)
+                ),
                 'declined_if:is_intro,true',
             ],
             'is_intro' => [
                 'boolean',
-                Rule::excludeIf($this->type != StripePriceType::one_time->name),
+                Rule::excludeIf($this->type != StripePriceType::get('one_time')),
                 'declined_if:is_renewable,true',
             ],
             'is_unlimited' => [
                 'boolean',
-                Rule::excludeIf($this->type == StripePriceType::one_time->name),
+                Rule::excludeIf($this->type == StripePriceType::get('one_time')),
             ],
             'is_fap' => 'boolean',
             'fap_value' => [
-                Rule::excludeIf($this->pack->type == PackType::default->name || $this->type == StripePriceType::one_time->name || empty($this->is_fap)),
-                Rule::requiredIf($this->type == StripePriceType::recurring->name && $this->is_fap),
+                Rule::excludeIf($this->pack->type == PackType::get('location_pass') || $this->type == StripePriceType::get('one_time') || empty($this->is_fap)),
+                Rule::requiredIf($this->type == StripePriceType::get('recurring') && $this->is_fap),
                 'integer',
                 'min:1'
             ],
@@ -104,10 +117,11 @@ class PriceFormRequest extends FormRequest
             'private_url.regex' => __('URL should have lowercase letters, numbers and hyphens only.'),
             'is_renewable.declined_if' => __('One of the fields must be disabled.'),
             'is_intro.declined_if' => __('One of the fields must be disabled.'),
-            'is_unlimited.declined_if' => __('Unlimited option is not available for default type pack.'),
+            'is_unlimited.declined_if' => __('Unlimited option is not available for pass type pack.'),
             'fixed_count.required_if' => __('Please provide the number of billing cycles.'),
             'interval_count.required_if' => __('Please set interval value.'),
             'interval.required_if' => __('Please select interval period.'),
+            'fixed_count.gte' => __('Number of subscription cycles must be greater than or equal min term duration.'),
         ];
     }
 }

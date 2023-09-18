@@ -51,8 +51,8 @@ props.form.restrictions = reactive({
      servicetypes: props.form.restrictions?.servicetypes ?? [],
 });
 
-const isDefaultType = computed(() => {
-  return props.form.type == 'default';
+const isPassType = computed(() => {
+  return props.form.type == 'location_pass';
 });
 const showRestrictions = computed(() => {
   return props.form.is_restricted;
@@ -76,12 +76,13 @@ const default_price_fields = {
     type: 'one_time',
     is_active: true,
     price: null,
-    sessions: null,
-    is_expiring: false,
+    sessions: 0,
+    is_expiring: true,
     expiration: null,
     expiration_period: null,
     interval: null,
     interval_count: null,
+    min_term: null,
     is_unlimited: false,
     is_fap: false,
     fap_value: null,
@@ -114,7 +115,7 @@ const showEditPrice = (price) => {
             <!-- Tab Basics -->
             <!-- Type -->
             <InputLabel value="Membership Type"/>
-            <div v-if="isNew" class="text-gray-500 text-xs">Membership type can be changed to Class, Service or Hybrid. Default type can not be changed once created.</div>
+            <div v-if="isNew" class="text-gray-500 text-xs">Membership type can be changed to Class, Service or Hybrid. Pass or Corporate type can not be changed once created.</div>
             <RadioGroup v-model="form.type" class="cursor-pointer flex flex-wrap gap-4">
                 <RadioGroupOption 
                     as="template"
@@ -185,7 +186,7 @@ const showEditPrice = (price) => {
             </div>
 
             <!-- is_restricted -->
-            <div v-if="!isDefaultType" class="bg-gray-50 p-2 rounded-md space-y-4">
+            <div v-if="!isPassType" class="bg-gray-50 p-2 rounded-md space-y-4">
                 <Switcher
                     v-model="form.is_restricted"
                     title="Restrictions"

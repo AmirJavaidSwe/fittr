@@ -16,6 +16,10 @@ const props = defineProps({
         type: String,
         required: true,
     },
+    locations: {
+        type: Array,
+        required: true,
+    },
     isLocked: {
         type: Boolean,
         required: false,
@@ -38,6 +42,16 @@ const restrictedServices = computed(() => {
         .map(x => x.title)
         .join(', ');
 });
+const show = function (price){
+    // show location unrestricted price || matching selected ID
+    if(price.locations.length === 0 || price.locations.find(el => el.id == props.location)){
+        return true;
+    }
+
+    //all locations option
+    //Only active locations should match price's active locations
+    return props.locations.length == price.locations.filter(o => o.status == true).length;
+};
 
 defineEmits(['priceSelected', 'buy']);
 </script>
@@ -62,10 +76,9 @@ defineEmits(['priceSelected', 'buy']);
                 :pack="pack"
                 :price="price"
                 :state_buttons="state_buttons"
-                :location="location"
                 class="flex justify-between items-center mb-4 last:mb-0 border-b-2"
                 :class="{'text-primary-400': state_buttons[pack.id].selected_price_id == price.id}"
-                v-show="price.locations.length === 0 || price.locations.find(el => el.id == location)"
+                v-show="show(price)"
                 @priceSelected="(pack_id, price_id) => $emit('priceSelected', pack_id, price_id)"
                 >
             </PriceOption>

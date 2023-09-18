@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import ButtonLink from '@/Components/ButtonLink.vue';
-import { faGear, faLocationPinLock, faRecycle, faUserPlus, faHourglassEnd } from '@fortawesome/free-solid-svg-icons';
+import { faGear, faLocationPinLock, faRecycle, faUserPlus, faHourglassEnd, faShopLock } from '@fortawesome/free-solid-svg-icons';
 
 const props = defineProps({
     price: {
@@ -40,8 +40,8 @@ const showExpiration = computed(() => {
 const isUnlimited = computed(() => {
     return props.price.is_unlimited && props.price.type == 'recurring';
 });
-const isDefaultType = computed(() => {
-    return props.pack_type == 'default';
+const isPassType = computed(() => {
+    return props.pack_type == 'location_pass';
 });
 
 defineEmits(['toggle', 'edit', 'delete']);
@@ -52,7 +52,7 @@ defineEmits(['toggle', 'edit', 'delete']);
         <div 
         class="flex font-medium items-center justify-between space-between"
         :class="{
-            'bg-opacity-10 bg-black': !price.is_active,
+            'bg-opacity-10': !price.is_active,
             'bg-primary-300': price.type == 'one_time',
             'bg-secondary-500': price.type == 'recurring',
             }"
@@ -93,21 +93,32 @@ defineEmits(['toggle', 'edit', 'delete']);
                 </template>
             </Dropdown>
         </div>
-        <div class="flex-grow p-2 space-y-2">
-            <!-- <div>ID: {{price.id}}</div> -->
+        <div class="flex-grow p-2 space-y-2" :class="{'bg-gray-100': !price.is_active}">
             <div> 
                 <span class="font-bold" :title="price.currency.toUpperCase()">{{price.price_formatted}}</span>
                 <span v-if="price.interval_count">&nbsp;{{price.interval_human}}</span>
             </div>
-            <template v-if="!isDefaultType">
+
             <div v-if="isUnlimited"> 
                 <span class="font-bold text-2xl">Unlimited {{price.taxonomy_sessions}}</span>
             </div>
-            <div v-else> 
-                <span class="font-bold text-2xl" :title="price.sessions">{{price.sessions}}</span>
-                <span class="ml-1">{{price.taxonomy_sessions}}</span>
-            </div>
+
+            <template v-if="isPassType">
+                <div v-if="price.sessions > 0"> 
+                    <span class="font-bold text-2xl" :title="price.sessions">{{price.sessions}}</span>
+                    <span class="ml-1">{{price.taxonomy_sessions}}&nbsp;{{price.interval_adjective}}</span>
+                </div>
+                <div v-else>
+                    Unlimited location visits while active
+                </div>
             </template>
+            <template v-else>
+                <div> 
+                    <span class="font-bold text-2xl" :title="price.sessions">{{price.sessions}}</span>
+                    <span class="ml-1">{{price.taxonomy_sessions}}</span>
+                </div>
+            </template>
+
             <div v-if="price.location_ids.length" class="flex flex-wrap items-center gap-2" v-tooltip="locationRestrictionsTooltip">
                 <font-awesome-icon :icon="faLocationPinLock" />
                 <span v-for="location in restricted_locations" :key="location.id" class="bg-red-100 font-semibold px-2 py-2 rounded-md text-red-800 text-xs">
@@ -132,7 +143,13 @@ defineEmits(['toggle', 'edit', 'delete']);
                 v-if="showExpiration"
                 :icon="faHourglassEnd"
                 class="w-4 h-4 m-2 p-1 bg-white rounded"
-                v-tooltip="(isDefaultType ? 'Membership' : 'Session credits') + ' will expire. Expiration period: '+price.expiration+' '+price.expiration_period" 
+                v-tooltip="(isPassType ? 'Membership' : 'Session credits') + ' will expire. Expiration period: '+price.expiration+' '+price.expiration_period" 
+                />
+            <font-awesome-icon 
+                v-if="isRecurring && price.min_term > 0"
+                :icon="faShopLock"
+                class="w-4 h-4 m-2 p-1 bg-white rounded"
+                v-tooltip="'This option has min term enabled for subscription.'" 
                 />
         </div>
     </div>

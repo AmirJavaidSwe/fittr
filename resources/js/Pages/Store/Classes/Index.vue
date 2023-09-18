@@ -613,8 +613,18 @@ const isBookable = (time) => {
                             </div>
                         </div>
                     </div>
-                    <div class="flex mb-4 pt-4 border-t border-gray-300 items-center">
-                        <div class="flex-grow uppercase font-semibold">
+                    <div class="mb-4 pt-4 border-t border-gray-300 items-center">
+
+                        <VTooltip v-if="item.title.length > 20" :triggers="['hover', 'click']">
+                            <div class="font-bold truncate">{{item.title}}</div>
+
+                            <template #popper>
+                                <div class="w-40">{{item.title}}</div>
+                            </template>
+                        </VTooltip>
+                        <div v-else class="font-bold truncate">{{item.title}}</div>
+
+                        <div class="uppercase font-semibold">
                             {{ item.class_type?.title }}
                         </div>
                     </div>
@@ -633,7 +643,7 @@ const isBookable = (time) => {
                         </div>
                     </div>
                     <div v-if="!item.is_booked && !item.on_waitlist" class="border-t border-gray-300"></div>
-                    <div class="flex my-4 items-center">
+                    <div class="flex flex-wrap my-4 items-center">
                         <div class="mr-2">
                             <LocationIcon />
                         </div>
@@ -641,6 +651,9 @@ const isBookable = (time) => {
                             <span class="mt-[1px]">{{ item.studio?.location?.title }}</span>
                         </div>
                     </div>
+
+                    <div v-if="item.is_free" class="bg-primary-300 text-white rounded-lg px-2 py-1 font-bold text-center">FREE CLASS</div>
+
                     <template v-if="item.is_booked">
                         <div class="border-t border-gray-300"></div>
                         <div class="flex mt-4 items-center justify-center text-xl text-white font-bold uppercase">

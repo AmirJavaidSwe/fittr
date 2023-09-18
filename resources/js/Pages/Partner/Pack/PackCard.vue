@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue';
 import { DateTime } from 'luxon';
-import { faEllipsis, faUserGroup, faPencil, faCopy, faTrashCan, faLock, faPowerOff, faMask, faCalendarDays } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsis, faUserGroup, faPencil, faCopy, faTrashCan, faLock, faLocationPinLock, faPowerOff, faMask, faCalendarDays } from '@fortawesome/free-solid-svg-icons';
 import ButtonLink from '@/Components/ButtonLink.vue';
 import DonutText from '@/Components/Charts/DonutText.vue';
 import { hideAllPoppers } from 'floating-vue';
@@ -167,14 +167,32 @@ defineEmits(['copy', 'toggle', 'delete']);
 
         <div class="bg-gray-50 px-2 py-4 space-y-2 flex-grow">
             <div v-if="pack.pack_prices.length" v-for="pack_price in pack.pack_prices" :key="pack_price.id" class="capitalize flex justify-between border-b last:border-none">
-                <span>
+                <div>
                     <template v-if="pack_price.type == 'one_time'">
                     {{price_types.find(({value}) => value === pack_price.type)?.label}}
                     </template>
                     <template v-if="pack_price.type == 'recurring'">
                     {{pack_price.interval_adjective}}
                     </template>
-                </span>
+
+                    <span v-if="pack_price.sessions > 0" class="font-bold mx-2">X{{pack_price.sessions}}</span>
+
+                    <template v-if="pack_price.locations.length">
+                    <VTooltip :triggers="['hover', 'click']" class="inline-block">
+                        <div>
+                            <font-awesome-icon :icon="faLocationPinLock" />
+                        </div>
+                        <template #popper>
+                            <div class="flex flex-wrap gap-1 w-72">
+                                <div class="w-full">Location restricted option</div>
+                                <span v-for="restricted_location in pack_price.locations" :key="restricted_location.id" class="bg-red-100 font-semibold px-2 py-1 rounded-md text-red-800 text-xs">
+                                    {{restricted_location.title}}
+                                </span>
+                            </div>
+                        </template>
+                    </VTooltip>
+                    </template>
+                </div>
                 <span class="font-bold">
                 {{pack_price.price_formatted}}
                 </span>

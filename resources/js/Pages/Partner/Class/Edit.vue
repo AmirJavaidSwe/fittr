@@ -30,6 +30,7 @@ let form = useForm({
     class_type_id: props.class_lesson.class_type_id,
     studio_id: props.class_lesson.studio_id,
     is_off_peak: props.class_lesson.is_off_peak,
+    is_free: props.class_lesson.is_free,
     use_defaults: props.class_lesson?.spaces ? false : true,
     spaces: props.class_lesson.spaces,
 });

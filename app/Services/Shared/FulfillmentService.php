@@ -131,6 +131,10 @@ class FulfillmentService
 
     public function processOrderItem($order_item) : void
     {
+        if($order_item->is_processed){
+            return;
+        }
+
         $pack_price = $order_item->pack_price;
         if(empty($pack_price)){
             // order_item has no stripe price related model - possible with add-on/upsale line items
@@ -142,7 +146,7 @@ class FulfillmentService
         switch ($pack_price->priceable_type) {
             case 'pack':
                 $membership = $this->createMembership($order_item);
-                $this->createSessionCredits($membership);
+                $session_credits = $this->createSessionCredits($membership);
 
                 if($membership->billing_type == StripePriceType::get('recurring')){
                     //MembershipCharge could already exist in database for new subscription, happens when 'invoice.paid' received before 'checkout.session.completed'
@@ -177,8 +181,14 @@ class FulfillmentService
         if(!empty($location_restrictions)){
             $restrictions['locations'] = $location_restrictions;
         }
+
+        $is_restricted = false;
+
+        //flag membership is_restricted
         if(empty($restrictions)){
             $restrictions = null;
+        } else {
+            $is_restricted = true;
         }
 
         return Membership::firstOrCreate(
@@ -196,7 +206,7 @@ class FulfillmentService
                 'title' => $pack->title,
                 'sub_title' => $pack->sub_title,
                 'description' => $pack->description,
-                'is_restricted' => $pack->is_restricted,
+                'is_restricted' => $is_restricted,
                 'restrictions' => $restrictions,
                 'billing_type' => $pack_price->type,
                 'sessions' => $pack_price->sessions,
@@ -208,6 +218,7 @@ class FulfillmentService
                 'currency_symbol' => $pack_price->currency_symbol,
                 'interval' => $pack_price->interval,
                 'interval_count' => $pack_price->interval_count,
+                'min_term' => $pack_price->min_term,
                 'is_unlimited' => $pack_price->is_unlimited,
                 'is_fap' => $pack_price->is_fap,
                 'fap_value' => $pack_price->fap_value,
@@ -246,15 +257,17 @@ class FulfillmentService
         );
     }
 
-    public function createSessionCredits($membership) : void
+    public function createSessionCredits($membership) : ?\Illuminate\Support\Collection
     {
-        // Memberships of type Class, Service and Hybrid are only types that can create new credits
+        // Memberships of type Class, Service and Hybrid can create new credits
+        // Memberships of type location_pass, may create credits if sessions > 0 (pass_mode)
         if(PackType::creditable($membership->type) === false){
-            return;
+            return null;
         }
+
         // Membership must not be unlimited (is_unlimited == false), sessions > 0
         if($membership->is_unlimited || !($membership->sessions > 0) ){
-            return;
+            return null;
         }
 
         $pack_price = $membership->pack_price;
@@ -276,8 +289,9 @@ class FulfillmentService
             }
         }
 
+        $session_credits = collect();
         for ($i = 1; $i <= $membership->sessions; $i++) { 
-            SessionCredit::create([
+            $session_credit = SessionCredit::create([
                 'user_id' => $membership->user_id,
                 'order_id' => $membership->order_id,
                 'order_item_id' => $membership->order_item_id,
@@ -288,7 +302,8 @@ class FulfillmentService
                 'restrictions' => $membership->restrictions, //inherits from membership
                 'expiry_at' => $expiry_at ?? null, // credit does not expire if null
             ]);
+            $session_credits->push($session_credit);
         }
-
+        return $session_credits;
     }
 }
