@@ -77,17 +77,19 @@ class StoreBookingController extends Controller
 
         $waiverSignNeeded = $storeBookingService->waiverSignNeeded();
 
-        if(!empty($waiverValidation) || ($waiverSignNeeded['waiver'] != null && $waiverSignNeeded['waiver_sign_needed'] === true)) {
+        WaiverValidationAndSaveService::saveWaiverAcceptanceData();
+
+        if(!empty($waiverValidation) || ($waiverSignNeeded['waivers'] != null && $waiverSignNeeded['waiver_sign_needed'] === true)) {
             return Inertia::render('Store/Classes/WaiverVerification', [
                 "form_data" => request()->request_data,
-                "waiver" => $waiverSignNeeded['waiver'],
+                "waivers" => $waiverSignNeeded['waivers'],
+                "user_waivers" => $waiverSignNeeded['user_waivers'],
                 'submit_to_route' => 'ss.member.bookings.store',
                 'page_title' => __('Waiver Verification Required'),
                 'errors' => $waiverValidation
             ]);
         }
 
-        WaiverValidationAndSaveService::saveWaiverAcceptanceData();
 
         return $storeBookingService->store();
     }
@@ -143,7 +145,7 @@ class StoreBookingController extends Controller
 
             return Inertia::render('Store/Classes/WaiverVerification', [
                 "form_data" => request()->request_data,
-                "waiver" => $waiverSignNeeded['waiver'],
+                "waivers" => $waiverSignNeeded['waivers'],
                 'page_title' => __('Waiver Verification Required'),
                 'submit_to_route' => 'ss.member.bookings.other-famly',
                 'errors' => $waiverValidation

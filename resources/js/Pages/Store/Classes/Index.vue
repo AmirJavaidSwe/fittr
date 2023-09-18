@@ -145,7 +145,6 @@ const bookingForm = useForm({ class_id: "" });
 
 const handleBooking = () => {
     bookingForm.class_id = classDetails.value.id;
-
     bookingForm.transform((data) => ({
         ...data,
         familyBooking: selectedFamilyMembers.value,

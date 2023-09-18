@@ -71,7 +71,7 @@ const emit = defineEmits(['close', 'isFamilyBooking', 'bookForOtherFamilyMembers
                 </div>
 
                 <div class="flex flex-row mb-3">
-                    <div class="w-1/2 flex mr-2 items-center">Class Type:</div>
+                    <div class="w-1/2 flex mr-2 items-center"></div>
                     <div class="flex w-1/2 justify-end font-bold">
                         {{ props.classDetails.class_type?.title }}
                     </div>

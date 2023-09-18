@@ -94,45 +94,45 @@ const EditForm = useForm({
 
 
 const storeFamilyMember = () => {
-    if (props.waiver !== null) {
-        if(!showWaiverModal.value) {
-            showWaiverModal.value = true;
-            return;
-        }
+if (props.waiver !== null) {
+    if(!showWaiverModal.value) {
+        showWaiverModal.value = true;
+        return;
     }
-    CreateForm.transform((data) => ({
-        ...data,
-        waiver_id: waiver !== null ? waiver.value?.id : null,
-        waiver_data: waiver !== null  ? {
-            data: waiverFormData.waiverQandA,
-            signature: waiverFormData.sign ?? null,
-        } : {},
-    })).post(
-        route("ss.member.family.store", {
-            subdomain: props.business_settings.subdomain,
-        }),
-        {
-            preserveScroll: true,
-            onSuccess: () => {
-                showCreateModal.value = false;
-                showWaiverModal.value = false;
-                waiverFormData.reset().clearErrors();
-                CreateForm.reset().clearErrors();
-                closedShowWaiver();
-                waiverQandData(waiver.value?.id);
-            },
-        }
-        );
-    };
+}
+CreateForm.transform((data) => ({
+    ...data,
+    waiver_id: waiver !== null ? waiver.value?.id : null,
+    waiver_data: waiver !== null  ? {
+        data: waiverFormData.waiverQandA,
+        signature: waiverFormData.sign ?? null,
+    } : {},
+})).post(
+    route("ss.member.family.store", {
+        subdomain: props.business_settings.subdomain,
+    }),
+    {
+        preserveScroll: true,
+        onSuccess: () => {
+            showCreateModal.value = false;
+            showWaiverModal.value = false;
+            waiverFormData.reset().clearErrors();
+            CreateForm.reset().clearErrors();
+            closedShowWaiver();
+            waiverQandData(waiver.value?.id);
+        },
+    }
+    );
+};
 
-    const removeFile = (param) => {
-        if (param == "CreateForm") {
-            CreateForm.profile_photo = null;
-        } else if (param == "EditForm") {
-            EditForm.profile_photo_path = null;
-            EditForm.has_image = false;
-        }
-    };
+const removeFile = (param) => {
+    if (param == "CreateForm") {
+        CreateForm.profile_photo = null;
+    } else if (param == "EditForm") {
+        EditForm.profile_photo_path = null;
+        EditForm.has_image = false;
+    }
+};
 
 const showCreateFamily = () => {
     showCreateModal.value = true;
@@ -419,6 +419,14 @@ const updateMember = () => {
                   @click="closeWaiverModal"
                 >
                   Go To Back
+                </ButtonLink>
+                <ButtonLink
+                  styling="secondary"
+                  size="default"
+                  class="mt-4"
+                  @click="closeWaiverModal"
+                >
+                  Save
                 </ButtonLink>
             </div>
         </template>

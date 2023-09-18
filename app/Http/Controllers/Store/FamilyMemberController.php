@@ -47,6 +47,7 @@ class FamilyMemberController extends Controller
 
     public function store(FamilyMemberRequest $request)
     {
+        // dd($request->all());
         $waiverValidation = WaiverValidationAndSaveService::validateIfHasWaiver();
 
         if(!empty($waiverValidation)) {
@@ -56,14 +57,26 @@ class FamilyMemberController extends Controller
         $member = FamilyMember::create($request->all());
 
         WaiverValidationAndSaveService::saveWaiverAcceptanceData($member->id);
+        $checkWaiverCompleted = WaiverValidationAndSaveService::checkWaiverComplete($member->id);
+        if($checkWaiverCompleted){
+            if ($request->hasFile('profile_photo')) {
+                $member->updateProfilePhoto($request->profile_photo);
+            }
+            $member->user_id = auth()->user()->id;
+            $member->save();
 
-        if ($request->hasFile('profile_photo')) {
-            $member->updateProfilePhoto($request->profile_photo);
+            return $this->redirectBackSuccessWithSubdomain(__('Family member added successfully'), 'ss.member.family.index');
+        }else{
+            $waivers = Waiver::where('show_at', 'family-add')->where('is_active', 1)->get();
+            $user_waivers = UserWaiver::where('user_id', auth()->user()->id)->get();
+            return Inertia::render('Store/Member/Family/Index', [
+                'family_members' => FamilyMember::where('user_id', auth()->user()->id)->get(),
+                'page_title' => __('Family'),
+                'waivers' => $waivers,
+                'user_waivers' => $user_waivers ?? null,
+                'user' => auth()->user(),
+            ]);
         }
-        $member->user_id = auth()->user()->id;
-        $member->save();
-
-        return $this->redirectBackSuccessWithSubdomain(__('Family member added successfully'), 'ss.member.family.index');
     }
 
     public function update(FamilyMemberRequest $request, $subdomain, $id)

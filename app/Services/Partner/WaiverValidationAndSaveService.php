@@ -96,4 +96,14 @@ class WaiverValidationAndSaveService
             ]);
         }
     }
+
+    public static function checkWaiverComplete($family_member_id = null){
+        $waivers = Waiver::where('show_at','family-add')->get();
+        $user_waivers = UserWaiver::where([['user_id',auth()->user()->id],['family_member_id','!=',null]])->get();
+        if(count($waivers) == count($user_waivers)){
+            return true;
+        }else{
+            return false;
+        }
+    }
 }
