@@ -335,11 +335,13 @@ class PartnerPackController extends Controller
         // this method handles price update and delete.
         // update API call can only change 'active' parameter
         // delete method can only delete the price locally, API call is the same but 'active' param is false, so that price can be archived only
+        $pack = $price->priceable;
+        $data = $this->pack_service->normalizedPrice($pack, $request->validated());
 
         switch ($request->action) {
             case 'edit': //only local fields (no api call) excluding: type, status, price, interval...
-                $price->locations()->sync($request->location_ids ?? []);
-                $price->update($request->validated());
+                $price->locations()->sync($data->location_ids ?? []);
+                $price->update($data);
                 $msg = __('Price updated successfully.');
 
                 return $this->redirectBackSuccess($msg);

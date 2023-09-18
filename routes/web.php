@@ -268,8 +268,8 @@ Route::domain('{subdomain}.'.$domain)->middleware(['auth.subdomain'])->name('ss.
             Route::post('/bookings/other-famly', [StoreBookingController::class, 'bookForOtherFamly'])->name('bookings.other-famly');
             Route::post('/bookings/cancel-all', [StoreBookingController::class, 'cancelForAllOrSelected'])->name('bookings.cancel-all');
             Route::get('/orders', [StoreOrderController::class, 'index'])->name('orders.index');
-            Route::get('/my-memberships', [StoreMembershipController::class, 'index'])->name('memberships.index');//not a table
-            Route::get('/all-memberships', [StoreMembershipController::class, 'all'])->name('memberships.all'); //basic table of historical records
+            Route::get('/my-memberships', [StoreMembershipController::class, 'index'])->name('memberships.index');
+            Route::put('/my-memberships/cancel/{membership}', [StoreMembershipController::class, 'cancel'])->name('memberships.cancel');
         });
 
         // INSTRUCTOR

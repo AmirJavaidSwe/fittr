@@ -2,11 +2,13 @@
 import { computed } from 'vue';
 import { DateTime } from 'luxon';
 import { faCalendarCheck, faCalendarDays, faHourglass } from '@fortawesome/free-regular-svg-icons';
-import { faLocationPinLock, faEllipsis } from '@fortawesome/free-solid-svg-icons';
+import { faLocationPinLock, faEllipsis, faShopLock, faFileInvoiceDollar } from '@fortawesome/free-solid-svg-icons';
 import ButtonLink from '@/Components/ButtonLink.vue';
 import DonutText from '@/Components/Charts/DonutText.vue';
 import CardIcon from '@/Components/CardIcon.vue';
 import Dropdown from '@/Components/Dropdown.vue';
+import SingleView from "@/Components/DataTable/SingleView.vue";
+import SingleViewRow from "@/Components/DataTable/SingleViewRow.vue";
 
 const props = defineProps({
     membership: {
@@ -70,6 +72,27 @@ const donutSubTitle = computed(() => {
     if(props.membership.is_unlimited) return '';
     return props.membership.sessions_active_credits_count + '/' + props.membership.sessions;
 });
+const isRecurring = computed(() => {
+    return props.membership.billing_type == 'recurring';
+});
+const showMinTerm = computed(() => {
+    return isRecurring.value && props.membership.min_term > 0;
+});
+const expirationDate = computed(() => {
+    return props.membership.is_expiring ?
+    DateTime.fromISO(props.membership.expiration_date)
+            .setZone(props.business_settings.timezone)
+            .toFormat(props.business_settings.date_format.format_js +' ' +props.business_settings.time_format.format_js) :
+            null;
+});
+const expirationText = computed(() => {
+    // SUBSCRIPTIONS
+    // ONE_TIME
+    if(props.membership.sessions > 0){
+        return props.membership.taxonomy_sessions +' from each billing cycle never expires and will be carried over';
+    } 
+    return 'Always active';
+});
 
 defineEmits(['cancel']);
 
@@ -89,7 +112,7 @@ defineEmits(['cancel']);
         <div class="-m-2 bg-gray-700 mb-2 p-2 text-white flex flex-wrap justify-between">
             <div class="md:flex-1">
                 <div class="font-bold">{{typeLabel.label}}</div>
-                <div class="text-sm">{{typeLabel.description}}</div>
+                <!-- <div class="text-sm">{{typeLabel.description}}</div> -->
             </div>
 
             <!-- PRICE -->
@@ -104,8 +127,8 @@ defineEmits(['cancel']);
         </div>
 
         <div class="flex flex-wrap gap-6 items-center justify-between">
-            <div class="flex-grow font-bold" v-tooltip.left="'membership.title'">{{membership.title}}</div>
-            <template v-if="membership.billing_type == 'recurring'">
+            <div class="flex-grow font-bold">{{membership.title}}</div>
+            <template v-if="isRecurring">
                 <div class="bg-primary-500 text-white text-sm rounded p-1">Subscription</div>
                 <Dropdown align="right" width="48" :content-classes="['bg-gray-100', 'p-1', 'space-y-4']">
                     <template #trigger>
@@ -127,8 +150,10 @@ defineEmits(['cancel']);
                 </Dropdown>
             </template>
         </div>
-        <div v-if="membership.sub_title" class="text-grey" v-tooltip.left="'membership.sub_title'">{{membership.sub_title}}</div>
-        <div v-if="membership.description" class="border-b-2 text-grey" v-tooltip.left="'membership.description'">{{membership.description}}</div>
+        <!-- <div v-if="membership.sub_title" class="text-grey" v-tooltip.left="'membership.sub_title'">{{membership.sub_title}}</div>
+        <div v-if="membership.description" class="border-b-2 text-grey" v-tooltip.left="'membership.description'">{{membership.description}}</div> -->
+        <div v-if="membership.sub_title" class="text-grey">{{membership.sub_title}}</div>
+        <div v-if="membership.description" class="border-b-2 text-grey">{{membership.description}}</div>
 
         <div class="flex flex-wrap gap-4 items-center">
             <!-- area with donut charts, showing remaining credits for each of type class/service. Unlimited credits, show chart with infinity in the middle -->
@@ -197,7 +222,7 @@ defineEmits(['cancel']);
                 </template>
             </CardIcon>
             <!-- expiration_date -->
-            <CardIcon>
+            <CardIcon class="max-w-xs">
                 <template #icon>
                     <font-awesome-icon :icon="faCalendarCheck" class="h-8 w-8" />
                 </template>
@@ -205,13 +230,45 @@ defineEmits(['cancel']);
                     <span class="font-bold text-2xl">Expiry</span>
                 </template>
                 <template #default>
-                    <div v-if="membership.is_expiring">
-                        {{ DateTime.fromISO(membership.expiration_date).setZone(business_settings.timezone)
-                                    .toFormat(business_settings.date_format.format_js +' ' +business_settings.time_format.format_js)
-                        }} ({{membership.expiration}} {{membership.expiration_period}})
+                    <template v-if="membership.is_expiring">
+                        {{ expirationDate }} 
+                        <!-- ({{membership.expiration}} {{membership.expiration_period}}) -->
+                    </template>
+                    <template v-else>
+                        <div v-if="expirationText.length > 25" v-tooltip.bottom="expirationText" class="truncate">
+                            {{expirationText}}
+                        </div>
+                        <div v-else>
+                            {{expirationText}}
+                        </div>
+                    </template>
+                </template>
+            </CardIcon>
+            <!-- min_term -->
+            <CardIcon v-if="showMinTerm">
+                <template #icon>
+                    <font-awesome-icon :icon="faShopLock" class="h-8 w-8" />
+                </template>
+                <template #title>
+                    <span class="font-bold text-2xl">Min term</span>
+                </template>
+                <template #default>
+                    <div>
+                        {{ membership.min_term}}
                     </div>
-                    <div v-else>
-                        Always active
+                </template>
+            </CardIcon>
+            <!-- interval/Billing cycle -->
+            <CardIcon v-if="isRecurring">
+                <template #icon>
+                    <font-awesome-icon :icon="faFileInvoiceDollar" class="h-8 w-8" />
+                </template>
+                <template #title>
+                    <span class="font-bold text-2xl">Billing cycle</span>
+                </template>
+                <template #default>
+                    <div>
+                        {{ membership.interval_human}}
                     </div>
                 </template>
             </CardIcon>
@@ -232,6 +289,27 @@ defineEmits(['cancel']);
             <div v-if="restrictedLocations">
                 Valid for {{restrictedLocations}} <b>location(s)</b> only.
             </div>
+        </div>
+
+        <!-- Payment History -->
+        <div v-if="isRecurring" class="mt-8">
+            <SingleView title="Payment History" :description="membership.membership_charges.length + ' to date'">
+            <template #list>
+                <SingleViewRow v-for="membership_charge in membership.membership_charges" :key="membership_charge.id">
+                    <template #label>
+                        {{DateTime.fromISO(membership_charge.created_at)
+                                .setZone(business_settings.timezone)
+                                .toFormat(business_settings.date_format.format_js +' ' +business_settings.time_format?.format_js)}}
+                    </template>
+                    <template #value>
+                        {{membership_charge.total_formatted_full}}
+                        <span v-if="membership_charge.is_paid" class="bg-primary-500 text-white text-sm rounded p-1">
+                            Paid
+                        </span>
+                    </template>
+                </SingleViewRow>
+            </template>
+        </SingleView>
         </div>
     </div>
 </template>

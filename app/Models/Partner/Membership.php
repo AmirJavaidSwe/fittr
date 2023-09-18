@@ -2,6 +2,7 @@
 
 namespace App\Models\Partner;
 
+use App\Enums\PackType;
 use App\Enums\StripeCurrency;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -47,6 +48,7 @@ class Membership extends Model
      * @var array
      */
     protected $appends = [
+        'taxonomy_sessions',
         'expiration_date',
         'interval_human',
         'price_floor',
@@ -120,6 +122,12 @@ class Membership extends Model
         }
 
         return $expiration_date;
+    }
+
+    public function getTaxonomySessionsAttribute(): ?string
+    {
+        $type_label = PackType::label($this->type);
+        return Str::plural($type_label, $this->sessions);
     }
 
     public function getIntervalHumanAttribute(): ?string

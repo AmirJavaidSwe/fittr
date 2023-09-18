@@ -38,9 +38,10 @@ class MembershipCharge extends Model
      *
      * @var array
      */
-    // protected $appends = [
-        
-    // ];
+    protected $appends = [
+        'total_formatted',
+        'total_formatted_full',
+    ];
 
     // Local scopes
 
@@ -57,4 +58,17 @@ class MembershipCharge extends Model
     }
 
     // Accessors
+    public static function humanAmount($stripe_number = 0): ?float
+    {
+        return round($stripe_number/100, 2);
+    }
+    public function getTotalFormattedAttribute(): ?string
+    {
+        return $this->currency_symbol.number_format($this::humanAmount($this->total), 2);
+    }
+
+    public function getTotalFormattedFullAttribute(): ?string
+    {
+        return $this->total_formatted.' '.strtoupper($this->currency);
+    }
 }

@@ -181,8 +181,14 @@ class FulfillmentService
         if(!empty($location_restrictions)){
             $restrictions['locations'] = $location_restrictions;
         }
+
+        $is_restricted = false;
+
+        //flag membership is_restricted
         if(empty($restrictions)){
             $restrictions = null;
+        } else {
+            $is_restricted = true;
         }
 
         return Membership::firstOrCreate(
@@ -200,7 +206,7 @@ class FulfillmentService
                 'title' => $pack->title,
                 'sub_title' => $pack->sub_title,
                 'description' => $pack->description,
-                'is_restricted' => $pack->is_restricted,
+                'is_restricted' => $is_restricted,
                 'restrictions' => $restrictions,
                 'billing_type' => $pack_price->type,
                 'sessions' => $pack_price->sessions,

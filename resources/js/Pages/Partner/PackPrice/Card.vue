@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import ButtonLink from '@/Components/ButtonLink.vue';
-import { faGear, faLocationPinLock, faRecycle, faUserPlus, faHourglassEnd } from '@fortawesome/free-solid-svg-icons';
+import { faGear, faLocationPinLock, faRecycle, faUserPlus, faHourglassEnd, faShopLock } from '@fortawesome/free-solid-svg-icons';
 
 const props = defineProps({
     price: {
@@ -106,7 +106,7 @@ defineEmits(['toggle', 'edit', 'delete']);
             <template v-if="isPassType">
                 <div v-if="price.sessions > 0"> 
                     <span class="font-bold text-2xl" :title="price.sessions">{{price.sessions}}</span>
-                    <span class="ml-1">passes&nbsp;{{price.interval_adjective}}</span>
+                    <span class="ml-1">{{price.taxonomy_sessions}}&nbsp;{{price.interval_adjective}}</span>
                 </div>
                 <div v-else>
                     Unlimited location visits while active
@@ -144,6 +144,12 @@ defineEmits(['toggle', 'edit', 'delete']);
                 :icon="faHourglassEnd"
                 class="w-4 h-4 m-2 p-1 bg-white rounded"
                 v-tooltip="(isPassType ? 'Membership' : 'Session credits') + ' will expire. Expiration period: '+price.expiration+' '+price.expiration_period" 
+                />
+            <font-awesome-icon 
+                v-if="isRecurring && price.min_term > 0"
+                :icon="faShopLock"
+                class="w-4 h-4 m-2 p-1 bg-white rounded"
+                v-tooltip="'This option has min term enabled for subscription.'" 
                 />
         </div>
     </div>

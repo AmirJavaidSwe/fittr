@@ -374,7 +374,7 @@ const hasMinTerm = ref(isRecurring.value && formPrice.min_term > 0);
             </div>
 
             <!-- min_term/hasMinTerm ref -->
-            <div>
+            <div v-if="isRecurring">
                 <Switcher
                     v-model="hasMinTerm"
                     title="Subscription min term"

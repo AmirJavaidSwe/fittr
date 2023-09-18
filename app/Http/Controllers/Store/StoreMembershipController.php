@@ -10,7 +10,9 @@ use App\Models\Partner\ClassType;
 use App\Models\Partner\Location;
 use App\Models\Partner\Membership;
 use App\Models\Partner\ServiceType;
+use App\Services\Store\StoreMembershipService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 use Illuminate\Database\Eloquent\Builder;
@@ -22,12 +24,17 @@ class StoreMembershipController extends Controller
     public $order_by;
     public $order_dir;
 
+    public function __construct(StoreMembershipService $store_membership_service)
+    {
+        $this->store_membership_service = $store_membership_service;
+    }
+
     public function index(Request $request, $subdomain)
     {
         // Load active memberships (membership becomes inactive if cancelled/recurring subscription OR Expired/location_pass type OR all credits used/expired)
         // Data to show:
         // 1. Type location_pass
-        //      one_time: time left to expiration/remaining passes + exp;
+        //      one_time: time left to expiration/remaining passes (pass mode) + exp + location restrictions;
         //      recuring: time left to exp for paid period, upcoming date of next charge
         // 2. Type corporate
         //      one_time:redemption code+usage so far+redemptions left;
@@ -49,6 +56,7 @@ class StoreMembershipController extends Controller
                                               ->orWhere('expiry_at', '>', now());
                                 });
                         }])
+                        ->with(['membership_charges'])
                         ->get();
 
         return Inertia::render('Store/Member/Memberships/Index', [
@@ -63,34 +71,32 @@ class StoreMembershipController extends Controller
         ]);
     }
 
-    public function all(Request $request, $subdomain)
+    public function cancel(Request $request, $subdomain, Membership $membership)
     {
-        $this->search = $request->query('search', null);
-        $this->per_page = $request->query('per_page', 10);
-        $this->order_by = $request->query('order_by', 'created_at');
-        $this->order_dir = $request->query('order_dir', 'desc');
         $user = auth()->user();
-        
-        return Inertia::render('Store/Member/Memberships/Table', [
-            'memberships' => Membership::with([
-                'pack',
-                'pack_price',
-                'order',
-                'order_item',
-                'user',
-            ])
-                ->orderBy($this->order_by, $this->order_dir)
-                ->where('user_id', $user->id)
-                ->paginate($this->per_page)
-                ->withQueryString(),
-            'pack_types' => PackType::labels(),
-            'price_types' => StripePriceType::labels(),
-            'search' => $this->search,
-            'per_page' => intval($this->per_page),
-            'order_by' => $this->order_by,
-            'order_dir' => $this->order_dir,
-            'page_title' => __('My memberships'),
-            'header' => __('My memberships'),
-        ]);
+        if(!$membership){
+            $msg = __('Membership not found.');
+            return $this->redirectBackError($msg);
+        }
+        if($membership->user_id != $user->id){
+            $msg = __('Unauthorized access.');
+            return $this->redirectBackError($msg);
+        }
+
+        //beta flow, quick check
+        //to do: allow to cancel even if term is not served yet.
+        $can_cancel = $this->store_membership_service->canCancel($membership);
+        if($can_cancel == false){
+            $msg = __('Subscription can not be cancelled at this time. ');
+            $msg .= __('Minimum commitment term is ');
+            $msg .= $membership->min_term.' '.Str::plural($membership->interval, $membership->min_term);
+            return $this->redirectBackError($msg);
+        }
+
+        $msg = 'Cancellation will be supported soon';
+        //TODO 
+        // call $this->store_membership_service => call stripe, attempt cancel => update membership set cancel_at => show message
+        return $this->redirectBackSuccess($msg);
+
     }
 }
