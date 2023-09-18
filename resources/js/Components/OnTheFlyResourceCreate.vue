@@ -54,6 +54,7 @@ const instructors = ref([])
 const locations = ref([])
 const roles = ref([])
 const statuses = ref([])
+const stateTypes = ref([])
 const studios = ref([])
 const systemModules = ref([])
 const users = ref([])
@@ -71,28 +72,28 @@ const getResources = () => {
         },
     })
     .then((response) => {
-            const data = response.data;
-            amenities.value = data.amenities
-            instructors.value = data.instructors
-            locations.value = data.locations
-            roles.value = data.roles
-            statuses.value = data.statuses
-            studios.value = data.studios
-            systemModules.value = data.systemModules
-            users.value = data.users
-            classtypes.value = data.classtypes
-            countries.value = data.countries
-            retry.value = 0
-
-        }).catch((e) => {
-            console.log(e);
-            if(retry.value < 3) {
-                retry.value++
-                getResources()
-            } else {
-                alert("Something went wrong! Please try again later.");
-            }
-        });
+        const data = response.data;
+        amenities.value = data.amenities;
+        instructors.value = data.instructors;
+        locations.value = data.locations;
+        roles.value = data.roles;
+        statuses.value = data.statuses;
+        studios.value = data.studios;
+        systemModules.value = data.systemModules;
+        users.value = data.users;
+        classtypes.value = data.classtypes;
+        stateTypes.value = data.stateTypes;
+        countries.value = data.countries;
+        retry.value = 0;
+    }).catch((e) => {
+        console.log(e);
+        if(retry.value < 3) {
+            retry.value++
+            getResources();
+        } else {
+            alert("Something went wrong! Please try again later.");
+        }
+    });
 }
 onMounted(() => {
     getResources()
@@ -144,6 +145,7 @@ const closeClassTypeCreateForm = () => {
 const createClassTypeFrom = useForm({
     title: null,
     description: null,
+    status: false,
 });
 
 const storeClassType = () => {
@@ -493,6 +495,7 @@ const storeStudio = () => {
             <ClassTypeCreateForm
                 :form="createClassTypeFrom"
                 :submitted="storeClassType"
+                :statuses="stateTypes"
                 modal
             />
         </template>

@@ -722,12 +722,7 @@ const emailClass = (classLesson) => {
                 <TableData :title="class_lesson?.studio?.title ?? class_lesson?.studio?.id"/>
 
                 <!-- class_type -->
-                <TableData>
-                    <ColoredValue
-                        color="#F47560"
-                        :title="class_lesson?.class_type?.title ?? 'Test'"
-                    />
-                </TableData>
+                <TableData :title="class_lesson?.class_type?.title" />
 
                 <!-- instructors -->
                 <TableData class="text-center">
@@ -752,7 +747,10 @@ const emailClass = (classLesson) => {
 
                 <!-- status -->
                 <TableData class="text-center">
-                    <StatusLabel :status="class_lesson.status_label" />
+                    <ColoredValue
+                        :color="statuses.find(el => el.value == class_lesson.status).color"
+                        :title="class_lesson.status_label"
+                    />
                 </TableData>
 
                 <!-- spaces_booked -->

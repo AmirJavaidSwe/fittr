@@ -184,15 +184,16 @@ const studioList = computed(() => {
                     :show-labels="true"
                     placeholder="Status"
                 >
-                    <template v-slot:singlelabel="{ value }">
+                    <template v-slot:singlelabel="{ value  }">
                         <div class="multiselect-single-label flex items-center">
-                            <ColoredValue color="#ddd" :title="value.label" />
+                            <ColoredValue :color="value.color" :title="value.label" />
                         </div>
                     </template>
 
                     <template v-slot:option="{ option }">
-                        <ColoredValue color="#ddd" :title="option.label" />
+                        <ColoredValue :color="option.color" :title="option.label" />
                     </template>
+
                 </Multiselect>
                 <InputError :message="form.errors.status" class="mt-2" />
             </div>
