@@ -252,6 +252,7 @@ Route::domain('{subdomain}.'.$domain)->middleware(['auth.subdomain'])->name('ss.
 
     Route::get('/waiver-verification', [WaiverVerificationController::class, 'index'])->name('waiver-verification');
     Route::post('/waiver-verification', [WaiverVerificationController::class, 'store'])->name('store.waiver-verification');
+    Route::post('/store-waiver', [WaiverVerificationController::class, 'storeWaiver'])->name('store.waiver');
     Route::get('/gotodashboard', [WaiverVerificationController::class, 'goToDashboard'])->name('gotodashboard');
 
     Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified', 'waiver-verified'])->group(function () {

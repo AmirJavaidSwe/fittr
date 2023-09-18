@@ -25,6 +25,7 @@ const props = defineProps({
     user:Object,
 });
 
+const waiver = ref('');
 const waiverFormData = useForm({
     waiverQandA: [],
     sign: props?.user_waivers?.length ? props?.user_waivers?.signature : null,
@@ -34,13 +35,13 @@ const showWaiver = () => {
 }
 const closedShowWaiver = () => {
     showWaivers.value = false;
-
+    showWaiverModal.value = true;
     waiverFormData.reset().clearErrors();
 }
 const waiverQandData = (id) => {
     waiver.value = props.waivers.find((item) => item.id == id);
     waiverFormData.waiverQandA = []
-    if (waiver) {
+    if (waiver.value) {
         for (let i = 0; i < waiver.value?.questions.length; i++) {
             waiverFormData.waiverQandA.push({
                 question: waiver.value?.questions[i].question,
@@ -48,8 +49,8 @@ const waiverQandData = (id) => {
                 answer: null,
             });
         }
+        showWaiver();
     }
-    showWaiver();
 };
 
 
@@ -58,17 +59,40 @@ const showCreateModal = ref(false);
 const showEditModal = ref(false);
 const showWaiverModal = ref(false);
 const showWaivers = ref(false);
-let waiver = ref('');
+const userWaiversIds = ref([]);
 
 
+const sumbitWaiver = () => {
+    axios
+    .post('/store-waiver', {
+        waiver_id: waiver !== null ? waiver.value?.id : null,
+        waiver_data: waiver !== null  ? {
+            data: waiverFormData.waiverQandA,
+            signature: waiverFormData.sign ?? null,
+        } : {},
+        headers: {
+            "X-Inertia": true,
+            "X-Inertia-Version": usePage().version,
+        },
+    })
+    .then((response) => {
+           if(response.status == 200){
+               closedShowWaiver();
+               userWaiversIds.value.push({waiver_id:response.data.waiver_id,id:response.data?.id});
+           }
+        }).catch((e) => {
+            console.log(e);
+                alert("Something went wrong! Please try again later.");
+        });
+}
 const closeCreateModal = () => {
     showCreateModal.value = false;
     CreateForm.reset().clearErrors();
 };
 
 const closeEditModal = () => {
+    showWaivers.value = false;
     showEditModal.value = false;
-    showWaiverModal.value = true;
     EditForm.reset().clearErrors();
 };
 
@@ -102,11 +126,7 @@ if (props.waiver !== null) {
 }
 CreateForm.transform((data) => ({
     ...data,
-    waiver_id: waiver !== null ? waiver.value?.id : null,
-    waiver_data: waiver !== null  ? {
-        data: waiverFormData.waiverQandA,
-        signature: waiverFormData.sign ?? null,
-    } : {},
+    waiver_data: userWaiversIds.value,
 })).post(
     route("ss.member.family.store", {
         subdomain: props.business_settings.subdomain,
@@ -116,10 +136,10 @@ CreateForm.transform((data) => ({
         onSuccess: () => {
             showCreateModal.value = false;
             showWaiverModal.value = false;
+            showWaivers.value = false;
+            userWaiversIds.value = [];
             waiverFormData.reset().clearErrors();
             CreateForm.reset().clearErrors();
-            closedShowWaiver();
-            waiverQandData(waiver.value?.id);
         },
     }
     );
@@ -153,27 +173,33 @@ const editMember = (member) => {
     waiverFormData.reset().clearErrors();
     waiverQandData();
 };
-
 const checkForWaiverValidation = computed(() => {
-    if ((props.waiver !== null && props.waiver.sign_again && !props?.user_waiver?.length) || (props.waiver !== null && props.waiver.sign_again && props?.user_waiver?.length) && (!props.user_waiver.includes(EditForm.id))) {
-        return true
+  const waivers = props.waivers || [];
+  const userWaivers = props.user_waivers || [];
+
+  for (const waiver of waivers) {
+    if (
+      waiver !== null &&
+      waiver.sign_again &&
+      ((!userWaivers.length) || !userWaivers.some((userWaiver) => userWaiver.family_member_id === EditForm.id))
+    ) {
+      return true;
     }
-    return false
-})
+  }
+
+  return false;
+});
+
 
 const updateMember = () => {
-    if (checkForWaiverValidation.value && !showWaiverModal.value) {
+    if (checkForWaiverValidation.value) {
         showWaiverModal.value = true;
-        return;
     }
     EditForm.transform((data) => ({
         ...data,
         _method: "put",
-        waiver_id: checkForWaiverValidation.value ? props.waiver.id : null,
-        waiver_data: props.waiver !== null ? {
-            data: waiverFormData.waiverQandA,
-            signature: waiverFormData.sign,
-        } : {},
+        waiver_id: waiver.value.id,
+        waiver_data: userWaiversIds.value,
     })).post(
         route("ss.member.family.update", {
             family: EditForm.id,
@@ -375,7 +401,7 @@ const updateMember = () => {
                 :form="waiverFormData"
                 :create-form="CreateForm"
                 :edit-form="EditForm"
-                :submitted="storeOrUpdateFamilyMember"
+                :submitted="sumbitWaiver"
                 :waiver="waiver"
                 modal
             />
@@ -396,9 +422,9 @@ const updateMember = () => {
 
         <template #content>
             <div class="flex items-center mt-2"  v-for="waiver in props.waivers" :key="waiver.id">
-                <WaiverAcceptCheck   v-if="props?.user_waivers?.find((item) => item.waiver_id === waiver.id) !==
+                <WaiverAcceptCheck   v-if="userWaiversIds?.find((item) => item.waiver_id === waiver.id) !==
                     undefined ? true : false "/>
-                <WaiverNotAcceptedCheck  v-if="props?.user_waivers?.find((item) => item.waiver_id === waiver.id) ==
+                <WaiverNotAcceptedCheck  v-if="userWaiversIds?.find((item) => item.waiver_id === waiver.id) ==
                     undefined ? true : false "/>
                 <span class="text-xl ml-4">{{ waiver.title }} Read and signed document</span>
                 <!-- <button class="ml-auto bg-[#E8A838] hover:bg-[#E8A838] text-white px-4 py-2 rounded focus:outline-none focus:ring focus:ring-[#F0F0F0]">view</button> -->
@@ -411,7 +437,7 @@ const updateMember = () => {
                 View
                </ButtonLink>
             </div>
-            <div class="flex justify-center space-x-4">
+            <div class="flex justify-center space-x-4" v-if="userWaiversIds.length == props.waivers.length">
                 <ButtonLink
                   styling="secondary"
                   size="default"
@@ -424,9 +450,9 @@ const updateMember = () => {
                   styling="secondary"
                   size="default"
                   class="mt-4"
-                  @click="closeWaiverModal"
+                  @click="storeOrUpdateFamilyMember"
                 >
-                  Save
+                    Save
                 </ButtonLink>
             </div>
         </template>

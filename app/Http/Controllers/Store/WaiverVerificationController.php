@@ -98,4 +98,22 @@ class WaiverVerificationController extends Controller
             return redirect(route('ss.member.dashboard', ["subdomain" => request()->session()->get('business_settings')['subdomain']]));
         }
     }
+
+    public function storeWaiver(Request $request){
+        $waiverValidation = WaiverValidationAndSaveService::validateIfHasWaiver();
+
+        if(!empty($waiverValidation)) {
+            return response()->json($waiverValidation,422);
+        }else{
+            $waiver = UserWaiver::create([
+                'user_id' => auth()->user()->id,
+                'waiver_id' => $request['waiver_id'],
+                'family_member_id' => $family_member_id ?? null,
+                'user_waiver_accepted_data' => $request['waiver_data']['data'],
+                'signature' => $request['waiver_data']['signature'],
+            ]);
+            return response()->json($waiver);
+        }
+
+    }
 }
