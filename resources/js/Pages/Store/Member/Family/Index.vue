@@ -3,7 +3,6 @@ import { ref, watch, computed } from "vue";
 import CardBasic from "@/Components/CardBasic.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
 import { useForm, usePage } from "@inertiajs/vue3";
-import CloseModal from "@/Components/CloseModal.vue";
 import SideModal from "@/Components/SideModal.vue";
 import Form from "./Form.vue";
 import WaiverForm from "../../WaiverForm.vue";
@@ -279,9 +278,6 @@ const updateMember = () => {
     <!-- Create Modal -->
     <SideModal :show="showCreateModal" @close="closeCreateModal">
         <template #title> Add New Family Member </template>
-        <template #close>
-            <CloseModal @click="closeCreateModal" />
-        </template>
 
         <template #content>
             <Form
@@ -296,9 +292,6 @@ const updateMember = () => {
     <!-- Edit Modal -->
     <SideModal :show="showEditModal" @close="closeEditModal">
         <template #title> Edit Family Member </template>
-        <template #close>
-            <CloseModal @click="closeEditModal" />
-        </template>
 
         <template #content>
             <Form
@@ -347,11 +340,6 @@ const updateMember = () => {
             <div class="w-full">
                 You need to sign "{{ props.waiver.title }}" once before adding
                 family members
-            </div>
-        </template>
-        <template #close>
-            <div class="w-20 text-right">
-                <CloseModal @click="closeWaiverModal" />
             </div>
         </template>
 

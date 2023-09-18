@@ -17,7 +17,6 @@ import DataTableLayout from "@/Components/DataTable/Layout.vue";
 import SideModal from "@/Components/SideModal.vue";
 import ConfirmationModal from "@/Components/ConfirmationModal.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
-import CloseModal from "@/Components/CloseModal.vue";
 import PreviewModal from "./PreviewModal.vue";
 import { useSwal } from "@/Composables/swal";
 import ImportIcon from "@/Icons/Import.vue";
@@ -867,9 +866,6 @@ const emailClass = (classLesson) => {
     <!-- Export form Modal -->
     <SideModal :show="showFilterModal" @close="closeFilterModal">
         <template #title>Filter</template>
-        <template #close>
-            <CloseModal @click="closeFilterModal" />
-        </template>
         <template #content>
             <FormFilter
                 :form="form"
@@ -886,9 +882,6 @@ const emailClass = (classLesson) => {
     <!-- Export form Modal -->
     <SideModal :show="showExportModal" @close="closeExportModal">
         <template #title> Export Classes </template>
-        <template #close>
-            <CloseModal @click="closeExportModal" />
-        </template>
 
         <template #content>
             <FormExport
@@ -908,9 +901,6 @@ const emailClass = (classLesson) => {
     <!-- Create new class Modal -->
     <SideModal :show="showCreateModal" @close="closeCreateModal">
         <template #title> Create new Class </template>
-        <template #close>
-            <CloseModal @click="closeCreateModal" />
-        </template>
 
         <template #content>
             <Form
@@ -934,9 +924,6 @@ const emailClass = (classLesson) => {
     <!-- Edit class Modal -->
     <SideModal :show="showEditModal" @close="closeEditModal">
         <template #title> Edit Class </template>
-        <template #close>
-            <CloseModal @click="closeEditModal" />
-        </template>
 
         <template #content>
             <Form
@@ -961,9 +948,6 @@ const emailClass = (classLesson) => {
         @close="closeDuplicateClassModal"
     >
         <template #title> Duplicate Class </template>
-        <template #close>
-            <CloseModal @click="closeDuplicateClassModal" />
-        </template>
 
         <template #content>
             <Form
@@ -1015,9 +999,6 @@ const emailClass = (classLesson) => {
 
     <SideModal :show="showBulkEditForm" @close="closeBulkEditForm">
         <template #title> Edit Detail for Select Items </template>
-        <template #close>
-            <CloseModal @click="closeBulkEditForm" />
-        </template>
 
         <template #content>
             <BulkEditForm

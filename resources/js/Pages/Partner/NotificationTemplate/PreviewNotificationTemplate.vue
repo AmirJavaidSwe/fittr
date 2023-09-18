@@ -1,6 +1,5 @@
 <script setup>
 import ButtonLink from '@/Components/ButtonLink.vue';
-import CloseModal from '@/Components/CloseModal.vue';
 import AvatarValue from '@/Components/DataTable/AvatarValue.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
@@ -78,9 +77,6 @@ const handleTest = () => {
 <template>
     <SideModal :show="show" @close="$emit('close')">
         <template #title>Preview Notification Template</template>
-        <template #close>
-            <CloseModal @click="$emit('close')" />
-        </template>
         <template #content>
             <div class="mb-4">
                 <InputLabel for="">Recipient Email:</InputLabel>

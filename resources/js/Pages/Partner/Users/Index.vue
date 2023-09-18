@@ -21,7 +21,6 @@ import DropdownLink from "@/Components/DropdownLink.vue";
 import Form from "./Form.vue";
 import EditForm from "./EditForm.vue";
 import SideModal from "@/Components/SideModal.vue";
-import CloseModal from "@/Components/CloseModal.vue";
 import uniqBy from "lodash/uniqBy";
 import RoleCreateForm from "@/Pages/Roles/Form.vue";
 import ActionsIcon from "@/Icons/ActionsIcon.vue";
@@ -396,9 +395,6 @@ const storeRole = ($event) => {
     <!-- GM Create Modal -->
     <SideModal :show="showUserCreateModal" @close="closeUserCreateModal">
         <template #title> Create new User </template>
-        <template #close>
-            <CloseModal @click="closeUserCreateModal" />
-        </template>
 
         <template #content>
             <Form
@@ -413,9 +409,6 @@ const storeRole = ($event) => {
     <!-- GM Create Modal -->
     <SideModal :show="showUserEditModal" @close="closeUserEditModal">
         <template #title> Edit User </template>
-        <template #close>
-            <CloseModal @click="closeUserEditModal" />
-        </template>
 
         <template #content>
             <EditForm
@@ -431,9 +424,6 @@ const storeRole = ($event) => {
     <!-- Role Create Modal -->
     <SideModal :show="showRoleCreateModal" @close="closeRoleCreateModal">
         <template #title> Create new Role </template>
-        <template #close>
-            <CloseModal @click="closeRoleCreateModal" />
-        </template>
 
         <template #content>
             <RoleCreateForm

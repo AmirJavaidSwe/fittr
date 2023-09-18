@@ -1,5 +1,4 @@
 <script setup>
-import CloseModal from '@/Components/CloseModal.vue';
 import SideModal from '@/Components/SideModal.vue';
 import { ref } from 'vue';
 import { onUpdated } from 'vue';
@@ -147,9 +146,6 @@ const selectAllCheckboxes = () => {
 <template>
     <SideModal :show="show" @close="$emit('close')">
         <template #title>Email class participants</template>
-        <template #close>
-            <CloseModal @click="$emit('close')" />
-        </template>
         <template #content>
             <div v-if="currentStep == 'participants'">
                 <div class="flex flex-col">

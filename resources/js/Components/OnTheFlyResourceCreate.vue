@@ -3,7 +3,6 @@ import { onMounted, ref, computed, toRef, watchEffect } from "vue";
 import { Link, useForm, usePage, router } from "@inertiajs/vue3";
 import ButtonLink from "@/Components/ButtonLink.vue";
 import SideModal from "@/Components/SideModal.vue";
-import CloseModal from "@/Components/CloseModal.vue";
 import cloneDeep from "lodash/cloneDeep";
 import uniqBy from "lodash/uniqBy";
 
@@ -386,9 +385,6 @@ const storeStudio = () => {
         @close="closeLocationCreateForm"
     >
         <template #title> Create new location </template>
-        <template #close>
-            <CloseModal @click="closeLocationCreateForm" />
-        </template>
 
         <template #content>
             <LocationCreateForm
@@ -420,9 +416,6 @@ const storeStudio = () => {
     <!-- GM Create Modal -->
     <SideModal :show="showGmCreateForm" @close="closeGMCreateForm">
         <template #title> Create new General Manager </template>
-        <template #close>
-            <CloseModal @click="closeGMCreateForm" />
-        </template>
 
         <template #content>
             <GMCreateForm
@@ -437,9 +430,6 @@ const storeStudio = () => {
     <!-- Role Create Modal -->
     <SideModal :show="showRoleCreateModal" @close="closeRoleCreateModal">
         <template #title> Create new Role </template>
-        <template #close>
-            <CloseModal @click="closeRoleCreateModal" />
-        </template>
 
         <template #content>
             <RoleCreateForm
@@ -453,9 +443,6 @@ const storeStudio = () => {
     <!-- Amenity Create Modal -->
     <SideModal :show="showAmenityCreateForm" @close="closeAmenityCreateForm">
         <template #title> Create new Amenity </template>
-        <template #close>
-            <CloseModal @click="closeAmenityCreateForm" />
-        </template>
 
         <template #content>
             <AmenityCreateForm
@@ -470,9 +457,6 @@ const storeStudio = () => {
     <!-- Studio Create Modal -->
     <SideModal :show="showStudioCreateForm" @close="closeStudioCreateForm">
         <template #title> Create new studio </template>
-        <template #close>
-            <CloseModal @click="closeStudioCreateForm" />
-        </template>
 
         <template #content>
             <StudioCreateForm
@@ -488,9 +472,6 @@ const storeStudio = () => {
     <!-- Instructor Create Modal -->
     <SideModal :show="showInstructorCreateForm" @close="closeInstructorCreateForm">
         <template #title> Create new Instructor </template>
-        <template #close>
-            <CloseModal @click="closeInstructorCreateForm" />
-        </template>
 
         <template #content>
             <InstructorCreateForm
@@ -507,9 +488,6 @@ const storeStudio = () => {
         @close="closeClassTypeCreateForm"
     >
         <template #title> Create new Class Type </template>
-        <template #close>
-            <CloseModal @click="closeClassTypeCreateForm" />
-        </template>
 
         <template #content>
             <ClassTypeCreateForm

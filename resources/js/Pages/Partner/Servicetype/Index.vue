@@ -10,7 +10,6 @@ import TableHead from "@/Components/DataTable/TableHead.vue";
 import TableData from "@/Components/DataTable/TableData.vue";
 import DataTableLayout from "@/Components/DataTable/Layout.vue";
 import ConfirmationModal from "@/Components/ConfirmationModal.vue";
-import CloseModal from "@/Components/CloseModal.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
 import EditIcon from "@/Icons/Edit.vue";
 import { faCog, faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -325,10 +324,6 @@ const deleteItem = () => {
     <SideModal :show="showCreateModal" @close="closeCreateModal">
         <template #title> Create new service type </template>
 
-        <template #close>
-            <CloseModal @click="closeCreateModal" />
-        </template>
-
         <template #content>
             <Form :form="form_new" :submitted="storeItem" modal :statuses="statuses" />
         </template>
@@ -338,10 +333,6 @@ const deleteItem = () => {
     <SideModal :show="showEditModal" @close="closeEditModal">
         <template #title> Update Service Type </template>
 
-        <template #close>
-            <CloseModal @click="closeEditModal" />
-        </template>
-
         <template #content>
             <Form :form="form_edit" :submitted="updateItem" modal :statuses="statuses" />
         </template>
@@ -350,10 +341,6 @@ const deleteItem = () => {
     <!-- Duplicate Modal -->
     <SideModal :show="showDuplicateModal" @close="closeDuplicateModal">
         <template #title> Duplicate service type </template>
-
-        <template #close>
-            <CloseModal @click="closeDuplicateModal" />
-        </template>
 
         <template #content>
             <Form

@@ -16,7 +16,6 @@ import { Splide, SplideSlide } from '@splidejs/vue-splide';
 import { useWindowSize } from '@/Composables/window_size';
 import { useSwal } from '@/Composables/swal';
 import AvatarValue from "@/Components/DataTable/AvatarValue.vue";
-import CloseModal from "@/Components/CloseModal.vue";
 import AttendiesSelection from "./AttendiesSelection.vue";
 import AttendiesSelected from "./AttendiesSelected.vue";
 import DateValue from "@/Components/DataTable/DateValue.vue";
@@ -28,11 +27,8 @@ const emit = defineEmits(['close', 'isFamilyBooking', 'bookForOtherFamilyMembers
 
 </script>
 <template>
-        <SideModal :show="props.show" @close="$emit('close')">
+    <SideModal :show="props.show" @close="$emit('close')">
         <template #title>Details</template>
-        <template #close>
-            <CloseModal @click="$emit('close')" />
-        </template>
         <template #content>
             <div class="w-full mb-4">
                 <img class="w-full rounded-md" v-if="props.classDetails.studio?.location?.images?.length"
