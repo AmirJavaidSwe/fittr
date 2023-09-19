@@ -24,6 +24,10 @@ const updateSignature = debounce(() => {
 
 onMounted(() => {
     canvas.value = document.getElementById('signature-pad');
+    const parentElement = canvas.value.parentElement;
+    const parentWidth = parentElement.offsetWidth;
+    canvas.value.setAttribute("width", parentWidth-5);
+
     signaturePad.value = new SignaturePad(canvas.value, {
       backgroundColor: 'rgb(255, 255, 255)' // necessary for saving image as JPEG; can be removed is only saving as PNG or SVG
     });
