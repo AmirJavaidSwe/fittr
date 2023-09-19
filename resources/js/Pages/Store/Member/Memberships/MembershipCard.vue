@@ -85,13 +85,25 @@ const expirationDate = computed(() => {
             .toFormat(props.business_settings.date_format.format_js +' ' +props.business_settings.time_format.format_js) :
             null;
 });
-const expirationText = computed(() => {
+const noExpirationText = computed(() => {
+    // ONLY TEXT FOR NO EXPIRATION
     // SUBSCRIPTIONS
-    // ONE_TIME
-    if(props.membership.sessions > 0){
-        return props.membership.taxonomy_sessions +' from each billing cycle never expires and will be carried over';
-    } 
-    return 'Always active';
+    if(isRecurring.value){
+        // location_pass for pass_mode is_expiring applies to credits, non pass mode to paid period
+        // class_lesson, service, hybrid have credits UNLESS is_unlimited=true
+        // corporate must have credits (redeemable)
+        return props.membership.sessions > 0 ?
+               props.membership.taxonomy_sessions +' from each billing cycle never expire':
+               'at the end of paid period';
+    } else {
+        // ONE_TIME
+        // location_pass for pass_mode is_expiring applies to credits, non pass mode to paid period
+        // class_lesson, service, hybrid must have credits
+        // corporate must have credits (redeemable)
+        return props.membership.sessions > 0 ?
+               props.membership.taxonomy_sessions +' never expire':
+               'No expiration';
+    }
 });
 
 defineEmits(['cancel']);
@@ -231,15 +243,15 @@ defineEmits(['cancel']);
                 </template>
                 <template #default>
                     <template v-if="membership.is_expiring">
-                        {{ expirationDate }} 
+                        {{ expirationDate }}
                         <!-- ({{membership.expiration}} {{membership.expiration_period}}) -->
                     </template>
                     <template v-else>
-                        <div v-if="expirationText.length > 25" v-tooltip.bottom="expirationText" class="truncate">
-                            {{expirationText}}
+                        <div v-if="noExpirationText.length > 25" v-tooltip.bottom="noExpirationText" class="truncate">
+                            {{noExpirationText}}
                         </div>
                         <div v-else>
-                            {{expirationText}}
+                            {{noExpirationText}}
                         </div>
                     </template>
                 </template>

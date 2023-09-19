@@ -32,7 +32,7 @@ class ClassFormRequest extends FormRequest
             'class_type_id' => 'required|integer|exists:mysql_partner.class_types,id',
             'studio_id' => 'required|integer|exists:mysql_partner.studios,id',
             'start_date' => 'required|date',
-            'end_date' => 'required|date',
+            'duration' => 'required|integer|min:1|max:600', //10h max?
             'repeat_end_date' => 'required_if:does_repeat,true|nullable|date',
             'week_days' => 'required_if:does_repeat,true|nullable',
             'week_days.*' => 'in:0,1,2,3,4,5,6',

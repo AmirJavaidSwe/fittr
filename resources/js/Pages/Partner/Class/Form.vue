@@ -112,7 +112,7 @@ const studioList = computed(() => {
 <template>
     <FormSection @submitted="submitted">
         <template #form>
-            <div class="">
+            <div>
                 <InputLabel for="title" value="Class Title" />
                 <TextInput
                     id="title"
@@ -123,54 +123,63 @@ const studioList = computed(() => {
                 <InputError :message="form.errors.title" class="mt-2" />
             </div>
 
-            <div class="">
-                <div class="mb-5">
-                    <InputLabel for="start_date" value="Start Date and Time" />
-                    <div
-                        class="DatepickerWrap mt-1 block w-full bg-gray-100 border-transparent rounded-md shadow-sm focus:border-gray-300 focus:bg-white focus:ring-0"
-                    >
-                        <Datepicker
-                            class="border-none bg-mainBg/40"
-                            v-model="form.start_date"
-                            :enable-time-picker="true"
-                            :flow="['calendar', 'time']"
-                            :format="formatDate"
-                            :timezone="business_settings?.timezone"
-                            position="left"
-                            placeholder="Start Date"
-                            minutes-increment="1"
-                            text-input
-                            week-numbers
-                            close-on-scroll
-                            partial-flow
-                            hide-offset-dates
-                        />
-                    </div>
-                    <InputError
-                        :message="form.errors.start_date"
-                        class="mt-2"
-                    />
-                </div>
-
-                <div class="mb-5">
-                    <InputLabel for="end_date" value="End Date and Time" />
+            <div>
+                <InputLabel for="start_date" value="Start Date and Time" />
+                <div
+                    class="DatepickerWrap mt-1 block w-full bg-gray-100 border-transparent rounded-md shadow-sm focus:border-gray-300 focus:bg-white focus:ring-0"
+                >
                     <Datepicker
-                        class="mt-1 block w-full"
-                        v-model="form.end_date"
+                        class="border-none bg-mainBg/40"
+                        v-model="form.start_date"
                         :enable-time-picker="true"
                         :flow="['calendar', 'time']"
                         :format="formatDate"
                         :timezone="business_settings?.timezone"
                         position="left"
-                        placeholder="End Date"
+                        placeholder="Start Date"
                         minutes-increment="1"
                         text-input
+                        week-numbers
                         close-on-scroll
                         partial-flow
                         hide-offset-dates
                     />
-                    <InputError :message="form.errors.end_date" class="mt-2" />
                 </div>
+                <InputError
+                    :message="form.errors.start_date"
+                    class="mt-2"
+                />
+            </div>
+
+            <div>
+                <InputLabel for="duration" value="Class Duration, minutes" />
+                <div class="flex gap-2">
+                    <TextInput
+                        v-model="form.duration"
+                        type="range"
+                        min="10"
+                        max="120"
+                        :value="form.duration" step="5"
+                        class="flex-grow cursor-pointer"
+                         list="values"
+                    />
+                    <datalist id="values">
+                        <option value="30" label="30"></option>
+                        <option value="45" label="45"></option>
+                        <option value="60" label="60"></option>
+                        <option value="75" label="75"></option>
+                        <option value="90" label="90"></option>
+                    </datalist>
+                    <TextInput
+                        id="duration"
+                        v-model="form.duration"
+                        type="number"
+                        min="1"
+                        max="600"
+                        class="w-20"
+                    />
+                </div>
+                <InputError :message="form.errors.duration" class="mt-2" />
             </div>
 
             <!-- Status -->

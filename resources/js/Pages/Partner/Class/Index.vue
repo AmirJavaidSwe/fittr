@@ -61,6 +61,7 @@ const props = defineProps({
 
 const swal = useSwal();
 
+//search form
 const form = useForm({
     search: props.search,
     status: [],
@@ -81,7 +82,7 @@ const form_class = useForm({
     title: null,
     status: null,
     start_date: null,
-    end_date: null,
+    duration: null,
     instructor_id: [],
     class_type_id: null,
     studio_id: null,
@@ -98,7 +99,7 @@ const duplicateClassForm = useForm({
     title: null,
     status: null,
     start_date: null,
-    end_date: null,
+    duration: null,
     instructor_id: [],
     class_type_id: null,
     studio_id: null,
@@ -108,8 +109,8 @@ const duplicateClassForm = useForm({
     does_repeat: false,
     repeat_end_date: null,
     week_days: [],
+    use_defaults: false,
     spaces: null,
-    use_defaults: false
 });
 
 const setOrdering = (col) => {
@@ -222,7 +223,7 @@ let formEdit = useForm({
     title: null,
     status: null,
     start_date: null,
-    end_date: null,
+    duration: null,
     instructor_id: [],
     class_type_id: null,
     studio_id: null,
@@ -239,7 +240,7 @@ const handleUpdateForm = (data) => {
     formEdit.title = data.title;
     formEdit.status = data.status;
     formEdit.start_date = data.start_date;
-    formEdit.end_date = data.end_date;
+    formEdit.duration = data.duration;
     formEdit.instructor_id = map(data.instructor, "id");
     formEdit.class_type_id = data.class_type_id;
     formEdit.studio_id = data.studio_id;
@@ -255,7 +256,7 @@ const handleDuplicateForm = (data) => {
     duplicateClassForm.title = data.title;
     duplicateClassForm.status = "active";
     duplicateClassForm.start_date = data.start_date;
-    duplicateClassForm.end_date = data.end_date;
+    duplicateClassForm.duration = data.duration;
     duplicateClassForm.instructor_id = map(data.instructor, "id");
     duplicateClassForm.class_type_id = data.class_type_id;
     duplicateClassForm.studio_id = data.studio_id;
@@ -518,11 +519,11 @@ const onPreviewModal = () => {
     if(
         !previewClassDetails.value.title
         || !previewClassDetails.value.start_date
-        || !previewClassDetails.value.end_date
+        || !previewClassDetails.value.duration
         || !previewClassDetails.value.instructor_id.length
         || !previewClassDetails.value.class_type_id
     ) {
-        let textContent = "<ul class='font-semibold'><li>" + ["Title", "Start Date", "End Date", "Instructors", "Class Type", "Studio"].join("</li><li>") + "</li></ul>"
+        let textContent = "<ul class='font-semibold'><li>" + ["Title", "Start Date", "Class Duration", "Instructors", "Class Type", "Studio"].join("</li><li>") + "</li></ul>"
         swal.toast({
             icon: "warning",
             title: "Invalid preview data",
@@ -531,11 +532,8 @@ const onPreviewModal = () => {
         return;
     }
 
-    if (previewClassDetails.value.start_date)
-        previewClassDetails.value.start_date = DateTime.fromISO(previewClassDetails.value.start_date.toISOString(), { zone: props.business_settings?.timezone });
-
-    if (previewClassDetails.value.end_date)
-        previewClassDetails.value.end_date = DateTime.fromISO(previewClassDetails.value.end_date.toISOString(), { zone: props.business_settings?.timezone });
+    previewClassDetails.value.start_date = DateTime.fromISO(previewClassDetails.value.start_date.toISOString(), { zone: props.business_settings?.timezone });
+    previewClassDetails.value.end_date = previewClassDetails.value.start_date.plus({ minutes: previewClassDetails.value.duration });
 
     previewClassDetails.value.instructor = previewClassDetails.value?.instructor_id?.map((item) => {
         return props.instructors[item] ? { name: props.instructors[item] } : {};
@@ -781,6 +779,9 @@ const emailClass = (classLesson) => {
 
                 <!-- start_date -->
                 <TableData>
+                    <span class="text-xs">
+                        {{ DateTime.fromISO(class_lesson.start_date).setZone(business_settings.timezone).toFormat("ccc") }}
+                    </span>
                     <DateValue :date="DateTime
                         .fromISO(class_lesson.start_date)
                         .setZone(business_settings.timezone)
