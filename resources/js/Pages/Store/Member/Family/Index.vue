@@ -8,6 +8,7 @@ import SideModal from "@/Components/SideModal.vue";
 import WaiverAcceptCheck from "@/Icons/WaiverAcceptCheck.vue";
 import WaiverNotAcceptedCheck from "@/Icons/WaiverNotAcceptedCheck.vue";
 import Form from "./Form.vue";
+import WaiverListing from "./WaiverListing.vue";
 import WaiverForm from "../../WaiverForm.vue";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import DateValue from "@/Components/DataTable/DateValue.vue";
@@ -21,85 +22,27 @@ const props = defineProps({
     page_title: String,
     family_members: Object,
     waivers: Object,
-    user_waivers: Object|null,
-    user:Object,
 });
 
-const waiver = ref('');
-const waiverFormData = useForm({
-    waiverQandA: [],
-    sign: props?.user_waivers?.length ? props?.user_waivers?.signature : null,
-});
-const showWaiver = () => {
-    showWaivers.value = true;
-}
-const closedShowWaiver = () => {
-    showWaivers.value = false;
-    showWaiverModal.value = true;
-    waiverFormData.reset().clearErrors();
-}
-const waiverQandData = (id) => {
-    waiver.value = props.waivers.find((item) => item.id == id);
-    waiverFormData.waiverQandA = []
-    if (waiver.value) {
-        for (let i = 0; i < waiver.value?.questions.length; i++) {
-            waiverFormData.waiverQandA.push({
-                question: waiver.value?.questions[i].question,
-                type: waiver.value?.questions[i].selectedQuestionType,
-                answer: null,
-            });
-        }
-        showWaiver();
-    }
-};
-
-
+const user = ref(usePage().props.user);
 
 const showCreateModal = ref(false);
 const showEditModal = ref(false);
 const showWaiverModal = ref(false);
-const showWaivers = ref(false);
-const userWaiversIds = ref([]);
 
-
-const sumbitWaiver = () => {
-    axios
-    .post('/store-waiver', {
-        waiver_id: waiver !== null ? waiver.value?.id : null,
-        waiver_data: waiver !== null  ? {
-            data: waiverFormData.waiverQandA,
-            signature: waiverFormData.sign ?? null,
-        } : {},
-        headers: {
-            "X-Inertia": true,
-            "X-Inertia-Version": usePage().version,
-        },
-    })
-    .then((response) => {
-           if(response.status == 200){
-               closedShowWaiver();
-               userWaiversIds.value.push({waiver_id:response.data.waiver_id,id:response.data?.id});
-           }
-        }).catch((e) => {
-            console.log(e);
-                alert("Something went wrong! Please try again later.");
-        });
-}
 const closeCreateModal = () => {
     showCreateModal.value = false;
     CreateForm.reset().clearErrors();
 };
 
 const closeEditModal = () => {
-    showWaivers.value = false;
     showEditModal.value = false;
     EditForm.reset().clearErrors();
 };
 
-const closeWaiverModal = () => {
-    showWaiverModal.value = false;
-    waiverFormData.reset().clearErrors();
-};
+
+const user_waiver_ids = ref([]);
+const signed_waiver_ids = ref([]);
 
 const CreateForm = useForm({
     name: null,
@@ -116,32 +59,31 @@ const EditForm = useForm({
     has_image: false,
 });
 
-
 const storeFamilyMember = () => {
-if (props.waiver !== null) {
-    if(!showWaiverModal.value) {
+    if (
+        props.waivers.length &&
+        user_waiver_ids.value.length !== props.waivers.length
+    ) {
         showWaiverModal.value = true;
         return;
     }
-}
-CreateForm.transform((data) => ({
-    ...data,
-    waiver_data: userWaiversIds.value,
-})).post(
-    route("ss.member.family.store", {
-        subdomain: props.business_settings.subdomain,
-    }),
-    {
-        preserveScroll: true,
-        onSuccess: () => {
-            showCreateModal.value = false;
-            showWaiverModal.value = false;
-            showWaivers.value = false;
-            userWaiversIds.value = [];
-            waiverFormData.reset().clearErrors();
-            CreateForm.reset().clearErrors();
-        },
-    }
+    CreateForm.transform((data) => ({
+        ...data,
+        user_waiver_ids: user_waiver_ids.value,
+        signed_waiver_ids: signed_waiver_ids.value
+    })).post(
+        route("ss.member.family.store", {
+            subdomain: props.business_settings.subdomain,
+        }),
+        {
+            preserveScroll: true,
+            onSuccess: () => {
+                CreateForm.reset().clearErrors();
+                showCreateModal.value = false;
+                user_waiver_ids.value = [];
+                signed_waiver_ids.value = [];
+            },
+        }
     );
 };
 
@@ -157,8 +99,7 @@ const removeFile = (param) => {
 const showCreateFamily = () => {
     showCreateModal.value = true;
     CreateForm.reset().clearErrors();
-    waiverFormData.reset().clearErrors();
-}
+};
 const editMember = (member) => {
     EditForm.reset().clearErrors();
     EditForm.id = member.id;
@@ -167,39 +108,24 @@ const editMember = (member) => {
     EditForm.profile_photo = member.profile_photo;
     EditForm.profile_photo_path = member.profile_photo_path;
     EditForm.profile_photo_url =
-    member.profile_photo_path !== null ? member.profile_photo_url : null;
+        member.profile_photo_path !== null ? member.profile_photo_url : null;
     EditForm.has_image = !!member.profile_photo_path;
+    signed_waiver_ids.value = member.user_waivers.length ? member.user_waivers.map((waiver) => waiver.waiver_id) : [];
+    user_waiver_ids.value = member.user_waivers.length ? member.user_waivers.map((waiver) => waiver.id) : [];
     showEditModal.value = true;
-    waiverFormData.reset().clearErrors();
-    waiverQandData();
 };
-const checkForWaiverValidation = computed(() => {
-  const waivers = props.waivers || [];
-  const userWaivers = props.user_waivers || [];
-
-  for (const waiver of waivers) {
-    if (
-      waiver !== null &&
-      waiver.sign_again &&
-      ((!userWaivers.length) || !userWaivers.some((userWaiver) => userWaiver.family_member_id === EditForm.id))
-    ) {
-      return true;
-    }
-  }
-
-  return false;
-});
-
 
 const updateMember = () => {
-    if (checkForWaiverValidation.value) {
+    if (
+        props.waivers.length &&
+        user_waiver_ids.value.length !== props.waivers.length
+    ) {
         showWaiverModal.value = true;
+        return;
     }
     EditForm.transform((data) => ({
         ...data,
         _method: "put",
-        waiver_id: waiver.value.id,
-        waiver_data: userWaiversIds.value,
     })).post(
         route("ss.member.family.update", {
             family: EditForm.id,
@@ -208,50 +134,54 @@ const updateMember = () => {
         {
             preserveScroll: true,
             onSuccess: () => {
-                EditForm.reset().clearErrors();
                 showEditModal.value = false;
                 showWaiverModal.value = false;
-                waiverFormData.reset().clearErrors();
+                user_waiver_ids.value = [];
+                signed_waiver_ids.value = [];
+                EditForm.reset().clearErrors();
             },
         }
-        );
-    };
+    );
+};
 
-    const storeOrUpdateFamilyMember = () => {
-        if(EditForm.id && showEditModal.value == true) {
-            updateMember()
-        } else {
-            storeFamilyMember()
-        }
+const storeOrUpdateFamilyMember = () => {
+    if (EditForm.id && showEditModal.value == true) {
+        updateMember();
+    } else {
+        storeFamilyMember();
     }
+};
 
+//delete confirmation modal:
+const itemDeleting = ref(false);
+const itemIdDeleting = ref(null);
+const confirmDeletion = (id) => {
+    itemIdDeleting.value = id;
+    itemDeleting.value = true;
+};
 
-    //delete confirmation modal:
-    const itemDeleting = ref(false);
-    const itemIdDeleting = ref(null);
-    const confirmDeletion = (id) => {
-        itemIdDeleting.value = id;
-        itemDeleting.value = true;
-    };
+const deleteItem = () => {
+    EditForm.delete(
+        route("ss.member.family.destroy", {
+            family: itemIdDeleting.value,
+            subdomain: props.business_settings.subdomain,
+        }),
+        {
+            preserveScroll: true,
+            preserveState: true,
+            onSuccess: () => {
+                itemDeleting.value = false;
+                itemIdDeleting.value = null;
+            },
+        }
+    );
+};
 
-    const deleteItem = () => {
-        EditForm.delete(
-            route("ss.member.family.destroy", {
-                family: itemIdDeleting.value,
-                subdomain: props.business_settings.subdomain,
-            }),
-            {
-                preserveScroll: true,
-                preserveState: true,
-                onSuccess: () => {
-                    itemDeleting.value = false;
-                    itemIdDeleting.value = null;
-                    waiverFormData.reset().clearErrors();
-                },
-            }
-            );
-        };
-    </script>
+const updateUserWaiverIds = ($event) => {
+    signed_waiver_ids.value.push($event.waiver_id);
+    user_waiver_ids.value.push($event.user_waiver_id);
+};
+</script>
 
 <template>
     <div class="text-right">
@@ -383,7 +313,7 @@ const updateMember = () => {
     </ConfirmationModal>
 
     <!-- Waiver Modal -->
-    <SideModal :show="showWaivers" @close="showWaiver">
+    <!-- <SideModal :show="showWaivers" @close="showWaiver">
         <template #title>
             <div class="w-full">
                 You need to sign "{{waiver?.title}}" once before adding
@@ -406,55 +336,17 @@ const updateMember = () => {
                 modal
             />
         </template>
-    </SideModal>
-    <SideModal :show="showWaiverModal" @close="closeWaiverModal">
-        <template #title>
-            <div class="w-full mb-16">
-                <p class="text-xl mb-2">Welcome {{ props?.user?.name }}!<span class="font-bold">!</span></p>
-                <p class="text-xl mb-4">You just need to check out the following important documents in order to add Family Member.</p>
-            </div>
-        </template>
-        <template #close>
-            <div class="w-20 text-right">
-                <CloseModal @click="closeWaiverModal" />
-            </div>
-        </template>
+    </SideModal> -->
 
-        <template #content>
-            <div class="flex items-center mt-2"  v-for="waiver in props.waivers" :key="waiver.id">
-                <WaiverAcceptCheck   v-if="userWaiversIds?.find((item) => item.waiver_id === waiver.id) !==
-                    undefined ? true : false "/>
-                <WaiverNotAcceptedCheck  v-if="userWaiversIds?.find((item) => item.waiver_id === waiver.id) ==
-                    undefined ? true : false "/>
-                <span class="text-xl ml-4">{{ waiver.title }} Read and signed document</span>
-                <!-- <button class="ml-auto bg-[#E8A838] hover:bg-[#E8A838] text-white px-4 py-2 rounded focus:outline-none focus:ring focus:ring-[#F0F0F0]">view</button> -->
-                <ButtonLink
-                styling="secondary"
-                size="default"
-                class="mt-4 ml-auto"
-                @click="waiverQandData(waiver?.id)"
-                >
-                View
-               </ButtonLink>
-            </div>
-            <div class="flex justify-center space-x-4" v-if="userWaiversIds.length == props.waivers.length">
-                <ButtonLink
-                  styling="secondary"
-                  size="default"
-                  class="mt-4"
-                  @click="closeWaiverModal"
-                >
-                  Go To Back
-                </ButtonLink>
-                <ButtonLink
-                  styling="secondary"
-                  size="default"
-                  class="mt-4"
-                  @click="storeOrUpdateFamilyMember"
-                >
-                    Save
-                </ButtonLink>
-            </div>
-        </template>
-    </SideModal>
+    <WaiverListing
+        :edit_form="EditForm"
+        :business_settings="business_settings"
+        :show="showWaiverModal"
+        :waivers="props.waivers"
+        :user="user"
+        :user_waiver_ids="user_waiver_ids"
+        :signed_waiver_ids="signed_waiver_ids"
+        @updateUserWaiverIds="updateUserWaiverIds"
+        @close="showWaiverModal = false"
+    />
 </template>

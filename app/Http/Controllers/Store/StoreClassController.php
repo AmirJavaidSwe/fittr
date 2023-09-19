@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers\Store;
 
-use App\Enums\ClassStatus;
-use App\Http\Controllers\Controller;
-use App\Models\Partner\ClassLesson;
-use App\Models\Partner\ClassType;
-use App\Models\Partner\User;
-use Illuminate\Contracts\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Enums\ClassStatus;
+use App\Models\Partner\User;
+use Illuminate\Http\Request;
+use App\Models\Partner\Waiver;
+use App\Models\Partner\ClassType;
+use App\Models\Partner\UserWaiver;
+use App\Models\Partner\ClassLesson;
+use App\Http\Controllers\Controller;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class StoreClassController extends Controller
 {
@@ -21,6 +23,8 @@ class StoreClassController extends Controller
         $startDate = now(session('business_settings.timezone'))->startOfDay();
         $endDate = $startDate->copy()->addDays($maxDaysTimetable)->endOfDay()->utc();
         $startDate = $startDate->utc();
+
+        $waivers = Waiver::where('show_at', 'checkout')->where('is_active', 1)->get();
 
         return Inertia::render('Store/Classes/Index', [
             'page_title' => __('Classes'),
@@ -65,6 +69,9 @@ class StoreClassController extends Controller
                 }),
             'class_types' => ClassType::select('id as value', 'title as label')->get(),
             'instructors' => User::select('id as value', 'name as label')->instructor()->get(),
+            'waivers' => $waivers,
+            'signed_waiver_ids' => UserWaiver::where('user_id', auth()->user()->id)->whereIn('waiver_id', $waivers->pluck('id'))->pluck('waiver_id')->toArray(),
+            'user_waiver_ids' => UserWaiver::where('user_id', auth()->user()->id)->whereIn('waiver_id', $waivers->pluck('id'))->pluck('id')->toArray(),
         ]);
     }
 

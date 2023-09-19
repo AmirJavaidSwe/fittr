@@ -19,7 +19,7 @@ class StoreBookingCancellationService
         $booking = Booking::with(['user', 'class.classType', 'class.instructor', 'class.studio.location'])
                    ->where('class_id', $request->class_id)
                    ->where('user_id', auth()->user()?->id)
-                   ->where('id',$request->id)->active()->first();
+                   ->where('id', $request->id)->active()->first();
 
         if(!$booking) {
             return $this->redirectBackError('The booking not found.');

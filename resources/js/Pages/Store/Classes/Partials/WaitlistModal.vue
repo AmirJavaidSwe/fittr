@@ -70,7 +70,8 @@ const processWaitlist = () => {
             title: "This class is full",
             text: "You can still book to waitlist. We will inform you if space becomes available.",
         }).then((result) => {
-            storeWaitlist();
+            addRemove(true, user.value.id)
+            addSingleUserToWaitList();
         })
     } else if (props.addRemoveUsersToWaitlist == 2) {
         if (userHasFamily.value) {
@@ -79,6 +80,7 @@ const processWaitlist = () => {
             storeWaitlist();
         }
     } else if (props.addRemoveUsersToWaitlist == 3) {
+        alert()
         removeFromWaitlist()
     }
 };
@@ -93,6 +95,22 @@ const removeFromWaitlist = () => {
 
     waitlistForm.post(
         route("ss.member.bookings.remove-from-waitlist", {
+            subdomain: props.businessSettings.subdomain,
+        }),
+        {
+            onSuccess: (res) => {
+                emit('enableButton')
+                emit("hideBoth");
+            },
+        }
+    );
+};
+const addSingleUserToWaitList = () => {
+    emit('disableButton')
+    waitlistForm.class_id = props.classDetail.id;
+
+    waitlistForm.post(
+        route("ss.member.bookings.add-self-to-waitlist", {
             subdomain: props.businessSettings.subdomain,
         }),
         {

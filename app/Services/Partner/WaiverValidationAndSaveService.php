@@ -20,14 +20,14 @@ class WaiverValidationAndSaveService
         if($waiver) {
             $rules = [];
             $messages = [];
-            $answers = collect(request()->waiver_data['data'])->whereNotNull('answer')
+            $answers = collect(request()->data)->whereNotNull('answer')
             ->pluck('answer')->toArray();
-            if((!(count($waiver->questions) == count($answers))) || ($waiver->is_signature_needed && !request()->waiver_data['signature'])) {
+            if((!(count($waiver->questions) == count($answers))) || ($waiver->is_signature_needed && !request()->signature)) {
                 if(!(count($waiver->questions) == count($answers))) {
                     $rules =  [
-                        'waiver_data.data.*.answer' => 'required',
+                        'data.*.answer' => 'required',
                     ];
-                    $messages['waiver_data.data.*.answer.required'] = __('The answers to all waiver questions are required.');
+                    $messages['data.*.answer.required'] = __('The answers to all waiver questions are required.');
                 }
                 if ($waiver->is_signature_needed && (!isset(request()->waiver_data['signature']) || !request()->waiver_data['signature'])) {
                     $rules['signature'] = ['required'];
@@ -58,7 +58,7 @@ class WaiverValidationAndSaveService
             $errorMessages = [];
 
             // Check for at least one answers error
-            $answerErrors = collect($errors->get('waiver_data.data.*.answer'))->filter();
+            $answerErrors = collect($errors->get('data.*.answer'))->filter();
             if ($answerErrors->isNotEmpty()) {
                 $errorMessages['answer_error'] = __('The answers to all waiver questions are required.');
             }
@@ -87,13 +87,15 @@ class WaiverValidationAndSaveService
                 $user_waiver->delete();
             }
 
-            return UserWaiver::create([
+            $user_waiver = UserWaiver::create([
                 'user_id' => auth()->user()->id,
                 'waiver_id' => request()->waiver_id,
                 'family_member_id' => $family_member_id ?? null,
-                'user_waiver_accepted_data' => request()->waiver_data['data'],
-                'signature' => request()->waiver_data['signature'],
+                'user_waiver_accepted_data' => request()->data,
+                'signature' => request()->signature,
             ]);
+
+            return $user_waiver->id;
         }
     }
 

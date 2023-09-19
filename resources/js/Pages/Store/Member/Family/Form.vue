@@ -91,12 +91,12 @@ const formatDate = computed(() => {
 
             <ButtonLink
                 :class="{ 'opacity-25': form.processing }"
-                :disabled="form.processing || !form.name || !form.date_of_birth"
+                :disabled="form.processing"
                 styling="secondary"
                 size="default"
                 type="submit"
             >
-                <span v-if="!form.id">Add Family Member</span>
+                <span v-if="!form.id">Create</span>
                 <span v-else>Save Changes</span>
             </ButtonLink>
         </template>

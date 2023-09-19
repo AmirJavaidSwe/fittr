@@ -21,35 +21,25 @@ class WaiverVerified
         if (!auth()->user()) {
             return $next($request);
         }
-
-        $waivers = Waiver::where('show_at', 'sign-up')->where('is_active', 1)->get();
-
-        if (!$waivers->isEmpty()) {
-            $countWaivers = 0;
-
-            foreach ($waivers as $waiver) {
-                $user_waiver = UserWaiver::where('user_id', auth()->user()->id)
-                    ->where('waiver_id', $waiver->id)
-                    ->exists();
-
-                if ($user_waiver) {
-                    $countWaivers++;
-                }
+        if($request->session()->has('all-signup-waiver-signed')) {
+            $allSignupWaiverSigned = $request->session()->get('all-signup-waiver-signed');
+            if($allSignupWaiverSigned === true) {
+                return $next($request);
             }
+        }
+        $waivers = Waiver::where('show_at', 'sign-up')->where('is_active', 1)->get();
+        if (!$waivers->isEmpty()) {
+            $waiver_ids = $waivers->pluck('id')->toArray();
+            $user_waiver_count = UserWaiver::where('user_id', auth()->user()->id)
+            ->whereIn('waiver_id', $waiver_ids)->count();
 
-            if ($countWaivers == count($waivers)) {
+            if (count($waiver_ids) == $user_waiver_count) {
+                $request->session()->put('all-signup-waiver-signed', true);
                 return $next($request);
             } else {
-                foreach ($waivers as $waiver) {
-                    if ((!($waiver->sign_again)) && Carbon::parse($waiver->created_at) > Carbon::parse(auth()->user()->created_at)) {
-                        return $next($request);
-                    }
-                }
-
                 return redirect(route('ss.waiver-verification', ["subdomain" => request()->session()->get('business_settings')['subdomain']]));
             }
         }
-
         return $next($request);
     }
 

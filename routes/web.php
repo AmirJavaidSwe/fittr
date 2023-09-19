@@ -252,8 +252,6 @@ Route::domain('{subdomain}.'.$domain)->middleware(['auth.subdomain'])->name('ss.
 
     Route::get('/waiver-verification', [WaiverVerificationController::class, 'index'])->name('waiver-verification');
     Route::post('/waiver-verification', [WaiverVerificationController::class, 'store'])->name('store.waiver-verification');
-    Route::post('/store-waiver', [WaiverVerificationController::class, 'storeWaiver'])->name('store.waiver');
-    Route::get('/gotodashboard', [WaiverVerificationController::class, 'goToDashboard'])->name('gotodashboard');
 
     Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified', 'waiver-verified'])->group(function () {
 
@@ -263,15 +261,20 @@ Route::domain('{subdomain}.'.$domain)->middleware(['auth.subdomain'])->name('ss.
 
             Route::get('/bookings', [StoreBookingController::class, 'index'])->name('bookings.index');
             Route::post('/bookings', [StoreBookingController::class, 'store'])->name('bookings.store');
+            Route::post('/store-booking-waiver', [WaiverVerificationController::class, 'storeBookingWaiver'])->name('store.booking.waiver');
             Route::post('/bookings/cancel', [StoreBookingController::class, 'cancel'])->name('bookings.cancel');
             Route::post('/bookings/add-to-waitlist', [StoreBookingController::class, 'addToWaitlist'])->name('bookings.add-to-waitlist');
             Route::post('/bookings/remove-from-waitlist', [StoreBookingController::class, 'removeFromWaitList'])->name('bookings.remove-from-waitlist');
+            Route::post('/bookings/add-self-to-waitlist', [StoreBookingController::class, 'addSelfToWaitlist'])->name('bookings.remove-from-waitlist');
             Route::resource('family', FamilyMemberController::class);
             Route::post('/bookings/other-famly', [StoreBookingController::class, 'bookForOtherFamly'])->name('bookings.other-famly');
             Route::post('/bookings/cancel-all', [StoreBookingController::class, 'cancelForAllOrSelected'])->name('bookings.cancel-all');
             Route::get('/orders', [StoreOrderController::class, 'index'])->name('orders.index');
             Route::get('/my-memberships', [StoreMembershipController::class, 'index'])->name('memberships.index');
             Route::put('/my-memberships/cancel/{membership}', [StoreMembershipController::class, 'cancel'])->name('memberships.cancel');
+
+            Route::post('/store-family-waiver', [WaiverVerificationController::class, 'storeFamilyWaiver'])->name('store.family.waiver');
+            // Route::get('/gotodashboard', [WaiverVerificationController::class, 'goToDashboard'])->name('gotodashboard');
         });
 
         // INSTRUCTOR

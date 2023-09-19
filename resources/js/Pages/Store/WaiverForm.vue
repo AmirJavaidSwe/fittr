@@ -40,13 +40,13 @@ const onSignatureUpdate = ($event) => {
 };
 
 const answerError = computed(() => {
-    return (props?.createForm?.errors?.answer_error || props?.editForm?.errors?.answer_error) ? true : false
+    return (props?.form?.errors?.answer_error) ? true : false
 })
 
 const signatureError = computed(() => {
     return {
-        error: (props?.createForm?.errors?.signature_error || props?.editForm?.errors?.signature_error) ? true : false,
-        msg: (props?.createForm?.errors?.signature_error || props?.editForm?.errors?.signature_error)
+        error: props?.form?.errors?.signature_error ? true : false,
+        msg: props?.form?.errors?.signature_error
     }
 })
 
@@ -114,7 +114,7 @@ const signatureError = computed(() => {
                             <InputLabel :value="obj.question" />
                         </div>
                         <div class="block items-center mb-2 mt-2">
-                            <Textarea
+                            <TextArea
                                 v-model="form.waiverQandA[index].answer"
                                 placeholder="Enter your answer here..."
                                 class="w-full"

@@ -11,7 +11,7 @@ class StoreWaitlistService
 {
     use GenericHelper;
     public function addToWaitlist() {
-        // dd(request());
+
         $request = request();
 
         $class = ClassLesson::with(['waitlists' => function ($query) {
@@ -67,20 +67,63 @@ class StoreWaitlistService
                     'status' => BookingStatus::get('waitlisted'),
                 ]);
             }
-            return $this->redirectBackSuccessWithSubdomain('The class waiting list for you has been updated as per your choosen options.',  'ss.classes.index');
-        } else {
-            if(count(request()->members) > 0){
-                Booking::create([
-                    'class_id' => $request->class_id,
-                    'user_id' => $request->user()->id,
-                    'status' => BookingStatus::get('waitlisted'),
-                ]);
-            }
-            return $this->redirectBackSuccessWithSubdomain('The class has been added to waitlist.',  'ss.classes.index');
-
         }
+        return $this->redirectBackSuccessWithSubdomain('The class waiting list for you has been updated as per your choosen options.',  'ss.classes.index');
     }
 
+    public function addSelfToWaitlist() {
+
+        $request = request();
+
+        $class = ClassLesson::with(['waitlists' => function ($query) {
+            $query->where(function($q) {
+                $q->where('user_id', auth()->user()?->id);
+            });
+        }])
+        ->active()
+        ->find($request->class_id);
+
+
+        $maxDaysBooking = session('business_settings.days_max_booking');
+        $maxBookingStart = now(session('business_settings.timezone'))->startOfDay();
+        $maxBookingEnd = $maxBookingStart->copy()
+        ->when($maxDaysBooking, fn($date) => $date->addDays($maxDaysBooking-1))
+        ->endOfDay()
+        ->utc();
+        $maxBookingStart = $maxBookingStart->utc();
+
+        if(!$class) {
+            return $this->redirectBackError(__('The class does not exist.'));
+        }
+
+        if(
+            $maxDaysBooking
+            && !(
+                $maxBookingStart->lte($class->start_date)
+                && $maxBookingEnd->gte($class->end_date)
+            )
+        ) {
+            return $this->redirectBackError(__('The class cannot be added to waitlist.'));
+        }
+
+        if($class->waitlists->count() == (count(auth()->user()->family) + 1)) {
+            return $this->redirectBackError(__('The class cannot be added to waitlist again.'));
+        }
+
+        if (now() > $class->start_date->subDay()) {
+            return $this->redirectBackError(__('This class can no longer be added to waitlist.'));
+        }
+
+        Booking::where(['status' => BookingStatus::get('waitlisted'),'user_id' => $request->user()->id,])->delete();
+
+        Booking::create([
+            'class_id' => $request->class_id,
+            'user_id' => $request->user()->id,
+            'status' => BookingStatus::get('waitlisted'),
+        ]);
+
+        return $this->redirectBackSuccessWithSubdomain('You have been removed from the class waitlist.',  'ss.classes.index');
+    }
     public function removeFromWaitlist() {
 
         $request = request();

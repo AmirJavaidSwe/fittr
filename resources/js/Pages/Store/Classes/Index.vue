@@ -21,6 +21,7 @@ import CancelBooking from "./Partials/CancelBooking.vue";
 import ClassDetail from "./Partials/ClassDetail.vue";
 import ArrowLeft from '@/Components/ArrowLeft.vue';
 import ArrowRight from '@/Components/ArrowRight.vue';
+import WaiverListing from "./WaiverListing.vue";
 
 const props = defineProps({
     classes: {
@@ -36,6 +37,18 @@ const props = defineProps({
         required: true,
     },
     instructors: {
+        type: Array,
+        required: true,
+    },
+    waivers: {
+        type: Object,
+        required: true,
+    },
+    user_waiver_ids: {
+        type: Array,
+        required: true,
+    },
+    signed_waiver_ids: {
         type: Array,
         required: true,
     },
@@ -143,7 +156,18 @@ const closeModal = () => {
 
 const bookingForm = useForm({ class_id: "" });
 
+const showWaiverModal = ref(false)
+const signed_waiver_ids = computed(() => props.signed_waiver_ids)
+const user_waiver_ids = computed(() => props.user_waiver_ids)
+
 const handleBooking = () => {
+    if (
+        props.waivers.length &&
+        user_waiver_ids.value.length !== props.waivers.length
+    ) {
+        showWaiverModal.value = true;
+        return;
+    }
     bookingForm.class_id = classDetails.value.id;
     bookingForm.transform((data) => ({
         ...data,
@@ -200,7 +224,10 @@ const cancelBooking = () => {
     }
     bookingForm.class_id = classDetails.value.id;
 
-    bookingForm.post(
+    bookingForm.transform((data) => ({
+            ...data,
+            id: classDetails.value.user_bookings[0].id,
+        })).post(
         route("ss.member.bookings.cancel", {
             subdomain: props.business_settings.subdomain,
         }),
@@ -283,7 +310,6 @@ const showFamilyBookingModal = ref(false);
 const is_family_booking = ref(1);
 
 const isFamilyBooking = ($event) => {
-    console.log($event)
     if ($event.is_family_booking == 2) {
         is_family_booking.value = 2
         showFamilyBookingModal.value = true;
@@ -345,6 +371,13 @@ const closeBookForOtherFamilyMembersModal = (param) => {
 }
 
 const confirmBookingOtherFamilyMemberBooking = (classDetail, members) => {
+    if (
+        props.waivers.length &&
+        user_waiver_ids.value.length !== props.waivers.length
+    ) {
+        showWaiverModal.value = true;
+        return;
+    }
     bookingForm.transform((data) => ({
         class_id: classDetail.id,
         members: members,
@@ -705,4 +738,15 @@ const isBookable = (time) => {
         @hide-both=";[showWaitlistModal = false, modal = false, addRemoveUsersToWaitlist = 0]"
         :business-settings="business_settings" @hide=";[showWaitlistModal = false, addRemoveUsersToWaitlist = 0]"
         @disable-button=";[disableButton = true]" @enable-button=";[disableButton = false]" />
+
+
+        <WaiverListing
+        :business_settings="business_settings"
+        :show="showWaiverModal"
+        :waivers="props.waivers"
+        :user="user"
+        :user_waiver_ids="user_waiver_ids"
+        :signed_waiver_ids="signed_waiver_ids"
+        @close="showWaiverModal = false"
+    />
 </template>

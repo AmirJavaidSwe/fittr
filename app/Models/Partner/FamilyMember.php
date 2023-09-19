@@ -50,6 +50,7 @@ class FamilyMember extends Model
         'initials',
         'profile_photo_url',
         'dashboard_route',
+        'waivers'
     ];
 
     /**
@@ -79,9 +80,20 @@ class FamilyMember extends Model
         });
     }
 
+    public function getWaiversAttribute()
+    {
+        return Waiver::where('show_at', 'family-add')->where('is_active', 1)->get();
+    }
+
     //Local scopes
     public function scopeMember($query)
     {
         $query->where('role', PartnerUserRole::MEMBER->value);
+    }
+
+    // Relation With Waivers
+    public function userWaivers()
+    {
+        return $this->hasMany(UserWaiver::class, 'family_member_id');
     }
 }

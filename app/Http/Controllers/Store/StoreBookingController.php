@@ -73,24 +73,6 @@ class StoreBookingController extends Controller
 
         $storeBookingService = new StoreBookingService;
 
-        $waiverValidation = WaiverValidationAndSaveService::validateIfHasWaiver();
-
-        $waiverSignNeeded = $storeBookingService->waiverSignNeeded();
-
-        WaiverValidationAndSaveService::saveWaiverAcceptanceData();
-
-        if(!empty($waiverValidation) || ($waiverSignNeeded['waivers'] != null && $waiverSignNeeded['waiver_sign_needed'] === true)) {
-            return Inertia::render('Store/Classes/WaiverVerification', [
-                "form_data" => request()->request_data,
-                "waivers" => $waiverSignNeeded['waivers'],
-                "user_waivers" => $waiverSignNeeded['user_waivers'],
-                'submit_to_route' => 'ss.member.bookings.store',
-                'page_title' => __('Waiver Verification Required'),
-                'errors' => $waiverValidation
-            ]);
-        }
-
-
         return $storeBookingService->store();
     }
 
@@ -120,6 +102,12 @@ class StoreBookingController extends Controller
         return $storeWaitlistService->addToWaitlist();
     }
 
+    public function addSelfToWaitlist()
+    {
+        $storeWaitlistService = new StoreWaitlistService;
+        return $storeWaitlistService->addSelfToWaitlist();
+    }
+
     public function removeFromWaitList()
     {
         $storeWaitlistService = new StoreWaitlistService;
@@ -136,23 +124,6 @@ class StoreBookingController extends Controller
                 'request_data' => request()->all()
             ]);
         }
-
-        $waiverValidation = WaiverValidationAndSaveService::validateIfHasWaiver();
-
-        $waiverSignNeeded = $storeBookingService->waiverSignNeeded();
-
-        if(!empty($waiverValidation) || ($waiverSignNeeded['waiver'] != null && $waiverSignNeeded['waiver_sign_needed'] === true)) {
-
-            return Inertia::render('Store/Classes/WaiverVerification', [
-                "form_data" => request()->request_data,
-                "waivers" => $waiverSignNeeded['waivers'],
-                'page_title' => __('Waiver Verification Required'),
-                'submit_to_route' => 'ss.member.bookings.other-famly',
-                'errors' => $waiverValidation
-            ]);
-        }
-
-        WaiverValidationAndSaveService::saveWaiverAcceptanceData();
 
         return $storeBookingService->bookForOtherFamly();
 

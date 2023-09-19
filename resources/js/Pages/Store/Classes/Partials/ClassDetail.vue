@@ -23,8 +23,8 @@ import DateValue from "@/Components/DataTable/DateValue.vue";
 import ArrowLeft from '@/Components/ArrowLeft.vue';
 import ArrowRight from '@/Components/ArrowRight.vue';
 
-const props = defineProps(["is_cancel_able_booking", "business_settings", "class_types", "instructors", 'show', 'handleBooking', 'classDetails', 'user', 'is_family_booking', 'bookingForm', 'selected_family_members', 'other_family_member_booking_ids'])
-const emit = defineEmits(['close', 'isFamilyBooking', 'bookForOtherFamilyMembers', 'addRemoveFromWaitlist', 'cancelBooking'])
+const props = defineProps(["is_cancel_able_booking", "business_settings", "class_types", "instructors", 'show', 'classDetails', 'user', 'is_family_booking', 'bookingForm', 'selected_family_members', 'other_family_member_booking_ids'])
+const emit = defineEmits(['close', 'isFamilyBooking', 'bookForOtherFamilyMembers', 'addRemoveFromWaitlist', 'cancelBooking', 'handleBooking'])
 
 </script>
 <template>
@@ -109,7 +109,7 @@ const emit = defineEmits(['close', 'isFamilyBooking', 'bookForOtherFamilyMembers
                 </div>
             </div>
             <AttendiesSelection :user="props.user" :current_class="props.classDetails" :is_family_booking="props.is_family_booking" @is-family-booking="$emit('isFamilyBooking', $event)" />
-            <AttendiesSelected :selected_family_members="props.selected_family_members" :user="props.user" :other_family_member_booking_ids="props.other_family_member_booking_ids" :current_class="props.classDetails" :is_family_booking="props.is_family_booking" @is-family-booking="$emit('isFamilyBooking', $event)" />
+            <AttendiesSelected :selected_family_members="props.selected_family_members" :user="props.user" :other_family_member_booking_ids="props.other_family_member_booking_ids" :current_class="props.classDetails" :is_family_booking="props.is_family_booking" />
         </template>
         <template #footer>
             <ButtonLink class="mr-2" styling="default" size="default" @click="$emit('close')">Close</ButtonLink>

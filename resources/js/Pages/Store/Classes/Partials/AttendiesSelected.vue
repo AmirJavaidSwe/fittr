@@ -2,6 +2,7 @@
 import { watch } from 'vue';
 import find from 'lodash/find';
 const props = defineProps(["user", "current_class", 'selected_family_members', 'is_family_booking', 'other_family_member_booking_ids']);
+
 const getFamilyMemberName = (id) => {
     const member = find(props.user.family, (o) => o.id == id)
     return member.name
