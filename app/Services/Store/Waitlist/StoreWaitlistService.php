@@ -122,7 +122,7 @@ class StoreWaitlistService
             'status' => BookingStatus::get('waitlisted'),
         ]);
 
-        return $this->redirectBackSuccessWithSubdomain('You have been removed from the class waitlist.',  'ss.classes.index');
+        return $this->redirectBackSuccessWithSubdomain('You have been added to the class waitlist.',  'ss.classes.index');
     }
     public function removeFromWaitlist() {
 
