@@ -3,7 +3,6 @@ import { onMounted, ref, computed, toRef, watchEffect } from "vue";
 import { Link, useForm, usePage, router } from "@inertiajs/vue3";
 import ButtonLink from "@/Components/ButtonLink.vue";
 import SideModal from "@/Components/SideModal.vue";
-import CloseModal from "@/Components/CloseModal.vue";
 import cloneDeep from "lodash/cloneDeep";
 import uniqBy from "lodash/uniqBy";
 
@@ -55,6 +54,7 @@ const instructors = ref([])
 const locations = ref([])
 const roles = ref([])
 const statuses = ref([])
+const stateTypes = ref([])
 const studios = ref([])
 const systemModules = ref([])
 const users = ref([])
@@ -72,28 +72,28 @@ const getResources = () => {
         },
     })
     .then((response) => {
-            const data = response.data;
-            amenities.value = data.amenities
-            instructors.value = data.instructors
-            locations.value = data.locations
-            roles.value = data.roles
-            statuses.value = data.statuses
-            studios.value = data.studios
-            systemModules.value = data.systemModules
-            users.value = data.users
-            classtypes.value = data.classtypes
-            countries.value = data.countries
-            retry.value = 0
-
-        }).catch((e) => {
-            console.log(e);
-            if(retry.value < 3) {
-                retry.value++
-                getResources()
-            } else {
-                alert("Something went wrong! Please try again later.");
-            }
-        });
+        const data = response.data;
+        amenities.value = data.amenities;
+        instructors.value = data.instructors;
+        locations.value = data.locations;
+        roles.value = data.roles;
+        statuses.value = data.statuses;
+        studios.value = data.studios;
+        systemModules.value = data.systemModules;
+        users.value = data.users;
+        classtypes.value = data.classtypes;
+        stateTypes.value = data.stateTypes;
+        countries.value = data.countries;
+        retry.value = 0;
+    }).catch((e) => {
+        console.log(e);
+        if(retry.value < 3) {
+            retry.value++
+            getResources();
+        } else {
+            alert("Something went wrong! Please try again later.");
+        }
+    });
 }
 onMounted(() => {
     getResources()
@@ -145,6 +145,7 @@ const closeClassTypeCreateForm = () => {
 const createClassTypeFrom = useForm({
     title: null,
     description: null,
+    status: false,
 });
 
 const storeClassType = () => {
@@ -386,9 +387,6 @@ const storeStudio = () => {
         @close="closeLocationCreateForm"
     >
         <template #title> Create new location </template>
-        <template #close>
-            <CloseModal @click="closeLocationCreateForm" />
-        </template>
 
         <template #content>
             <LocationCreateForm
@@ -420,9 +418,6 @@ const storeStudio = () => {
     <!-- GM Create Modal -->
     <SideModal :show="showGmCreateForm" @close="closeGMCreateForm">
         <template #title> Create new General Manager </template>
-        <template #close>
-            <CloseModal @click="closeGMCreateForm" />
-        </template>
 
         <template #content>
             <GMCreateForm
@@ -437,9 +432,6 @@ const storeStudio = () => {
     <!-- Role Create Modal -->
     <SideModal :show="showRoleCreateModal" @close="closeRoleCreateModal">
         <template #title> Create new Role </template>
-        <template #close>
-            <CloseModal @click="closeRoleCreateModal" />
-        </template>
 
         <template #content>
             <RoleCreateForm
@@ -453,9 +445,6 @@ const storeStudio = () => {
     <!-- Amenity Create Modal -->
     <SideModal :show="showAmenityCreateForm" @close="closeAmenityCreateForm">
         <template #title> Create new Amenity </template>
-        <template #close>
-            <CloseModal @click="closeAmenityCreateForm" />
-        </template>
 
         <template #content>
             <AmenityCreateForm
@@ -470,9 +459,6 @@ const storeStudio = () => {
     <!-- Studio Create Modal -->
     <SideModal :show="showStudioCreateForm" @close="closeStudioCreateForm">
         <template #title> Create new studio </template>
-        <template #close>
-            <CloseModal @click="closeStudioCreateForm" />
-        </template>
 
         <template #content>
             <StudioCreateForm
@@ -488,9 +474,6 @@ const storeStudio = () => {
     <!-- Instructor Create Modal -->
     <SideModal :show="showInstructorCreateForm" @close="closeInstructorCreateForm">
         <template #title> Create new Instructor </template>
-        <template #close>
-            <CloseModal @click="closeInstructorCreateForm" />
-        </template>
 
         <template #content>
             <InstructorCreateForm
@@ -507,14 +490,12 @@ const storeStudio = () => {
         @close="closeClassTypeCreateForm"
     >
         <template #title> Create new Class Type </template>
-        <template #close>
-            <CloseModal @click="closeClassTypeCreateForm" />
-        </template>
 
         <template #content>
             <ClassTypeCreateForm
                 :form="createClassTypeFrom"
                 :submitted="storeClassType"
+                :statuses="stateTypes"
                 modal
             />
         </template>

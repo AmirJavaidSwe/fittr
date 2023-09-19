@@ -12,7 +12,6 @@ import Switcher from "@/Components/Switcher.vue";
 import Multiselect from '@vueform/multiselect';
 import Datepicker from '@vuepic/vue-datepicker';
 import SideModal from "@/Components/SideModal.vue";
-import CloseModal from "@/Components/CloseModal.vue";
 import PriceCard from "../PackPrice/Card.vue";
 import PriceForm from "../PackPrice/Form.vue";
 import { faCircle, faCircleDot } from '@fortawesome/free-regular-svg-icons';
@@ -342,9 +341,6 @@ const showEditPrice = (price) => {
                 <!-- Edit price Modal -->
                 <SideModal :show="shown_price_form" @close="shown_price_form = false">
                     <template #title>{{is_new_price ? 'Create new pricing option' : 'Update pricing option'}}</template>
-                    <template #close>
-                        <CloseModal @click="shown_price_form = false" />
-                    </template>
 
                     <template #content>
                         <PriceForm

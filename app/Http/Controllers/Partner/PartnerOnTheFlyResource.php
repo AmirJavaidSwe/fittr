@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers\Partner;
 
-use App\Models\Role;
-use Inertia\Inertia;
-use App\Models\Country;
 use App\Enums\ClassStatus;
+use App\Enums\StateType;
+use App\Models\Role;
+use App\Models\Country;
 use App\Models\User;
 use App\Models\SystemModule;
-use Illuminate\Http\Request;
 use App\Models\Partner\Studio;
 use App\Models\Partner\Amenity;
 use App\Models\Partner\Location;
@@ -18,10 +17,10 @@ use App\Http\Controllers\Controller;
 
 class PartnerOnTheFlyResource extends Controller
 {
-
     public function index()
     {
         $statuses = ClassStatus::labels();
+        $stateTypes = StateType::labels();
         $instructors = Instructor::pluck('name', 'id');
         $classtypes = ClassType::pluck('title', 'id');
         $studios = Studio::latest('id')->pluck('title', 'id');
@@ -34,6 +33,7 @@ class PartnerOnTheFlyResource extends Controller
 
         return response()->json([
             'statuses' => $statuses,
+            'stateTypes' => $stateTypes,
             'instructors' => $instructors,
             'classtypes' => $classtypes,
             'studios' => $studios,

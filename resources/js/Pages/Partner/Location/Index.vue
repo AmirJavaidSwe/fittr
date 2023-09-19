@@ -17,7 +17,6 @@ import DeleteIcon from "@/Icons/Delete.vue";
 import ActionsIcon from "@/Icons/ActionsIcon.vue";
 import DateValue from "@/Components/DataTable/DateValue.vue";
 import SideModal from "@/Components/SideModal.vue";
-import CloseModal from "@/Components/CloseModal.vue";
 import cloneDeep from "lodash/cloneDeep";
 import uniqBy from "lodash/uniqBy";
 import OnTheFlyResourceCreate from "@/Components/OnTheFlyResourceCreate.vue";
@@ -392,9 +391,6 @@ const closeAmenityCreateForm = () => {
     <SideModal :show="modal" @close="modal = false">
         <template #title>
             {{ editMode ? "Edit" : "Create" }} Location
-        </template>
-        <template #close>
-            <CloseModal @click="modal = false" />
         </template>
 
         <template #content>

@@ -21,14 +21,17 @@ enum ClassStatus: string
             [
                 'label' => Str::ucfirst(__(self::ACTIVE->value)),
                 'value' => self::ACTIVE->value,
+                'color' => '#339933',
             ],
             [
                 'label' => Str::ucfirst(__(self::INACTIVE->value)),
                 'value' => self::INACTIVE->value,
+                'color' => '#e8eae9',
             ],
             [
                 'label' => Str::ucfirst(__(self::CANCELLED->value)),
                 'value' => self::CANCELLED->value,
+                'color' => '#ffcc66',
             ]
         );
     }

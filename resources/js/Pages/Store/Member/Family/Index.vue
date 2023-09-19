@@ -3,7 +3,6 @@ import { ref, watch, computed } from "vue";
 import CardBasic from "@/Components/CardBasic.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
 import { useForm, usePage } from "@inertiajs/vue3";
-import CloseModal from "@/Components/CloseModal.vue";
 import SideModal from "@/Components/SideModal.vue";
 import WaiverAcceptCheck from "@/Icons/WaiverAcceptCheck.vue";
 import WaiverNotAcceptedCheck from "@/Icons/WaiverNotAcceptedCheck.vue";
@@ -250,9 +249,6 @@ const updateUserWaiverIds = ($event) => {
     <!-- Create Modal -->
     <SideModal :show="showCreateModal" @close="closeCreateModal">
         <template #title> Add New Family Member </template>
-        <template #close>
-            <CloseModal @click="closeCreateModal" />
-        </template>
 
         <template #content>
             <Form
@@ -267,9 +263,6 @@ const updateUserWaiverIds = ($event) => {
     <!-- Edit Modal -->
     <SideModal :show="showEditModal" @close="closeEditModal">
         <template #title> Edit Family Member </template>
-        <template #close>
-            <CloseModal @click="closeEditModal" />
-        </template>
 
         <template #content>
             <Form
@@ -311,32 +304,6 @@ const updateUserWaiverIds = ($event) => {
             </ButtonLink>
         </template>
     </ConfirmationModal>
-
-    <!-- Waiver Modal -->
-    <!-- <SideModal :show="showWaivers" @close="showWaiver">
-        <template #title>
-            <div class="w-full">
-                You need to sign "{{waiver?.title}}" once before adding
-                family members
-            </div>
-        </template>
-        <template #close>
-            <div class="w-20 text-right">
-                <CloseModal @click="closedShowWaiver" />
-            </div>
-        </template>
-
-        <template #content>
-            <WaiverForm
-                :form="waiverFormData"
-                :create-form="CreateForm"
-                :edit-form="EditForm"
-                :submitted="sumbitWaiver"
-                :waiver="waiver"
-                modal
-            />
-        </template>
-    </SideModal> -->
 
     <WaiverListing
         :edit_form="EditForm"

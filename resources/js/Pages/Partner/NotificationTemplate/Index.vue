@@ -13,7 +13,6 @@ import EditIcon from "@/Icons/Edit.vue";
 import ActionsIcon from "@/Icons/ActionsIcon.vue";
 import DateValue from "@/Components/DataTable/DateValue.vue";
 import SideModal from "@/Components/SideModal.vue";
-import CloseModal from "@/Components/CloseModal.vue";
 import StatusLabel from "@/Components/StatusLabel.vue";
 import PreviewNotificationTemplate from "./PreviewNotificationTemplate.vue";
 
@@ -292,9 +291,6 @@ const showPreview = async () => {
     <SideModal :show="modal" @close="modal = false">
         <template #title>
             Edit Notification Template
-        </template>
-        <template #close>
-            <CloseModal @click="modal = false" />
         </template>
 
         <template #content>

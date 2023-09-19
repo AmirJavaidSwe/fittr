@@ -17,7 +17,6 @@ import { faCog, faPlus } from "@fortawesome/free-solid-svg-icons";
 import StatusLabel from "@/Components/StatusLabel.vue";
 import DateValue from "@/Components/DataTable/DateValue.vue";
 import ActionsIcon from '@/Icons/ActionsIcon.vue';
-import CloseModal from "@/Components/CloseModal.vue";
 import { hideAllPoppers } from 'floating-vue';
 
 const props = defineProps({
@@ -241,11 +240,7 @@ const deleteItem = () => {
 
     <!-- Create new amenity Modal -->
     <SideModal :show="showCreateModal" @close="closeCreateModal">
-        <template #title> Create new amenity </template>
-
-        <template #close>
-            <CloseModal @click="closeCreateModal" />
-        </template>
+        <template #title> Create new amenity</template>
 
         <template #content>
             <Form :form="form_class" :submitted="storeAmenity" modal />
@@ -255,10 +250,6 @@ const deleteItem = () => {
     <!-- Update amenity Modal -->
     <SideModal :show="showEditModal" @close="closeEditModal">
         <template #title> Update amenity </template>
-
-        <template #close>
-            <CloseModal @click="closeEditModal" />
-        </template>
 
         <template #content>
             <Form :form="form_edit" :submitted="updateAmenities" modal />

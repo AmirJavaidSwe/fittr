@@ -18,7 +18,6 @@ import { faUserLock, faCog, faPlus } from "@fortawesome/free-solid-svg-icons";
 import DateValue from "@/Components/DataTable/DateValue.vue";
 import { Dialog } from "@headlessui/vue";
 import ActionsIcon from "@/Icons/ActionsIcon.vue";
-import CloseModal from "@/Components/CloseModal.vue";
 import { hideAllPoppers } from 'floating-vue';
 
 const props = defineProps({
@@ -264,9 +263,6 @@ const deleteItem = () => {
     <!-- Create new instructor Modal -->
     <SideModal :show="showCreateModal" @close="closeCreateModal">
         <template #title> Create new instructor </template>
-        <template #close>
-            <CloseModal @click="closeCreateModal" />
-        </template>
 
         <template #content>
             <Form :form="form_class" :submitted="storeInstructor" modal />
@@ -276,9 +272,6 @@ const deleteItem = () => {
     <!-- Update instructor Modal -->
     <SideModal :show="showEditModal" @close="closeEditModal">
         <template #title> Update instructor </template>
-        <template #close>
-            <CloseModal @click="closeEditModal" />
-        </template>
 
         <template #content>
             <Form :form="form_edit" :submitted="updateInstructors" modal />

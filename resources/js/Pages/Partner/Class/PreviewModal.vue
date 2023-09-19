@@ -1,5 +1,4 @@
 <script setup>
-import CloseModal from '@/Components/CloseModal.vue';
 import AvatarValue from '@/Components/DataTable/AvatarValue.vue';
 import SideModal from '@/Components/SideModal.vue';
 
@@ -25,9 +24,6 @@ defineEmits(['close']);
 <template>
     <SideModal :show="show" @close="$emit('close')">
         <template #title>Details</template>
-        <template #close>
-            <CloseModal @click="$emit('close')" />
-        </template>
         <template #content>
             <div class="w-full mb-4">
                 <img class="w-full rounded-md" v-if="classDetails.studio?.location?.images?.length"
