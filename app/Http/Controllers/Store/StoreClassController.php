@@ -69,9 +69,9 @@ class StoreClassController extends Controller
                 }),
             'class_types' => ClassType::select('id as value', 'title as label')->get(),
             'instructors' => User::select('id as value', 'name as label')->instructor()->get(),
-            'waivers' => $waivers,
-            'signed_waiver_ids' => UserWaiver::where('user_id', auth()->user()->id)->whereIn('waiver_id', $waivers->pluck('id'))->pluck('waiver_id')->toArray(),
-            'user_waiver_ids' => UserWaiver::where('user_id', auth()->user()->id)->whereIn('waiver_id', $waivers->pluck('id'))->pluck('id')->toArray(),
+            'waivers' => auth()->user() ? $waivers : [],
+            'signed_waiver_ids' => auth()->user() ? UserWaiver::where('user_id', auth()?->user()?->id)->whereIn('waiver_id', $waivers->pluck('id'))->pluck('waiver_id')->toArray() : [],
+            'user_waiver_ids' => auth()->user() ? UserWaiver::where('user_id', auth()?->user()?->id)->whereIn('waiver_id', $waivers->pluck('id'))->pluck('id')->toArray() : [],
         ]);
     }
 
