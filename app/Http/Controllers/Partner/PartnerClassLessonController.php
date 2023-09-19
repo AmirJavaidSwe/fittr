@@ -229,13 +229,14 @@ class PartnerClassLessonController extends Controller
     public function store(ClassFormRequest $request)
     {
         $validated = $request->validated();
+        $validated['end_date'] = Carbon::parse($validated['start_date'])->addMinutes($validated['duration']);
 
         //if class will be repeating itself, let's show preview page with a list/number of classes that will be created
         if ($request->does_repeat) {
             //parse dates:
-            $start_date = Carbon::parse($request->start_date);
-            $end_date = Carbon::parse($request->end_date);
-            $repeat_end_date = Carbon::parse($request->repeat_end_date);
+            $start_date = Carbon::parse($validated['start_date']);
+            $end_date = Carbon::parse($validated['end_date']);
+            $repeat_end_date = Carbon::parse($validated['repeat_end_date']);
             $class_duration = $start_date->diffInMinutes($end_date);
 
             // $week_days: in ISO 8601: 0 => Mon, 1 => Tue, 2 => Wed, 3 => Thu, 4 => Fri, 5 => Sat, 6 => Sun
@@ -266,11 +267,9 @@ class PartnerClassLessonController extends Controller
 
                     $class = ClassLesson::create($class_data);
 
-                    if (!empty($class_data['instructor_id'])) {
-                        $class->instructor()->sync($class_data['instructor_id']);
-                    }
+                    $class->instructor()->sync($class_data['instructor_id'] ?? []);
                 }
-                return $this->redirectBackSuccess(__('Classes created successfully'), 'partner.classes.index');
+                return $this->redirectBackSuccess(__('Classes created successfully'));
             }
 
             return Inertia::render('Partner/Class/RepeatPreview', [
@@ -290,7 +289,7 @@ class PartnerClassLessonController extends Controller
                     ],
                 ),
                 'form_data' => array_merge($validated, ['preview_confirmed' => true]),
-                'instructor' => Instructor::find($request->instructor_id),
+                'instructors' => Instructor::whereIn('id', $request->instructor_id)->get(),
                 'classtype' => ClassType::find($request->class_type_id),
                 'studio' => Studio::find($request->studio_id),
                 'class_duration' => $class_duration,
@@ -301,11 +300,9 @@ class PartnerClassLessonController extends Controller
 
         $class = ClassLesson::create($validated);
 
-        if (!empty($validated['instructor_id'])) {
-            $class->instructor()->sync($validated['instructor_id']);
-        }
+        $class->instructor()->sync($validated['instructor_id'] ?? []);
 
-        return $this->redirectBackSuccess(__('Class updated successfully'), 'partner.classes.index');
+        return $this->redirectBackSuccess(__('Class updated successfully'));
     }
 
     /**
@@ -407,12 +404,11 @@ class PartnerClassLessonController extends Controller
     public function update(ClassFormRequest $request, ClassLesson $class)
     {
         $validated = $request->validated();
+        $validated['end_date'] = Carbon::parse($validated['start_date'])->addMinutes($validated['duration']);
         $class->fill($validated);
         $class->save();
 
-        if (!empty($validated['instructor_id'])) {
-            $class->instructor()->sync($validated['instructor_id']);
-        }
+        $class->instructor()->sync($validated['instructor_id'] ?? []);
 
         return $this->redirectBackSuccess(__('Class updated successfully'));
     }
@@ -500,6 +496,7 @@ class PartnerClassLessonController extends Controller
 
         return $this->redirectBackSuccess(__('Classes updated successfully'), 'partner.classes.index');
     }
+
     public function bulkDelete(Request $request)
     {
         $validator = Validator::make($request->all(), [

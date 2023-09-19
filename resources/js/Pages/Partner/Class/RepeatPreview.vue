@@ -14,21 +14,25 @@ import {
     faRetweet,
 } from "@fortawesome/free-solid-svg-icons";
 
-const confirm = () => {
-    form.post(route("partner.classes.store"));
-};
-
 const props = defineProps({
     form_data: Object,
     class_duration: Number,
-    instructor: Object,
+    instructors: Array,
     classtype: Object,
     repeats: Array,
     repeats_count: Number,
     studio: Object,
+    business_settings: {
+        required: true,
+        type: Object,
+    },
 });
 
 const form = useForm(props.form_data);
+
+const confirm = () => {
+    form.post(route("partner.classes.store"));
+};
 </script>
 
 <template>
@@ -74,10 +78,12 @@ const form = useForm(props.form_data);
                     </template>
 
                     <template #title>
-                        {{ props.instructor.name }}
+                        <div v-for="instructor in props.instructors">
+                            {{ instructor.name }}
+                        </div>
                     </template>
 
-                    <template #default> Instructor </template>
+                    <template #default> Instructor(s) </template>
                 </CardIcon>
                 <CardIcon class="w-full sm:w-auto">
                     <template #icon>
@@ -121,7 +127,7 @@ const form = useForm(props.form_data);
                         {{ DateTime.fromISO(repeat).toFormat("cccc") }}
                     </dt>
                     <dd class="text-lg font-semibold">
-                        {{ DateTime.fromISO(repeat) }}
+                        {{DateTime.fromISO(repeat).setZone(business_settings.timezone).toFormat(business_settings.date_format.format_js + ' ' + business_settings.time_format.format_js)}}
                     </dd>
                 </div>
             </dl>

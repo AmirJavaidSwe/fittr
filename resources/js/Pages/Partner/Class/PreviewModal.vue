@@ -25,17 +25,18 @@ defineEmits(['close']);
     <SideModal :show="show" @close="$emit('close')">
         <template #title>Details</template>
         <template #content>
-            <div class="w-full mb-4">
+            <!-- <div class="w-full mb-4">
                 <img class="w-full rounded-md" v-if="classDetails.studio?.location?.images?.length"
                     :src="classDetails.studio?.location?.images[0].url" :alt="classDetails.studio?.location?.images[0]
                             .original_filename
                         " />
-            </div>
+            </div> -->
             <div class="flex flex-col">
                 <div class="flex text-3xl font-bold mb-4 items-center">
                     <div class="flex flex-grow mr-4">{{ classDetails.title }}</div>
                     <div class="flex flex-col shrink-0">
                         <div
+                            v-if="classDetails.is_free"
                             class="inline-flex text-sm font-normal rounded-lg bg-green-500 text-white p-2 justify-center mb-2">
                             Free</div>
                         <div class="inline-flex text-sm font-normal rounded-lg text-white p-2 justify-center"
