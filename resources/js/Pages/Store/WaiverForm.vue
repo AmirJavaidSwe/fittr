@@ -56,12 +56,10 @@ const signatureError = computed(() => {
     <FormSection @submitted="submitted">
         <template #form v-if="waiver !== null">
             <div class="" v-if="waiver.title">
-                <InputLabel value="Title" />
                 <p>{{ waiver.title }}</p>
             </div>
             <div class="" v-if="waiver.description">
-                <InputLabel value="Description" />
-                <p v-html="waiver.description"></p>
+                <p class="waiver-desc" v-html="waiver.description"></p>
             </div>
             <div
                 v-for="(obj, index) in form.waiverQandA"

@@ -173,10 +173,10 @@ const showQuestion = (id) => {
                         v-if="obj.description.length > 25"
                         v-tooltip="{ content: obj.description, html: true }"
                     >
-                        <span v-html="obj.description.substring(0, 25)+'...'"></span>
+                        <span class="waiver-desc" v-html="obj.description.substring(0, 25)+'...'"></span>
                     </span>
                     <span v-else>
-                        <span v-html="obj.description"></span>
+                        <span class="waiver-desc" v-html="obj.description"></span>
                     </span>
                 </table-data>
                 <table-data>

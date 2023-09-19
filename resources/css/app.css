@@ -167,3 +167,9 @@ div.iti .input-field {
 .ck-content ol, .ck-content ul {
     padding: 0 0 0 1.25rem;
 }
+
+.waiver-desc ol {
+    list-style: initial !important;
+    margin-left: 10px !important;
+    margin-right: 10px !important;
+}
