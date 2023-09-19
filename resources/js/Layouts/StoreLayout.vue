@@ -172,8 +172,7 @@ const { toast } = useSwal({flash, errors});
         <div class="bg-gray-50 md:flex md:flex-grow bg-mainBg">
             <component :is="LoggedinMenu" />
             <!-- Page Content -->
-            <main class="flex flex-col flex-grow max-w-full py-8 sm:px-6 lg:px-8 space-y-8">
-                <div>Window width: {{ windowWidth }} screen: {{ screen }}</div>
+            <main class="flex flex-col flex-grow max-w-full py-8 sm:px-6 lg:px-8 space-y-8 overflow-auto">
                 <slot />
             </main>
         </div>
