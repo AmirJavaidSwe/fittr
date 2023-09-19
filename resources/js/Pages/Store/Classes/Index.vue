@@ -661,19 +661,18 @@ const isBookable = (time) => {
                             {{ item.class_type?.title }}
                         </div>
                     </div>
-                    <div class="flex mb-4 items-center">
-                        <div class="flex mr-2 w-7 h-7">
-                            <template v-if="item?.instructor?.length">
-                                <template v-for="(
-                                        instructor, ins
-                                    ) in item?.instructor" :key="ins">
-                                    <AvatarValue
-                                        class="cursor-pointer inline-flex justify-center mr-1 text-center items-center"
-                                        :onlyTooltip="true" :title="instructor?.name ?? 'Demo Ins'
-                                            " />
-                                </template>
+                    <div class="mb-4">
+                        <template v-if="item?.instructor?.length">
+                            <template v-for="(
+                                    instructor, ins
+                                ) in item?.instructor" :key="ins">
+                                <AvatarValue
+                                    class="cursor-pointer mb-2"
+                                    :title="instructor?.name ?? 'Demo Ins'"
+                                    :useIcon="true"
+                                />
                             </template>
-                        </div>
+                        </template>
                     </div>
                     <div v-if="!item.is_booked && !item.on_waitlist" class="border-t border-gray-300"></div>
                     <div class="flex flex-wrap my-4 items-center">

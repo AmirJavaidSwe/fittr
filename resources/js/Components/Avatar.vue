@@ -1,4 +1,6 @@
 <script setup>
+import { faUserCircle } from "@fortawesome/free-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { computed } from "vue";
 
 const props = defineProps({
@@ -7,11 +9,20 @@ const props = defineProps({
         type: String,
         default: "medium",
     },
+    useIcon: {
+        type: Boolean,
+        default: false
+    },
+    imageUrl: {
+        type: String,
+        default: ''
+    },
 });
 
 const classes = computed(() => {
     let common =
-        "bg-blue p-1 text-white rounded-full flex items-center justify-center text-center uppercase font-semibold ";
+        (props.useIcon || props.imageUrl) ? "text-gray-600 flex items-center justify-center "
+        : "bg-blue p-1 text-white rounded-full flex items-center justify-center text-center uppercase font-semibold ";
 
     switch (props.size) {
         case "small":
@@ -48,7 +59,11 @@ const handleUsersInitials = (name) => {
 </script>
 
 <template>
-    <div :class="classes">
+    <div v-if="imageUrl" :class="classes">
+        <img class="w-full" :src="imageUrl" />
+    </div>
+    <FontAwesomeIcon v-else-if="useIcon" :icon="faUserCircle" :class="classes" />
+    <div v-else :class="classes">
         {{ handleUsersInitials(title) }}
     </div>
 </template>
