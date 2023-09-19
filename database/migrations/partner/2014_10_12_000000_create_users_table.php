@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('stripe_id', 255)->nullable();
             $table->string('name');
             $table->string('email');
-            $table->string('password');
+            $table->string('password')->nullable();
             $table->rememberToken();
             $table->foreignId('current_team_id')->nullable();
             $table->string('profile_photo_path', 2048)->nullable();

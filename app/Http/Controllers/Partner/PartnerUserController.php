@@ -107,12 +107,15 @@ class PartnerUserController extends Controller
     public function store(PartnerUserRequest $request)
     {
         $fields = array_merge($request->validated(), [
-            'password' => bcrypt($request->password),
+            // 'password' => bcrypt($request->password),
             "source" => auth()->user()->source,
             'business_id' => auth()->user()->business_id
         ]);
+
         $user = User::create($fields);
         $user->roles()->sync($request->roles);
+
+        $user->sendEmailVerificationNotification();
 
         if(request()->has('returnTo')) {
             return redirect()->route(request()->returnTo);

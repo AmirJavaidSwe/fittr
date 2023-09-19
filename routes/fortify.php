@@ -11,6 +11,7 @@ use Laravel\Fortify\Http\Controllers\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\NewPasswordController; //extends Laravel\Fortify\Http\Controllers\NewPasswordController
 use Laravel\Fortify\Http\Controllers\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController; //extends Laravel\Fortify\Http\Controllers\PasswordResetLinkController
+use App\Http\Controllers\Auth\VerifyEmailController;
 use Laravel\Fortify\Http\Controllers\ProfileInformationController;
 use Laravel\Fortify\Http\Controllers\RecoveryCodeController;
 use Laravel\Fortify\Http\Controllers\RegisteredUserController;
@@ -18,7 +19,6 @@ use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticatedSessionController;
 use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticationController;
 use Laravel\Fortify\Http\Controllers\TwoFactorQrCodeController;
 use Laravel\Fortify\Http\Controllers\TwoFactorSecretKeyController;
-use Laravel\Fortify\Http\Controllers\VerifyEmailController;
 use Laravel\Fortify\RoutePath;
 
 Route::group(['middleware' => config('fortify.middleware', ['web'])], function () {
@@ -90,7 +90,7 @@ Route::group(['middleware' => config('fortify.middleware', ['web'])], function (
         }
 
         Route::get(RoutePath::for('verification.verify', '/email/verify/{id}/{hash}'), [VerifyEmailController::class, '__invoke'])
-            ->middleware([$authMiddleware, 'signed', 'throttle:'.$verificationLimiter])
+            ->middleware(['signed', 'throttle:'.$verificationLimiter])
             ->name('verification.verify');
 
         Route::post(RoutePath::for('verification.send', '/email/verification-notification'), [EmailVerificationNotificationController::class, 'store'])
@@ -125,6 +125,10 @@ Route::group(['middleware' => config('fortify.middleware', ['web'])], function (
     Route::post(RoutePath::for('password.confirm', '/user/confirm-password'), [ConfirmablePasswordController::class, 'store'])
         ->middleware([$authMiddleware])
         ->name('password.confirm');
+
+    Route::post('/user/password-creation', [NewPasswordController::class, 'passwordCreation'])
+        ->middleware([$authMiddleware])
+        ->name('password.creation');
 
     // Two Factor Authentication...
     if (Features::enabled(Features::twoFactorAuthentication())) {
