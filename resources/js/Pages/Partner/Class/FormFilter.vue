@@ -1,4 +1,5 @@
 <script setup>
+import { watchEffect, watch, computed, ref, onMounted } from "vue";
 import Multiselect from "@vueform/multiselect";
 import Datepicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
@@ -15,10 +16,22 @@ const props = defineProps({
     instructors: Object,
     classtypes: Object,
     studios: Object,
+    locations: Object,
     form: {
         type: Object,
         required: true,
     },
+});
+
+const studioList = computed(() => {
+    let studios = [];
+    for (let i = 0; i < props.studios.length; i++) {
+        studios.push({
+            value: props.studios[i].id,
+            label: props.studios[i].title.split('/')[1].trim(),
+        });
+    }
+    return studios;
 });
 
 const emit = defineEmits(["reset", "submitted","close"]);
@@ -104,12 +117,29 @@ const emit = defineEmits(["reset", "submitted","close"]);
                     :groups="true"
                     :options="[{
                         label: (form.studio_id.length == Object.values(studios).length) ? 'Deselect All' : 'Select All',
-                        options: studios,
+                        options: studioList,
                     }]"
                     :searchable="true"
                     :close-on-select="true"
                     :show-labels="true"
                     placeholder="Select Studio"
+                >
+                </Multiselect>
+            </div>
+            <!-- Locations -->
+            <div class="">
+                <InputLabel for="locations" value="Locations" />
+                <Multiselect mode="tags"
+                    v-model="form.location_id"
+                    :groups="true"
+                    :options="[{
+                        label: (form.location_id.length == Object.values(locations).length) ? 'Deselect All' : 'Select All',
+                        options: locations,
+                    }]"
+                    :searchable="true"
+                    :close-on-select="true"
+                    :show-labels="true"
+                    placeholder="Select Location"
                 >
                 </Multiselect>
             </div>

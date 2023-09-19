@@ -55,7 +55,8 @@ const props = defineProps({
     statuses: Object,
     studios: Object,
     instructors: Object,
-    classtypes: Object
+    classtypes: Object,
+    locations: Object
 });
 
 const swal = useSwal();
@@ -68,6 +69,7 @@ const form = useForm({
     instructor_id: [],
     class_type_id: [],
     studio_id: [],
+    location_id: [],
     is_off_peak: "",
     runFilter: false,
     per_page: props.per_page,
@@ -106,6 +108,8 @@ const duplicateClassForm = useForm({
     does_repeat: false,
     repeat_end_date: null,
     week_days: [],
+    spaces: null,
+    use_defaults: false
 });
 
 const setOrdering = (col) => {
@@ -249,7 +253,7 @@ const handleDuplicateForm = (data) => {
     hideAllPoppers();
     showDuplicateClassModal.value = true;
     duplicateClassForm.title = data.title;
-    duplicateClassForm.status = "inactive";
+    duplicateClassForm.status = "active";
     duplicateClassForm.start_date = data.start_date;
     duplicateClassForm.end_date = data.end_date;
     duplicateClassForm.instructor_id = map(data.instructor, "id");
@@ -871,6 +875,7 @@ const emailClass = (classLesson) => {
                 :studios="studios"
                 :instructors="instructors"
                 :classtypes="classtypes"
+                :locations="locations"
                 @close="closeFilterModal"
                 @reset="resetClassFilters"
             />

@@ -62,7 +62,8 @@ class PartnerClassLessonController extends Controller
             'classType',
             'instructor',
             'waitlists',
-            'bookings' => fn($query) => $query->active()])
+            'bookings' => fn ($query) => $query->active()
+        ])
             ->orderBy($this->order_by, $this->order_dir)
             ->when($this->search, function ($query) {
                 $query->where(function ($query) {
@@ -102,7 +103,7 @@ class PartnerClassLessonController extends Controller
                 // apply instructors filters
                 if ($request->has('instructor_id') && count($request->instructor_id)) {
                     $query->where(function ($query) use ($request) {
-                        $query->whereHas('instructor', function($q) {
+                        $query->whereHas('instructor', function ($q) {
                             $q->whereIn('id', request()->instructor_id);
                         });
                     });
@@ -119,6 +120,16 @@ class PartnerClassLessonController extends Controller
                 if ($request->has('studio_id') && count($request->studio_id)) {
                     $query->where(function ($query) use ($request) {
                         $query->whereIn('studio_id', $request->studio_id);
+                    });
+                }
+                /// apply location_id filters
+                if ($request->has('location_id') && count($request->location_id)) {
+                    $query->where(function ($query) use ($request) {
+                        $query->whereIn('studio_id', function ($subQuery) use ($request) {
+                            $subQuery->select('id')
+                            ->from('studios')
+                            ->whereIn('location_id', $request->location_id);
+                        });
                     });
                 }
                 // apply off_peak filter
@@ -153,14 +164,14 @@ class PartnerClassLessonController extends Controller
                 ->orderBy('title', 'asc')
                 ->get()
                 ->map(function ($item) {
-                    $item->title = $item->location?->title .' / '. $item->title;
+                    $item->title = $item->location?->title . ' / ' . $item->title;
                     return $item;
                 }),
             'roles' => Role::select('id', 'title')->where('source', auth()->user()->source)->where('business_id', auth()->user()->business_id)->get(),
             'users' => User::select('id', 'name', 'email')->partner()->where('business_id', auth()->user()->business_id)->get(),
-            'locations' => Location::select('id', 'title')->get(),
+            'locations' => Location::pluck('title', 'id'),
             'countries' => Country::select('id', 'name')->whereStatus(1)->get(),
-            'amenities' => Amenity::select('id', 'title')->get()->map(fn($item) => ['label' => $item->title, 'value' => $item->id]),
+            'amenities' => Amenity::select('id', 'title')->get()->map(fn ($item) => ['label' => $item->title, 'value' => $item->id]),
             'systemModules' => SystemModule::with('permissions')->where('is_for', auth()->user()->source)->get(),
             'search' => $this->search,
             'per_page' => intval($this->per_page),
@@ -203,7 +214,7 @@ class PartnerClassLessonController extends Controller
                 ->orderBy('title', 'asc')
                 ->get()
                 ->map(function ($item) {
-                    $item->title = $item->location?->title .' / '. $item->title;
+                    $item->title = $item->location?->title . ' / ' . $item->title;
                     return $item;
                 }),
         ]);
@@ -380,7 +391,7 @@ class PartnerClassLessonController extends Controller
                 ->orderBy('title', 'asc')
                 ->get()
                 ->map(function ($item) {
-                    $item->title = $item->location?->title .' / '. $item->title;
+                    $item->title = $item->location?->title . ' / ' . $item->title;
                     return $item;
                 }),
         ]);
@@ -403,7 +414,7 @@ class PartnerClassLessonController extends Controller
             $class->instructor()->sync($validated['instructor_id']);
         }
 
-        return $this->redirectBackSuccess(__('Class updated successfully'), 'partner.classes.index');
+        return $this->redirectBackSuccess(__('Class updated successfully'));
     }
 
     /**
@@ -516,23 +527,25 @@ class PartnerClassLessonController extends Controller
 
 
         if ($request->start_date && $request->end_date && $request->shift_period && $request->shift_repeat) {
-            $request->validate([
-                'start_date' => 'required|date',
-                'end_date' => 'required|date',
-                'shift_period' => 'required|numeric|min:1',
-                'shift_repeat' => 'required|numeric|min:1',
-                'class_type_id' => 'nullable|numeric|min:1',
-                'studio_id' => 'nullable|numeric|min:1',
-            ],
-            [],
-            [
-                'start_date' => 'Start Date',
-                'end_date' => 'End Date',
-                'shift_period' => 'Shift Period (In Days)',
-                'shift_repeat' => 'Shift Repeat',
-                'class_type_id' => 'Class Type',
-                'studio_id' => 'Studio',
-            ]);
+            $request->validate(
+                [
+                    'start_date' => 'required|date',
+                    'end_date' => 'required|date',
+                    'shift_period' => 'required|numeric|min:1',
+                    'shift_repeat' => 'required|numeric|min:1',
+                    'class_type_id' => 'nullable|numeric|min:1',
+                    'studio_id' => 'nullable|numeric|min:1',
+                ],
+                [],
+                [
+                    'start_date' => 'Start Date',
+                    'end_date' => 'End Date',
+                    'shift_period' => 'Shift Period (In Days)',
+                    'shift_repeat' => 'Shift Repeat',
+                    'class_type_id' => 'Class Type',
+                    'studio_id' => 'Studio',
+                ]
+            );
 
             $timezone = session('business_settings.timezone');
             $start_date = Carbon::parse($request->start_date, $timezone)->startOfDay()->utc();
@@ -541,19 +554,21 @@ class PartnerClassLessonController extends Controller
             $classes = ClassLesson::with('classType', 'studio.location', 'instructor')
                 ->where('start_date', '>=', $start_date)
                 ->where('end_date', '<=', $end_date)
-                ->when($request->class_type_id, fn($query) => $query->where('class_type_id', $request->class_type_id))
-                ->when($request->studio_id, fn($query) => $query->where('studio_id', $request->studio_id))
+                ->when($request->class_type_id, fn ($query) => $query->where('class_type_id', $request->class_type_id))
+                ->when($request->studio_id, fn ($query) => $query->where('studio_id', $request->studio_id))
                 ->get()
-                ->map(function ($item) use($request) {
+                ->map(function ($item) use ($request) {
                     $item->shift_period = $request->shift_period;
 
-                    if($request->shift_repeat && $request->shift_repeat >= 1) {
+                    if ($request->shift_repeat && $request->shift_repeat >= 1) {
                         $lastDatetime = $item->start_date;
                         $newDateTimes = [];
 
                         foreach (range(1, $request->shift_repeat) as $repeat) {
-                            array_push($newDateTimes, $lastDatetime->copy()
-                                ->addDays($request->shift_period * $repeat)
+                            array_push(
+                                $newDateTimes,
+                                $lastDatetime->copy()
+                                    ->addDays($request->shift_period * $repeat)
                             );
                         }
                         $item->new_date_time = $newDateTimes;
@@ -587,42 +602,45 @@ class PartnerClassLessonController extends Controller
 
     public function storeBulkCopy(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'start_date' => 'required|date',
-            'end_date' => 'required|date',
-            'shift_period' => 'required|numeric|min:1',
-            'shift_repeat' => 'required|numeric|min:1',
-            'class_type_id' => 'nullable|numeric|min:1',
-            'studio_id' => 'nullable|numeric|min:1',
-            'ids' => 'required|array',
-        ],
-        [
-            'ids.required' => __('Class selection is required'),
-            'ids.array' => __('Invalid class selection.'),
-        ],
-        [
-            'start_date' => 'Start Date',
-            'end_date' => 'End Date',
-            'shift_period' => 'Shift Period (In Days)',
-            'shift_repeat' => 'Shift Repeat',
-            'class_type_id' => 'Class Type',
-            'studio_id' => 'Studio',
-        ]);
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'start_date' => 'required|date',
+                'end_date' => 'required|date',
+                'shift_period' => 'required|numeric|min:1',
+                'shift_repeat' => 'required|numeric|min:1',
+                'class_type_id' => 'nullable|numeric|min:1',
+                'studio_id' => 'nullable|numeric|min:1',
+                'ids' => 'required|array',
+            ],
+            [
+                'ids.required' => __('Class selection is required'),
+                'ids.array' => __('Invalid class selection.'),
+            ],
+            [
+                'start_date' => 'Start Date',
+                'end_date' => 'End Date',
+                'shift_period' => 'Shift Period (In Days)',
+                'shift_repeat' => 'Shift Repeat',
+                'class_type_id' => 'Class Type',
+                'studio_id' => 'Studio',
+            ]
+        );
 
         if ($validator->fails()) {
             $errorMsg = "";
             foreach ($validator->getMessageBag()->getMessages() as $message) {
                 $message = $message[0];
-                $errorMsg .= $message ? $message."\n" : "";
+                $errorMsg .= $message ? $message . "\n" : "";
             }
 
             return $this->redirectBackError($errorMsg);
         }
 
         $this->copied_classes_count = 0;
-        ClassLesson::with(['instructor' => fn($query) => $query->select('id')])
+        ClassLesson::with(['instructor' => fn ($query) => $query->select('id')])
             ->whereIn('id', $request->ids)
-            ->each(function($class) use ($request) {
+            ->each(function ($class) use ($request) {
                 foreach (range(1, $request->shift_repeat) as $repeat) {
                     $classModel = $class->replicate();
                     $classModel->start_date = $classModel->start_date->addDays($request->shift_period * $repeat);
@@ -636,7 +654,7 @@ class PartnerClassLessonController extends Controller
 
         $noun = Str::of('class')->plural($this->copied_classes_count);
 
-        return $this->redirectBackSuccess(__(':count new :noun have been created.', ['count' => $this->copied_classes_count, 'noun' => $noun ]), 'partner.classes.index');
+        return $this->redirectBackSuccess(__(':count new :noun have been created.', ['count' => $this->copied_classes_count, 'noun' => $noun]), 'partner.classes.index');
     }
 
     public function participants(Request $request, ClassLesson $class)
@@ -651,7 +669,7 @@ class PartnerClassLessonController extends Controller
     {
         $class->load([
             'classType', 'studio.location',
-            'bookings' => function ($query) use($request) {
+            'bookings' => function ($query) use ($request) {
                 $query->with('user')
                     ->active()
                     ->whereHas('user', fn ($subQuery) => $subQuery->whereIn('id', $request->ids));
