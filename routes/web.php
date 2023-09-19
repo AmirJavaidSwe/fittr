@@ -265,7 +265,7 @@ Route::domain('{subdomain}.'.$domain)->middleware(['auth.subdomain'])->name('ss.
             Route::post('/bookings/cancel', [StoreBookingController::class, 'cancel'])->name('bookings.cancel');
             Route::post('/bookings/add-to-waitlist', [StoreBookingController::class, 'addToWaitlist'])->name('bookings.add-to-waitlist');
             Route::post('/bookings/remove-from-waitlist', [StoreBookingController::class, 'removeFromWaitList'])->name('bookings.remove-from-waitlist');
-            Route::post('/bookings/add-self-to-waitlist', [StoreBookingController::class, 'addSelfToWaitlist'])->name('bookings.remove-from-waitlist');
+            Route::post('/bookings/add-self-to-waitlist', [StoreBookingController::class, 'addSelfToWaitlist'])->name('bookings.add-self-to-waitlist');
             Route::resource('family', FamilyMemberController::class);
             Route::post('/bookings/other-famly', [StoreBookingController::class, 'bookForOtherFamly'])->name('bookings.other-famly');
             Route::post('/bookings/cancel-all', [StoreBookingController::class, 'cancelForAllOrSelected'])->name('bookings.cancel-all');
