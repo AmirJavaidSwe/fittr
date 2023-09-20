@@ -405,13 +405,14 @@ class PartnerClassLessonController extends Controller
     {
         $validated = $request->validated();
         $validated['end_date'] = Carbon::parse($validated['start_date'])->addMinutes($validated['duration']);
+        $class->fill($validated);
+        $class->save();
+        $class->instructor()->sync($validated['instructor_id'] ?? []);
 
         if ($request->does_repeat) {
-            //parse dates:
-            $start_date = Carbon::parse($validated['start_date']);
-            $end_date = Carbon::parse($validated['end_date']);
+            $start_date = $class->start_date->copy();
+            $class_duration = $class->duration;
             $repeat_end_date = Carbon::parse($validated['repeat_end_date']);
-            $class_duration = $start_date->diffInMinutes($end_date);
 
             // $week_days: in ISO 8601: 0 => Mon, 1 => Tue, 2 => Wed, 3 => Thu, 4 => Fri, 5 => Sat, 6 => Sun
             // isoWeekday returns a number between 1 (monday) and 7 (sunday)
@@ -422,9 +423,9 @@ class PartnerClassLessonController extends Controller
             //create a period with 1 day interval
             $period = $start_date->toPeriod($repeat_end_date);
 
-            //keep period dates that match selected weekdays and keep initial donor class
-            $period->filter(function (Carbon $date) use ($week_days, $start_date) {
-                return $date->isSameDay($start_date) || in_array($date->isoWeekday(), $week_days);
+            //keep period dates that match selected weekdays but exclude donor class
+            $period->filter(function (Carbon $date) use ($week_days) {
+                return in_array($date->isoWeekday(), $week_days);
             });
 
             $repeats = array();
@@ -434,38 +435,17 @@ class PartnerClassLessonController extends Controller
 
             //preview_confirmed comes from confirmation page and if so, we need to create bulk classes and redirect back to index
             if ($request->filled('preview_confirmed')) {
-                $counter = 0;
-                foreach ($repeats as $key => $start_date) {
-                    if($key == 0) {
-                        $class->fill($validated);
-                        $class->save();
-                        $class->instructor()->sync($validated['instructor_id'] ?? []);
-                        continue;
-                    }
-                    $class_data = $validated;
-                    $class_data['start_date'] = $start_date;
-                    $class_data['end_date'] = $start_date->copy()->addMinutes($class_duration);
-
-                    $where = $class_data;
-                    unset($where['instructor_id']);
-                    unset($where['duration']);
-                    unset($where['repeat_end_date']);
-                    unset($where['week_days']);
-                    unset($where['does_repeat']);
-                    if(ClassLesson::where($where)->exists()) {
-                        $class = ClassLesson::where($where)->first();
-                        if($class) {
-                            $class->fill($class_data);
-                            $class->save();
-                            $class->instructor()->sync($class_data['instructor_id'] ?? []);
-                        }
-                    } else {
-                        $class = ClassLesson::create($class_data);
-                        $class->instructor()->sync($class_data['instructor_id'] ?? []);
-                    }
-
+                //use existing class, create repeats
+                $class_instructors = $class->instructor->pluck('id');
+                foreach ($repeats as $start_date) {
+                    $repeat_class = $class->replicate();
+                    $repeat_class->start_date = $start_date;
+                    $repeat_class->end_date = $start_date->copy()->addMinutes($class_duration);
+                    $repeat_class->save();
+                    $repeat_class->instructor()->sync($class_instructors);
                 }
-                return $this->redirectBackSuccess(__('Class update and repeat classes created successfully'), 'partner.classes.index');
+
+                return $this->redirectBackSuccess(__('Class updated and new classes created successfully'), 'partner.classes.index');
             }
 
             return Inertia::render('Partner/Class/RepeatPreview', [
@@ -493,11 +473,6 @@ class PartnerClassLessonController extends Controller
                 'repeats_count' => $period->count(),
             ]);
         }
-
-        $class->fill($validated);
-        $class->save();
-
-        $class->instructor()->sync($validated['instructor_id'] ?? []);
 
         return $this->redirectBackSuccess(__('Class updated successfully'));
     }
