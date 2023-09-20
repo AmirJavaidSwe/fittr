@@ -213,23 +213,29 @@ const removeUploadedFile = (id) => {
 const showGMCreateForm = ref(false);
 const showAmenityCreateForm = ref(false);
 const showStudioCreateForm = ref(false);
-const closeGMCreateForm = () => {
-    createForm.manager_id = "";
+const closeGMCreateForm = (data = false) => {
+    createForm.manager_id = data && data.id ? data.id : '';
     showGMCreateForm.value = false;
 };
-const closeStudioCreateForm = () => {
+const closeStudioCreateForm = (data = false) => {
     const studio_ids = createForm.studio_ids.filter(
         (item) => item != "create_new_studio"
     );
     createForm.studio_ids = studio_ids;
+    if(data && data.id) {
+        createForm.studio_ids.unshift(data.id)
+    }
     showStudioCreateForm.value = false;
 };
 
-const closeAmenityCreateForm = () => {
+const closeAmenityCreateForm = (data = false) => {
     const amenity_ids = createForm.amenity_ids.filter(
         (item) => item != "create_new_amenity"
     );
     createForm.amenity_ids = amenity_ids;
+    if(data && data.id) {
+        createForm.amenity_ids.unshift(data.id);
+    }
     showAmenityCreateForm.value = false;
 };
 </script>

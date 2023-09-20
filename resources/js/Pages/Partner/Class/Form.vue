@@ -186,6 +186,7 @@ const studioList = computed(() => {
             <div class="">
                 <InputLabel for="status" value="Status" />
                 <Multiselect
+                    id="status"
                     v-model="form.status"
                     :options="statuses"
                     :searchable="true"
@@ -211,6 +212,7 @@ const studioList = computed(() => {
             <div class="">
                 <InputLabel for="instructors" value="Instructors" />
                 <Multiselect
+                    id="instructors"
                     :mode="'tags'"
                     v-model="form.instructor_id"
                     :options="instructorsList"
@@ -239,6 +241,7 @@ const studioList = computed(() => {
             <div class="">
                 <InputLabel for="classtype" value="Class Type" />
                 <Multiselect
+                    id="classtype"
                     v-model="form.class_type_id"
                     :options="classTypeList"
                     :searchable="true"
@@ -264,6 +267,7 @@ const studioList = computed(() => {
             <div class="">
                 <InputLabel for="studios" value="Studio" />
                 <Multiselect
+                    id="studios"
                     v-model="form.studio_id"
                     :options="studioList"
                     :searchable="true"
@@ -308,7 +312,7 @@ const studioList = computed(() => {
             </div>
 
             <!-- repeat -->
-            <div v-if="isNew || isDuplicate">
+            <div>
                 <Switcher
                     v-model="form.does_repeat"
                     title="Repeat"

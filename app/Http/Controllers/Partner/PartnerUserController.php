@@ -115,7 +115,8 @@ class PartnerUserController extends Controller
         $user->roles()->sync($request->roles);
 
         if(request()->has('returnTo')) {
-            return redirect()->route(request()->returnTo);
+            $extra = array('gm' => $user);
+            return redirect()->route(request()->returnTo)->with('extra', $extra);
         }
 
         return $this->redirectBackSuccess(__('User created'), 'partner.users.index');

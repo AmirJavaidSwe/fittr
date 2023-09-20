@@ -26,11 +26,13 @@ class ArrayFieldExistsInDatabase implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $count = DB::connection($this->connection)->table($this->table)
-            ->whereIn($this->field, $value)
-            ->count();
-        if (!$count) {
-            $fail('The selected :attribute do not exist in the database.');
+        if(!empty($value)) {
+            $count = DB::connection($this->connection)->table($this->table)
+                ->whereIn($this->field, $value)
+                ->count();
+            if (!$count) {
+                $fail('The selected :attribute do not exist in the database.');
+            }
         }
     }
 }

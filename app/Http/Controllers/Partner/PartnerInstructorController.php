@@ -96,10 +96,11 @@ class PartnerInstructorController extends Controller
                 'password' => Hash::make('password'),
             ]
         );
-        Instructor::create($fields); //TODO: Security issue
+        $instructor = Instructor::create($fields); //TODO: Security issue
 
         if(request()->has('returnTo')) {
-            return redirect()->route(request()->returnTo);
+            $extra = array('instructor' => $instructor);
+            return redirect()->route(request()->returnTo)->with('extra', $extra);
         }
 
         return $this->redirectBackSuccess(__('Instructor created successfully'), 'partner.instructors.index');

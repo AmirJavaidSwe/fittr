@@ -106,10 +106,10 @@ watchEffect(() => {
     showInstructorCreateForm.value = showInstructorCreateFormPropRef.value
 });
 
-const closeInstructorCreateForm = () => {
+const closeInstructorCreateForm = (data = false) => {
     createInstructorFrom.reset().clearErrors();
     showInstructorCreateForm.value = false;
-    emit('closeInstructorCreateForm')
+    emit('closeInstructorCreateForm', data)
 };
 
 const createInstructorFrom = useForm({
@@ -125,9 +125,9 @@ const storeInstructor = () => {
         }))
         .post(route("partner.instructors.store"), {
             preserveScroll: true,
-            onSuccess: () => {
+            onSuccess: (res) => {
+                closeInstructorCreateForm(res.props.extra.instructor)
                 getResources()
-                closeInstructorCreateForm()
             },
         });
 };
@@ -137,10 +137,10 @@ const showClassTypeCreateForm = ref(showClassTypeCreateFormPropRef.value);
 watchEffect(() => {
     showClassTypeCreateForm.value = showClassTypeCreateFormPropRef.value
 });
-const closeClassTypeCreateForm = () => {
+const closeClassTypeCreateForm = (data = false) => {
     createClassTypeFrom.reset().clearErrors();
     showClassTypeCreateForm.value = false;
-    emit('closeClassTypeCreateForm')
+    emit('closeClassTypeCreateForm', data)
 };
 const createClassTypeFrom = useForm({
     title: null,
@@ -156,8 +156,8 @@ const storeClassType = () => {
         }))
         .post(route("partner.classtypes.store"), {
             preserveScroll: true,
-            onSuccess: () => {
-                closeClassTypeCreateForm();
+            onSuccess: (res) => {
+                closeClassTypeCreateForm(res.props.extra.class_type)
                 getResources();
             }
         });
@@ -173,11 +173,11 @@ const showLocationCreateFormFn = () => {
     createLocationFrom.reset().clearErrors();
     showLocationCreateForm.value = true
 };
-const closeLocationCreateForm = () => {
+const closeLocationCreateForm = (data = false) => {
     showLocationCreateForm.value = false;
     createLocationFrom.reset().clearErrors();
-    createStudioForm.location_id = null
-    emit('closeLocationCreateForm');
+    createStudioForm.location_id = (data && data.id) ? data.id : null
+    emit('closeLocationCreateForm', data);
 };
 
 const createLocationFrom = useForm({
@@ -205,11 +205,10 @@ const storeLocation = () => {
         }))
         .post(route("partner.locations.store"), {
             preserveScroll: true,
-            onSuccess: () => [
-                createLocationFrom.reset().clearErrors(),
-                closeLocationCreateForm(),
-                (createStudioForm.location_id = null),
-            ],
+            onSuccess: (res) => {
+                getResources();
+                closeLocationCreateForm(res.props.extra.location);
+            }
         });
 };
 
@@ -241,11 +240,11 @@ const showGmCreateFormFn = () => {
     showGmCreateForm.value = true
 };
 
-const closeGMCreateForm = () => {
+const closeGMCreateForm = (data = false) => {
     createGmFrom.reset().clearErrors();
     showGmCreateForm.value = false;
-    createLocationFrom.manager_id = ''
-    emit('closeGmCreateForm')
+    createLocationFrom.manager_id = data && data.id ? data.id : ''
+    emit('closeGmCreateForm', data)
 };
 const createGmFrom = useForm({
     name: "",
@@ -266,9 +265,9 @@ const storeGM = () => {
         }))
         .post(route("partner.users.store"), {
             preserveScroll: true,
-            onSuccess: () => {
+            onSuccess: (res) => {
+                closeGMCreateForm(res.props.extra.gm);
                 getResources();
-                closeGMCreateForm();
             }
         });
 };
@@ -317,12 +316,16 @@ const showAmenityCreateFormFn = () => {
     showAmenityCreateForm.value = true;
 };
 
-const closeAmenityCreateForm = () => {
+const closeAmenityCreateForm = (data = false) => {
     createAmenityFrom.reset().clearErrors();
     showAmenityCreateForm.value = false;
     const filtered = createLocationFrom.amenity_ids.filter((item) => item != 'create_new_amenity')
     createLocationFrom.amenity_ids = filtered
-    emit('closeAmenityCreateForm')
+    if(data && data.id) {
+        createLocationFrom.amenity_ids.unshift(data.id)
+    }
+
+    emit('closeAmenityCreateForm', data)
 };
 const createAmenityFrom = useForm({
     title: "",
@@ -337,9 +340,9 @@ const storeAmenity = () => {
         }))
         .post(route(`partner.amenity.store`), {
             preserveScroll: true,
-            onSuccess: () => {
+            onSuccess: (res) => {
+                closeAmenityCreateForm(res.props.extra.amenity)
                 getResources();
-                closeAmenityCreateForm()
             },
         });
 };
@@ -352,10 +355,10 @@ watchEffect(() => {
 });
 
 
-const closeStudioCreateForm = () => {
+const closeStudioCreateForm = (data = false) => {
     createStudioForm.reset().clearErrors();
     showStudioCreateForm.value = false;
-    emit('closeStudioCreateForm')
+    emit('closeStudioCreateForm', data)
 };
 
 const createStudioForm = useForm({
@@ -372,8 +375,8 @@ const storeStudio = () => {
         }))
         .post(route("partner.studios.store"), {
             preserveScroll: true,
-            onSuccess: () => {
-                closeStudioCreateForm();
+            onSuccess: (res) => {
+                closeStudioCreateForm(res.props.extra.studio);
                 getResources();
             }
         });

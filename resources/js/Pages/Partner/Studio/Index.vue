@@ -166,10 +166,10 @@ const deleteItem = () => {
 };
 
 const showLocationCreateForm = ref(false);
-const closeLocationCreateForm = () => {
+const closeLocationCreateForm = (data = false) => {
     showLocationCreateForm.value = false;
-    form_class.location_id = null;
-    form_edit.location_id = null;
+    form_class.location_id = (data && data.id) ? data.id: null;
+    form_edit.location_id = (data && data.id) ? data.id : null;
 };
 
 const locationList = computed(() => {

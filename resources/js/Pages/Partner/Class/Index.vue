@@ -218,7 +218,7 @@ const closeDuplicateClassModal = () => {
     duplicateClassForm.reset().clearErrors();
 };
 
-let formEdit = useForm({
+const formEdit = useForm({
     id: null,
     title: null,
     status: null,
@@ -230,6 +230,9 @@ let formEdit = useForm({
     is_off_peak: null,
     is_free: false,
     use_defaults: false,
+    does_repeat: false,
+    repeat_end_date: null,
+    week_days: [],
     spaces: null,
     default_spaces: null,
 });
@@ -340,7 +343,7 @@ const showLink = (exporting) => {
 
 const showInstructorCreateForm = ref(false);
 
-const closeInstructorCreateForm = () => {
+const closeInstructorCreateForm = (data = false) => {
     showInstructorCreateForm.value = false
     let filtered = form_class.instructor_id.filter((item) => item != 'create_new_instructor')
     form_class.instructor_id = filtered
@@ -350,24 +353,30 @@ const closeInstructorCreateForm = () => {
     formBulkEdit.instructor_id = filtered
     filtered = duplicateClassForm.instructor_id.filter((item) => item != 'create_new_instructor')
     duplicateClassForm.instructor_id = filtered
+    if(data && data.id) {
+        form_class.instructor_id.unshift(data.id)
+        formEdit.instructor_id.unshift(data.id)
+        formBulkEdit.instructor_id.unshift(data.id)
+        duplicateClassForm.instructor_id.unshift(data.id)
+    }
 };
 
 const showClassTypeCreateForm = ref(false);
-const closeClassTypeCreateForm = () => {
+const closeClassTypeCreateForm = (data = false) => {
     showClassTypeCreateForm.value = false
-    form_class.class_type_id = null
-    formEdit.class_type_id = null
-    formBulkEdit.class_type_id = null
-    duplicateClassForm.class_type_id = null
+    form_class.class_type_id = (data && data.id) ? data.id : null
+    formEdit.class_type_id = (data && data.id) ? data.id : null
+    formBulkEdit.class_type_id = (data && data.id) ? data.id : null
+    duplicateClassForm.class_type_id = (data && data.id) ? data.id : null
 };
 
 const showStudioCreateForm = ref(false);
-const closeStudioCreateForm = () => {
+const closeStudioCreateForm = (data = false) => {
     showStudioCreateForm.value = false;
-    form_class.studio_id = null
-    formEdit.studio_id = null
-    formBulkEdit.studio_id = null
-    duplicateClassForm.studio_id = null
+    form_class.studio_id = (data && data.id) ? data.id : null
+    formEdit.studio_id = (data && data.id) ? data.id : null
+    formBulkEdit.studio_id = (data && data.id) ? data.id : null
+    duplicateClassForm.studio_id = (data && data.id) ? data.id : null
 };
 const createStudioFrom = useForm({
     title: null,
@@ -474,6 +483,8 @@ const formBulkEdit = useForm({
     instructor_id: [],
     class_type_id: null,
     studio_id: null,
+    use_defaults: true,
+    spaces: null,
     password: null,
 });
 const showBulkDeleteConfirmationModal = ref(false);

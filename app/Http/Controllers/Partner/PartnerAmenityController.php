@@ -105,10 +105,11 @@ class PartnerAmenityController extends Controller
      */
     public function store(AmenityRequest $request)
     {
-        Amenity::create($request->validated());
+        $amenity = Amenity::create($request->validated());
 
         if(request()->has('returnTo')) {
-            return redirect()->route(request()->returnTo);
+            $extra = array('amenity' => $amenity);
+            return redirect()->route(request()->returnTo)->with('extra', $extra);
         }
 
         return $this->redirectBackSuccess(__('Amenity created successfully'), 'partner.amenity.index');

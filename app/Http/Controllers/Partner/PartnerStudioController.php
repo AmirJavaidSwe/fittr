@@ -107,10 +107,11 @@ class PartnerStudioController extends Controller
      */
     public function store(StudioFormRequest $request)
     {
-        Studio::create($request->validated());
+        $studio = Studio::create($request->validated());
 
         if(request()->has('returnTo')) {
-            return redirect()->route(request()->returnTo);
+            $extra = array('studio' => $studio);
+            return redirect()->route(request()->returnTo)->with('extra', $extra);
         }
 
         return $this->redirectBackSuccess(__('Studio created successfully'), 'partner.studios.index');

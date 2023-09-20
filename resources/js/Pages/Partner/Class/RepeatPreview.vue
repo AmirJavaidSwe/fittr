@@ -30,8 +30,14 @@ const props = defineProps({
 
 const form = useForm(props.form_data);
 
+console.log(props.form_data)
+
 const confirm = () => {
-    form.post(route("partner.classes.store"));
+    if(props.form_data.is_edit) {
+        form.put(route("partner.classes.update", props.form_data.edit_class.id));
+    } else {
+        form.post(route("partner.classes.store"));
+    }
 };
 </script>
 

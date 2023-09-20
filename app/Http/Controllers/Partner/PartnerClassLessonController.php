@@ -269,7 +269,7 @@ class PartnerClassLessonController extends Controller
 
                     $class->instructor()->sync($class_data['instructor_id'] ?? []);
                 }
-                return $this->redirectBackSuccess(__('Classes created successfully'));
+                return $this->redirectBackSuccess(__('Classes created successfully'), 'partner.classes.index');
             }
 
             return Inertia::render('Partner/Class/RepeatPreview', [
@@ -405,6 +405,95 @@ class PartnerClassLessonController extends Controller
     {
         $validated = $request->validated();
         $validated['end_date'] = Carbon::parse($validated['start_date'])->addMinutes($validated['duration']);
+
+        if ($request->does_repeat) {
+            //parse dates:
+            $start_date = Carbon::parse($validated['start_date']);
+            $end_date = Carbon::parse($validated['end_date']);
+            $repeat_end_date = Carbon::parse($validated['repeat_end_date']);
+            $class_duration = $start_date->diffInMinutes($end_date);
+
+            // $week_days: in ISO 8601: 0 => Mon, 1 => Tue, 2 => Wed, 3 => Thu, 4 => Fri, 5 => Sat, 6 => Sun
+            // isoWeekday returns a number between 1 (monday) and 7 (sunday)
+            $week_days = array_map(function ($v) {
+                return $v + 1;
+            }, $request->week_days);
+
+            //create a period with 1 day interval
+            $period = $start_date->toPeriod($repeat_end_date);
+
+            //keep period dates that match selected weekdays and keep initial donor class
+            $period->filter(function (Carbon $date) use ($week_days, $start_date) {
+                return $date->isSameDay($start_date) || in_array($date->isoWeekday(), $week_days);
+            });
+
+            $repeats = array();
+            foreach ($period as $date) {
+                $repeats[] = $date;
+            }
+
+            //preview_confirmed comes from confirmation page and if so, we need to create bulk classes and redirect back to index
+            if ($request->filled('preview_confirmed')) {
+                $counter = 0;
+                foreach ($repeats as $key => $start_date) {
+                    if($key == 0) {
+                        $class->fill($validated);
+                        $class->save();
+                        $class->instructor()->sync($validated['instructor_id'] ?? []);
+                        continue;
+                    }
+                    $class_data = $validated;
+                    $class_data['start_date'] = $start_date;
+                    $class_data['end_date'] = $start_date->copy()->addMinutes($class_duration);
+
+                    $where = $class_data;
+                    unset($where['instructor_id']);
+                    unset($where['duration']);
+                    unset($where['repeat_end_date']);
+                    unset($where['week_days']);
+                    unset($where['does_repeat']);
+                    if(ClassLesson::where($where)->exists()) {
+                        $class = ClassLesson::where($where)->first();
+                        if($class) {
+                            $class->fill($class_data);
+                            $class->save();
+                            $class->instructor()->sync($class_data['instructor_id'] ?? []);
+                        }
+                    } else {
+                        $class = ClassLesson::create($class_data);
+                        $class->instructor()->sync($class_data['instructor_id'] ?? []);
+                    }
+
+                }
+                return $this->redirectBackSuccess(__('Class update and repeat classes created successfully'), 'partner.classes.index');
+            }
+
+            return Inertia::render('Partner/Class/RepeatPreview', [
+                'page_title' => __('Confirm classes'),
+                'header' => array(
+                    [
+                        'title' => __('Classes'),
+                        'link' => route('partner.classes.index'),
+                    ],
+                    [
+                        'title' => '/',
+                        'link' => null,
+                    ],
+                    [
+                        'title' => __('Review and confirm'),
+                        'link' => null,
+                    ],
+                ),
+                'form_data' => array_merge($validated, ['preview_confirmed' => true, 'is_edit' => true, 'edit_class' => $class]),
+                'instructors' => Instructor::whereIn('id', $request->instructor_id)->get(),
+                'classtype' => ClassType::find($request->class_type_id),
+                'studio' => Studio::find($request->studio_id),
+                'class_duration' => $class_duration,
+                'repeats' => $repeats,
+                'repeats_count' => $period->count(),
+            ]);
+        }
+
         $class->fill($validated);
         $class->save();
 
@@ -472,10 +561,10 @@ class PartnerClassLessonController extends Controller
     public function bulkEdit(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'status' => ['required', new Enum(ClassStatus::class)],
-            'instructor_id' => ['required', 'array', new ArrayFieldExistsInDatabase('mysql_partner', 'users', 'id')],
-            'class_type_id' => 'required|integer|exists:mysql_partner.class_types,id',
-            'studio_id' => 'required|integer|exists:mysql_partner.studios,id',
+            'status' => ['nullable', new Enum(ClassStatus::class)],
+            'instructor_id' => ['nullable', 'array', new ArrayFieldExistsInDatabase('mysql_partner', 'users', 'id')],
+            'class_type_id' => 'nullable|integer|exists:mysql_partner.class_types,id',
+            'studio_id' => 'nullable|integer|exists:mysql_partner.studios,id',
             'password' => ['required', new UserPasswordMatch],
         ]);
 
@@ -487,11 +576,22 @@ class PartnerClassLessonController extends Controller
         $classes = ClassLesson::whereIn('id', request()->ids)->get();
 
         foreach ($classes as $k => $class) {
-            $class->studio_id = request()->studio_id;
-            $class->class_type_id = request()->class_type_id;
-            $class->status = request()->status;
+            if(request()->studio_id) {
+                $class->studio_id = request()->studio_id;
+            }
+            if(request()->use_defaults == false) {
+                $class->spaces = request()->spaces;
+            }
+            if(request()->class_type_id) {
+                $class->class_type_id = request()->class_type_id;
+            }
+            if(request()->status) {
+                $class->status = request()->status;
+            }
             $class->save();
-            $class->instructor()->sync(request()->instructor_id);
+            if(!empty(request()->instructor_id)) {
+                $class->instructor()->sync(request()->instructor_id);
+            }
         }
 
         return $this->redirectBackSuccess(__('Classes updated successfully'), 'partner.classes.index');

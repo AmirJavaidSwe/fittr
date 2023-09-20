@@ -136,7 +136,8 @@ class PartnerLocationController extends Controller
             $this->uploadFiles($request->file('image'), $location, 'images/location');
 
             if(request()->has('returnTo')) {
-                return redirect()->route(request()->returnTo);
+                $extra = array('location' => $location);
+                return redirect()->route(request()->returnTo)->with('extra', $extra);
             }
 
             return $this->redirectBackSuccess(__('Location created successfully'), 'partner.locations.index');

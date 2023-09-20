@@ -106,10 +106,11 @@ class PartnerClassTypeController extends Controller
      */
     public function store(ClasstypeFormRequest $request)
     {
-        ClassType::create($request->validated());
+        $class_type = ClassType::create($request->validated());
 
         if(request()->has('returnTo')) {
-            return redirect()->route(request()->returnTo);
+            $extra = array('class_type' => $class_type);
+            return redirect()->route(request()->returnTo)->with('extra', $extra);
         }
 
         return $this->redirectBackSuccess(__('Class Type created successfully'));

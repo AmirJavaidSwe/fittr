@@ -90,6 +90,15 @@ const studioList = computed(() => {
     })
     return newStudioList;
 });
+
+const defaultCapacity = computed(() => {
+    const studio = props.studios.filter(item => props.form.studio_id == item.id)[0];
+    if(studio) {
+        const classTypeStudio = studio.class_type_studios.filter(item => props.form.class_type_id == item.class_type_id)[0];
+        return classTypeStudio?.spaces ?? 0;
+    }
+    return 0;
+});
 </script>
 
 <template>
@@ -99,6 +108,7 @@ const studioList = computed(() => {
             <div class="">
                 <InputLabel for="status" value="Status" />
                 <Multiselect
+                    :autocomplete="'off'"
                     v-model="form.status"
                     :options="statuses"
                     :searchable="true"
@@ -123,6 +133,7 @@ const studioList = computed(() => {
             <div class="">
                 <InputLabel for="instructors" value="Instructors" />
                 <Multiselect
+                    :autocomplete="'off'"
                     mode="tags"
                     v-model="form.instructor_id"
                     :options="instructorsList"
@@ -159,6 +170,7 @@ const studioList = computed(() => {
             <div class="">
                 <InputLabel for="classtype" value="Class Type" />
                 <Multiselect
+                    :autocomplete="'off'"
                     v-model="form.class_type_id"
                     :options="classTypeList"
                     :searchable="true"
@@ -184,6 +196,7 @@ const studioList = computed(() => {
             <div class="">
                 <InputLabel for="studios" value="Studio" />
                 <Multiselect
+                    :autocomplete="'off'"
                     v-model="form.studio_id"
                     :options="studioList"
                     :searchable="true"
@@ -207,6 +220,29 @@ const studioList = computed(() => {
                 <InputError :message="form.errors.studio_id" class="mt-2" />
             </div>
 
+            <div class="">
+                <InputLabel
+                    value="Class Capacity"
+                    class="mb-2"
+                />
+
+                <div class="flex justify-between mt-1 items-center">
+                    <div v-if="form.use_defaults" class="mr-2">Class pre-defined spaces</div>
+                    <ButtonLink v-if="form.use_defaults" type="button" size="small" styling="secondary" @click="form.use_defaults = false">Change</ButtonLink>
+                    <TextInput
+                        v-else
+                        id="title"
+                        v-model="form.spaces"
+                        type="number"
+                        min="1"
+                        max="1000"
+                        class="mr-2 block w-full"
+                    />
+                </div>
+
+
+            </div>
+
             <div class="mt-4">
                 <InputLabel for="password" value="Your Password" class="mb-1" />
                 <div class="relative">
@@ -215,7 +251,7 @@ const studioList = computed(() => {
                         id="password"
                         v-model="form.password"
                         class="mt-1 block w-full"
-                        autocomplete="current-password"
+                        autocomplete="off"
                     />
                     <button
                         type="button"
