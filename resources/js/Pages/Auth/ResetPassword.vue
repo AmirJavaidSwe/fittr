@@ -47,10 +47,6 @@ const inputConfirmPasswordType = computed(() => (showConfirmPassword.value ? "te
                 <div class="mb-4 text-sm text-gray-600">
                     <h3 class="mt-3 mb-3 text-2xl"><strong>Reset Password</strong></h3>
                 </div>
-
-                <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
-                    {{ status }}
-                </div>
                 <form @submit.prevent="submit">
             <div>
                 <InputLabel for="email" value="Email" />
