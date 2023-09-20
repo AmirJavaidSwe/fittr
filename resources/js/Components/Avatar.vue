@@ -7,7 +7,7 @@ const props = defineProps({
     title: String,
     size: {
         type: String,
-        default: "medium",
+        default: "small",
     },
     useIcon: {
         type: Boolean,
@@ -25,16 +25,18 @@ const classes = computed(() => {
         : "bg-blue p-1 text-white rounded-full flex items-center justify-center text-center uppercase font-semibold ";
 
     switch (props.size) {
+        case "xs":
+            common += "w-5 h-5 text-sm";
         case "small":
-            common += "w-7 h-7 2xl:w-9 2xl:h-9 text-sm 2xl:text-lg";
+            common += "w-7 h-7 text-sm";
             break;
         case "medium":
             common +=
-                "w-10 h-10 2xl:w-12 2xl:h-12 text-md lg:text-md 2xl:text-lg";
+                "w-10 h-10 text-md";
             break;
         case "large":
             common +=
-                "w-14 h-14 2xl:w-16 2xl:h-16 text-lg lg:text-lg 2xl:text-xl";
+                "w-14 h-14 text-lg";
             break;
 
         default:

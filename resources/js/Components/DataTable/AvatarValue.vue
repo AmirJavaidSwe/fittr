@@ -16,12 +16,16 @@ const props = defineProps({
         type: String,
         default: ''
     },
+    size: {
+        type: String,
+        required: false,
+    },
 });
 </script>
 
 <template>
     <span class="flex items-center">
-        <Avatar :title="title" size="small" v-tooltip="title" :useIcon="useIcon" :imageUrl="imageUrl" />
+        <Avatar :title="title" :size="size" v-tooltip="title" :useIcon="useIcon" :imageUrl="imageUrl" />
         <span v-if="!onlyTooltip" class="ml-2">{{ title }}</span>
     </span>
 </template>

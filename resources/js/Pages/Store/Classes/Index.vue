@@ -606,11 +606,9 @@ const isBookable = (time) => {
                         hidden:
                             form.is_off_peak &&
                             item.is_off_peak != form.is_off_peak,
-                        'border border-blue-500 bg-gray-200':
-                            classDetails.id == item.id && !item.on_waitlist && !item.is_booked,
+                        'border border-primary-500 bg-gray-200': classDetails.id == item.id && !item.on_waitlist && !item.is_booked,
                         'opacity-30': !isBookable(item.end_date),
-                        'border border-black hover:border-blue-500 bg-white':
-                            !item.on_waitlist && !item.is_booked && classDetails.id != item.id,
+                        'border border-black hover:border-primary-500 bg-white': !item.on_waitlist && !item.is_booked && classDetails.id != item.id,
                         'shadow-md': item.is_booked || item.on_waitlist,
                     }" :style="{
     backgroundColor: item.is_booked ? 'rgba(41, 181, 128, 0.5)'
@@ -661,15 +659,14 @@ const isBookable = (time) => {
                             {{ item.class_type?.title }}
                         </div>
                     </div>
-                    <div class="mb-4">
+                    <div class="mb-4 space-y-1">
                         <template v-if="item?.instructor?.length">
-                            <template v-for="(
-                                    instructor, ins
-                                ) in item?.instructor" :key="ins">
+                            <template v-for="(instructor, ins) in item?.instructor" :key="ins">
                                 <AvatarValue
-                                    class="cursor-pointer mb-2"
-                                    :title="instructor?.name ?? 'Demo Ins'"
+                                    class="cursor-pointer"
+                                    :title="instructor?.name"
                                     :useIcon="true"
+                                    size="xs"
                                 />
                             </template>
                         </template>
