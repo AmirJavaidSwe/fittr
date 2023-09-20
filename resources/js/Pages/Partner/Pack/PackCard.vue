@@ -35,7 +35,7 @@ defineEmits(['copy', 'toggle', 'delete']);
                 'border-secondary-600': pack.type == 'class_lesson',
                 'border-blue-600': pack.type == 'service',
                 'border-secondary-100': pack.type == 'hybrid',
-                'border-primary-400': pack.type == 'default',
+                'border-primary-400': pack.type == 'location_pass',
                 'border-cyan-500': pack.type == 'corporate',
             }">
         <div v-if="pack.type == 'hybrid'" class="absolute bg-gradient-to-r from-secondary-600 h-2 inset-x-0 top-[-8px] rounded-tl-md rounded-tr-md to-blue-600 w-full"></div>

@@ -30,12 +30,12 @@ const emit = defineEmits(['close', 'isFamilyBooking', 'bookForOtherFamilyMembers
     <SideModal :show="props.show" @close="$emit('close')">
         <template #title>Details</template>
         <template #content>
-            <div class="w-full mb-4">
+            <!-- <div class="w-full mb-4">
                 <img class="w-full rounded-md" v-if="props.classDetails.studio?.location?.images?.length"
                     :src="props.classDetails.studio?.location?.images[0].url" :alt="props.classDetails.studio?.location?.images[0]
                             .original_filename
                         " />
-            </div>
+            </div> -->
             <div class="flex flex-col">
                 <div class="flex text-3xl font-bold mb-4 items-center">
                     <div class="flex flex-grow mr-4">{{ props.classDetails.title }}</div>
@@ -49,15 +49,17 @@ const emit = defineEmits(['close', 'isFamilyBooking', 'bookForOtherFamilyMembers
 
                 <div class="flex flex-row mb-4">
                     <div class="flex flex-row">
-                        <div class="flex mr-2">
+                        <div class="flex flex-col mr-2">
                             <!-- <img src="" class="inline-block rounded-xl w-full h-full bg-gray-500" alt="User" /> -->
                             <template v-if="classDetails?.instructor.length">
                                 <template v-for="(
                                         instructor, ins
                                     ) in classDetails?.instructor" :key="ins">
                                     <AvatarValue
-                                        class="cursor-pointer inline-flex justify-center mr-1 text-center items-center"
-                                        :onlyTooltip="true" :title="instructor?.name ?? 'Demo Ins'" />
+                                        class="cursor-pointer mb-3"
+                                        :title="instructor?.name ?? 'Demo Ins'"
+                                        :useIcon="true"
+                                    />
                                 </template>
                             </template>
                         </div>

@@ -84,7 +84,7 @@ const inputPasswordType = computed(() =>
                 />
                 <InputError :message="form.errors.email" class="mt-2" />
             </div>
-            <div class="col-span-6 sm:col-span-4">
+            <!-- <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="password" value="Password" />
                 <div class="relative">
                     <TextInput
@@ -110,7 +110,7 @@ const inputPasswordType = computed(() =>
                     </button>
                 </div>
                 <InputError :message="form.errors.password" class="mt-2" />
-            </div>
+            </div> -->
             <div class="flex flex-row items-center justify-start">
                 <Checkbox
                     id="is_super_admin"

@@ -96,10 +96,13 @@ class PartnerMemberController extends Controller
             $request->validated(),
             [
                 'role' => PartnerUserRole::MEMBER->value,
-                'password' => Hash::make('password'),
+                // 'password' => Hash::make('password'),
             ]
         );
-        User::create($fields);
+
+        $user = User::create($fields);
+
+        $user->sendEmailVerificationNotification();
 
         return $this->redirectBackSuccess(__('Member created successfully'), 'partner.members.index');
     }

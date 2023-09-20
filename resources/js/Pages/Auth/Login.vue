@@ -50,7 +50,7 @@ const inputPasswordType = computed(() =>
                 <AuthenticationCardLogo class="flex justify-center pt-8 sm:pt-0" />
             </template>
 
-            <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
+            <div v-if="status" class="mb-4 font-bold text-sm text-green-600 text-center">
                 {{ status }}
             </div>
 

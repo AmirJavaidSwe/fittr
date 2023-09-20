@@ -23,7 +23,7 @@ class FortifyServiceProvider extends ServiceProvider
      * @return void
      */
     public function register()
-    {        
+    {
         Fortify::ignoreRoutes();
 
         $host = request()->host();
@@ -32,7 +32,7 @@ class FortifyServiceProvider extends ServiceProvider
         $this->app->instance(LoginResponse::class, new class implements LoginResponse {
             public function toResponse($request)
             {
-                $url = empty(config('subdomain')) ? 
+                $url = empty(config('subdomain')) ?
                     route($request->user()?->dashboard_route) :
                     route($request->user()?->dashboard_route, ['subdomain' => config('subdomain.name')]);
 
@@ -43,7 +43,7 @@ class FortifyServiceProvider extends ServiceProvider
         $this->app->instance(TwoFactorLoginResponse::class, new class implements TwoFactorLoginResponse {
             public function toResponse($request)
             {
-                $url = empty(config('subdomain')) ? 
+                $url = empty(config('subdomain')) ?
                     route($request->user()?->dashboard_route) :
                     route($request->user()?->dashboard_route, ['subdomain' => config('subdomain.name')]);
 

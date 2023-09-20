@@ -95,7 +95,7 @@ const closeUserCreateModal = () => {
 const createUserFrom = useForm({
     name: "",
     email: "",
-    password: "",
+    // password: "",
     is_super: true,
     roles: [],
 });

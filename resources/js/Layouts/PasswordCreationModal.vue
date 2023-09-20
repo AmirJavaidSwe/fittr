@@ -1,61 +1,53 @@
 <script setup>
-import { ref, computed } from 'vue';
-import { Head, useForm } from '@inertiajs/vue3';
-import AuthenticationCard from '@/Components/AuthenticationCard.vue';
-import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
+import SideModal from '@/Components/SideModal.vue';
 import TextInput from '@/Components/TextInput.vue';
-import ButtonLink from '@/Components/ButtonLink.vue';
-import AuthBackground from "@/Components/AuthBackground.vue";
+import { useForm, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
+import { ref } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faEye,faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import ButtonLink from '@/Components/ButtonLink.vue';
+import CloseModal from '@/Components/CloseModal.vue';
 
-const props = defineProps({
-    email: String,
-    token: String,
-});
+
+const show = ref(usePage().props?.extra?.show_password_creation ?? false);
+
+const close = () => {
+    show.value = false;
+}
 
 const form = useForm({
-    token: props.token,
-    email: props.email,
     password: '',
     password_confirmation: '',
 });
-
-const submit = () => {
-    form.post(route('password.update'), {
-        onFinish: () => form.reset('password', 'password_confirmation'),
-    });
-};
 
 const showPassword = ref(false);
 const showConfirmPassword = ref(false);
 const inputPasswordType = computed(() => (showPassword.value ? "text" : "password"));
 const inputConfirmPasswordType = computed(() => (showConfirmPassword.value ? "text" : "password"));
+
+const createPassword = () => {
+    form.post(route('password.creation'), {
+        onSuccess: () => {
+            form.reset('password', 'password_confirmation');
+            close();
+        },
+    });
+}
+
 </script>
 
 <template>
-    <Head title="Reset Password" />
+    <SideModal :show="show" @close="close">
+        <template #title> Create New Password </template>
+        <template #close>
+            <CloseModal @click="close" />
+        </template>
 
-    <div class="flex flex-col lg:flex-row rounded-xl mx-auto min-h-screen">
-        <AuthenticationCard class="pt-8">
-            <template #logo>
-                <AuthenticationCardLogo class="flex justify-center pt-8 sm:pt-0" />
-            </template>
-            <div class="w-96 mx-auto bg-white p-5 rounded-lg max-[500px]:w-full">
-                <div class="mb-4 text-sm text-gray-600">
-                    <h3 class="mt-3 mb-3 text-2xl"><strong>Reset Password</strong></h3>
-                </div>
-                <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="email" value="Email" />
-                <TextInput id="email" v-model="form.email" type="email" class="mt-1 block w-full" required autofocus
-                    autocomplete="username" />
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
-
-            <div class="mt-4">
+        <template #content>
+            <div class="mb-4">
                 <InputLabel for="password" value="New Password" class="mb-1" />
                 <div class="relative border-none p-0">
                     <TextInput id="password" v-model="form.password" :type="inputPasswordType"
@@ -73,7 +65,7 @@ const inputConfirmPasswordType = computed(() => (showConfirmPassword.value ? "te
                 <InputError class="mt-2" :message="form.errors.password" />
             </div>
 
-            <div class="mt-4">
+            <div class="mb-4">
                 <InputLabel for="password_confirmation" value="Confirm Password" />
                 <div class="relative border-none p-0">
                     <TextInput id="password_confirmation" v-model="form.password_confirmation" :type="inputConfirmPasswordType" class="mt-1 block w-full" required autocomplete="new-password" />
@@ -89,20 +81,24 @@ const inputConfirmPasswordType = computed(() => (showConfirmPassword.value ? "te
                 </div>
                 <InputError class="mt-2" :message="form.errors.password_confirmation" />
             </div>
-
-            <div class="flex items-center justify-end mt-4">
-                <ButtonLink 
-                    styling="secondary"
-                    size="default"
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
-                    >
-                    Reset Password
-                </ButtonLink>
-            </div>
-        </form>
-            </div>
-        </AuthenticationCard>
-        <AuthBackground />
-    </div>
+        </template>
+        <template #footer>
+            <ButtonLink
+                styling="default"
+                size="default"
+                class="mr-2"
+                @click="close"
+            >
+                Skip
+            </ButtonLink>
+            <ButtonLink
+                styling="secondary"
+                size="default"
+                :disabled="form.processing"
+                @click="createPassword"
+            >
+                Reset Password
+            </ButtonLink>
+        </template>
+    </SideModal>
 </template>

@@ -18,6 +18,7 @@ import ButtonLink from "@/Components/ButtonLink.vue";
 
 import { useWindowSize } from '@/Composables/window_size.js';
 import { useSwal } from '@/Composables/swal';
+import PasswordCreationModal from './PasswordCreationModal.vue';
 const { windowWidth, screen } = useWindowSize();
 
 const props = defineProps({
@@ -179,4 +180,5 @@ const { toast } = useSwal({flash, errors});
         <!-- footer -->
         <footer class="bg-primary-600 p-2 text-center text-primary-100 text-xs">MADE WITH <font-awesome-icon :icon="faHeart" class="mx-2" /> IN LONDON</footer>
     </div>
+    <PasswordCreationModal />
 </template>

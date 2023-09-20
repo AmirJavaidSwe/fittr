@@ -93,10 +93,13 @@ class PartnerInstructorController extends Controller
             $request->validated(),
             [
                 'role' => PartnerUserRole::INSTRUCTOR->value,
-                'password' => Hash::make('password'),
+                // 'password' => Hash::make('password'),
             ]
         );
+
         $instructor = Instructor::create($fields); //TODO: Security issue
+
+        $instructor->sendEmailVerificationNotification();
 
         if(request()->has('returnTo')) {
             $extra = array('instructor' => $instructor);

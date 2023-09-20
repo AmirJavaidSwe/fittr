@@ -87,7 +87,7 @@ const priceSelected = (pack_id, price_id) => {
 
 <template>
     <Section bg="bg-transparent" class="mx-auto max-w-7xl">
-        <div class="text-xl font-bold text-center">
+        <div class="font-bold mb-6 text-3xl text-center">
             Pricing
         </div>
         <div class="text-center mb-4 sticky top-0 bg-gray-300 z-10">
@@ -122,7 +122,7 @@ const priceSelected = (pack_id, price_id) => {
                 :location="location"
                 :locations="locations"
                 :isLocked="isLocked"
-                class="bg-white rounded-md border-t-8 p-2 w-80 flex flex-col"
+                class="bg-[#f0f0f0] rounded-md border-t-8 p-2 w-80 flex flex-col shadow-lg"
                 @priceSelected="(pack_id, price_id) => priceSelected(pack_id, price_id)"
                 @buy="buy(pack.id)"
                 >

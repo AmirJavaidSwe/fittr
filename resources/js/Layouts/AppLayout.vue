@@ -21,6 +21,7 @@ import Messages from "@/Icons/Messages.vue";
 import Avatar from "@/Components/Avatar.vue";
 import { useSwal } from "@/Composables/swal";
 import { useWindowSize } from '@/Composables/window_size';
+import PasswordCreationModal from "./PasswordCreationModal.vue";
 
 const showingNavigationDropdown = ref(false);
 
@@ -248,4 +249,5 @@ const { toast } = useSwal({flash, errors});
             </footer>
         </div>
     </div>
+    <PasswordCreationModal />
 </template>

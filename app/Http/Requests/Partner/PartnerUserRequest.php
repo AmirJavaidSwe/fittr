@@ -31,7 +31,7 @@ class PartnerUserRequest extends FormRequest
                 'max:191',
                 Rule::unique('users', 'email')->whereNull('deleted_at')->ignore($this->id)
             ],
-            'password' => ['required_with:is_new', 'nullable', new Password, 'max:16'],
+            'password' => ['nullable', new Password, 'max:16'],
             'is_super' => 'boolean',
             'roles' => 'array|exists:roles,id|required_if:is_super,false',
         ];
@@ -45,7 +45,6 @@ class PartnerUserRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'password.required_with' => __('The password field is required.'),
             'roles.required_if' => __('Please select at least one role for the user.'),
         ];
     }
