@@ -82,7 +82,7 @@ const form_class = useForm({
     title: null,
     status: null,
     start_date: null,
-    duration: null,
+    duration: 60,
     instructor_id: [],
     class_type_id: null,
     studio_id: null,

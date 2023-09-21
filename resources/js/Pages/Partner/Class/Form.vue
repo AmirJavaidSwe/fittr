@@ -131,17 +131,16 @@ const studioList = computed(() => {
                     <Datepicker
                         class="border-none bg-mainBg/40"
                         v-model="form.start_date"
-                        :enable-time-picker="true"
-                        :flow="['calendar', 'time']"
                         :format="formatDate"
                         :timezone="business_settings?.timezone"
+                        :is-24="false"
+                        month-name-format="long"
                         position="left"
-                        placeholder="Start Date"
-                        minutes-increment="1"
+                        placeholder="Start Date and Time"
+                        auto-apply
                         text-input
-                        week-numbers
-                        close-on-scroll
-                        partial-flow
+                        minutes-increment="5"
+                        time-picker-inline
                         hide-offset-dates
                     />
                 </div>
@@ -332,7 +331,7 @@ const studioList = computed(() => {
                     placeholder="Repeat End Date"
                     text-input
                     auto-apply
-                    :min-date="form.end_date"
+                    :min-date="form.start_date"
                 />
                 <InputError
                     :message="form.errors.repeat_end_date"

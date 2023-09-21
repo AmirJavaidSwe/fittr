@@ -67,7 +67,7 @@ const close = () => {
         >
             <nav
                 v-if="show"
-                class="sideModalOpened fixed right-0 top-0 overflow-y-auto h-full w-full md:w-1/2 xl:w-1/3 overflow-hidden bg-white shadow-[0_4px_12px_0_rgba(0,0,0,0.07),_0_2px_4px_rgba(0,0,0,0.05)] p-5 flex flex-col"
+                class="sideModalOpened fixed right-0 top-0 overflow-y-auto h-full w-full md:w-1/2 xl:w-1/3 bg-white shadow-[0_4px_12px_0_rgba(0,0,0,0.07),_0_2px_4px_rgba(0,0,0,0.05)] p-5 flex flex-col"
                 :style="sideModalZIndex"
             >
                 <div class="text-xl font-bold flex justify-between">
