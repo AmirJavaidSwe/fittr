@@ -80,7 +80,7 @@ const alreadySigned = (id) => {
 };
 
 const closedShowWaiver = () => {
-    showWaiversSideModal = false;
+    showWaiversSideModal.value = false;
     waiverForm.reset().clearErrors();
 };
 </script>
