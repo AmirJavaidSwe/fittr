@@ -20,6 +20,7 @@ return new class extends Migration
             $table->enum('status', ClassStatus::all())->default(ClassStatus::INACTIVE->value);
             $table->boolean('is_off_peak')->default(false);
             $table->boolean('is_free')->default(false);
+            $table->boolean('is_hidden')->default(false);
             $table->timestamp('start_date')->nullable();
             $table->timestamp('end_date')->nullable();
             $table->json('original_instructors')->nullable();

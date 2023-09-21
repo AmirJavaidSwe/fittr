@@ -29,7 +29,7 @@ class StoreClassController extends Controller
         return Inertia::render('Store/Classes/Index', [
             'page_title' => __('Classes'),
             'header' => __('Classes'),
-            'classes' => ClassLesson::active()
+            'classes' => ClassLesson::active()->public()
                 ->with(['studio.location.images', 'studio.class_type_studios', 'instructor', 'classType', 'waitlists', 'bookings' => function (Builder $query) {
                     $query->active();
                 }])

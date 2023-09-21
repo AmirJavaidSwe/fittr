@@ -107,6 +107,10 @@ const studioList = computed(() => {
     })
     return newStudioList;
 });
+
+const classLinkUrl = computed(() => {
+    return props.form.id ? route('ss.classes.show', { subdomain: props.business_settings.subdomain, class: props.form.id }) : null;
+});
 </script>
 
 <template>
@@ -308,6 +312,22 @@ const studioList = computed(() => {
                     'This class can be booked by anyone. No membership required to book.' :
                     'Active membership required to book.'"
                 />
+            </div>
+
+            <!-- Hidden class -->
+            <div>
+                <Switcher
+                    v-model="form.is_hidden"
+                    title="Hidden class"
+                    :description="form.is_hidden ?
+                    'Class will be excluded from timetable.' :
+                    'Class will be listed in timetable.'"
+                />
+            </div>
+
+            <!-- TODO -->
+            <div class="text-primary-500">
+                {{classLinkUrl}}
             </div>
 
             <!-- repeat -->

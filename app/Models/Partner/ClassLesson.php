@@ -25,6 +25,7 @@ class ClassLesson extends Model
     protected $casts = [
         'is_off_peak' => 'boolean',
         'is_free' => 'boolean',
+        'is_hidden' => 'boolean',
         'start_date' => 'datetime',
         'end_date' => 'datetime',
         'deleted_at' => 'datetime',
@@ -51,6 +52,11 @@ class ClassLesson extends Model
     public function scopeActive($query)
     {
         $query->where('status', ClassStatus::ACTIVE->value);
+    }
+
+    public function scopePublic($query)
+    {
+        $query->where('is_hidden', false);
     }
 
     //Relationships

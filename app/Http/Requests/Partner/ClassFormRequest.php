@@ -39,6 +39,7 @@ class ClassFormRequest extends FormRequest
             'status' => ['required', new Enum(ClassStatus::class)],
             'is_off_peak' => 'boolean',
             'is_free' => 'boolean',
+            'is_hidden' => 'boolean',
             'does_repeat' => 'boolean',
             'spaces' => 'nullable|integer|min:1|max:1000',
         ];

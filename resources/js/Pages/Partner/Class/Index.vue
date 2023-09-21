@@ -2,7 +2,6 @@
 import { ref, watch, computed } from "vue";
 import { useForm, usePage, router } from "@inertiajs/vue3";
 import { DateTime } from "luxon";
-import map from "lodash/map";
 import uniq from "lodash/uniq";
 import find from "lodash/find";
 import Form from "./Form.vue";
@@ -89,6 +88,7 @@ const form_class = useForm({
     file_type: "csv",
     is_off_peak: false,
     is_free: false,
+    is_hidden: false,
     does_repeat: false,
     repeat_end_date: null,
     week_days: [],
@@ -106,6 +106,7 @@ const duplicateClassForm = useForm({
     file_type: "csv",
     is_off_peak: false,
     is_free: false,
+    is_hidden: false,
     does_repeat: false,
     repeat_end_date: null,
     week_days: [],
@@ -229,6 +230,7 @@ const formEdit = useForm({
     studio_id: null,
     is_off_peak: null,
     is_free: false,
+    is_hidden: false,
     use_defaults: false,
     does_repeat: false,
     repeat_end_date: null,
@@ -244,11 +246,12 @@ const handleUpdateForm = (data) => {
     formEdit.status = data.status;
     formEdit.start_date = data.start_date;
     formEdit.duration = data.duration;
-    formEdit.instructor_id = map(data.instructor, "id");
+    formEdit.instructor_id = data.instructor.map((o) => o.id);
     formEdit.class_type_id = data.class_type_id;
     formEdit.studio_id = data.studio_id;
     formEdit.is_off_peak = data.is_off_peak;
     formEdit.is_free = data.is_free;
+    formEdit.is_hidden = data.is_hidden;
     formEdit.use_defaults = data.spaces ? false : true;
     formEdit.spaces = data.spaces;
     formEdit.default_spaces = data.default_spaces;
@@ -260,11 +263,12 @@ const handleDuplicateForm = (data) => {
     duplicateClassForm.status = "active";
     duplicateClassForm.start_date = data.start_date;
     duplicateClassForm.duration = data.duration;
-    duplicateClassForm.instructor_id = map(data.instructor, "id");
+    duplicateClassForm.instructor_id = data.instructor.map((o) => o.id);
     duplicateClassForm.class_type_id = data.class_type_id;
     duplicateClassForm.studio_id = data.studio_id;
     duplicateClassForm.is_off_peak = data.is_off_peak;
     duplicateClassForm.is_free = data.is_free;
+    duplicateClassForm.is_hidden = data.is_hidden;
     duplicateClassForm.use_defaults = data.spaces ? false : true;
     duplicateClassForm.spaces = data.spaces;
     duplicateClassForm.default_spaces = data.default_spaces;
@@ -713,6 +717,12 @@ const emailClass = (classLesson) => {
 
                 <!-- title -->
                 <TableData>
+                    <font-awesome-icon
+                        v-if="class_lesson.is_hidden"
+                        v-tooltip="'Hidden from timetable'"
+                        :icon="faEyeSlash"
+                        class="text-secondary-500 mr-1"
+                    />
                     <ButtonLink
                         :href="route('partner.classes.show', class_lesson)"
                     >
