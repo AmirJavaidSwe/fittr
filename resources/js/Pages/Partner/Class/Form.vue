@@ -14,7 +14,9 @@ import Switcher from "@/Components/Switcher.vue";
 import Avatar from "@/Components/Avatar.vue";
 import ColoredValue from "@/Components/DataTable/ColoredValue.vue";
 import MapMarker from "@/Icons/MapMarker.vue";
+import LinkIcon from "@/Icons/LinkIcon.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
+import ClipboardCopy from "@/Components/ClipboardCopy.vue";
 
 const emit = defineEmits(["createNewInstructor", "createNewClassType", "createNewStudio", "onPreview"]);
 const props = defineProps({
@@ -325,9 +327,13 @@ const classLinkUrl = computed(() => {
                 />
             </div>
 
-            <!-- TODO -->
-            <div class="text-primary-500">
-                {{classLinkUrl}}
+            <div v-if="classLinkUrl" class="flex justify-between">
+                <ButtonLink :href="classLinkUrl" :ext="true">
+                    <LinkIcon class="mr-2" v-tooltip="'Class link'" />
+                    {{classLinkUrl}}
+                </ButtonLink>
+
+                <ClipboardCopy :text="classLinkUrl" />
             </div>
 
             <!-- repeat -->

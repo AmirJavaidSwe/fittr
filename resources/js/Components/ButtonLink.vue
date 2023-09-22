@@ -7,6 +7,10 @@ const props = defineProps({
         type: String,
         default: null,
     },
+    ext: {
+        type: Boolean,
+        default: false,
+    },
     styling: {
         type: String,
         default: "link",
@@ -77,7 +81,10 @@ const classes = computed(() => {
 
 <template>
     <template v-if="href">
-        <Link :href="href" :class="classes">
+        <a v-if="ext" :href="href" :class="classes" target="_blank">
+            <slot />
+        </a>
+        <Link v-else :href="href" :class="classes">
             <slot />
         </Link>
     </template>
