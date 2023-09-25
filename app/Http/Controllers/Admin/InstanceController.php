@@ -20,7 +20,7 @@ class InstanceController extends Controller
 
     public function index(Request $request)
     {
-        if (Gate::denies('viewAny-'.AppUserSource::admin->name . '-aws-instances-viewAny')) {
+        if (Gate::denies('viewAny-'.AppUserSource::get('admin'). '-aws-instances-viewAny')) {
             abort(403);
         }
         //get a list of AWS Lightsail instances
@@ -38,7 +38,7 @@ class InstanceController extends Controller
 
     public function show(Request $request, $name)
     {
-        if (Gate::denies('view-'.AppUserSource::admin->name . '-aws-instances-view')) {
+        if (Gate::denies('view-'.AppUserSource::get('admin'). '-aws-instances-view')) {
             abort(403);
         }
         return Inertia::render('Admin/InstanceShow', [
@@ -63,7 +63,7 @@ class InstanceController extends Controller
 
     public function showMetric(Request $request, $name, $metric)
     {
-        if (Gate::denies('showMetric-'.AppUserSource::admin->name . '-aws-instances-showMetric')) {
+        if (Gate::denies('showMetric-'.AppUserSource::get('admin'). '-aws-instances-showMetric')) {
             abort(403);
         }
         return Inertia::render('Admin/InstanceMetric', [

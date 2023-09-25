@@ -1,6 +1,5 @@
 <script setup>
 import ButtonLink from '@/Components/ButtonLink.vue';
-import AvatarValue from '@/Components/DataTable/AvatarValue.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import SideModal from '@/Components/SideModal.vue';

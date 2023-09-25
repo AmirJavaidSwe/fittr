@@ -26,14 +26,16 @@ class CreateNewUser implements CreatesNewUsers
 
         if(!empty(config('subdomain')) && !empty(config('database.connections.mysql_partner'))){
             Validator::make($input, [
-                'name' => ['required', 'string', 'max:255'],
+                'first_name' => ['required', 'string', 'max:100'],
+                'last_name' => ['required', 'string', 'max:100'],
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:mysql_partner.users'],
                 'password' => $this->passwordRules(),
                 'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
             ])->validate();
 
             return Member::create([
-                'name' => $input['name'],
+                'first_name' => $input['first_name'],
+                'last_name' => $input['last_name'],
                 'email' => $input['email'],
                 'role' => PartnerUserRole::get('member'),
                 'password' => Hash::make($input['password']),
@@ -41,14 +43,16 @@ class CreateNewUser implements CreatesNewUsers
         }
         
         Validator::make($input, [
-            'name' => ['required', 'string', 'max:255'],
+            'first_name' => ['required', 'string', 'max:100'],
+            'last_name' => ['required', 'string', 'max:100'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => $this->passwordRules(),
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
         ])->validate();
 
         return User::create([
-            'name' => $input['name'],
+            'first_name' => $input['first_name'],
+            'last_name' => $input['last_name'],
             'email' => $input['email'],
             'source' => 'partner',
             'is_super' => true,

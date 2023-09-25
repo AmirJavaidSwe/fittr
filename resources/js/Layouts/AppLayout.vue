@@ -164,7 +164,7 @@ const { toast } = useSwal({flash, errors});
                     </ul>
 
                     <!-- Settings Dropdown -->
-                    <div class="relative flex-shrink-0">
+                    <div v-if="$page.props.user" class="relative flex-shrink-0">
                         <Dropdown
                             align="right"
                             width="48"
@@ -180,7 +180,7 @@ const { toast } = useSwal({flash, errors});
                                             {{$page.props.user.email}}
                                         </div>
                                     </div>
-                                    <Avatar :title="$page.props.user.name"/>
+                                    <Avatar :initials="$page.props.user.initials" :image-url="$page.props.user.profile_photo_url" size="medium" />
                                     <!-- <img class="w-8 h-8 rounded-full object-cover" :src="$page.props.user.profile_photo_url" :alt="$page.props.user.name" /> -->
                                 </div>
 

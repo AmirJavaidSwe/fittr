@@ -18,7 +18,9 @@ return new class extends Migration
             $table->id();
             $table->enum('role', PartnerUserRole::roles())->default(PartnerUserRole::get('member'));
             $table->string('stripe_id', 255)->nullable();
-            $table->string('name');
+            $table->string('first_name');
+            $table->string('last_name');
+            $table->string('phone')->nullable();
             $table->string('email');
             $table->string('password')->nullable();
             $table->rememberToken();

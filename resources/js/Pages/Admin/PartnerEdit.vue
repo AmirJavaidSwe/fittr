@@ -13,7 +13,8 @@ const props = defineProps({
 
 const form = useForm({
     id: props.partner.id,
-    name: props.partner.name,
+    first_name: props.partner.first_name,
+    last_name: props.partner.last_name,
     email: props.partner.email,
 });
 
@@ -34,21 +35,33 @@ const updateProfileInformation = () => {
         </template>
 
         <template #form>
-            <!-- Name -->
-            <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="name" value="Name" />
+            <!-- First Name -->
+            <div>
+                <InputLabel for="first_name" value="First Name" />
                 <TextInput
                     id="name"
-                    v-model="form.name"
+                    v-model="form.first_name"
                     type="text"
                     class="mt-1 block w-full"
                     autocomplete="name"
                 />
-                <InputError :message="form.errors.name" class="mt-2" />
+                <InputError :message="form.errors.first_name" class="mt-2" />
+            </div>
+            <!-- Last Name -->
+            <div>
+                <InputLabel for="name" value="Last Name" />
+                <TextInput
+                    id="last_name"
+                    v-model="form.last_name"
+                    type="text"
+                    class="mt-1 block w-full"
+                    autocomplete="name"
+                />
+                <InputError :message="form.errors.last_name" class="mt-2" />
             </div>
 
             <!-- Email -->
-            <div class="col-span-6 sm:col-span-4">
+            <div>
                 <InputLabel for="email" value="Email" />
                 <TextInput
                     id="email"

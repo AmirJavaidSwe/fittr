@@ -77,8 +77,9 @@ const studioChanged = () => {
 }
 
 const instructorsList = computed(() => {
-    let newInstructorsList = { ...props.instructors }; // Create a shallow copy of the object
-    newInstructorsList.create_new_instructor = "Add New"; // Add a new property
+    let newInstructorsList = props.instructors;
+    newInstructorsList.push({id: 'create_new_instructor', full_name: 'Add New'});
+
     return newInstructorsList;
 });
 
@@ -221,22 +222,30 @@ const classLinkUrl = computed(() => {
                     :mode="'tags'"
                     v-model="form.instructor_id"
                     :options="instructorsList"
+                    valueProp="id"
+                    trackBy="full_name"
                     :searchable="true"
-                    :close-on-select="true"
-                    :show-labels="true"
+                    :closeOnSelect="true"
                     placeholder="Select Instructors"
                     @select="instructorChanged"
                 >
-                    <template v-slot:singlelabel="{ value }">
-                        <div class="multiselect-single-label flex items-center">
-                            <Avatar size="small" :title="value.label" v-if="value.label != 'Add New'"/>
-                            <span class="ml-2">{{ value.label }}</span>
+                    <template v-slot:tag="{ option, handleTagRemove, disabled }">
+                        <div v-if="option.id != 'create_new_instructor'" class="multiselect-tag flex items-center">
+                            <Avatar size="small" :initials="option.initials" :imageUrl="option.profile_photo_url" />
+                            <span class="ml-2">{{ option.full_name }}</span>
+                            <span
+                                v-if="!disabled"
+                                class="multiselect-tag-remove"
+                                @mousedown.prevent="handleTagRemove(option, $event)"
+                                >
+                                <span class="multiselect-tag-remove-icon"></span>
+                            </span>
                         </div>
                     </template>
 
                     <template v-slot:option="{ option }">
-                        <Avatar size="small" :title="option.label" v-if="option.label != 'Add New'" />
-                        <span class="ml-5">{{ option.label }}</span>
+                        <Avatar size="small" :initials="option.initials" :imageUrl="option.profile_photo_url" v-if="option.id != 'create_new_instructor'" />
+                        <span class="ml-4">{{ option.full_name }}</span>
                     </template>
                 </Multiselect>
                 <InputError :message="form.errors.instructor_id" class="mt-2" />

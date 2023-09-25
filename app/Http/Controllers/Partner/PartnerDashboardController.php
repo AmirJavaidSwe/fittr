@@ -16,7 +16,7 @@ class PartnerDashboardController extends Controller
 {
     public function index(Request $request)
     {
-        if (Gate::denies('viewAny-'.AppUserSource::partner->name . '-dashboard-viewAny')) {
+        if (Gate::denies('viewAny-'.AppUserSource::get('partner') . '-dashboard-viewAny')) {
             abort(403);
         }
 

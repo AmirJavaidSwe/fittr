@@ -11,8 +11,9 @@ const storeMember = () => {
 };
 
 let form = useForm({
-    name: '',
-    email: ''
+    first_name: null,
+    last_name: null,
+    email: null
 });
 
 </script>

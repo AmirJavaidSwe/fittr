@@ -29,15 +29,10 @@ defineProps({
         <template #item>
             <single-view-row label="ID" :value="instructor.id" />
 
-            <single-view-row
-                label="Name"
-                :value="instructor.name"
-            />
-
-            <single-view-row
-                label="Contents"
-                :value="instructor.email"
-            />
+            <single-view-row label="First Name" :value="instructor.first_name" />
+            <single-view-row label="Last Name" :value="instructor.last_name" />
+            <single-view-row label="Phone" :value="instructor.phone" />
+            <single-view-row label="Email" :value="instructor.email" />
 
             <single-view-row
                 label="Created At"

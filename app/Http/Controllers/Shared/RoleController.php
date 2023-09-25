@@ -25,7 +25,7 @@ class RoleController extends Controller
      */
     public function index(Request $request)
     {
-        if (Gate::denies('viewAny-'.AppUserSource::admin->name . '-roles-viewAny')) {
+        if (Gate::denies('viewAny-'.AppUserSource::get('admin'). '-roles-viewAny')) {
             abort(403);
         }
 
@@ -36,10 +36,10 @@ class RoleController extends Controller
         $this->order_dir = $request->query('order_dir', 'desc');
 
         switch ($user->source) {
-            case AppUserSource::admin->name:
+            case AppUserSource::get('admin'):
                 $header = __('Roles management');
                 break;
-            case AppUserSource::partner->name:
+            case AppUserSource::get('partner'):
                 $header = array(
                     [
                         'title' => __('Settings'),
@@ -91,16 +91,16 @@ class RoleController extends Controller
      */
     public function create()
     {
-        if (Gate::denies('create-'.AppUserSource::admin->name . '-roles-create')) {
+        if (Gate::denies('create-'.AppUserSource::get('admin'). '-roles-create')) {
             abort(403);
         }
 
         $user = auth()->user();
         switch ($user->source) {
-            case AppUserSource::admin->name:
+            case AppUserSource::get('admin'):
                 $header = __('Create new role');
                 break;
-            case AppUserSource::partner->name:
+            case AppUserSource::get('partner'):
                 $header = array(
                     [
                         'title' => __('Settings'),
@@ -139,7 +139,7 @@ class RoleController extends Controller
      */
     public function store(RoleRequest $request)
     {
-        if (Gate::denies('create-'.AppUserSource::admin->name . '-roles-create')) {
+        if (Gate::denies('create-'.AppUserSource::get('admin'). '-roles-create')) {
             abort(403);
         }
         $user = auth()->user();
@@ -162,7 +162,7 @@ class RoleController extends Controller
      */
     public function show($slug)
     {
-        if (Gate::denies('view-'.AppUserSource::admin->name . '-roles-view')) {
+        if (Gate::denies('view-'.AppUserSource::get('admin'). '-roles-view')) {
             abort(403);
         }
 
@@ -176,10 +176,10 @@ class RoleController extends Controller
             ->firstOrFail();
 
         switch ($user->source) {
-            case AppUserSource::admin->name:
+            case AppUserSource::get('admin'):
                 $header = __('Role details');
                 break;
-            case AppUserSource::partner->name:
+            case AppUserSource::get('partner'):
                 $header = array(
                     [
                         'title' => __('Settings'),
@@ -217,7 +217,7 @@ class RoleController extends Controller
      */
     public function edit($slug)
     {
-        if (Gate::denies('update-'.AppUserSource::admin->name . '-roles-update')) {
+        if (Gate::denies('update-'.AppUserSource::get('admin'). '-roles-update')) {
             abort(403);
         }
         $user = auth()->user();
@@ -231,10 +231,10 @@ class RoleController extends Controller
             ->firstOrFail();
 
         switch ($user->source) {
-            case AppUserSource::admin->name:
+            case AppUserSource::get('admin'):
                 $header = __('Edit role');
                 break;
-            case AppUserSource::partner->name:
+            case AppUserSource::get('partner'):
                 $header = array(
                     [
                         'title' => __('Settings'),
@@ -273,7 +273,7 @@ class RoleController extends Controller
      */
     public function update(RoleRequest $request, $slug)
     {
-        if (Gate::denies('update-'.AppUserSource::admin->name . '-roles-update')) {
+        if (Gate::denies('update-'.AppUserSource::get('admin'). '-roles-update')) {
             abort(403);
         }
 
@@ -296,7 +296,7 @@ class RoleController extends Controller
      */
     public function destroy($slug)
     {
-        if (Gate::denies('destroy-'.AppUserSource::admin->name . '-roles-destroy')) {
+        if (Gate::denies('destroy-'.AppUserSource::get('admin'). '-roles-destroy')) {
             abort(403);
         }
 

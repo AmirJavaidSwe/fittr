@@ -1,7 +1,8 @@
 [
     {
         "source": "partner",
-        "name": "Demo Partner1",
+        "first_name": "Demo",
+        "last_name": "Partner1",
         "email": "dummy1@fittr.tech",
         "password": "dummy1",
         "stripe_account_id": "acct_1MlaLVFZgNT1PRCW",
@@ -9,7 +10,8 @@
             {
                 "source": "partner",
                 "business_id": 1,
-                "name": "Jan Bargy",
+                "first_name": "Jan",
+                "last_name": "Bargy",
                 "email": "jan@digmefitness.com",
                 "password": "jan",
                 "is_super": false
@@ -17,7 +19,8 @@
             {
                 "source": "partner",
                 "business_id": 1,
-                "name": "Hattie Bass",
+                "first_name": "Hattie",
+                "last_name": "Bass",
                 "email": "hattie@digmefirness.com",
                 "password": "hattie",
                 "is_super": false
@@ -25,7 +28,8 @@
             {
                 "source": "partner",
                 "business_id": 1,
-                "name": "Geoff Bamber",
+                "first_name": "Geoff",
+                "last_name": "Bamber",
                 "email": "geoff@digmefitness.com",
                 "password": "geoff",
                 "is_super": true
@@ -33,7 +37,8 @@
             {
                 "source": "partner",
                 "business_id": 1,
-                "name": "Caoimhe Bamber",
+                "first_name": "Caoimhe",
+                "last_name": "Bamber",
                 "email": "caoimhe@digmefitness.com",
                 "password": "geoff",
                 "is_super": true
@@ -41,7 +46,8 @@
             {
                 "source": "partner",
                 "business_id": 1,
-                "name": "Debbie Alberto",
+                "first_name": "Debbie",
+                "last_name": "Alberto",
                 "email": "debbie@digmefitness.com",
                 "password": "debbie",
                 "is_super": false
@@ -49,7 +55,8 @@
             {
                 "source": "partner",
                 "business_id": 1,
-                "name": "Rebecca Terrell",
+                "first_name": "Rebecca",
+                "last_name": "Terrell",
                 "email": "rebecca@digmefitness.com",
                 "password": "debbie",
                 "is_super": false
@@ -58,7 +65,8 @@
     },
     {
         "source": "partner",
-        "name": "Demo Partner2",
+        "first_name": "Demo",
+        "last_name": "Partner2",
         "email": "dummy2@fittr.tech",
         "password": "dummy2"
     },
@@ -66,37 +74,43 @@
 
     {
         "source": "admin",
-        "name": "Default Administrator",
+        "first_name": "Default",
+        "last_name": "Administrator",
         "email": "support@fittr.tech",
         "password": "support"
     },
     {
         "source": "admin",
-        "name": "Geoff Bamber",
+        "first_name": "Geoff",
+        "last_name": "Bamber",
         "email": "geoff@fittr.tech",
         "password": "geoff"
     },
     {
         "source": "admin",
-        "name": "Phil Parker",
+        "first_name": "Phil",
+        "last_name": "Parker",
         "email": "phil@fittr.tech",
         "password": "phil"
     },
     {
         "source": "admin",
-        "name": "Leo Studenikin",
+        "first_name": "Leo",
+        "last_name": "Studenikin",
         "email": "leo@fittr.tech",
         "password": "leo"
     },
     {
         "source": "admin",
-        "name": "Obaid Farooq",
+        "first_name": "Obaid",
+        "last_name": "Farooq",
         "email": "obaiidfarooq@hotmail.com",
         "password": "obaid"
     },
     {
         "source": "admin",
-        "name": "Amir",
+        "first_name": "Amir",
+        "last_name": "Arain",
         "email": "softwareengr.1@gmail.com",
         "password": "amir"
     }

@@ -15,7 +15,6 @@ import SideModal from '@/Components/SideModal.vue';
 import { Splide, SplideSlide } from '@splidejs/vue-splide';
 import { useWindowSize } from '@/Composables/window_size';
 import { useSwal } from '@/Composables/swal';
-import AvatarValue from "@/Components/DataTable/AvatarValue.vue";
 import AttendiesSelection from "./AttendiesSelection.vue";
 import AttendiesSelected from "./AttendiesSelected.vue";
 import DateValue from "@/Components/DataTable/DateValue.vue";
@@ -36,7 +35,7 @@ const emit = defineEmits(['close', 'isFamilyBooking', 'bookForOtherFamilyMembers
                             .original_filename
                         " />
             </div> -->
-            <div class="flex flex-col">
+            <div class="space-y-2">
                 <div class="flex text-3xl font-bold mb-4 items-center">
                     <div class="flex flex-grow mr-4">{{ props.classDetails.title }}</div>
                     <div class="flex flex-col shrink-0">
@@ -47,61 +46,54 @@ const emit = defineEmits(['close', 'isFamilyBooking', 'bookForOtherFamilyMembers
                     </div>
                 </div>
 
-                <div class="flex flex-row mb-4">
-                    <div class="flex flex-row">
-                        <div class="flex flex-col mr-2">
-                            <!-- <img src="" class="inline-block rounded-xl w-full h-full bg-gray-500" alt="User" /> -->
-                            <template v-if="classDetails?.instructor.length">
-                                <template v-for="(
-                                        instructor, ins
-                                    ) in classDetails?.instructor" :key="ins">
-                                    <AvatarValue
-                                        class="cursor-pointer mb-3"
-                                        :title="instructor?.name ?? 'Demo Ins'"
-                                        :useIcon="true"
-                                    />
-                                </template>
-                            </template>
-                        </div>
-                    </div>
+                <template v-if="classDetails?.instructors.length">
+                <div class="flex items-center gap-2 pb-2" v-for="instructor in classDetails.instructors" :key="instructor.id">
+                    <Avatar
+                        :initials="instructor.initials"
+                        :imageUrl="instructor.profile_photo_url"
+                        :useIcon="true"
+                        size="medium"
+                    />
+                    {{instructor.full_name}}
                 </div>
+                </template>
 
-                <div class="flex flex-row mb-3">
-                    <div class="w-1/2 flex mr-2 items-center"></div>
-                    <div class="flex w-1/2 justify-end font-bold">
+                <div class="flex justify-between">
+                    <div class="flex-grow">Class type:</div>
+                    <div class="font-bold">
                         {{ props.classDetails.class_type?.title }}
                     </div>
                 </div>
 
-                <div class="flex flex-row mb-3">
-                    <div class="w-1/2 flex mr-2 items-center">Time:</div>
-                    <div class="flex w-1/2 justify-end font-bold">
+                <div class="flex justify-between">
+                    <div class="flex-grow">Date:</div>
+                    <div class="font-bold">
+                        {{ props.classDetails.start_date?.toFormat(props.business_settings.date_format?.format_js) }}
+                    </div>
+                </div>
+
+                <div class="flex justify-between">
+                    <div class="flex-grow">Time:</div>
+                    <div class="font-bold">
                         {{ props.classDetails.start_date?.toFormat("hh:mm a") }} -
                         {{ props.classDetails.end_date?.toFormat("hh:mm a") }}
                     </div>
                 </div>
 
-                <div class="flex flex-row mb-3">
-                    <div class="w-1/2 flex mr-2 items-center">
-                        Lession Time:
+                <div class="flex justify-between">
+                    <div class="flex-grow">
+                        Duration:
                     </div>
-                    <div class="flex w-1/2 justify-end font-bold">
+                    <div class="font-bold">
                         {{ props.classDetails.duration }} minutes
                     </div>
                 </div>
 
-                <div class="flex flex-row mb-3">
-                    <div class="w-1/2 flex mr-2 items-center">Date:</div>
-                    <div class="flex w-1/2 justify-end font-bold">
-                        {{ props.classDetails.start_date?.toFormat(props.business_settings.date_format?.format_js) }}
-                    </div>
-                </div>
-
-                <div v-if="props.classDetails.waitlists?.length" class="flex flex-row mb-3">
-                    <div class="w-1/2 flex mr-2 items-center">
+                <div v-if="props.classDetails.waitlists?.length" class="flex justify-between">
+                    <div class="flex-grow">
                         Waiting list:
                     </div>
-                    <div class="flex w-1/2 justify-end font-bold">
+                    <div class="font-bold">
                         {{ props.classDetails.waitlists?.length }}
                     </div>
                 </div>

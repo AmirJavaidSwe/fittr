@@ -80,17 +80,13 @@ const classes = computed(() => {
 </script>
 
 <template>
-    <template v-if="href">
-        <a v-if="ext" :href="href" :class="classes" target="_blank">
+    <a v-if="ext && href" :href="href" :class="classes" target="_blank">
+        <slot />
+    </a>
+    <Link v-else-if="href" :href="href" :class="classes">
+        <slot />
+    </Link>
+    <button v-else :class="classes">
             <slot />
-        </a>
-        <Link v-else :href="href" :class="classes">
-            <slot />
-        </Link>
-    </template>
-    <template v-else>
-        <button :class="classes">
-            <slot />
-        </button>
-    </template>
+    </button>
 </template>

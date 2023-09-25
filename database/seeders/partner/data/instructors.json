@@ -1,44 +1,36 @@
 [
     {
         "role": "instructor",
-        "name": "Demo Instructor 1",
+        "first_name": "Demo",
+        "last_name": "Instructor",
         "email": "instructor1@fittr.tech",
         "password": "instructor1"
     },
     {
         "role": "instructor",
-        "name": "Demo Instructor 2",
-        "email": "instructor2@fittr.tech",
-        "password": "instructor2"
-    },
-    {
-        "role": "instructor",
-        "name": "Demo Instructor 3",
-        "email": "instructor3@fittr.tech",
-        "password": "instructor3"
-    },
-
-    {
-        "role": "instructor",
-        "name": "Frances Merry",
+        "first_name": "Frances",
+        "last_name": "Merry",
         "email": "francesevemerry@gmail.com",
         "password": "francesevemerry"
     },
     {
         "role": "instructor",
-        "name": "Dan Little" ,
+        "first_name": "Dan",
+        "last_name": "Little",
         "email": "danlittle1@me.com",
         "password": "danlittle1"
     },
     {
         "role": "instructor",
-        "name": "Chloe Laureyns" ,
+        "first_name": "Chloe",
+        "last_name": "Laureyns",
         "email": "chloelaureyns@hotmail.com",
         "password": "chloelaureyn"
     },
     {
         "role": "instructor",
-        "name": "Paul Gascoyne" ,
+        "first_name": "Paul",
+        "last_name": "Gascoyne",
         "email": "ucanfitness@gmail.com",
         "password": "ucanfitness"
     }

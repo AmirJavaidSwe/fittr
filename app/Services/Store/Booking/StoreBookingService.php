@@ -98,7 +98,7 @@ class StoreBookingService
             ]);
         }
 
-        $booking->load(['user', 'class.classType', 'class.instructor', 'class.studio.location']);
+        $booking->load(['user', 'class.classType', 'class.instructors', 'class.studio.location']);
 
         event(new BookingConfirmation($booking));
 

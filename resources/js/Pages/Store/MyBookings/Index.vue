@@ -15,7 +15,7 @@ import DateValue from '@/Components/DataTable/DateValue.vue';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
 import { DateTime } from 'luxon';
 import ColoredValue from '@/Components/DataTable/ColoredValue.vue';
-import AvatarValue from '@/Components/DataTable/AvatarValue.vue';
+import Avatar from '@/Components/Avatar.vue';
 
 const props = defineProps({
     disableSearch: {
@@ -117,11 +117,6 @@ const cancelBooking = (class_id,id) => {
 
 const user = ref(usePage().props.user);
 
-const ucwords = (str) => {
-    return str.replace(/^(.)|\s+(.)/g, function($1) {
-        return $1.toUpperCase();
-    });
-}
 
 const optionsList= computed(() => {
     const data = []
@@ -131,13 +126,13 @@ const optionsList= computed(() => {
     })
     data.push({
         id: 'parent--'+user?.value?.id,
-        name: ucwords(user?.value?.name),
+        name: user?.value?.full_name,
         parent: true,
     })
     for(let i=0; i < user?.value?.family?.length; i++) {
         data.push({
             id: 'child--'+user?.value?.family[i]?.id,
-            name: ucwords(user?.value?.family[i]?.name),
+            name: user?.value?.family[i]?.full_name,
             parent: false,
         })
     }
@@ -223,26 +218,17 @@ const optionsList= computed(() => {
                     <table-data>
                         <DateValue :date="DateTime.fromISO(booking.class?.end_date).setZone(business_settings.timezone).toFormat(business_settings.time_format.format_js)" />
                     </table-data>
-                    <table-data> {{ booking.class?.duration }} </table-data>
+                    <table-data> {{ booking.class?.duration }} minutes</table-data>
                     <table-data>
-                        <template v-if="booking.class?.instructor.length">
-                            <template
-                                v-for="(
-                                    instructor, ins
-                                ) in booking.class?.instructor"
-                                :key="ins"
-                            >
-                                <AvatarValue
-                                    class="cursor-pointer inline-flex justify-center mr-1 text-center items-center"
-                                    :onlyTooltip="true"
-                                    :title="instructor?.name ?? 'Demo Ins'"
-                                />
-                            </template>
-                        </template>
-                        <template v-else>
-                            <AvatarValue :title="'Demo Ins'" />
-                        </template>
-                        <!-- <AvatarValue :title="booking.class.instructor?.name" /> -->
+                         <div v-if="booking.class?.instructors.length" class="flex items-center gap-1" v-for="instructor in booking.class.instructors" :key="instructor.id">
+                            <Avatar
+                                :initials="instructor.initials"
+                                :imageUrl="instructor.profile_photo_url"
+                                :useIcon="true"
+                                size="xs"
+                            />
+                            {{instructor.full_name}}
+                        </div>
                     </table-data>
                     <table-data> {{ booking.class?.studio?.location?.title }} </table-data>
                     <table-data> {{ booking.status_text }} </table-data>

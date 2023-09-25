@@ -22,7 +22,7 @@ class ClassesSeeder extends Seeder
         $classes = ClassLesson::get();
         foreach($classes as $class) {
             $instructors = User::instructor()->inRandomOrder()->take(rand(1, 3))->pluck('id')->toArray();
-            $class->instructor()->sync($instructors);
+            $class->instructors()->sync($instructors);
             $class->update([
                 'title' => ucfirst($class->classType->title).' '.$class->duration,
             ]);

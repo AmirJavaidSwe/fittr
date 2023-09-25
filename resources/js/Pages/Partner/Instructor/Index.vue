@@ -33,7 +33,7 @@ const props = defineProps({
     order_dir: String,
 });
 
-const form = useForm({
+const form_search = useForm({
     search: props.search,
     per_page: props.per_page,
     order_by: props.order_by,
@@ -41,7 +41,7 @@ const form = useForm({
 });
 
 const runSearch = () => {
-    form.get(route("partner.instructors.index"), {
+    form_search.get(route("partner.instructors.index"), {
         preserveScroll: true,
         preserveState: true,
         replace: true,
@@ -50,44 +50,45 @@ const runSearch = () => {
 
 const setOrdering = (col) => {
     //reverse same col order
-    if (form.order_by == col) {
-        form.order_dir = form.order_dir == "asc" ? "desc" : "asc";
+    if (form_search.order_by == col) {
+        form_search.order_dir = form_search.order_dir == "asc" ? "desc" : "asc";
     }
-    form.order_by = col;
+    form_search.order_by = col;
     runSearch();
 };
 
 const setPerPage = (n) => {
-    form.per_page = n;
+    form_search.per_page = n;
     runSearch();
 };
 
 // form.search getter only;
-watch(() => form.search, runSearch);
+watch(() => form_search.search, runSearch);
 
 // Create/Edit Member Queries
-let form_class = useForm({
-    name: "",
-    email: "",
+const form_item = useForm({
+    id: null,
+    first_name: null,
+    last_name: null,
+    email: null,
+    phone: null,
 });
 
 const showCreateModal = ref(false);
+const handleCreateForm = () => {
+    form_item.reset();
+    showCreateModal.value = true;
+};
 const closeCreateModal = () => {
     showCreateModal.value = false;
 };
 
 const storeInstructor = () => {
-    form_class.post(route("partner.instructors.store"), {
+    form_item.post(route("partner.instructors.store"), {
         preserveScroll: true,
-        onSuccess: () => [form_class.reset(), closeCreateModal()],
+        onSuccess: () => [form_item.reset(), closeCreateModal()],
     });
 };
-
-let form_edit = useForm({
-    id: "",
-    name: "",
-    email: "",
-});
 
 const showEditModal = ref(false);
 const closeEditModal = () => {
@@ -97,15 +98,17 @@ const closeEditModal = () => {
 const handleUpdateForm = (data) => {
     hideAllPoppers();
     showEditModal.value = true;
-    form_edit.id = data.id;
-    form_edit.name = data.name;
-    form_edit.email = data.email;
+    form_item.id = data.id;
+    form_item.first_name = data.first_name;
+    form_item.last_name = data.last_name;
+    form_item.email = data.email;
+    form_item.phone = data.phone;
 };
 
 const updateInstructors = () => {
-    form_edit.put(route("partner.instructors.update", form_edit.id), {
+    form_item.put(route("partner.instructors.update", form_item.id), {
         preserveScroll: true,
-        onSuccess: () => [form_class.reset(), closeEditModal()],
+        onSuccess: () => [form_item.reset(), closeEditModal()],
     });
 };
 
@@ -118,7 +121,7 @@ const confirmDeletion = (id) => {
     itemDeleting.value = true;
 };
 const deleteItem = () => {
-    form.delete(
+    form_item.delete(
         route("partner.instructors.destroy", { id: itemIdDeleting.value }),
         {
             preserveScroll: true,
@@ -137,9 +140,9 @@ const deleteItem = () => {
             <ButtonLink
                 styling="secondary"
                 size="default"
-                @click="showCreateModal = true"
+                @click="handleCreateForm"
             >
-                Create a new instructor
+                Create new instructor
                 <font-awesome-icon class="ml-2" :icon="faPlus" />
             </ButtonLink>
             <!-- <ButtonLink
@@ -154,37 +157,49 @@ const deleteItem = () => {
 
         <template #search>
             <Search
-                v-model="form.search"
+                v-model="form_search.search"
                 :disable-search="disableSearch"
-                @reset="form.search = null"
+                @reset="form_search.search = null"
                 noFilter
             />
         </template>
 
         <template #tableHead>
             <TableHead
-                title="Name"
-                @click="setOrdering('name')"
-                :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'name'"
+                title="First Name"
+                @click="setOrdering('first_name')"
+                :arrowSide="form_search.order_dir"
+                :currentSort="form_search.order_by === 'first_name'"
+            />
+            <TableHead
+                title="Last Name"
+                @click="setOrdering('last_name')"
+                :arrowSide="form_search.order_dir"
+                :currentSort="form_search.order_by === 'last_name'"
             />
             <TableHead
                 title="Email"
                 @click="setOrdering('email')"
-                :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'email'"
+                :arrowSide="form_search.order_dir"
+                :currentSort="form_search.order_by === 'email'"
+            />
+            <TableHead
+                title="Phone"
+                @click="setOrdering('phone')"
+                :arrowSide="form_search.order_dir"
+                :currentSort="form_search.order_by === 'phone'"
             />
             <TableHead
                 title="Created"
                 @click="setOrdering('created_at')"
-                :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'created_at'"
+                :arrowSide="form_search.order_dir"
+                :currentSort="form_search.order_by === 'created_at'"
             />
             <TableHead
                 title="Updated"
                 @click="setOrdering('updated_at')"
-                :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'updated_at'"
+                :arrowSide="form_search.order_dir"
+                :currentSort="form_search.order_by === 'updated_at'"
             />
             <TableHead title="Action" class="flex justify-end" />
         </template>
@@ -192,11 +207,19 @@ const deleteItem = () => {
         <template #tableData>
             <tr v-for="(instructor, index) in instructors.data" :key="index">
                 <TableData>
+                    {{ instructor.first_name }}
+                </TableData>
+                <TableData>
+                    {{ instructor.last_name }}
+                </TableData>
+                <TableData>
                     <ButtonLink :href="route('partner.instructors.show', instructor)">
-                        {{ instructor.name }}
+                        {{ instructor.email }}
                     </ButtonLink>
                 </TableData>
-                <TableData :title="instructor.email" />
+                <TableData>
+                    {{ instructor.phone }}
+                </TableData>
                 <TableData>
                     <!-- <DateValue :date="DateTime.fromISO(instructor.created_at).toLocaleString()"/> -->
                     <DateValue :date="DateTime.fromISO(instructor.created_at)
@@ -229,6 +252,8 @@ const deleteItem = () => {
                                     :href="route('partner.login-as')"
                                     :data="{ id: instructor.id }"
                                     method="post"
+                                    type="button"
+                                    as="button"
                                     >
                                     <font-awesome-icon class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2" :icon="faUserLock" />
                                     <span> Login as </span>
@@ -265,7 +290,7 @@ const deleteItem = () => {
         <template #title> Create new instructor </template>
 
         <template #content>
-            <Form :form="form_class" :submitted="storeInstructor" modal />
+            <Form :form="form_item" :submitted="storeInstructor" modal />
         </template>
     </SideModal>
 
@@ -274,7 +299,7 @@ const deleteItem = () => {
         <template #title> Update instructor </template>
 
         <template #content>
-            <Form :form="form_edit" :submitted="updateInstructors" modal />
+            <Form :form="form_item" :submitted="updateInstructors" modal />
         </template>
     </SideModal>
 
@@ -299,8 +324,8 @@ const deleteItem = () => {
                 size="default"
                 styling="danger"
                 class="ml-3"
-                :class="{ 'opacity-25': form.processing }"
-                :disabled="form.processing"
+                :class="{ 'opacity-25': form_item.processing }"
+                :disabled="form_item.processing"
                 @click="deleteItem"
             >
                 Delete

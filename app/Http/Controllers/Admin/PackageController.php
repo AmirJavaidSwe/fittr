@@ -14,7 +14,7 @@ class PackageController extends Controller
 {
     public function index(Request $request)
     {
-        if (Gate::denies('viewAny-'.AppUserSource::admin->name . '-packages-viewAny')) {
+        if (Gate::denies('viewAny-'.AppUserSource::get('admin'). '-packages-viewAny')) {
             abort(403);
         }
 
@@ -27,7 +27,7 @@ class PackageController extends Controller
 
     public function create()
     {
-        if (Gate::denies('create-'.AppUserSource::admin->name . '-packages-create')) {
+        if (Gate::denies('create-'.AppUserSource::get('admin'). '-packages-create')) {
             abort(403);
         }
 
@@ -39,7 +39,7 @@ class PackageController extends Controller
 
     public function store(PackageRequest $request)
     {
-        if (Gate::denies('create-'.AppUserSource::admin->name . '-packages-create')) {
+        if (Gate::denies('create-'.AppUserSource::get('admin'). '-packages-create')) {
             abort(403);
         }
 
@@ -50,7 +50,7 @@ class PackageController extends Controller
 
     public function show(Package $package)
     {
-        if (Gate::denies('view-'.AppUserSource::admin->name . '-packages-view')) {
+        if (Gate::denies('view-'.AppUserSource::get('admin'). '-packages-view')) {
             abort(403);
         }
 
@@ -63,7 +63,7 @@ class PackageController extends Controller
 
     public function edit(Package $package)
     {
-        if (Gate::denies('update-'.AppUserSource::admin->name . '-packages-update')) {
+        if (Gate::denies('update-'.AppUserSource::get('admin'). '-packages-update')) {
             abort(403);
         }
 
@@ -76,7 +76,7 @@ class PackageController extends Controller
 
     public function update(PackageRequest $request, Package $package)
     {
-        if (Gate::denies('update-'.AppUserSource::admin->name . '-packages-update')) {
+        if (Gate::denies('update-'.AppUserSource::get('admin'). '-packages-update')) {
             abort(403);
         }
 
@@ -87,7 +87,7 @@ class PackageController extends Controller
 
     public function destroy(Package $package)
     {
-        if (Gate::denies('destroy-'.AppUserSource::admin->name . '-packages-destroy')) {
+        if (Gate::denies('destroy-'.AppUserSource::get('admin'). '-packages-destroy')) {
             abort(403);
         }
 

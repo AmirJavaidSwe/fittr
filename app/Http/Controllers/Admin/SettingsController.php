@@ -19,7 +19,7 @@ class SettingsController extends Controller
 {
     public function index()
     {
-        if (Gate::denies('viewAny-'.AppUserSource::admin->name . '-settings-viewAny')) {
+        if (Gate::denies('viewAny-'.AppUserSource::get('admin'). '-settings-viewAny')) {
             abort(403);
         }
         
@@ -32,22 +32,22 @@ class SettingsController extends Controller
     }
 
     public function getPackages() {
-        if (Gate::denies('viewAny-'.AppUserSource::admin->name . '-packages-viewAny')) {
+        if (Gate::denies('viewAny-'.AppUserSource::get('admin'). '-packages-viewAny')) {
             return [];
         }
         return Package::all();
     }
     
     public function getAdminUsers() {
-        if (Gate::denies('viewAny-'.AppUserSource::admin->name . '-admin-users-viewAny')) {
+        if (Gate::denies('viewAny-'.AppUserSource::get('admin'). '-admin-users-viewAny')) {
             return [];
         }
-        return User::admin()->select('id', 'name', 'email', 'is_super', 'profile_photo_path','created_at')->get();
+        return User::admin()->select('id', 'first_name', 'last_name', 'email', 'is_super', 'profile_photo_path', 'created_at')->get();
     }
 
     public function addAdmins()
     {
-        if (Gate::denies('create-'.AppUserSource::admin->name . '-admin-users-create')) {
+        if (Gate::denies('create-'.AppUserSource::get('admin'). '-admin-users-create')) {
             abort(403);
         }
 
@@ -60,12 +60,13 @@ class SettingsController extends Controller
 
     public function saveAdmins(Request $request)
     {
-        if (Gate::denies('create-'.AppUserSource::admin->name . '-admin-users-create')) {
+        if (Gate::denies('create-'.AppUserSource::get('admin').'-admin-users-create')) {
             abort(403);
         }
 
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:191',
+            'first_name' => 'required|string|max:191',
+            'last_name' => 'required|string|max:191',
             'email' => [
                 'required',
                 'string',
@@ -80,7 +81,8 @@ class SettingsController extends Controller
         }
 
         $admin = new User();
-        $admin->name = $request->name;
+        $admin->first_name = $request->first_name;
+        $admin->last_name = $request->last_name;
         $admin->email = $request->email;
         $admin->password = Hash::make($request->password);
         $admin->is_super = $request->is_super;
@@ -96,7 +98,7 @@ class SettingsController extends Controller
 
     public function editAdmins($id)
     {
-        if (Gate::denies('update-'.AppUserSource::admin->name . '-admin-users-update')) {
+        if (Gate::denies('update-'.AppUserSource::get('admin'). '-admin-users-update')) {
             abort(403);
         }
 
@@ -110,12 +112,13 @@ class SettingsController extends Controller
 
     public function updateAdmins(Request $request, $id)
     {
-        if (Gate::denies('update-'.AppUserSource::admin->name . '-admin-users-update')) {
+        if (Gate::denies('update-'.AppUserSource::get('admin'). '-admin-users-update')) {
             abort(403);
         }
         
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:191',
+            'first_name' => 'required|string|max:191',
+            'last_name' => 'required|string|max:191',
             'email' => [
                 'required',
                 'string',
@@ -131,7 +134,8 @@ class SettingsController extends Controller
 
         $admin = User::admin()->where('id', $id)->first();
         if($admin) {
-            $admin->name = $request->name;
+            $admin->first_name = $request->first_name;
+            $admin->last_name = $request->last_name;
             $admin->email = $request->email;
             $admin->is_super = $request->is_super;
             $admin->save();

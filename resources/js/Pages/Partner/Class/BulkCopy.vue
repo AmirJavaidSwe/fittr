@@ -20,7 +20,7 @@ import { DateTime } from "luxon";
 import DateValue from "@/Components/DataTable/DateValue.vue";
 import ColoredValue from "@/Components/DataTable/ColoredValue.vue";
 import StatusLabel from "@/Components/StatusLabel.vue";
-import AvatarValue from "@/Components/DataTable/AvatarValue.vue";
+import Avatar from "@/Components/Avatar.vue";
 import TextInput from "@/Components/TextInput.vue";
 import Checkbox from "@/Components/Checkbox.vue";
 
@@ -340,23 +340,15 @@ const selectAllCheckboxes = () => {
 
                             <!-- Instructors -->
                             <table-data class="text-center">
-                                <template v-if="data?.instructor.length">
-                                    <template
-                                        v-for="(
-                                            instructor, ins
-                                        ) in data?.instructor"
-                                        :key="ins"
-                                    >
-                                        <AvatarValue
-                                            class="cursor-pointer inline-flex justify-center mr-1 text-center items-center"
-                                            :onlyTooltip="true"
-                                            :title="instructor?.name ?? 'Demo Ins'"
+                                <div v-if="data?.instructors.length" class="flex items-center gap-1" v-for="instructor in data.instructors" :key="instructor.id">
+                                        <Avatar
+                                            :initials="instructor.initials"
+                                            :imageUrl="instructor.profile_photo_url"
+                                            :useIcon="true"
+                                            size="xs"
                                         />
-                                    </template>
-                                </template>
-                                <template v-else>
-                                    <AvatarValue :title="'Demo Ins'" />
-                                </template>
+                                        {{instructor.full_name}}
+                                </div>
                             </table-data>
 
                             <!-- Status -->

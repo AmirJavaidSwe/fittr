@@ -18,7 +18,6 @@ import {
     faCog,
     faEye,
 } from "@fortawesome/free-solid-svg-icons";
-import AvatarValue from "@/Components/DataTable/AvatarValue.vue";
 import DateValue from "@/Components/DataTable/DateValue.vue";
 
 const props = defineProps({
@@ -88,10 +87,16 @@ watch(() => form.search, runSearch);
             />
             <table-head title="Business" />
             <table-head
-                title="Name"
-                @click="setOrdering('name')"
+                title="First Name"
+                @click="setOrdering('first_name')"
                 :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'name'"
+                :currentSort="form.order_by === 'first_name'"
+            />
+            <table-head
+                title="Last Name"
+                @click="setOrdering('last_name')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'last_name'"
             />
             <table-head
                 title="Email"
@@ -113,7 +118,8 @@ watch(() => form.search, runSearch);
                 <table-data>{{ user.id }}</table-data>
                 <table-data>{{ user.business_id }}</table-data>
                 <table-data>{{ user.business_name }}</table-data>
-                <table-data> <AvatarValue :title="user.name" /></table-data>
+                <table-data>{{ user.first_name }}</table-data>
+                <table-data>{{ user.last_name }}</table-data>
                 <table-data>{{ user.email }}</table-data>
                 <table-data>
                     <DateValue :date="user.created_at" />

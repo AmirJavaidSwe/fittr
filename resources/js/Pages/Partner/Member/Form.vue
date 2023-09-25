@@ -21,19 +21,41 @@ defineProps({
 <template>
     <FormSection @submitted="submitted">
         <template #form>
-            <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="name" value="Name" />
+            <div>
+                <InputLabel for="first_name" value="First Name" />
                 <TextInput
-                    id="title"
-                    v-model="form.name"
+                    id="first_name"
+                    v-model="form.first_name"
                     type="text"
                     class="mt-1 block w-full"
                     autocomplete="one-time-code"
                 />
-                <InputError :message="form.errors.name" class="mt-2" />
+                <InputError :message="form.errors.first_name" class="mt-2" />
+            </div>
+            <div>
+                <InputLabel for="last_name" value="Last Name" />
+                <TextInput
+                    id="last_name"
+                    v-model="form.last_name"
+                    type="text"
+                    class="mt-1 block w-full"
+                    autocomplete="one-time-code"
+                />
+                <InputError :message="form.errors.last_name" class="mt-2" />
+            </div>
+            <div>
+                <InputLabel for="phone" value="Phone" />
+                <TextInput
+                    id="phone"
+                    v-model="form.phone"
+                    type="text"
+                    class="mt-1 block w-full"
+                    autocomplete="one-time-code"
+                />
+                <InputError :message="form.errors.phone" class="mt-2" />
             </div>
 
-            <div class="col-span-6 sm:col-span-4">
+            <div>
                 <InputLabel for="email" value="Email" />
                 <TextInput
                     id="icon"

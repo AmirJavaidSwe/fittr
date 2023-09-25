@@ -13,7 +13,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
-use Laravel\Jetstream\HasProfilePhoto;
+use App\Traits\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Contracts\Database\Eloquent\Builder;
@@ -47,7 +47,8 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var string[]
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
         'password',
         'email_verified_at',
@@ -87,6 +88,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $appends = [
         'initials',
+        'full_name',
         'profile_photo_url',
         'dashboard_route',
         'active_subscription',
@@ -109,12 +111,12 @@ class User extends Authenticatable implements MustVerifyEmail
     // Accessors
     public function getIsPartnerAttribute()
     {
-        return $this->source == AppUserSource::partner->name;
+        return $this->source == AppUserSource::get('partner');
     }
 
     public function getIsAdminAttribute()
     {
-        return $this->source == AppUserSource::admin->name;
+        return $this->source == AppUserSource::get('admin');
     }
 
     public function getDashboardRouteAttribute()
@@ -134,20 +136,23 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getInitialsAttribute()
     {
-        return Str::of($this->name)->upper()->explode(' ')->reduce(function (?string $carry, string $item) {
-            return $carry .''. mb_substr($item, 0, 1);
-        });
+        return Str::of($this->first_name)->upper()->substr(0, 1).Str::of($this->last_name)->upper()->substr(0, 1);
+    }
+
+    public function getFullNameAttribute()
+    {
+        return Str::of($this->first_name)->ucfirst()->append(' ').Str::of($this->last_name)->ucfirst();
     }
 
     //Local scopes
     public function scopeAdmin($query)
     {
-        $query->where('source', AppUserSource::admin->name);
+        $query->where('source', AppUserSource::get('admin'));
     }
 
     public function scopePartner($query)
     {
-        $query->where('source', AppUserSource::partner->name);
+        $query->where('source', AppUserSource::get('partner'));
     }
 
     // public function scopeDatabaseless($query)
