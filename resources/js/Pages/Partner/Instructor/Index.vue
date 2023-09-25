@@ -87,6 +87,8 @@ let form_edit = useForm({
     id: "",
     name: "",
     email: "",
+    profile_description: "",
+    profile_image: null,
 });
 
 const showEditModal = ref(false);
@@ -100,13 +102,20 @@ const handleUpdateForm = (data) => {
     form_edit.id = data.id;
     form_edit.name = data.name;
     form_edit.email = data.email;
+    form_edit.profile_description = data.profile?.description;
+    form_edit.profile_image = data.profile?.images?.length ? { ...data.profile?.images[0] } : null;
 };
 
 const updateInstructors = () => {
-    form_edit.put(route("partner.instructors.update", form_edit.id), {
-        preserveScroll: true,
-        onSuccess: () => [form_class.reset(), closeEditModal()],
-    });
+    form_edit
+        .transform((data) => ({
+            ...data,
+            _method: "put",
+        }))
+        .post(route("partner.instructors.update", form_edit.id), {
+            preserveScroll: true,
+            onSuccess: () => [form_class.reset(), closeEditModal()],
+        });
 };
 
 //delete confiramtion modal:
@@ -274,7 +283,7 @@ const deleteItem = () => {
         <template #title> Update instructor </template>
 
         <template #content>
-            <Form :form="form_edit" :submitted="updateInstructors" modal />
+            <Form :form="form_edit" :submitted="updateInstructors" :isEdit="true" modal />
         </template>
     </SideModal>
 

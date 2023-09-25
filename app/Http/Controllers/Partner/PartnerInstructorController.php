@@ -7,12 +7,17 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Partner\InstructorFormRequest;
 use App\Models\Partner\User;
 use App\Models\Partner\Instructor;
+use App\Traits\ImageableTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class PartnerInstructorController extends Controller
 {
+
+    use ImageableTrait;
+
     /**
      * Display a listing of the resource.
      *
@@ -26,7 +31,8 @@ class PartnerInstructorController extends Controller
         $this->order_dir = $request->query('order_dir', 'asc');
 
         return Inertia::render('Partner/Instructor/Index', [
-            'instructors' => User::instructor()
+            'instructors' => User::with('profile.images')
+                ->instructor()
                 ->orderBy($this->order_by, $this->order_dir)
                 ->when($this->search, function ($query) {
                     $query->where(function($query) {
@@ -45,6 +51,7 @@ class PartnerInstructorController extends Controller
                     'email' => $user->email,
                     'created_at' => $user->created_at,
                     'updated_at' => $user->updated_at,
+                    'profile' => $user->profile,
                 ]),
             'search' => $this->search,
             'per_page' => intval($this->per_page),
@@ -156,6 +163,31 @@ class PartnerInstructorController extends Controller
     public function update(InstructorFormRequest $request, Instructor $instructor)
     {
         $instructor->update($request->validated());
+
+        $instructor->load('profile');
+
+        if ($instructor->profile) {
+            $instructor->profile->update([
+                'user_id' => $instructor->id,
+                'description' => $request->profile_description,
+            ]);
+        } else {
+            $instructor->profile()->create([
+                'user_id' => $instructor->id,
+                'description' => $request->profile_description,
+            ]);
+
+            $instructor->load('profile');
+        }
+
+        try {
+            if($request->hasFile('profile_image')) {
+                $this->updateFiles($request->file('profile_image'), [], $instructor->profile, 'images/instructor_photos');
+            }
+        } catch(\Exception $e) {
+            Log::error($e->getMessage());
+            return $this->redirectBackError(__('Something went wrong!'));
+        }
 
         return $this->redirectBackSuccess(__('Instructor updated successfully'));
     }

@@ -7,6 +7,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -41,5 +42,10 @@ class Instructor extends Authenticatable implements MustVerifyEmail
     protected function newBaseQueryBuilder(): Builder
     {
         return parent::newBaseQueryBuilder()->where('role', PartnerUserRole::INSTRUCTOR->value);
+    }
+
+    public function profile(): HasOne
+    {
+        return $this->hasOne(InstructorProfile::class, 'user_id');
     }
 }

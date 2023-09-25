@@ -7,6 +7,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
@@ -130,5 +131,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getFamilyAttribute(): array
     {
         return $this->familyMember()->get()->toArray();
+    }
+
+    public function profile(): HasOne
+    {
+        return $this->hasOne(InstructorProfile::class, 'user_id');
     }
 }
