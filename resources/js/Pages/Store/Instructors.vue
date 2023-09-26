@@ -16,9 +16,8 @@ const props = defineProps({
         </div>
         <div class="flex flex-wrap gap-4 flex-1">
             <div v-for="item in instructors" :key="item.id" class="bg-white p-4 rounded shadow-md flex-grow">
-                <div class="font-bold mb-2">{{item.name}}</div>
+                <div class="font-bold mb-2">{{item.full_name}}</div>
                 <div>email: {{item.email}}</div>
-                <div>since: {{item.created_at}}</div>
             </div>
         </div>
 

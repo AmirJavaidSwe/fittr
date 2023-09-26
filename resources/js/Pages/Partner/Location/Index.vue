@@ -21,6 +21,7 @@ import cloneDeep from "lodash/cloneDeep";
 import uniqBy from "lodash/uniqBy";
 import OnTheFlyResourceCreate from "@/Components/OnTheFlyResourceCreate.vue";
 import { hideAllPoppers } from 'floating-vue';
+import Avatar from "@/Components/Avatar.vue";
 
 const props = defineProps({
     disableSearch: {
@@ -312,7 +313,12 @@ const closeAmenityCreateForm = (data = false) => {
                         {{ location.title }}
                     </ButtonLink>
                 </TableData>
-                <TableData :title="location.manager?.name" />
+                <TableData>
+                    <div class="flex items-center gap-2">
+                        {{location.manager?.full_name}}
+                        <Avatar v-if="location.manager" size="small" :initials="location.manager.initials" :imageUrl="location.manager.profile_photo_url" />
+                    </div>
+                </TableData>
                 <TableData>
                     <DateValue
                         :date="

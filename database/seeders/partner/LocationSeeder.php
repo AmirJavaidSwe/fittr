@@ -19,11 +19,21 @@ class LocationSeeder extends Seeder
         $business_id = config('database.connections.mysql_partner.business_id');
         dump('seeding locations');
 
-        if (!Storage::disk('seeders')->exists('/partner/data/locations.json')) {
-            dump('/partner/data/locations.json file does not exist!');
+        $has_seeder_data = false;
+        if (Storage::disk('seeders')->exists('/partner/data/business_'.$business_id.'/all.json')) {
+            $data = json_decode(Storage::disk('seeders')->get('/partner/data/business_'.$business_id.'/all.json'));
+            $has_seeder_data = true;
+        }
+        if($has_seeder_data == false){
+            dump('NO locations seeder');
             return;
         }
-        $locations = json_decode(Storage::disk('seeders')->get('/partner/data/locations.json'));
+        $locations = $data->locations ?? null;
+        if(!$locations){
+            dump('NO locations data');
+            return;
+        }
+
         foreach ($locations as $location) {
             $location_model = Location::create([
                 'status' => $location->status,

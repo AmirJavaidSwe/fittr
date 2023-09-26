@@ -16,13 +16,23 @@ class PackSeeder extends Seeder
      */
     public function run()
     {
+        $business_id = config('database.connections.mysql_partner.business_id');
         dump('seeding packs');
-
-        if (!Storage::disk('seeders')->exists('/partner/data/sandboxpacks.json')) {
-            dump('/partner/data/users.json file does not exist!');
+        $has_seeder_data = false;
+        if (Storage::disk('seeders')->exists('/partner/data/business_'.$business_id.'/all.json')) {
+            $data = json_decode(Storage::disk('seeders')->get('/partner/data/business_'.$business_id.'/all.json'));
+            $has_seeder_data = true;
+        }
+        if($has_seeder_data == false){
+            dump('NO packs seeder');
             return;
         }
-        $packs = json_decode(Storage::disk('seeders')->get('/partner/data/sandboxpacks.json'));
+        $packs = $data->sandboxpacks ?? null;
+        if(!$packs){
+            dump('NO packs data');
+            return;
+        }
+
         Pack::truncate();
         foreach ($packs as $pack) {
             $pack_model = Pack::create([

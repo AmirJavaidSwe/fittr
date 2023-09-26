@@ -100,6 +100,11 @@ enum SettingKey: string
         return array_column(self::cases(), 'name');
     }
 
+    public static function get(string $case): string
+    {
+        return self::from($case)->value;
+    }
+
     public static function files(): array
     {
         return array_column([

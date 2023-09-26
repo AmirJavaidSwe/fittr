@@ -195,7 +195,7 @@ const selectAllCheckboxes = () => {
                                         </div>
                                     </table-data>
                                     <table-data>
-                                        {{ participant?.user?.name }}
+                                        {{ participant?.user?.full_name }}
                                     </table-data>
                                     <table-data>
                                         {{ participant?.user?.email }}

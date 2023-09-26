@@ -2,8 +2,6 @@
 
 namespace Database\Factories\Partner;
 
-use App\Models\Partner\ClassLesson;
-use App\Models\Partner\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,8 +17,6 @@ class ClassLessonFactory extends Factory
     public function definition(): array
     {
         $dt = today()->addDays(rand(1, 10))->addHour(rand(6, 10));
-
-        $instructors = User::instructor()->get();
 
         return [
             'title' => $this->faker->sentence,

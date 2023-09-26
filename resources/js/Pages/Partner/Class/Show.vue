@@ -9,6 +9,7 @@ import { watch } from "vue";
 import StatusLabel from "@/Components/StatusLabel.vue";
 import EmailClass from "./EmailClass.vue";
 import { ref } from "vue";
+import Avatar from '@/Components/Avatar.vue';
 
 const props = defineProps({
     class_lesson: {
@@ -122,9 +123,20 @@ const emailClass = (classLesson) => {
             />
 
             <single-view-row
-                label="Instructor"
-                :value="class_lesson.instructor?.name"
-            />
+                label="Instructors"
+            >
+                <template #value>
+                <div v-if="class_lesson.instructors" class="flex items-center gap-1 mb-1" v-for="instructor in class_lesson.instructors" :key="instructor.id">
+                    <Avatar
+                        :initials="instructor.initials"
+                        :imageUrl="instructor.profile_photo_url"
+                        :useIcon="true"
+                        size="medium"
+                    />
+                    {{instructor.full_name}}
+                </div>
+                </template>
+            </single-view-row>
 
             <single-view-row
                 label="Status"

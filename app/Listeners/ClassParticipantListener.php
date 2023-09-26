@@ -44,19 +44,20 @@ class ClassParticipantListener extends PartnerListener implements ShouldQueue
                 "CLASS_DATE" => $classLesson->start_date->tz($timezone)->format($dateFormat),
                 "CLASS_START" => $classLesson->start_date->tz($timezone)->format($timeFormat),
                 "CLASS_END" => $classLesson->end_date->tz($timezone)->format($timeFormat),
-                "MEMBER_NAME" => $booking->user?->name,
+                "MEMBER_NAME" => $booking->user->full_name,
                 "CLASS_TYPE" => $classLesson->classType?->title,
                 "CLASS_STUDIO" => $classLesson->studio?->title,
                 "CLASS_LOCATION" => $classLesson->studio?->location?->title,
             ];
 
             $mailService = new NotificationService;
-            $mailService->setTemplate(
+            $mailService
+            ->setTemplate(
                     $data['template_id'],
                     Arr::only($data, ['subject', 'content', 'content_plain'])
-                )
-                ->setParams($params)
-                ->send($booking->user?->email);
+            )
+            ->setParams($params)
+            ->send($booking->user->email);
         }
     }
 }

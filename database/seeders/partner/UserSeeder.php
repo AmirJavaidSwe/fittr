@@ -29,7 +29,7 @@ class UserSeeder extends Seeder
         foreach ($users as $user) {
             DB::table('users')->insert([
                 'role' => $user->role,
-                'stripe_id' => $user->stripe_id ?? null,
+                // 'stripe_id' => $user->stripe_id ?? null,
                 'first_name' => $user->first_name,
                 'last_name' => $user->last_name,
                 'email' => $user->email,
@@ -42,7 +42,21 @@ class UserSeeder extends Seeder
         }
 
         dump('seeding instructors');
-        $instructors = json_decode(Storage::disk('seeders')->get('/partner/data/instructors.json'));
+        $has_seeder_data = false;
+        if (Storage::disk('seeders')->exists('/partner/data/business_'.$business_id.'/all.json')) {
+            dump($business_id. ' business seeder data used');
+            $data = json_decode(Storage::disk('seeders')->get('/partner/data/business_'.$business_id.'/all.json'));
+            $has_seeder_data = true;
+        }
+        if($has_seeder_data == false){
+            dump('NO instructors seeder');
+            return;
+        }
+        $instructors = $data->instructors ?? null;
+        if(!$instructors){
+            dump('NO instructors data');
+            return;
+        }
 
         foreach ($instructors as $instructor) {
             DB::table('users')->insert([

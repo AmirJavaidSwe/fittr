@@ -10,6 +10,7 @@ use App\Models\Business;
 use App\Models\Format;
 use App\Models\User;
 use DB;
+use Storage;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Config;
@@ -49,7 +50,7 @@ class PartnerDatabaseSeeder extends Seeder
                     'db_name' => $db_name,
                 ],
                 [
-                    'status' => StateType::ACTIVE->value,
+                    'status' => StateType::get('active'),
                     'db_host' => $db_host,
                     'db_port' => $db_port,
                     'db_user' => $db_user,
@@ -61,20 +62,20 @@ class PartnerDatabaseSeeder extends Seeder
 
             // default date and time settings for business
             $business->settings()->updateOrCreate(
-                ['key' => SettingKey::date_format->name],
+                ['key' => SettingKey::get('date_format')],
                 [
-                    'group_name' => SettingGroup::general_formats->name,
-                    'cast_to' => CastType::integer->name,
+                    'group_name' => SettingGroup::get('general_formats'),
+                    'cast_to' => CastType::get('integer'),
                     'val' => Format::where('type', 'date')->where('format_string', 'Y-m-d')->first()->id,
                 ]
             );
             dump('setting up business settings: date_format');
 
             $business->settings()->updateOrCreate(
-                ['key' => SettingKey::time_format->name],
+                ['key' => SettingKey::get('time_format')],
                 [
-                    'group_name' => SettingGroup::general_formats->name,
-                    'cast_to' => CastType::integer->name,
+                    'group_name' => SettingGroup::get('general_formats'),
+                    'cast_to' => CastType::get('integer'),
                     'val' => Format::where('type', 'time')->where('format_string', 'H:i')->first()->id,
                 ]
             );
@@ -148,207 +149,29 @@ class PartnerDatabaseSeeder extends Seeder
 
             dump('running migrations on partner db: '.$db_name);
 
-            //run seeds for the first partner only
-            if($partner->id == $first_partner_id){
-                dump('seeding partner id '.$first_partner_id);
-                dump($partner->email.' set stripe connected account for business '.$business->id);
-
-                $business->update(['stripe_account_id' => 'acct_1MlaLVFZgNT1PRCW']);
-
-                //service store domain
-                $business->settings()->updateOrCreate(
-                    ['key' => SettingKey::subdomain->name],
-                    [
-                        'group_name' => SettingGroup::service_store_general->name,
-                        'cast_to' => CastType::string->name,
-                        'val' => 'demo',
-                    ]
-                );
-                //date_format
-                $business->settings()->updateOrCreate(
-                    ['key' => SettingKey::date_format->name],
-                    [
-                        'group_name' => SettingGroup::general_formats->name,
-                        'cast_to' => CastType::integer->name,
-                        'val' => 6,
-                    ]
-                );
-                //time_format
-                $business->settings()->updateOrCreate(
-                    ['key' => SettingKey::time_format->name],
-                    [
-                        'group_name' => SettingGroup::general_formats->name,
-                        'cast_to' => CastType::integer->name,
-                        'val' => 8,
-                    ]
-                );
-                //business_name
-                $business->settings()->updateOrCreate(
-                    ['key' => SettingKey::business_name->name],
-                    [
-                        'group_name' => SettingGroup::general_details->name,
-                        'cast_to' => CastType::string->name,
-                        'val' => 'ACME Corp',
-                    ]
-                );
-                //business_email
-                $business->settings()->updateOrCreate(
-                    ['key' => SettingKey::business_email->name],
-                    [
-                        'group_name' => SettingGroup::general_details->name,
-                        'cast_to' => CastType::string->name,
-                        'val' => 'support@fittr.tech',
-                    ]
-                );
-                //country_id
-                $business->settings()->updateOrCreate(
-                    ['key' => SettingKey::country_id->name],
-                    [
-                        'group_name' => SettingGroup::general_details->name,
-                        'cast_to' => CastType::integer->name,
-                        'val' => 231,
-                    ]
-                );
-                //business_phone
-                $business->settings()->updateOrCreate(
-                    ['key' => SettingKey::business_phone->name],
-                    [
-                        'group_name' => SettingGroup::general_details->name,
-                        'cast_to' => CastType::string->name,
-                        'val' => 441112223333,
-                    ]
-                );
-                //timezone
-                $business->settings()->updateOrCreate(
-                    ['key' => SettingKey::timezone->name],
-                    [
-                        'group_name' => SettingGroup::general_details->name,
-                        'cast_to' => CastType::string->name,
-                        'val' => 'Europe/London',
-                    ]
-                );
-                //fap_status
-                $business->settings()->updateOrCreate(
-                    ['key' => SettingKey::fap_status->name],
-                    [
-                        'group_name' => SettingGroup::fap->name,
-                        'cast_to' => CastType::boolean->name,
-                        'val' => 1,
-                    ]
-                );
-                //days_max_booking
-                $business->settings()->updateOrCreate(
-                    ['key' => SettingKey::days_max_booking->name],
-                    [
-                        'group_name' => SettingGroup::bookings->name,
-                        'cast_to' => CastType::integer->name,
-                        'val' => 7,
-                    ]
-                );
-                //days_max_timetable
-                $business->settings()->updateOrCreate(
-                    ['key' => SettingKey::days_max_timetable->name],
-                    [
-                        'group_name' => SettingGroup::bookings->name,
-                        'cast_to' => CastType::integer->name,
-                        'val' => 14,
-                    ]
-                );
-                //logo_url
-                $business->settings()->updateOrCreate(
-                    ['key' => SettingKey::logo_url->name],
-                    [
-                        'group_name' => SettingGroup::service_store_header->name,
-                        'cast_to' => CastType::string->name,
-                        'val' => '/locations',
-                    ]
-                );
-                //logo
-                $business->settings()->updateOrCreate(
-                    ['key' => SettingKey::logo->name],
-                    [
-                        'group_name' => SettingGroup::service_store_header->name,
-                        'cast_to' => CastType::string->name,
-                        // 'val' => 'logo/WCl1AyBWdykPShPpff6ky1wKtj68d7eFYiHd7H9d.svg', //logo gym
-                        'val' => 'logo/rvGZ8vYmwNZ5U4Boz6DiOta7kV7raJtDATZ2YVhs.jpg',
-                    ]
-                );
-                //favicon
-                $business->settings()->updateOrCreate(
-                    ['key' => SettingKey::favicon->name],
-                    [
-                        'group_name' => SettingGroup::service_store_header->name,
-                        'cast_to' => CastType::string->name,
-                        'val' => 'favicon/98mi9T3fVxS7LVJkD0FEn0vcmuTgnutTeFOLVxjF.png',
-                    ]
-                );
-                //link_facebook
-                $business->settings()->updateOrCreate(
-                    ['key' => SettingKey::link_facebook->name],
-                    [
-                        'group_name' => SettingGroup::service_store_header->name,
-                        'cast_to' => CastType::string->name,
-                        'val' => 'https://www.facebook.com/digmefitness',
-                    ]
-                );
-                //link_instagram
-                $business->settings()->updateOrCreate(
-                    ['key' => SettingKey::link_instagram->name],
-                    [
-                        'group_name' => SettingGroup::service_store_header->name,
-                        'cast_to' => CastType::string->name,
-                        'val' => 'https://www.instagram.com/digmefitness',
-                    ]
-                );
-                //link_twitter
-                $business->settings()->updateOrCreate(
-                    ['key' => SettingKey::link_twitter->name],
-                    [
-                        'group_name' => SettingGroup::service_store_header->name,
-                        'cast_to' => CastType::string->name,
-                        'val' => 'https://twitter.com/digmefitness',
-                    ]
-                );
-                //address_line1
-                $business->settings()->updateOrCreate(
-                    ['key' => SettingKey::address_line1->name],
-                    [
-                        'group_name' => SettingGroup::general_address->name,
-                        'cast_to' => CastType::string->name,
-                        'val' => 'Spencer House, 23 Sheen Road',
-                    ]
-                );
-                //city
-                $business->settings()->updateOrCreate(
-                    ['key' => SettingKey::city->name],
-                    [
-                        'group_name' => SettingGroup::general_address->name,
-                        'cast_to' => CastType::string->name,
-                        'val' => 'Richmond',
-                    ]
-                );
-                //legal_country_id
-                $business->settings()->updateOrCreate(
-                    ['key' => SettingKey::legal_country_id->name],
-                    [
-                        'group_name' => SettingGroup::general_address->name,
-                        'cast_to' => CastType::integer->name,
-                        'val' => 231,
-                    ]
-                );
-                //zip_code
-                $business->settings()->updateOrCreate(
-                    ['key' => SettingKey::zip_code->name],
-                    [
-                        'group_name' => SettingGroup::general_address->name,
-                        'cast_to' => CastType::string->name,
-                        'val' => 'TW9 1BN',
-                    ]
-                );
-
-                // Artisan::call('db:seed --force Database\\\Seeders\\\Partner\\\DatabaseSeeder');
-                Artisan::call('db:seed', ['--class' => 'Database\Seeders\Partner\DatabaseSeeder', '--force' => true]);
+            $has_seeder_data = false;
+            if (Storage::disk('seeders')->exists('/partner/data/business_'.$business->id.'/all.json')) {
+                dump($business->id. ' business seeder data used');
+                $data = json_decode(Storage::disk('seeders')->get('/partner/data/business_'.$business->id.'/all.json'));
+                $has_seeder_data = true;
             }
+            if($has_seeder_data == false){
+                continue;
+            }
+            $business->update(['stripe_account_id' => $data->stripe_account_id]);
+            foreach ($data->business_settings as $business_setting) {
+                $business->settings()->updateOrCreate(
+                    ['key' => $business_setting->key],
+                    [
+                        'group_name' => $business_setting->group_name,
+                        'cast_to' => $business_setting->cast_to,
+                        'val' => $business_setting->val,
+                    ]
+                );
+            }
+
+            // Artisan::call('db:seed --force Database\\\Seeders\\\Partner\\\DatabaseSeeder');
+            Artisan::call('db:seed', ['--class' => 'Database\Seeders\Partner\DatabaseSeeder', '--force' => true]);
         }
 
         DB::reconnect('mysql'); //Reconnect to master database.
