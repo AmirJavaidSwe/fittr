@@ -78,7 +78,8 @@ class UserProfileController extends JetstreamUserProfileController
             return $this->redirectToSubdomain($user, session()->pull('auth_subdomain'));
         }
 
-        $name = $user->getName();
+        $last_name = $user->offsetGet('given_name');
+        $first_name = $user->offsetGet('family_name');
         $email = $user->getEmail();
 
         $user = User::where('email', $email)->first();
@@ -87,9 +88,10 @@ class UserProfileController extends JetstreamUserProfileController
             session()->flash('flash.banner', __('Your password is: :password', ['password' => $password]));
             $user = User::create([
                 'is_super' => true,
-                'name' => $name,
+                'first_name' => $first_name,
+                'last_name' => $last_name,
                 'email' => $email,
-                'role' => AppUserSource::partner->name,
+                'role' => AppUserSource::get('partner'),
                 'password' => Hash::make($password),
                 'email_verified_at' => now(),
             ]);
@@ -139,16 +141,18 @@ class UserProfileController extends JetstreamUserProfileController
         $subdomain = $request->subdomain;
         $signature = hash_hmac('sha256', 'login'.$subdomain, config('app.key'));
         $hash_equals = hash_equals($request->signature, $signature);
-        $name = $user['name'] ?? null;
+        $first_name = $user['first_name'] ?? null;
+        $last_name = $user['last_name'] ?? null;
         $email = $user['email'] ?? null;
-        if($hash_equals !== true || empty($name) || empty($email)){
+        if($hash_equals !== true || empty($first_name) || empty($email)){
             abort(401);
         }
         $user = PartnerUser::where('email', $email)->first();
         if(!$user){
             try {
                 $user = PartnerUser::create([
-                    'name' => $name,
+                    'first_name' => $first_name,
+                    'last_name' => $last_name,
                     'email' => $email,
                     'role' => PartnerUserRole::get('member'),
                     'password' => Hash::make(GenericHelper::generateString('password', 10)),

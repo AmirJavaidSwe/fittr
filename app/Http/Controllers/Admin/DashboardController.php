@@ -15,7 +15,7 @@ class DashboardController extends Controller
 {
     public function index(Request $request)
     {
-        if (Gate::denies('viewAny-'.AppUserSource::admin->name . '-dashboard-viewAny')) {
+        if (Gate::denies('viewAny-'.AppUserSource::get('admin'). '-dashboard-viewAny')) {
             abort(403);
         }
         return Inertia::render('Admin/Dashboard', [

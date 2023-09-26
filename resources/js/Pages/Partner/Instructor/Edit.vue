@@ -18,8 +18,10 @@ let props = defineProps({
 });
 
 let form = useForm({
-    name: props.instructor.name,
-    email: props.instructor.email
+    first_name: props.instructor.first_name,
+    last_name: props.instructor.last_name,
+    email: props.instructor.email,
+    phone: props.instructor.phone
 });
 
 </script>

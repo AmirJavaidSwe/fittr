@@ -1,20 +1,21 @@
 <script setup>
-import { ref, watch, computed } from "vue";
-import CardBasic from "@/Components/CardBasic.vue";
-import ButtonLink from "@/Components/ButtonLink.vue";
+import { ref, computed } from "vue";
 import { useForm, usePage } from "@inertiajs/vue3";
+import Form from "./Form.vue";
+import ConfirmationModal from "@/Components/ConfirmationModal.vue";
 import SideModal from "@/Components/SideModal.vue";
 import WaiverAcceptCheck from "@/Icons/WaiverAcceptCheck.vue";
 import WaiverNotAcceptedCheck from "@/Icons/WaiverNotAcceptedCheck.vue";
-import Form from "./Form.vue";
 import WaiverListing from "./WaiverListing.vue";
 import WaiverForm from "../../WaiverForm.vue";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import DateValue from "@/Components/DataTable/DateValue.vue";
 import { DateTime } from "luxon";
+import DateValue from "@/Components/DataTable/DateValue.vue";
+import CardBasic from "@/Components/CardBasic.vue";
+import ButtonLink from "@/Components/ButtonLink.vue";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faUserCircle } from "@fortawesome/free-regular-svg-icons";
 import EditIcon from "@/Icons/Edit.vue";
 import DeleteIcon from "@/Icons/Delete.vue";
-import ConfirmationModal from "@/Components/ConfirmationModal.vue";
 
 const props = defineProps({
     business_settings: Object,
@@ -39,18 +40,19 @@ const closeEditModal = () => {
     EditForm.reset().clearErrors();
 };
 
-
 const user_waiver_ids = ref([]);
 const signed_waiver_ids = ref([]);
 
 const CreateForm = useForm({
-    name: null,
+    first_name: null,
+    last_name: null,
     date_of_birth: null,
     profile_photo: null,
 });
 const EditForm = useForm({
     id: null,
-    name: null,
+    first_name: null,
+    last_name: null,
     date_of_birth: null,
     profile_photo: null,
     profile_photo_path: null,
@@ -102,7 +104,8 @@ const showCreateFamily = () => {
 const editMember = (member) => {
     EditForm.reset().clearErrors();
     EditForm.id = member.id;
-    EditForm.name = member.name;
+    EditForm.first_name = member.first_name;
+    EditForm.last_name = member.last_name;
     EditForm.date_of_birth = member.date_of_birth;
     EditForm.profile_photo = member.profile_photo;
     EditForm.profile_photo_path = member.profile_photo_path;
@@ -194,20 +197,22 @@ const updateUserWaiverIds = ($event) => {
             <font-awesome-icon class="ml-2" :icon="faPlus" />
         </ButtonLink>
     </div>
-    <div class="mt-[75px]">
+    <div class="flex flex-wrap gap-4">
         <template v-for="(familyMember, index) in family_members" :key="index">
-            <CardBasic class="mb-4">
+            <CardBasic width="lg" class="mb-4">
                 <template #default>
                     <div class="flex items-center justify-between">
-                        <div class="flex items-center">
+                        <div class="flex flex-grow items-center">
                             <img
+                                v-if="profile_photo_url"
                                 :src="familyMember.profile_photo_url"
-                                :alt="familyMember.name"
+                                :alt="familyMember.full_name"
                                 class="rounded-full h-20 w-20 object-cover"
                             />
+                            <font-awesome-icon v-else :icon="faUserCircle"  />
                             <div class="pl-4">
                                 <div class="block pl-6 font-semibold mb-2">
-                                    {{ familyMember.name }}
+                                    {{ familyMember.full_name }}
                                 </div>
                                 <div class="block pl-4">
                                     <DateValue
@@ -224,9 +229,7 @@ const updateUserWaiverIds = ($event) => {
                                 </div>
                             </div>
                         </div>
-                        <div
-                            class="inline-flex items-center justify-start mr-20"
-                        >
+                        <div class="inline-flex">
                             <EditIcon
                                 class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-5 cursor-pointer text-blue"
                                 v-tooltip="'Edit'"
@@ -235,9 +238,7 @@ const updateUserWaiverIds = ($event) => {
                             <DeleteIcon
                                 class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2 cursor-pointer text-red-900"
                                 v-tooltip="'Delete'"
-                                @click.prevent="
-                                    confirmDeletion(familyMember.id)
-                                "
+                                @click.prevent="confirmDeletion(familyMember.id)"
                             />
                         </div>
                     </div>

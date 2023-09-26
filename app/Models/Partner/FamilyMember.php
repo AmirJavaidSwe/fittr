@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Laravel\Jetstream\HasProfilePhoto;
+use App\Traits\Jetstream\HasProfilePhoto;
 
 class FamilyMember extends Model
 {
@@ -28,7 +28,8 @@ class FamilyMember extends Model
      * @var string[]
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'date_of_birth'
     ];
 
@@ -48,21 +49,12 @@ class FamilyMember extends Model
      */
     protected $appends = [
         'initials',
+        'full_name',
         'profile_photo_url',
         'dashboard_route',
         'waivers'
     ];
 
-    /**
-     * Interact with the user's first name.
-     */
-    protected function dateOfBirth(): Attribute
-    {
-        return Attribute::make(
-            get: fn (string $value) => date('Y-m-d', strtotime($value)),
-            set: fn (string $value) => date('Y-m-d', strtotime($value)),
-        );
-    }
 
     public function getDashboardRouteAttribute(): string
     {
@@ -75,9 +67,12 @@ class FamilyMember extends Model
 
     public function getInitialsAttribute()
     {
-        return Str::of($this->name)->upper()->explode(' ')->reduce(function (?string $carry, string $item) {
-            return $carry .''. mb_substr($item, 0, 1);
-        });
+        return Str::of($this->first_name)->upper()->substr(0, 1).Str::of($this->last_name)->upper()->substr(0, 1);
+    }
+
+    public function getFullNameAttribute()
+    {
+        return Str::of($this->first_name)->ucfirst()->append(' ').Str::of($this->last_name)->ucfirst();
     }
 
     public function getWaiversAttribute()

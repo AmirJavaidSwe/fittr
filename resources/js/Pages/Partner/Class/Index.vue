@@ -27,7 +27,7 @@ import { faEnvelope, faEnvelopesBulk, faPlus, faEye, faEyeSlash } from "@fortawe
 import { faCopy } from "@fortawesome/free-regular-svg-icons";
 import StatusLabel from "@/Components/StatusLabel.vue";
 import ColoredValue from "@/Components/DataTable/ColoredValue.vue";
-import AvatarValue from "@/Components/DataTable/AvatarValue.vue";
+import Avatar from "@/Components/Avatar.vue";
 import DateValue from "@/Components/DataTable/DateValue.vue";
 import ActionsIcon from "@/Icons/ActionsIcon.vue";
 import Checkbox from "@/Components/Checkbox.vue";
@@ -246,7 +246,7 @@ const handleUpdateForm = (data) => {
     formEdit.status = data.status;
     formEdit.start_date = data.start_date;
     formEdit.duration = data.duration;
-    formEdit.instructor_id = data.instructor.map((o) => o.id);
+    formEdit.instructor_id = data.instructors.map((o) => o.id);
     formEdit.class_type_id = data.class_type_id;
     formEdit.studio_id = data.studio_id;
     formEdit.is_off_peak = data.is_off_peak;
@@ -263,7 +263,7 @@ const handleDuplicateForm = (data) => {
     duplicateClassForm.status = "active";
     duplicateClassForm.start_date = data.start_date;
     duplicateClassForm.duration = data.duration;
-    duplicateClassForm.instructor_id = data.instructor.map((o) => o.id);
+    duplicateClassForm.instructor_id = data.instructors.map((o) => o.id);
     duplicateClassForm.class_type_id = data.class_type_id;
     duplicateClassForm.studio_id = data.studio_id;
     duplicateClassForm.is_off_peak = data.is_off_peak;
@@ -549,15 +549,13 @@ const onPreviewModal = () => {
 
     previewClassDetails.value.start_date = DateTime.fromISO(previewClassDetails.value.start_date.toISOString(), { zone: props.business_settings?.timezone });
     previewClassDetails.value.end_date = previewClassDetails.value.start_date.plus({ minutes: previewClassDetails.value.duration });
-
-    previewClassDetails.value.instructor = previewClassDetails.value?.instructor_id?.map((item) => {
-        return props.instructors[item] ? { name: props.instructors[item] } : {};
-    });
+    previewClassDetails.value.instructors = props.instructors.filter((ins) => previewClassDetails.value.instructor_id.includes(ins.id));
 
     const selectedClassType = props.classtypes[previewClassDetails.value?.class_type_id];
     previewClassDetails.value.class_type = selectedClassType ? { title: selectedClassType } : {};
 
     showPreviewModal.value = true;
+    console.log(previewClassDetails)
 }
 const closePreviewModal = () => {
     showPreviewModal.value = false;
@@ -748,23 +746,20 @@ const emailClass = (classLesson) => {
                 <TableData :title="class_lesson?.class_type?.title" />
 
                 <!-- instructors -->
-                <TableData class="text-center">
-                    <template v-if="class_lesson?.instructor.length">
-                        <template
-                            v-for="(
-                                instructor, ins
-                            ) in class_lesson?.instructor"
-                            :key="ins"
-                        >
-                            <AvatarValue
+                <TableData>
+                    <template v-if="class_lesson?.instructors.length">
+                        <div class="flex items-center">
+                            <Avatar
+                                v-for="instructor in class_lesson.instructors" :key="instructor.id"
                                 class="cursor-pointer inline-flex justify-center mr-1 text-center items-center"
-                                :onlyTooltip="true"
-                                :title="instructor?.name ?? 'Demo Ins'"
+                                :initials="instructor.initials"
+                                :imageUrl="instructor.profile_photo_url"
+                                v-tooltip="instructor.full_name"
                             />
-                        </template>
+                        </div>
                     </template>
                     <template v-else>
-                        <AvatarValue :title="'Demo Ins'" />
+                        ORPHAN
                     </template>
                 </TableData>
 

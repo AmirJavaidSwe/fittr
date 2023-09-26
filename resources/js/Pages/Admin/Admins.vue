@@ -2,6 +2,7 @@
 import { Link, useForm } from "@inertiajs/vue3";
 import { DateTime } from "luxon";
 import { faPencil, faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import Avatar from "@/Components/Avatar.vue";
 import ButtonLink from '@/Components/ButtonLink.vue';
 const props = defineProps({
     admins: Array,
@@ -14,7 +15,8 @@ const props = defineProps({
             <thead class="uppercase bg-gray-100 text-sm whitespace-nowrap">
                 <tr>
                     <th class="px-6 py-3 border-b cursor-pointer">ID</th>
-                    <th class="px-6 py-3 border-b cursor-pointer">Name</th>
+                    <th class="px-6 py-3 border-b cursor-pointer">First Name</th>
+                    <th class="px-6 py-3 border-b cursor-pointer">Last Name</th>
                     <th class="px-6 py-3 border-b cursor-pointer">Email</th>
                     <th class="px-6 py-3 border-b cursor-pointer">Is Super Admin</th>
                     <th class="px-6 py-3 border-b cursor-pointer">Roles</th>
@@ -27,7 +29,8 @@ const props = defineProps({
             <tbody>
                 <tr v-for="admin in admins" :key="admin.id" class="border-b whitespace-nowrap bg-white hover:bg-gray-50">
                     <td class="px-6 py-4">{{admin.id}}</td>
-                    <td class="px-6 py-4">{{admin.name}}</td>
+                    <td class="px-6 py-4">{{admin.first_name}}</td>
+                    <td class="px-6 py-4">{{admin.last_name}}</td>
                     <td class="px-6 py-4">{{admin.email}}</td>
                     <td class="px-6 py-4 text-center">
                         <div class="ml-4 w-16 rounded my-1 bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 dark:bg-gray-700 dark:text-gray-300">
@@ -42,7 +45,7 @@ const props = defineProps({
                         </template>
                     </td>
                     <td class="px-6 py-4">
-                        <img :src="admin.profile_photo_url" :alt="admin.name" class="rounded-full h-8 w-8 object-cover" />
+                        <Avatar :initials="admin.initials" :image-url="admin.profile_photo_url" size="small" />
                     </td>
                     <td class="px-6 py-4">{{DateTime.fromISO(admin.created_at)}}</td>
                     <td class="px-6 py-4">

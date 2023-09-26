@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref } from "vue";
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head, Link, useForm } from '@inertiajs/vue3';
 import { DateTime } from "luxon";
 import LogoLetter from '@/Components/LogoLetter.vue';
 import FormSection from "@/Components/FormSection.vue";
@@ -218,18 +218,27 @@ const submitForm = () => {
                 </template>
 
                 <template #actions>
+                    <div class="flex justify-between w-full">
+                        <Link
+                            :href="route('logout')"
+                            as="button"
+                            method="post"
+                            class="text-gray-500 hover:text-gray-900 transition font-semibold"
+                            >
+                            Log out
+                        </Link>
+                        <ButtonLink
+                            styling="secondary"
+                            size="default"
+                            :class="{ 'opacity-25': form.processing }"
+                            :disabled="form.processing"
+                        >
+                            Save
+                        </ButtonLink>
+                    </div>
                     <ActionMessage :on="form.recentlySuccessful" class="mr-3">
                         Saved.
                     </ActionMessage>
-
-                    <ButtonLink
-                        styling="secondary"
-                        size="default"
-                        :class="{ 'opacity-25': form.processing }"
-                        :disabled="form.processing"
-                    >
-                        Save
-                    </ButtonLink>
                 </template>
             </FormSection>
         </div> 

@@ -16,7 +16,7 @@ class StoreBookingCancellationService
 
         $request = request();
 
-        $booking = Booking::with(['user', 'class.classType', 'class.instructor', 'class.studio.location'])
+        $booking = Booking::with(['user', 'class.classType', 'class.instructors', 'class.studio.location'])
                    ->where('class_id', $request->class_id)
                    ->where('user_id', auth()->user()?->id)
                    ->where('id', $request->id)->active()->first();
@@ -41,7 +41,7 @@ class StoreBookingCancellationService
 
         event(new BookingCancellation($booking));
 
-        $waitlist = Booking::with('user', 'class.classType', 'class.instructor', 'class.studio.location')->where('class_id', $request->class_id)->waitlisted()->first();
+        $waitlist = Booking::with('user', 'class.classType', 'class.instructors', 'class.studio.location')->where('class_id', $request->class_id)->waitlisted()->first();
 
         if($waitlist) {
             $waitlist->update([
@@ -64,7 +64,7 @@ class StoreBookingCancellationService
 
         foreach($request->ids_cancellation as $k => $member) {
 
-            $booking = Booking::with(['user', 'class.classType', 'class.instructor', 'class.studio.location'])->where('class_id', $request->class_id)
+            $booking = Booking::with(['user', 'class.classType', 'class.instructors', 'class.studio.location'])->where('class_id', $request->class_id)
             ->where('user_id', auth()->user()?->id);
 
             if(!$member['is_parent']) {
@@ -86,7 +86,7 @@ class StoreBookingCancellationService
 
             $bookings[] = $booking;
 
-            $waitlist = Booking::with('user', 'class.classType', 'class.instructor', 'class.studio.location')->where('class_id', $request->class_id)->waitlisted()->skip($k)->first();
+            $waitlist = Booking::with('user', 'class.classType', 'class.instructors', 'class.studio.location')->where('class_id', $request->class_id)->waitlisted()->skip($k)->first();
 
             if($waitlist) {
                 $waitlists[] = $waitlist;

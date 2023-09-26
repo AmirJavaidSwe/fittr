@@ -30,7 +30,8 @@ class UserSeeder extends Seeder
             DB::table('users')->insert([
                 'role' => $user->role,
                 'stripe_id' => $user->stripe_id ?? null,
-                'name' => $user->name,
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
                 'email' => $user->email,
                 'password' => Hash::make($user->password),
                 'remember_token' => Str::random(10),
@@ -45,7 +46,8 @@ class UserSeeder extends Seeder
 
         foreach ($instructors as $instructor) {
             DB::table('users')->insert([
-                'name' => $instructor->name,
+                'first_name' => $instructor->first_name,
+                'last_name' => $instructor->last_name,
                 'email' => $instructor->email,
                 'role' => $instructor->role,
                 'password' => Hash::make($instructor->password),

@@ -19,7 +19,7 @@ class PartnerController extends Controller
 
     public function index(Request $request)
     {
-        if (Gate::denies('viewAny-' . AppUserSource::admin->name . '-partner-management-viewAny')) {
+        if (Gate::denies('viewAny-' . AppUserSource::get('admin'). '-partner-management-viewAny')) {
             abort(403);
         }
         $this->search = $request->query('search', null);
@@ -34,7 +34,8 @@ class PartnerController extends Controller
                     $query->where(function ($query) {
                         $query
                             ->orWhere('id', intval($this->search))
-                            ->orWhere('name', 'LIKE', '%' . $this->search . '%')
+                            ->orWhere('first_name', 'LIKE', '%'.$this->search.'%')
+                            ->orWhere('last_name', 'LIKE', '%'.$this->search.'%')
                             ->orWhere('email', 'LIKE', '%' . $this->search . '%');
                     });
                 })
@@ -44,7 +45,10 @@ class PartnerController extends Controller
                 ->through(
                     fn ($user) => [
                         'id' => $user->id,
-                        'name' => $user->name,
+                        'first_name' => $user->first_name,
+                        'last_name' => $user->last_name,
+                        'initials' => $user->initials,
+                        'full_name' => $user->full_name,
                         'email' => $user->email,
                         'business_id' => $user->business_id,
                         'business_name' => $user->business?->settings->firstWhere('key', 'business_name')?->val,
@@ -62,7 +66,7 @@ class PartnerController extends Controller
 
     public function show(Request $request, $id)
     {
-        if (Gate::denies('view-' . AppUserSource::admin->name . '-partner-management-view')) {
+        if (Gate::denies('view-' . AppUserSource::get('admin'). '-partner-management-view')) {
             abort(403);
         }
         $partner = User::partner()->findOrFail($id);
@@ -76,7 +80,7 @@ class PartnerController extends Controller
 
     public function edit(Request $request, $id)
     {
-        if (Gate::denies('update-' . AppUserSource::admin->name . '-partner-management-update')) {
+        if (Gate::denies('update-' . AppUserSource::get('admin'). '-partner-management-update')) {
             abort(403);
         }
         $partner = User::partner()->findOrFail($id);
@@ -90,7 +94,7 @@ class PartnerController extends Controller
 
     public function update(Request $request, $id)
     {
-        if (Gate::denies('update-' . AppUserSource::admin->name . '-partner-management-update')) {
+        if (Gate::denies('update-' . AppUserSource::get('admin'). '-partner-management-update')) {
             abort(403);
         }
         $validated = $request->validateWithBag('updateProfileInformation', [
@@ -106,7 +110,7 @@ class PartnerController extends Controller
 
     public function performanceIndex(Request $request)
     {
-        if (Gate::denies('viewAny-' . AppUserSource::admin->name . '-partners-performance-viewAny')) {
+        if (Gate::denies('viewAny-' . AppUserSource::get('admin'). '-partners-performance-viewAny')) {
             abort(403);
         }
         return Inertia::render('Admin/PartnersPerformance', [
@@ -118,7 +122,7 @@ class PartnerController extends Controller
     // public function loginAs(Request $request,  \Illuminate\Contracts\Auth\StatefulGuard $guard)
     public function loginAsPartner(Request $request)
     {
-        if (Gate::denies('loginAs-' . AppUserSource::admin->name . '-partner-management-loginAs')) {
+        if (Gate::denies('loginAs-' . AppUserSource::get('admin'). '-partner-management-loginAs')) {
             abort(403);
         }
         // note auth() \Illuminate\Auth\AuthManager has 2 guards:

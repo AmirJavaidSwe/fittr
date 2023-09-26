@@ -65,7 +65,7 @@ class ClassLesson extends Model
         return $this->belongsTo(Studio::class);
     }
 
-    public function instructor(): BelongsToMany
+    public function instructors(): BelongsToMany
     {
         return $this->belongsToMany(Instructor::class, 'class_instructor', 'class_id', 'instructor_id');
     }

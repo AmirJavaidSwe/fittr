@@ -60,7 +60,7 @@ class PartnerClassLessonController extends Controller
             'studio.class_type_studios',
             'studio.location',
             'classType',
-            'instructor',
+            'instructors',
             'waitlists',
             'bookings' => fn ($query) => $query->active()
         ])
@@ -103,7 +103,7 @@ class PartnerClassLessonController extends Controller
                 // apply instructors filters
                 if ($request->has('instructor_id') && count($request->instructor_id)) {
                     $query->where(function ($query) use ($request) {
-                        $query->whereHas('instructor', function ($q) {
+                        $query->whereHas('instructors', function ($q) {
                             $q->whereIn('id', request()->instructor_id);
                         });
                     });
@@ -157,7 +157,7 @@ class PartnerClassLessonController extends Controller
             'header' => __('Classes'),
             'classes' => $classes,
             'statuses' => ClassStatus::labels(),
-            'instructors' => Instructor::pluck('name', 'id'),
+            'instructors' => Instructor::select('id', 'first_name', 'last_name', 'email', 'profile_photo_path')->get(),
             'classtypes' => ClassType::pluck('title', 'id'),
             'studios' => Studio::with(['class_type_studios', 'location'])
                 ->select('id', 'title', 'location_id')
@@ -168,7 +168,7 @@ class PartnerClassLessonController extends Controller
                     return $item;
                 }),
             'roles' => Role::select('id', 'title')->where('source', auth()->user()->source)->where('business_id', auth()->user()->business_id)->get(),
-            'users' => User::select('id', 'name', 'email')->partner()->where('business_id', auth()->user()->business_id)->get(),
+            'users' => User::select('id', 'first_name', 'last_name', 'email')->partner()->where('business_id', auth()->user()->business_id)->get(),
             'locations' => Location::pluck('title', 'id'),
             'countries' => Country::select('id', 'name')->whereStatus(1)->get(),
             'amenities' => Amenity::select('id', 'title')->get()->map(fn ($item) => ['label' => $item->title, 'value' => $item->id]),
@@ -267,7 +267,7 @@ class PartnerClassLessonController extends Controller
 
                     $class = ClassLesson::create($class_data);
 
-                    $class->instructor()->sync($class_data['instructor_id'] ?? []);
+                    $class->instructors()->sync($class_data['instructor_id'] ?? []);
                 }
                 return $this->redirectBackSuccess(__('Classes created successfully'), 'partner.classes.index');
             }
@@ -300,7 +300,7 @@ class PartnerClassLessonController extends Controller
 
         $class = ClassLesson::create($validated);
 
-        $class->instructor()->sync($validated['instructor_id'] ?? []);
+        $class->instructors()->sync($validated['instructor_id'] ?? []);
 
         return $this->redirectBackSuccess(__('Class updated successfully'));
     }
@@ -346,7 +346,7 @@ class PartnerClassLessonController extends Controller
                     'link' => null,
                 ],
             ),
-            'class_lesson' => $class->load(['studio.class_type_studios', 'classType', 'instructor', 'waitlists.user', 'bookings.user']),
+            'class_lesson' => $class->load(['studio.class_type_studios', 'classType', 'instructors', 'waitlists.user', 'bookings.user']),
             'bookings' => $bookings,
             'waitlists' => $waitlists,
             'cancellations' => $cancellations,
@@ -379,7 +379,7 @@ class PartnerClassLessonController extends Controller
                     'link' => null,
                 ],
             ),
-            'class_lesson' => $class->load(['studio', 'instructor', 'classType']),
+            'class_lesson' => $class->load(['studio', 'instructors', 'classType']),
             'statuses' => ClassStatus::labels(),
             'instructors' => Instructor::orderBy('id', 'desc')->pluck('name', 'id'),
             'classtypes' => ClassType::orderBy('id', 'desc')->pluck('title', 'id'),
@@ -407,7 +407,7 @@ class PartnerClassLessonController extends Controller
         $validated['end_date'] = Carbon::parse($validated['start_date'])->addMinutes($validated['duration']);
         $class->fill($validated);
         $class->save();
-        $class->instructor()->sync($validated['instructor_id'] ?? []);
+        $class->instructors()->sync($validated['instructor_id'] ?? []);
 
         if ($request->does_repeat) {
             $start_date = $class->start_date->copy();
@@ -442,7 +442,7 @@ class PartnerClassLessonController extends Controller
                     $repeat_class->start_date = $start_date;
                     $repeat_class->end_date = $start_date->copy()->addMinutes($class_duration);
                     $repeat_class->save();
-                    $repeat_class->instructor()->sync($class_instructors);
+                    $repeat_class->instructors()->sync($class_instructors);
                 }
 
                 return $this->redirectBackSuccess(__('Class updated and new classes created successfully'), 'partner.classes.index');
@@ -486,7 +486,7 @@ class PartnerClassLessonController extends Controller
     public function destroy(ClassLesson $class)
     {
         // TODO: prevent delete here or early, when class has active bookings
-        $class->instructor()->sync([]);
+        $class->instructors()->sync([]);
         $class->delete();
 
         // TODO: if bookings exist and admin really wants to delete a class, we need to cancel and refund all bookings made for this class
@@ -519,7 +519,7 @@ class PartnerClassLessonController extends Controller
                 $class->name,
                 $class->start_date,
                 $class->end_date,
-                implode(', ', $class->instructor()->pluck('name')->toArray()),
+                implode(', ', $class->instructors()->pluck('name')->toArray()),
                 $class->studio()->first()->name,
                 $class->status
             ]);
@@ -565,7 +565,7 @@ class PartnerClassLessonController extends Controller
             }
             $class->save();
             if(!empty(request()->instructor_id)) {
-                $class->instructor()->sync(request()->instructor_id);
+                $class->instructors()->sync(request()->instructor_id);
             }
         }
 
@@ -586,7 +586,7 @@ class PartnerClassLessonController extends Controller
         $classes = ClassLesson::whereIn('id', request()->ids)->get();
 
         foreach ($classes as $k => $class) {
-            $class->instructor()->detach();
+            $class->instructors()->detach();
             $class->delete();
         }
 
@@ -623,7 +623,7 @@ class PartnerClassLessonController extends Controller
             $start_date = Carbon::parse($request->start_date, $timezone)->startOfDay()->utc();
             $end_date = Carbon::parse($request->end_date, $timezone)->endOfDay()->utc();
 
-            $classes = ClassLesson::with('classType', 'studio.location', 'instructor')
+            $classes = ClassLesson::with('classType', 'studio.location', 'instructors')
                 ->where('start_date', '>=', $start_date)
                 ->where('end_date', '<=', $end_date)
                 ->when($request->class_type_id, fn ($query) => $query->where('class_type_id', $request->class_type_id))
@@ -710,7 +710,7 @@ class PartnerClassLessonController extends Controller
         }
 
         $this->copied_classes_count = 0;
-        ClassLesson::with(['instructor' => fn ($query) => $query->select('id')])
+        ClassLesson::with(['instructors' => fn ($query) => $query->select('users.id')])
             ->whereIn('id', $request->ids)
             ->each(function ($class) use ($request) {
                 foreach (range(1, $request->shift_repeat) as $repeat) {
@@ -718,7 +718,7 @@ class PartnerClassLessonController extends Controller
                     $classModel->start_date = $classModel->start_date->addDays($request->shift_period * $repeat);
                     $classModel->end_date = $classModel->end_date->addDays($request->shift_period * $repeat);
                     $classModel->save();
-                    $classModel->instructor()->sync($class->instructor->pluck('id'));
+                    $classModel->instructors()->sync($class->instructors->pluck('id'));
 
                     $this->copied_classes_count++;
                 }

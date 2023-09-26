@@ -26,7 +26,7 @@ let form = useForm({
     status: props.class_lesson.status,
     start_date: props.class_lesson.start_date,
     duration: props.class_lesson.duration,
-    instructor_id: props.class_lesson.instructor.map((o) => o.id),
+    instructor_id: props.class_lesson.instructors.map((o) => o.id),
     class_type_id: props.class_lesson.class_type_id,
     studio_id: props.class_lesson.studio_id,
     is_off_peak: props.class_lesson.is_off_peak,

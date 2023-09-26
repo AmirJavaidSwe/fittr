@@ -60,7 +60,9 @@ class VerifyEmailController extends Controller
         }
 
         if ($request->user()->markEmailAsVerified()) {
-            session()->flash('extra', ['show_password_creation' => true]); // Show password creation for first time only
+            if(empty($request->user()->password)){
+                session()->flash('extra', ['show_password_creation' => true]); // Show password creation for first time only
+            }
             event(new Verified($request->user()));
         }
 

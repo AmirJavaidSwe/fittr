@@ -30,12 +30,10 @@ defineProps({
         <template #item>
             <single-view-row label="ID" :value="member.id" />
 
-            <single-view-row label="Name" :value="member.name" />
-
-            <single-view-row
-                label="Contents"
-                :value="member.email"
-            />
+            <single-view-row label="First Name" :value="member.first_name" />
+            <single-view-row label="Last Name" :value="member.last_name" />
+            <single-view-row label="Phone" :value="member.phone" />
+            <single-view-row label="Email" :value="member.email" />
 
             <single-view-row
                 label="Created At"

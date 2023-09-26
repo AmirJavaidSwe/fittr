@@ -19,7 +19,8 @@ return new class extends Migration
             $table->enum('source', AppUserSource::all());
             $table->boolean('is_super')->default(false);
             $table->integer('business_id')->nullable();
-            $table->string('name');
+            $table->string('first_name');
+            $table->string('last_name');
             $table->string('email')->unique();
             $table->string('password')->nullable();
             $table->rememberToken();

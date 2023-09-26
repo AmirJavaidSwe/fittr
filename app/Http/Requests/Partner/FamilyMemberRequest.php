@@ -26,7 +26,8 @@ class FamilyMemberRequest extends FormRequest
     public function rules()
     {
         return  [
-            'name' => 'required|max:100',
+            'first_name' => 'required|max:100',
+            'last_name' => 'required|max:100',
             'date_of_birth' => 'required|date',
             'profile_photo' => ['nullable', 'mimes:jpg,jpeg,png,webp', 'max:2048']
         ];

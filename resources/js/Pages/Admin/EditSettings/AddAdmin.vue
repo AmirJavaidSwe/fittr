@@ -17,9 +17,10 @@ const props = defineProps({
     roles: Object,
 });
 const form = useForm({
-    name: "",
-    email: "",
-    password: "",
+    first_name: null,
+    last_name: null,
+    email: null,
+    password: null,
     is_super: true,
 });
 
@@ -51,19 +52,19 @@ onMounted(() => {});
         <template #title> Admin Information </template>
         <template #description> Add admin information. </template>
         <template #form>
-            <!-- Name -->
-            <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="name" value="Name" />
-                <TextInput
-                    id="name"
-                    v-model="form.name"
-                    type="text"
-                    class="mt-1 block w-full"
-                    autocomplete="name"
-                />
-                <InputError :message="form.errors.name" class="mt-2" />
+            <!-- First Name -->
+            <div>
+                <InputLabel for="first_name" value="First Name" />
+                <TextInput id="first_name" v-model="form.first_name" type="text" class="mt-1 block w-full" autocomplete="name" />
+                <InputError :message="form.errors.first_name" class="mt-2" />
             </div>
-            <div class="col-span-6 sm:col-span-4">
+            <!-- Last Name -->
+            <div>
+                <InputLabel for="last_name" value="First Name" />
+                <TextInput id="last_name" v-model="form.last_name" type="text" class="mt-1 block w-full" autocomplete="name" />
+                <InputError :message="form.errors.last_name" class="mt-2" />
+            </div>
+            <div>
                 <InputLabel for="email" value="Email" />
                 <TextInput
                     id="email"
@@ -74,7 +75,7 @@ onMounted(() => {});
                 />
                 <InputError :message="form.errors.email" class="mt-2" />
             </div>
-            <div class="col-span-6 sm:col-span-4">
+            <div>
                 <InputLabel for="password" value="Password" />
                 <TextInput
                     id="password"

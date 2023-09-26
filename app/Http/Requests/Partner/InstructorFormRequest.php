@@ -26,7 +26,9 @@ class InstructorFormRequest extends FormRequest
     public function rules()
     {
         $rules =  [
-            'name' => 'required',
+            'first_name' => 'required|max:100',
+            'last_name' => 'required|max:100',
+            'phone' => 'nullable|regex:"^[0-9]+$"',
             'email' => 'required|email|unique:mysql_partner.users,email,'.$this->instructor?->id,
             'profile_image' => [
                 'sometimes',

@@ -14,7 +14,8 @@ import { faEye,faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import AuthBackground from "@/Components/AuthBackground.vue";
 
 const form = useForm({
-    name: '',
+    first_name: '',
+    last_name: '',
     email: '',
     password: '',
     password_confirmation: '',
@@ -41,11 +42,17 @@ const inputConfirmPasswordType = computed(() => (showConfirmPassword.value ? "te
             </template>
 
             <form @submit.prevent="submit" class="w-96 mx-auto bg-white p-5 rounded-lg max-[500px]:w-full">
-                <div>
-                    <InputLabel for="name" value="Name" />
-                    <TextInput id="name" v-model="form.name" type="text" class="mt-1 block w-full" required autofocus
-                        autocomplete="name" />
-                    <InputError class="mt-2" :message="form.errors.name" />
+                <div class="flex gap-2">
+                    <div>
+                        <InputLabel for="first_name" value="First Name" />
+                        <TextInput id="first_name" v-model="form.first_name" type="text" class="mt-1 block w-full" required autofocus autocomplete="given-name" />
+                        <InputError class="mt-2" :message="form.errors.first_name" />
+                    </div>
+                    <div>
+                        <InputLabel for="last_name" value="Last Name" />
+                        <TextInput id="last_name" v-model="form.last_name" type="text" class="mt-1 block w-full" required autofocus autocomplete="family-name" />
+                        <InputError class="mt-2" :message="form.errors.last_name" />
+                    </div>
                 </div>
 
                 <div class="mt-4">

@@ -33,8 +33,9 @@ class PartnerMemberController extends Controller
                 ->orderBy($this->order_by, $this->order_dir)
                 ->when($this->search, function ($query) {
                     $query->where(function($query) {
-                        $query->orWhere('id', intval($this->search))
-                              ->orWhere('name', 'LIKE', '%'.$this->search.'%')
+                        $query->orWhere('first_name', 'LIKE', '%'.$this->search.'%')
+                              ->orWhere('last_name', 'LIKE', '%'.$this->search.'%')
+                              ->orWhere('phone', 'LIKE', '%'.$this->search.'%')
                               ->orWhere('email', 'LIKE', '%'.$this->search.'%');
                     });
                 })
@@ -44,8 +45,12 @@ class PartnerMemberController extends Controller
                 ->through(fn ($user) => [
                     //may inject number of classes run/scheduled ?
                     'id' => $user->id,
-                    'name' => $user->name,
+                    'first_name' => $user->first_name,
+                    'last_name' => $user->last_name,
+                    'initials' => $user->initials,
+                    'full_name' => $user->full_name,
                     'email' => $user->email,
+                    'phone' => $user->phone,
                     'created_at' => $user->created_at,
                     'updated_at' => $user->updated_at,
                 ]),

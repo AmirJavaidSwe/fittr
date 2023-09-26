@@ -31,7 +31,8 @@ const props = defineProps({
         </template>
 
         <template #item>
-            <single-view-row label="Name" :value="partner.name" />
+            <single-view-row label="First Name" :value="partner.first_name" />
+            <single-view-row label="Last Name" :value="partner.last_name" />
             <single-view-row
                 label="Email address"
                 :value="partner.email"
