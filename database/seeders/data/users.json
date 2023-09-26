@@ -1,7 +1,7 @@
 [
     {
         "source": "partner",
-        "first_name": "Demo",
+        "first_name": "Digme",
         "last_name": "Partner1",
         "email": "dummy1@fittr.tech",
         "password": "dummy1",
@@ -65,13 +65,58 @@
     },
     {
         "source": "partner",
-        "first_name": "Demo",
+        "first_name": "TheFont",
         "last_name": "Partner2",
         "email": "dummy2@fittr.tech",
-        "password": "dummy2"
+        "password": "dummy2",
+        "users": [
+            {
+                "source": "partner",
+                "business_id": 2,
+                "first_name": "Ian",
+                "last_name": "Pollington",
+                "email": "ian@the-font.co.uk",
+                "password": "ian",
+                "is_super": false
+            },
+            {
+                "source": "partner",
+                "business_id": 2,
+                "first_name": "Giulio",
+                "last_name": "De Mennato",
+                "email": "giulio@the-font.co.uk",
+                "password": "giulio",
+                "is_super": false
+            },
+            {
+                "source": "partner",
+                "business_id": 2,
+                "first_name": "Lucy",
+                "last_name": "Mabbitt",
+                "email": "lucy@the-font.co.uk",
+                "password": "lucy",
+                "is_super": false
+            },
+            {
+                "source": "partner",
+                "business_id": 2,
+                "first_name": "Alec",
+                "last_name": "Harper",
+                "email": "alec@the-font.co.uk",
+                "password": "alec",
+                "is_super": false
+            },
+            {
+                "source": "partner",
+                "business_id": 2,
+                "first_name": "Horace",
+                "last_name": "Moy",
+                "email": "horace@the-font.co.uk",
+                "password": "horace",
+                "is_super": true
+            }
+        ]
     },
-
-
     {
         "source": "admin",
         "first_name": "Default",

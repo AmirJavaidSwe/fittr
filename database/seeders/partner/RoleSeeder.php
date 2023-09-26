@@ -19,11 +19,20 @@ class RoleSeeder extends Seeder
         $business_id = config('database.connections.mysql_partner.business_id');
         dump('seeding roles');
 
-        if (!Storage::disk('seeders')->exists('/partner/data/roles.json')) {
-            dump('/partner/data/roles.json file does not exist!');
+        $has_seeder_data = false;
+        if (Storage::disk('seeders')->exists('/partner/data/business_'.$business_id.'/all.json')) {
+            $data = json_decode(Storage::disk('seeders')->get('/partner/data/business_'.$business_id.'/all.json'));
+            $has_seeder_data = true;
+        }
+        if($has_seeder_data == false){
+            dump('NO roles seeder');
             return;
         }
-        $roles = json_decode(Storage::disk('seeders')->get('/partner/data/roles.json'));
+        $roles = $data->roles ?? null;
+        if(!$roles){
+            dump('NO roles data');
+            return;
+        }
 
         foreach ($roles as $role) {
             Role::updateOrCreate(

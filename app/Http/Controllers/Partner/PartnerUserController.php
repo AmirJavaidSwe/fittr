@@ -48,7 +48,7 @@ class PartnerUserController extends Controller
             'roles' => Role::where('source', auth()->user()->source)
                 ->where('business_id', auth()->user()->business_id)->get(),
             'systemModules' => SystemModule::with('permissions')->where('is_for', auth()->user()->source)->get(),
-            'users' => User::select('id', 'name', 'email', 'is_super', 'profile_photo_path', 'created_at')
+            'users' => User::select('id', 'first_name', 'last_name', 'email', 'is_super', 'profile_photo_path', 'created_at')
                 ->where('source', auth()->user()->source)
                 ->where('business_id', auth()->user()->business_id)->orderBy($this->order_by, $this->order_dir)
                 ->when($this->search, function ($query) {

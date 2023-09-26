@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string('title', 255);
             $table->string('page_title', 255)->nullable();
             $table->string('brief', 500)->nullable();
-            $table->string('url', 255)->unique()->nullable();
-            $table->string('checkin_url', 255)->unique()->nullable();
+            $table->string('url', 255)->nullable();
+            $table->string('checkin_url', 255)->nullable();
             $table->unsignedBigInteger('manager_id')->index('manager_id');
             $table->string('address_line_1', 255)->nullable();
             $table->string('address_line_2', 255)->nullable();

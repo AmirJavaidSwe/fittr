@@ -84,17 +84,8 @@ watchEffect(() => {
 });
 
 const usersList = computed(() => {
-    let users = [];
-    for (let i = 0; i < props.users.length; i++) {
-        users.push({
-            value: props.users[i].id,
-            label: props.users[i].name,
-        });
-    }
-    users.push({
-        value: "create_new_user",
-        label: "Add New",
-    });
+    let users = props.users;
+    users.push({id: 'create_new_user', full_name: 'Add New'});
 
     return users;
 });
@@ -180,30 +171,23 @@ const formatPhoneInput = () => {
                 id="manager"
                 v-model="form.manager_id"
                 :options="usersList"
+                valueProp="id"
+                trackBy="full_name"
                 :searchable="true"
-                :close-on-select="true"
-                :show-labels="true"
+                :closeOnSelect="true"
                 placeholder="Select General Manager"
                 @select="gmChanged"
             >
                 <template v-slot:singlelabel="{ value }">
                     <div class="multiselect-single-label flex items-center">
-                        <Avatar
-                            size="small"
-                            :title="value.label"
-                            v-if="value.label != 'Add New'"
-                        />
-                        <span class="ml-2">{{ value.label }}</span>
+                        <Avatar v-if="value.id != 'create_new_user'" size="small" :initials="value.initials" :imageUrl="value.profile_photo_url" />
+                        <span class="ml-2">{{ value.full_name }}</span>
                     </div>
                 </template>
 
                 <template v-slot:option="{ option }">
-                    <Avatar
-                        size="small"
-                        :title="option.label"
-                        v-if="option.label != 'Add New'"
-                    />
-                    <span class="ml-5">{{ option.label }}</span>
+                    <Avatar size="small" :initials="option.initials" :imageUrl="option.profile_photo_url" v-if="option.id != 'create_new_user'" />
+                    <span class="ml-4">{{ option.full_name }}</span>
                 </template>
             </Multiselect>
             <InputError :message="form.errors.manager_id" class="mt-2" />

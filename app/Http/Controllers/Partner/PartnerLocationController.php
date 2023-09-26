@@ -49,7 +49,7 @@ class PartnerLocationController extends Controller
                 })
                 ->paginate($this->per_page)
                 ->withQueryString(),
-            'users' => User::select('id', 'name', 'email')->partner()->where('business_id', auth()->user()->business_id)->get(),
+            'users' => User::select('id', 'first_name', 'last_name', 'email')->partner()->where('business_id', auth()->user()->business_id)->get(),
             'countries' => Country::select('id', 'name')->whereStatus(1)->get(),
             'amenities' => Amenity::select('id', 'title')->get()->map(fn($item) => ['label' => $item->title, 'value' => $item->id]),
             'studios' => Studio::select('id', 'title')->get()->map(fn($item) => ['label' => $item->title, 'value' => $item->id]),
@@ -86,7 +86,7 @@ class PartnerLocationController extends Controller
     {
         return Inertia::render('Partner/Location/Create', [
             'page_title' => __('Create Location'),
-            'users' => User::select('id', 'name', 'email')->partner()->where('business_id', auth()->user()->business_id)->get(),
+            'users' => User::select('id', 'first_name', 'last_name', 'email')->partner()->where('business_id', auth()->user()->business_id)->get(),
             'countries' => Country::select('id', 'name')->whereStatus(1)->get(),
             'amenities' => Amenity::select('id', 'title')->get()->map(fn($item) => ['label' => $item->title, 'value' => $item->id]),
             'header' => array(
@@ -197,7 +197,7 @@ class PartnerLocationController extends Controller
     {
         return Inertia::render('Partner/Location/Edit', [
             'page_title' => __('Edit Location'),
-            'users' => User::select('id', 'name', 'email')->partner()->where('business_id', auth()->user()->business_id)->get(),
+            'users' => User::select('id', 'first_name', 'last_name', 'email')->partner()->where('business_id', auth()->user()->business_id)->get(),
             'countries' => Country::select('id', 'name')->whereStatus(1)->get(),
             'amenities' => Amenity::select('id', 'title')->get()->map(fn($item) => ['label' => $item->title, 'value' => $item->id]),
             'studios' => Studio::select('id', 'title')->get()->map(fn($item) => ['label' => $item->title, 'value' => $item->id]),

@@ -21,8 +21,8 @@ class DatabaseSeeder extends Seeder
             AmenitySeeder::class,
             ClasstypeSeeder::class,
             ServicetypeSeeder::class,
-            ClassesSeeder::class,
             LocationSeeder::class, //Studios added via Location
+            ClassesSeeder::class,
             PackSeeder::class,
             RoleSeeder::class,
             NotificationTemplateSeeder::class,

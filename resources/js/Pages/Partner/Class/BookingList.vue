@@ -54,7 +54,7 @@ defineEmits(['setPerPage']);
                 :key="dt.id"
             >
                 <table-data>
-                    {{ dt.user?.name }}
+                    {{ dt.user?.full_name }}
                 </table-data>
                 <table-data>
                     {{ dt.user?.email }}

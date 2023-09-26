@@ -19,11 +19,21 @@ class ServicetypeSeeder extends Seeder
         $business_id = config('database.connections.mysql_partner.business_id');
         dump('seeding service_types');
 
-        if (!Storage::disk('seeders')->exists('/partner/data/service_types.json')) {
-            dump('/partner/data/service_types.json file does not exist!');
+        $has_seeder_data = false;
+        if (Storage::disk('seeders')->exists('/partner/data/business_'.$business_id.'/all.json')) {
+            $data = json_decode(Storage::disk('seeders')->get('/partner/data/business_'.$business_id.'/all.json'));
+            $has_seeder_data = true;
+        }
+        if($has_seeder_data == false){
+            dump('NO service_types seeder');
             return;
         }
-        $service_types = json_decode(Storage::disk('seeders')->get('/partner/data/service_types.json'));
+        $service_types = $data->service_types ?? null;
+        if(!$service_types){
+            dump('NO service_types data');
+            return;
+        }
+
         foreach ($service_types as $service_type) {
             ServiceType::create([
                 'status' => StateType::get('active'),
@@ -31,14 +41,5 @@ class ServicetypeSeeder extends Seeder
                 'description' => $service_type->description,
             ]);
         }
-
-        // ServiceType::factory()
-        //     ->count(3)
-        //     ->sequence(
-        //         ['title' => 'body hydration'],
-        //         ['title' => 'massage'],
-        //         ['title' => 'personal trainer'],
-        //     )
-        //     ->create();
     }
 }

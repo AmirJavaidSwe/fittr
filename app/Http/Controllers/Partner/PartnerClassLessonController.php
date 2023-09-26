@@ -204,11 +204,11 @@ class PartnerClassLessonController extends Controller
                 ],
             ),
             'statuses' => ClassStatus::labels(),
-            'instructors' => Instructor::latest('id')->pluck('name', 'id'),
+            'instructors' => Instructor::select('id', 'first_name', 'last_name', 'email', 'profile_photo_path')->get(),
             'classtypes' => ClassType::latest('id')->pluck('title', 'id'),
             'locations' => Location::latest('id')->pluck('title', 'id'),
             'roles' => Role::latest('id')->pluck('title', 'id')->where('source', auth()->user()->source)->where('business_id', auth()->user()->business_id)->pluck('title', 'id'),
-            'users' => User::select('id', 'name', 'email')->partner()->where('business_id', auth()->user()->business_id)->get(),
+            'users' => User::select('id', 'first_name', 'last_name', 'email')->partner()->where('business_id', auth()->user()->business_id)->get(),
             'studios' => Studio::with(['class_type_studios', 'location'])
                 ->select('id', 'title', 'location_id')
                 ->orderBy('title', 'asc')
@@ -381,7 +381,7 @@ class PartnerClassLessonController extends Controller
             ),
             'class_lesson' => $class->load(['studio', 'instructors', 'classType']),
             'statuses' => ClassStatus::labels(),
-            'instructors' => Instructor::orderBy('id', 'desc')->pluck('name', 'id'),
+            'instructors' => Instructor::select('id', 'first_name', 'last_name', 'email', 'profile_photo_path')->get(),
             'classtypes' => ClassType::orderBy('id', 'desc')->pluck('title', 'id'),
             'studios' => Studio::with(['class_type_studios', 'location'])
                 ->select('id', 'title', 'location_id')

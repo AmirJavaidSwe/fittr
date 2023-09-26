@@ -24,7 +24,8 @@ class PartnerUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:191',
+            'first_name' => 'required|max:100',
+            'last_name' => 'required|max:100',
             'email' => [
                 'required',
                 'string',

@@ -39,7 +39,7 @@ defineProps({
 
             <single-view-row label="Checkin Url" :value="location.checkin_url"/>
 
-            <single-view-row label="General Manager" :value="location.manager?.name"/>
+            <single-view-row label="General Manager" :value="location.manager?.full_name"/>
 
             <single-view-row label="Email (General Manager)" :value="location.manager?.email"/>
 

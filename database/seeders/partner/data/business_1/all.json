@@ -1,0 +1,834 @@
+{
+    "business_id": "1",
+    "stripe_account_id": "acct_1MlaLVFZgNT1PRCW",
+    "business_settings": [
+        {
+            "business_id": "1",
+            "key": "date_format",
+            "group_name": "general_formats",
+            "cast_to": "integer",
+            "is_encrypted": "0",
+            "val": "6",
+            "created_at": "2023-09-13 22:05:43",
+            "updated_at": "2023-09-13 22:23:33"
+        },
+        {
+            "business_id": "1",
+            "key": "time_format",
+            "group_name": "general_formats",
+            "cast_to": "integer",
+            "is_encrypted": "0",
+            "val": "8",
+            "created_at": "2023-09-13 22:05:43",
+            "updated_at": "2023-09-13 22:23:33"
+        },
+        {
+            "business_id": "1",
+            "key": "subdomain",
+            "group_name": "service_store_general",
+            "cast_to": "string",
+            "is_encrypted": "0",
+            "val": "demo",
+            "created_at": "2023-09-13 22:23:33",
+            "updated_at": "2023-09-13 22:23:33"
+        },
+        {
+            "business_id": "1",
+            "key": "business_name",
+            "group_name": "general_details",
+            "cast_to": "string",
+            "is_encrypted": "0",
+            "val": "ACME Corp",
+            "created_at": "2023-09-13 22:23:33",
+            "updated_at": "2023-09-13 22:23:33"
+        },
+        {
+            "business_id": "1",
+            "key": "business_email",
+            "group_name": "general_details",
+            "cast_to": "string",
+            "is_encrypted": "0",
+            "val": "support@fittr.tech",
+            "created_at": "2023-09-13 22:23:33",
+            "updated_at": "2023-09-13 22:23:33"
+        },
+        {
+            "business_id": "1",
+            "key": "country_id",
+            "group_name": "general_details",
+            "cast_to": "integer",
+            "is_encrypted": "0",
+            "val": "231",
+            "created_at": "2023-09-13 22:23:33",
+            "updated_at": "2023-09-13 22:23:33"
+        },
+        {
+            "business_id": "1",
+            "key": "business_phone",
+            "group_name": "general_details",
+            "cast_to": "string",
+            "is_encrypted": "0",
+            "val": "441112223333",
+            "created_at": "2023-09-13 22:23:33",
+            "updated_at": "2023-09-13 22:23:33"
+        },
+        {
+            "business_id": "1",
+            "key": "timezone",
+            "group_name": "general_details",
+            "cast_to": "string",
+            "is_encrypted": "0",
+            "val": "Europe\/London",
+            "created_at": "2023-09-13 22:23:33",
+            "updated_at": "2023-09-13 22:23:33"
+        },
+        {
+            "business_id": "1",
+            "key": "fap_status",
+            "group_name": "fap",
+            "cast_to": "boolean",
+            "is_encrypted": "0",
+            "val": "1",
+            "created_at": "2023-09-13 22:23:33",
+            "updated_at": "2023-09-13 22:23:33"
+        },
+        {
+            "business_id": "1",
+            "key": "days_max_booking",
+            "group_name": "bookings",
+            "cast_to": "integer",
+            "is_encrypted": "0",
+            "val": "7",
+            "created_at": "2023-09-13 22:23:33",
+            "updated_at": "2023-09-13 22:23:33"
+        },
+        {
+            "business_id": "1",
+            "key": "days_max_timetable",
+            "group_name": "bookings",
+            "cast_to": "integer",
+            "is_encrypted": "0",
+            "val": "14",
+            "created_at": "2023-09-13 22:23:33",
+            "updated_at": "2023-09-13 22:23:33"
+        },
+        {
+            "business_id": "1",
+            "key": "logo_url",
+            "group_name": "service_store_header",
+            "cast_to": "string",
+            "is_encrypted": "0",
+            "val": "\/locations",
+            "created_at": "2023-09-13 22:23:33",
+            "updated_at": "2023-09-13 22:23:33"
+        },
+        {
+            "business_id": "1",
+            "key": "logo",
+            "group_name": "service_store_header",
+            "cast_to": "string",
+            "is_encrypted": "0",
+            "val": "logo\/rvGZ8vYmwNZ5U4Boz6DiOta7kV7raJtDATZ2YVhs.jpg",
+            "created_at": "2023-09-13 22:23:33",
+            "updated_at": "2023-09-13 22:23:33"
+        },
+        {
+            "business_id": "1",
+            "key": "favicon",
+            "group_name": "service_store_header",
+            "cast_to": "string",
+            "is_encrypted": "0",
+            "val": "favicon\/98mi9T3fVxS7LVJkD0FEn0vcmuTgnutTeFOLVxjF.png",
+            "created_at": "2023-09-13 22:23:33",
+            "updated_at": "2023-09-13 22:23:33"
+        },
+        {
+            "business_id": "1",
+            "key": "link_facebook",
+            "group_name": "service_store_header",
+            "cast_to": "string",
+            "is_encrypted": "0",
+            "val": "https:\/\/www.facebook.com\/digmefitness",
+            "created_at": "2023-09-13 22:23:33",
+            "updated_at": "2023-09-13 22:23:33"
+        },
+        {
+            "business_id": "1",
+            "key": "link_instagram",
+            "group_name": "service_store_header",
+            "cast_to": "string",
+            "is_encrypted": "0",
+            "val": "https:\/\/www.instagram.com\/digmefitness",
+            "created_at": "2023-09-13 22:23:33",
+            "updated_at": "2023-09-13 22:23:33"
+        },
+        {
+            "business_id": "1",
+            "key": "link_twitter",
+            "group_name": "service_store_header",
+            "cast_to": "string",
+            "is_encrypted": "0",
+            "val": "https:\/\/twitter.com\/digmefitness",
+            "created_at": "2023-09-13 22:23:33",
+            "updated_at": "2023-09-13 22:23:33"
+        },
+        {
+            "business_id": "1",
+            "key": "address_line1",
+            "group_name": "general_address",
+            "cast_to": "string",
+            "is_encrypted": "0",
+            "val": "Spencer House, 23 Sheen Road",
+            "created_at": "2023-09-13 22:23:33",
+            "updated_at": "2023-09-13 22:23:33"
+        },
+        {
+            "business_id": "1",
+            "key": "city",
+            "group_name": "general_address",
+            "cast_to": "string",
+            "is_encrypted": "0",
+            "val": "Richmond",
+            "created_at": "2023-09-13 22:23:33",
+            "updated_at": "2023-09-13 22:23:33"
+        },
+        {
+            "business_id": "1",
+            "key": "legal_country_id",
+            "group_name": "general_address",
+            "cast_to": "integer",
+            "is_encrypted": "0",
+            "val": "231",
+            "created_at": "2023-09-13 22:23:33",
+            "updated_at": "2023-09-13 22:23:33"
+        },
+        {
+            "business_id": "1",
+            "key": "zip_code",
+            "group_name": "general_address",
+            "cast_to": "string",
+            "is_encrypted": "0",
+            "val": "TW9 1BN",
+            "created_at": "2023-09-13 22:23:33",
+            "updated_at": "2023-09-13 22:23:33"
+        }
+    ],
+    "instructors": [
+        {
+            "role": "instructor",
+            "first_name": "Demo",
+            "last_name": "Instructor",
+            "email": "instructor1@fittr.tech",
+            "password": "instructor1"
+        },
+        {
+            "role": "instructor",
+            "first_name": "Frances",
+            "last_name": "Merry",
+            "email": "francesevemerry@gmail.com",
+            "password": "francesevemerry"
+        },
+        {
+            "role": "instructor",
+            "first_name": "Dan",
+            "last_name": "Little",
+            "email": "danlittle1@me.com",
+            "password": "danlittle1"
+        },
+        {
+            "role": "instructor",
+            "first_name": "Chloe",
+            "last_name": "Laureyns",
+            "email": "chloelaureyns@hotmail.com",
+            "password": "chloelaureyn"
+        },
+        {
+            "role": "instructor",
+            "first_name": "Paul",
+            "last_name": "Gascoyne",
+            "email": "ucanfitness@gmail.com",
+            "password": "ucanfitness"
+        }
+    ],
+    "class_types": [
+        {
+            "title": "cycle",
+            "description": "Clip in and join us in the saddle for our signature Ride, Rhythm and Perform class. Get lost in the music and ride to the rhythm, or focus on the data. It's the ultimate endorphin booster!"
+        },
+        {
+            "title": "circuits",
+            "description": "A pumping, endorphin-inducing 50-minute Circuit workout that will ignite your metabolism, light a fire in your muscles and pumped for the day! You’ll be treated to a fast-paced, full-body Strength, Conditioning and Cardio workout featuring Assault Bikes, Ski Ergs, Weights and Bodyweight plyometric exercises."
+        },
+        {
+            "title": "yoga",
+            "description": "Digme’s mix of yoga and breathwork classes welcomes practitioners of all levels. From beginners to advanced, meet us on the mat in studio, or Live and On Demand via our Digme at Home app, so you can join anytime, anywhere."
+        },
+        {
+            "title": "barre",
+            "description": "In a Barre class at Digme, expect 50 minutes of full body intense sculpting, featuring elements of ballet, pilates and yoga. All our Barre instructors are exceptional and have a strong background in ballet. However, to participate no dance experience is necessary!"
+        },
+        {
+            "title": "f.i.t",
+            "description": "Experience the ultimate functional workout in our thrilling new concept, F.I.T. Standing for Functional Intensity Training. It is a new 3-zone workout featuring cardio (Treads and Rowers), strength and unconventional zones."
+        },
+        {
+            "title": "strength",
+            "description": "Efficient, effective, and explosive. Bullet proof your body with this full body and controlled workout with our expert coaching through your screens."
+        },
+        {
+            "title": "fusion",
+            "description": "FUSION classes are split between 25 minutes of RIDE and 25 minutes of MATRIX HIIT. Designed to strip fat, tone muscle and improve mobility. AND best of all you get to try TWO Digme experiences in one go!"
+        },
+        {
+            "title": "breathwork",
+            "description": "You do it about 23,000 a day, but are you breathing properly?"
+        },
+        {
+            "title": "stretch & mobility",
+            "description": "Our Stretch & Mobility classes are the perfect combination of strength, flexibility and stability as we bridge the gap between fitness and yoga. Compliment your routine and your workouts, whilst allowing your body the release from the day-to-day and sitting at your desk for long periods of time."
+        },
+        {
+            "title": "high performance",
+            "description": "Our brand new High Performance structured workout sessions are power-based zonal training workouts on the very latest Wattbike Atom X bikes. The workouts are designed by our team of world class, highly qualified cycle coaches to help you push your training results."
+        }
+    ],
+    "service_types": [
+        {
+            "title": "myo-rehab",
+            "description": "MYO-REHAB (Muscle Recovery) combines advanced Sports Massage and Soft Tissue Therapy with Rehabilitation"
+        },
+        {
+            "title": "recover by hyperice",
+            "description": "Unlock your potential and enhance your movement, preparation and recovery. Recover by Hyperice will enable you to move better by focusing on activating, soothing and loosening your muscles whenever you need it the most. Ideal either before a class, a race, a break whilst WFH to energise and refresh or even as part of your wind down routine before bed to aid recovery. Try the NormaTec compression boots today at Digme Moorgate to take your recovery to the next level."
+        },
+        {
+            "title": "1 to 1 reformer & rehab pilates",
+            "description": "This is for a 1 hour private 1 to 1 Reformer & Rehab Pilates session with Aileen."
+        },
+        {
+            "title": "personal training",
+            "description": "Foundational, functional and inspirational, our personal training focuses on the basics of fitness: building strength, improving cardiovascular fitness, boosting muscular endurance and enhancing mobility."
+        }
+    ],
+    "locations": [
+        {
+            "status": 1,
+            "title": "Covent Garden",
+            "brief": "With the best CYCLE workouts, YOGA flows and BARRE classes, there is no doubt we've got something for you! You'll come for the workout, but you'll stay for the vibes and the friends you make. We are more than workouts; we are a community. The studio is located right in the heart of Seven Dials and within a very short walk from Leicester Square, Covent Garden and Tottenham Court Road tube stations.",
+            "address_line_1": "4-10 Tower Street",
+            "address_line_2": "Covent Garden",
+            "country_id": 231,
+            "city": "London",
+            "postcode": "WC2H 9NP",
+            "map_latitude": "51.4409656",
+            "map_longitude": "-0.3404793",
+            "tel": "+44 020 4553 1306",
+            "email": "coventgarden@digmefitness.com",
+            "studios": [
+                {
+                    "status": 1,
+                    "title": "The Arena"
+                },
+                {
+                    "status": 1,
+                    "title": "The Island"
+                }
+            ]
+        },
+        {
+            "status": 1,
+            "title": "Richmond",
+            "brief": "Digme was born in Richmond and is a mainstay in the local community. You'll come for the workouts but stay for the friends you make and the laughs you have!  Join us in our original studio for the very best CYCLE workouts in the UK. We are a three-minute walk from Richmond train and tube station.",
+            "address_line_1": "23 Sheen Road",
+            "address_line_2": null,
+            "country_id": 231,
+            "city": "Richmond",
+            "postcode": "TW9 1BN",
+            "map_latitude": "51.4610512",
+            "map_longitude": "-0.3017242",
+            "tel": "+44 020 4553 109",
+            "email": "richmond@digmefitness.com",
+            "studios": [
+                {
+                    "status": 1,
+                    "title": "The Arena"
+                }
+            ]
+        },
+        {
+            "status": 1,
+            "title": "Moorgate",
+            "brief": "You'll join us for the best CYCLE and Circuits workouts in London, but you'll stay for the laughs you have and the friends you'll make. We aren't a workout, we are a community.  The studio is just a two minute walk from Moorgate tube station and a short walk from Liverpool Street, Barbican and Bank stations.",
+            "address_line_1": "1 Fore Street",
+            "address_line_2": "Moor Place (via Moor Lane)",
+            "country_id": 231,
+            "city": "West Esteban",
+            "postcode": "EC2Y 5EJ",
+            "map_latitude": "51.5181768",
+            "map_longitude": "-0.0905412",
+            "tel": "+44 020 4553 1304",
+            "email": "moorgate@digmefitness.com",
+            "studios": [
+                {
+                    "status": 1,
+                    "title": "The Arena"
+                }
+            ]
+        },
+        {
+            "status": 1,
+            "title": "Bank",
+            "brief": "Simply the best and friendliest fitness studios in the City of London. With all of our CYCLE, HIIT, STRENGTH, YOGA and BARRE sessions, we've got something for you!  Our Bank studio is in the heart of the City and a very short walk from Bank, Moorgate, Monument and Cannon Street tube stations, immerse yourself in The Arena, feel the burn in the The Energy Lab or enjoy a mindful yoga flow or bouncing Barre class in The Island at our Bank studio.",
+            "address_line_1": "40 Coleman Street London",
+            "address_line_2": null,
+            "country_id": 231,
+            "city": "London",
+            "postcode": "EC2R 5EH",
+            "map_latitude": "51.5151197",
+            "map_longitude": "-0.0903553",
+            "tel": "+44 020 4553 1305",
+            "email": "bank@digmefitness.com",
+            "studios": [
+                {
+                    "status": 1,
+                    "title": "The Arena"
+                },
+                {
+                    "status": 1,
+                    "title": "The Energy Lab"
+                },
+                {
+                    "status": 1,
+                    "title": "The Island"
+                }
+            ]
+        }
+    ],
+    "roles": [
+        {
+            "source": "partner",
+            "title": "Admin"
+        },
+        {
+            "source": "partner",
+            "title": "Manager"
+        },
+        {
+            "source": "partner",
+            "title": "Instructors"
+        }
+    ],
+    "sandboxpacks": [
+        {
+            "type": "class_lesson",
+            "title": "Ultimate cycling",
+            "sub_title": "Restricted pack",
+            "description": "Best for bikers",
+            "stripe_product_id": "prod_OPMilXCKY9hhmt",
+            "is_active": "1",
+            "is_restricted": "1",
+            "is_private": "0",
+            "restrictions": null,
+            "private_url": null,
+            "active_from": null,
+            "active_to": null,
+            "created_at": "2023-07-27 18:17:31",
+            "updated_at": "2023-08-08 19:05:32"
+        },
+        {
+            "type": "service",
+            "title": "Muscle Recover",
+            "sub_title": "Hi-tech equipment",
+            "description": "45m session to restore your body muscles",
+            "stripe_product_id": "prod_OPgY0WT84AoJy0",
+            "is_active": "1",
+            "is_restricted": "0",
+            "is_private": "0",
+            "restrictions": null,
+            "private_url": null,
+            "active_from": null,
+            "active_to": null,
+            "created_at": "2023-07-27 18:17:31",
+            "updated_at": "2023-08-08 14:46:26"
+        },
+        {
+            "type": "location_pass",
+            "title": "Climbing wall",
+            "sub_title": "Limited location availablity",
+            "description": "Enjoy climbing as long as you. This is rather long pack description. This is rather long pack description. This is rather long pack description.",
+            "stripe_product_id": "prod_OPe3DGX3gGFv58",
+            "is_active": "1",
+            "is_restricted": "0",
+            "is_private": "0",
+            "restrictions": null,
+            "private_url": null,
+            "active_from": "2023-09-01",
+            "active_to": null,
+            "created_at": "2023-07-27 18:17:31",
+            "updated_at": "2023-09-05 06:40:21",
+            "prices": [
+                {
+                    "priceable_id": "3",
+                    "priceable_type": "pack",
+                    "stripe_price_id": "price_1Nn0R5FZgNT1PRCWOCflIo8d",
+                    "type": "one_time",
+                    "is_active": "1",
+                    "price": "5.00",
+                    "unit_amount": "500",
+                    "sessions": "0",
+                    "is_expiring": "1",
+                    "expiration": "1",
+                    "expiration_period": "week",
+                    "currency": "gbp",
+                    "currency_symbol": "£",
+                    "interval": null,
+                    "interval_count": null,
+                    "is_unlimited": "0",
+                    "is_fap": "0",
+                    "fap_value": "1",
+                    "is_ongoing": "1",
+                    "fixed_count": null,
+                    "is_renewable": "0",
+                    "is_intro": "0",
+                    "created_at": "2023-09-05 14:41:01",
+                    "updated_at": "2023-09-05 14:41:01",
+                    "deleted_at": null
+                },
+                {
+                    "priceable_id": "3",
+                    "priceable_type": "pack",
+                    "stripe_price_id": "price_1Nn0RkFZgNT1PRCWoPbRpnfr",
+                    "type": "recurring",
+                    "is_active": "1",
+                    "price": "2.99",
+                    "unit_amount": "299",
+                    "sessions": "0",
+                    "is_expiring": "0",
+                    "expiration": null,
+                    "expiration_period": null,
+                    "currency": "gbp",
+                    "currency_symbol": "£",
+                    "interval": "day",
+                    "interval_count": "1",
+                    "is_unlimited": "0",
+                    "is_fap": "0",
+                    "fap_value": "1",
+                    "is_ongoing": "1",
+                    "fixed_count": null,
+                    "is_renewable": "0",
+                    "is_intro": "0",
+                    "created_at": "2023-09-05 14:41:41",
+                    "updated_at": "2023-09-05 14:41:41",
+                    "deleted_at": null
+                }
+            ]
+        },
+        {
+            "type": "location_pass",
+            "title": "Gym space",
+            "sub_title": "Workout zone",
+            "description": "Get access to fully equipped gym space including a range of free weights, benches, rig and cardio machines.",
+            "stripe_product_id": "prod_OPJfFi45pk1UEI",
+            "is_active": "1",
+            "is_restricted": "0",
+            "is_private": "1",
+            "restrictions": null,
+            "private_url": "test2",
+            "active_from": "2023-09-01",
+            "active_to": "2023-09-15",
+            "created_at": "2023-08-07 15:07:23",
+            "updated_at": "2023-09-05 13:15:18",
+            "prices": [
+                {
+                    "priceable_id": "4",
+                    "priceable_type": "pack",
+                    "stripe_price_id": "price_1Nn0OjFZgNT1PRCWFJaicuHi",
+                    "type": "one_time",
+                    "is_active": "1",
+                    "price": "29.99",
+                    "unit_amount": "2999",
+                    "sessions": "0",
+                    "is_expiring": "1",
+                    "expiration": "1",
+                    "expiration_period": "month",
+                    "currency": "gbp",
+                    "currency_symbol": "£",
+                    "interval": null,
+                    "interval_count": null,
+                    "is_unlimited": "0",
+                    "is_fap": "0",
+                    "fap_value": "1",
+                    "is_ongoing": "1",
+                    "fixed_count": null,
+                    "is_renewable": "0",
+                    "is_intro": "0",
+                    "created_at": "2023-09-05 14:38:34",
+                    "updated_at": "2023-09-05 14:38:34",
+                    "deleted_at": null
+                },
+                {
+                    "priceable_id": "4",
+                    "priceable_type": "pack",
+                    "stripe_price_id": "price_1Nn0PoFZgNT1PRCWPGa0nS6V",
+                    "type": "recurring",
+                    "is_active": "1",
+                    "price": "49.99",
+                    "unit_amount": "4999",
+                    "sessions": "0",
+                    "is_expiring": "1",
+                    "expiration": "3",
+                    "expiration_period": "month",
+                    "currency": "gbp",
+                    "currency_symbol": "£",
+                    "interval": "month",
+                    "interval_count": "3",
+                    "is_unlimited": "0",
+                    "is_fap": "0",
+                    "fap_value": "1",
+                    "is_ongoing": "1",
+                    "fixed_count": null,
+                    "is_renewable": "0",
+                    "is_intro": "0",
+                    "created_at": "2023-09-05 14:39:42",
+                    "updated_at": "2023-09-05 14:39:42",
+                    "deleted_at": null
+                },
+                {
+                    "priceable_id": "4",
+                    "priceable_type": "pack",
+                    "stripe_price_id": "price_1Nn0QQFZgNT1PRCWCJx87Kiv",
+                    "type": "recurring",
+                    "is_active": "1",
+                    "price": "150.00",
+                    "unit_amount": "15000",
+                    "sessions": "0",
+                    "is_expiring": "1",
+                    "expiration": "13",
+                    "expiration_period": "month",
+                    "currency": "gbp",
+                    "currency_symbol": "£",
+                    "interval": "year",
+                    "interval_count": "1",
+                    "is_unlimited": "0",
+                    "is_fap": "0",
+                    "fap_value": "1",
+                    "is_ongoing": "1",
+                    "fixed_count": null,
+                    "is_renewable": "0",
+                    "is_intro": "0",
+                    "created_at": "2023-09-05 14:40:19",
+                    "updated_at": "2023-09-05 14:40:19",
+                    "deleted_at": null
+                }
+            ]
+        },
+        {
+            "type": "hybrid",
+            "title": "Demo pack 5",
+            "sub_title": "Class type",
+            "description": "Sunt dolores culpa adipisci sed voluptatibus.",
+            "stripe_product_id": "prod_OPJid4Phb00ge1",
+            "is_active": "1",
+            "is_restricted": "1",
+            "is_private": "0",
+            "restrictions": null,
+            "private_url": "test",
+            "active_from": null,
+            "active_to": null,
+            "created_at": "2023-08-07 15:10:26",
+            "updated_at": "2023-08-10 18:26:43",
+            "prices": [
+                {
+                    "priceable_type": "pack",
+                    "stripe_price_id": "price_1Nn1INFZgNT1PRCW5NLgZeD3",
+                    "type": "one_time",
+                    "is_active": "1",
+                    "price": "19.99",
+                    "unit_amount": "1999",
+                    "sessions": "2",
+                    "is_expiring": "1",
+                    "expiration": "3",
+                    "expiration_period": "month",
+                    "currency": "gbp",
+                    "currency_symbol": "£",
+                    "interval": null,
+                    "interval_count": null,
+                    "is_unlimited": "0",
+                    "is_fap": "0",
+                    "fap_value": "1",
+                    "is_ongoing": "1",
+                    "fixed_count": null,
+                    "is_renewable": "0",
+                    "is_intro": "0",
+                    "created_at": "2023-09-05 14:38:34",
+                    "updated_at": "2023-09-05 14:38:34",
+                    "deleted_at": null
+                }
+            ]
+        },
+        {
+            "type": "hybrid",
+            "title": "Hybrid",
+            "sub_title": "best for both",
+            "description": "Use your credits for classes and services. One credit = one entry.",
+            "stripe_product_id": "prod_OQTEVcO3s9hnvS",
+            "is_active": "0",
+            "is_restricted": "1",
+            "is_private": "0",
+            "restrictions": null,
+            "private_url": null,
+            "active_from": null,
+            "active_to": null,
+            "created_at": "2023-08-10 17:04:51",
+            "updated_at": "2023-09-04 18:47:36"
+        },
+        {
+            "type": "corporate",
+            "title": "Corp",
+            "sub_title": null,
+            "description": null,
+            "stripe_product_id": "prod_OQUPDzfs3EH4FX",
+            "is_active": "1",
+            "is_restricted": "0",
+            "is_private": "0",
+            "restrictions": null,
+            "private_url": null,
+            "active_from": null,
+            "active_to": null,
+            "created_at": "2023-08-10 18:17:32",
+            "updated_at": "2023-08-10 18:17:33"
+        },
+        {
+            "type": "hybrid",
+            "title": "Private",
+            "sub_title": null,
+            "description": null,
+            "stripe_product_id": "prod_OQUWGmEVaQNv1x",
+            "is_active": "0",
+            "is_restricted": "0",
+            "is_private": "1",
+            "restrictions": null,
+            "private_url": "test3",
+            "active_from": null,
+            "active_to": null,
+            "created_at": "2023-08-10 18:24:48",
+            "updated_at": "2023-09-05 06:57:54"
+        },
+        {
+            "type": "class_lesson",
+            "title": "Test class",
+            "sub_title": null,
+            "description": null,
+            "stripe_product_id": "prod_OVZFLEC3djRAKZ",
+            "is_active": "1",
+            "is_restricted": "1",
+            "is_private": "0",
+            "restrictions": null,
+            "private_url": "test-private-class",
+            "active_from": null,
+            "active_to": null,
+            "created_at": "2023-08-24 07:37:25",
+            "updated_at": "2023-09-05 05:23:13",
+            "prices": [
+                {
+                    "priceable_type": "pack",
+                    "stripe_price_id": "price_1Nn1MhFZgNT1PRCWA4TS4FCL",
+                    "type": "one_time",
+                    "is_active": "1",
+                    "price": "12.50",
+                    "unit_amount": "1250",
+                    "sessions": "1",
+                    "is_expiring": "1",
+                    "expiration": "7",
+                    "expiration_period": "day",
+                    "currency": "gbp",
+                    "currency_symbol": "£",
+                    "interval": null,
+                    "interval_count": null,
+                    "is_unlimited": "0",
+                    "is_fap": "0",
+                    "fap_value": "1",
+                    "is_ongoing": "1",
+                    "fixed_count": null,
+                    "is_renewable": "0",
+                    "is_intro": "0",
+                    "created_at": "2023-09-05 13:54:11",
+                    "updated_at": "2023-09-05 13:54:11",
+                    "deleted_at": null
+                }
+            ]
+        },
+        {
+            "type": "location_pass",
+            "title": "Gym special",
+            "sub_title": "not shown with the rest",
+            "description": null,
+            "stripe_product_id": "prod_Oa9R2TmzLNADSL",
+            "is_active": "1",
+            "is_restricted": "0",
+            "is_private": "1",
+            "restrictions": null,
+            "private_url": "gym-special",
+            "active_from": null,
+            "active_to": "2024-09-30",
+            "created_at": "2023-09-05 13:18:11",
+            "updated_at": "2023-09-05 13:18:13",
+            "prices": [
+                {
+                    "priceable_id": "11",
+                    "priceable_type": "pack",
+                    "stripe_price_id": "price_1NmzhmFZgNT1PRCWSPsWKDMf",
+                    "type": "one_time",
+                    "is_active": "1",
+                    "price": "14.99",
+                    "unit_amount": "1499",
+                    "sessions": "0",
+                    "is_expiring": "1",
+                    "expiration": "2",
+                    "expiration_period": "week",
+                    "currency": "gbp",
+                    "currency_symbol": "£",
+                    "interval": null,
+                    "interval_count": null,
+                    "is_unlimited": "0",
+                    "is_fap": "0",
+                    "fap_value": "1",
+                    "is_ongoing": "1",
+                    "fixed_count": null,
+                    "is_renewable": "0",
+                    "is_intro": "0",
+                    "created_at": "2023-09-05 13:54:11",
+                    "updated_at": "2023-09-05 13:54:11",
+                    "deleted_at": null
+                },
+                {
+                    "priceable_id": "11",
+                    "priceable_type": "pack",
+                    "stripe_price_id": "price_1Nmzi6FZgNT1PRCWtk7tAZ0R",
+                    "type": "recurring",
+                    "is_active": "1",
+                    "price": "9.99",
+                    "unit_amount": "999",
+                    "sessions": "0",
+                    "is_expiring": "0",
+                    "expiration": null,
+                    "expiration_period": null,
+                    "currency": "gbp",
+                    "currency_symbol": "£",
+                    "interval": "month",
+                    "interval_count": "1",
+                    "is_unlimited": "0",
+                    "is_fap": "0",
+                    "fap_value": "1",
+                    "is_ongoing": "1",
+                    "fixed_count": null,
+                    "is_renewable": "0",
+                    "is_intro": "0",
+                    "created_at": "2023-09-05 13:54:31",
+                    "updated_at": "2023-09-05 13:54:31",
+                    "deleted_at": null
+                }
+            ]
+        }
+    ]
+}

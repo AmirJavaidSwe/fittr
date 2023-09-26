@@ -93,8 +93,9 @@ const closeUserCreateModal = () => {
     showUserCreateModal.value = false;
 };
 const createUserFrom = useForm({
-    name: "",
-    email: "",
+    first_name: null,
+    last_name: null,
+    email: null,
     // password: "",
     is_super: true,
     roles: [],
@@ -105,7 +106,8 @@ const closeUserEditModal = () => {
     showUserEditModal.value = false;
 };
 const editUserFrom = useForm({
-    name: null,
+    first_name: null,
+    last_name: null,
     id: null,
     email: null,
     password: null,
@@ -138,7 +140,8 @@ const getUserRoles = (roles) => {
 const handleUpdateForm = (data) => {
     showUserEditModal.value = true;
     editUserFrom.id = data.id;
-    editUserFrom.name = data.name;
+    editUserFrom.first_name = data.first_name;
+    editUserFrom.last_name = data.last_name;
     editUserFrom.email = data.email;
     editUserFrom.password = null;
     editUserFrom.is_super = data.is_super;
@@ -243,43 +246,51 @@ const storeRole = ($event) => {
         </template>
 
         <template #tableHead>
-            <!-- <table-head title="ID" @click="setOrdering('id')" :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'id'" /> -->
-            <table-head
-                title="Name"
-                @click="setOrdering('name')"
+            <TableHead
+                title="First Name"
+                @click="setOrdering('first_name')"
                 :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'name'"
+                :currentSort="form.order_by === 'first_name'"
             />
-            <table-head
+            <TableHead
+                title="Last Name"
+                @click="setOrdering('last_name')"
+                :arrowSide="form.order_dir"
+                :currentSort="form.order_by === 'last_name'"
+            />
+            <TableHead
                 title="Email"
                 @click="setOrdering('email')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'email'"
             />
-            <table-head title="Is Super Admin" />
-            <table-head title="Roles" />
-            <table-head title="Avatar" />
-            <table-head
+            <TableHead title="Is Super Admin" />
+            <TableHead title="Roles" />
+            <TableHead title="Avatar" />
+            <TableHead
                 title="Date created"
                 @click="setOrdering('created_at')"
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'created_at'"
             />
-            <table-head title="" />
+            <TableHead title="Actions" />
         </template>
 
         <template #tableData>
             <tr v-for="(user, index) in props.users.data" :key="user.id">
-                <!-- <table-data>{{ user.id }}</table-data> -->
-                <table-data>{{ user.name }}</table-data>
-                <table-data>{{ user.email }}</table-data>
-                <table-data class="items-center text-center">
+                <TableData>
+                    {{ user.first_name }}
+                </TableData>
+                <TableData>
+                    {{ user.last_name }}
+                </TableData>
+                <TableData>{{ user.email }}</TableData>
+                <TableData class="items-center text-center">
                     <div class="block">
                         <StatusLabel :status="user.is_super ? 'Yes' : 'No'" />
                     </div>
-                </table-data>
-                <table-data class="items-center">
+                </TableData>
+                <TableData class="items-center">
                     <template v-if="!user.is_super">
                         <template v-for="(role, role_i) in user.user_roles" :key="role_i">
                             <div class="block mb-2">
@@ -287,18 +298,23 @@ const storeRole = ($event) => {
                             </div>
                         </template>
                     </template>
-                </table-data>
-                <table-data class="text-center">
-                    <Avatar :title="user.name" size="small" />
-                </table-data>
-                <table-data>
+                </TableData>
+                <TableData class="text-center">
+                    <Avatar
+                        class="cursor-pointer inline-flex justify-center mr-1 text-center items-center"
+                        :initials="user.initials"
+                        :imageUrl="user.profile_photo_url"
+                        v-tooltip="user.full_name"
+                    />
+                </TableData>
+                <TableData>
                     <DateValue
                         :date="
                             DateTime.fromISO(user.created_at).toLocaleString()
                         "
                     />
-                </table-data>
-                <table-data>
+                </TableData>
+                <TableData>
                     <Dropdown
                         align="right"
                         width="48"
@@ -347,7 +363,7 @@ const storeRole = ($event) => {
                             </DropdownLink>
                         </template>
                     </Dropdown>
-                </table-data>
+                </TableData>
             </tr>
         </template>
 
