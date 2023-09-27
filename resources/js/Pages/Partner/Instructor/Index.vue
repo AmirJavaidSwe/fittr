@@ -120,10 +120,11 @@ const updateInstructors = () => {
     form_item
         .transform((data) => ({
             ...data,
+            profile_image: form_item.profile_image,
             _method: "put",
-        }))
-        .post(route("partner.instructors.update", form_item.id), {
-            preserveScroll: true,
+        }));
+        form_item.post(route("partner.instructors.update", form_item.id), {
+        preserveScroll: true,
             onSuccess: () => [form_item.reset(), closeEditModal()],
         });
 };
