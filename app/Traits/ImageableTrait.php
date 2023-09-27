@@ -43,20 +43,34 @@ trait ImageableTrait
         }
     }
 
+    public function deleteImage($image, $disk = null)
+    {
+        if(!$disk) {
+            $disk = config('filesystems.default');
+        }
+        Storage::disk(config('filesystems.default'))->delete($image->path.'/'.$image->filename);
+        $image->delete();
+    }
+
     public function updateFiles($files, $uploaded_files, $model, $path = 'images', $disk = null)
     {
         try {
 
             $ids = $model->images->pluck('id');
+            
             $updated_ids = collect($uploaded_files)->pluck('id');
             $diff = $ids->diff($updated_ids);
 
             if($diff->count()) {
-                $model->images()->whereIn('id', $diff)->delete();
+                $images = $model->images()->whereIn('id', $diff)->get();
+                $images->each(function ($image){
+                    $this->deleteImage($image);
+                });
             }
 
-
-            $this->uploadFiles($files, $model, $path, $disk);
+            if(!empty($files)){
+                $this->uploadFiles($files, $model, $path, $disk);
+            }
 
         } catch(Exception $e) {
             throw new Exception($e->getMessage());

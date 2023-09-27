@@ -28,14 +28,16 @@ class InstructorFormRequest extends FormRequest
         $rules =  [
             'name' => 'required',
             'email' => 'required|email|unique:mysql_partner.users,email,'.$this->instructor?->id,
+            'old_profile_image' => 'boolean',
             'profile_image' => [
-                'sometimes',
+                'nullable',
+                'exclude_if:old_profile_image,true',
                 File::image()
                 ->min(1) //KB
                 ->max(20 * 1024) //KB
                 ->dimensions(Rule::dimensions([1920, 1280])),
             ],
-            'profile_description' => 'sometimes|string|max:5000',
+            'profile_description' => 'nullable|max:5000',
         ];
 
         return $rules;

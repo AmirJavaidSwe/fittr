@@ -89,6 +89,7 @@ let form_edit = useForm({
     email: "",
     profile_description: "",
     profile_image: null,
+    old_profile_image: false,
 });
 
 const showEditModal = ref(false);
@@ -104,12 +105,14 @@ const handleUpdateForm = (data) => {
     form_edit.email = data.email;
     form_edit.profile_description = data.profile?.description;
     form_edit.profile_image = data.profile?.images?.length ? { ...data.profile?.images[0] } : null;
+    form_edit.old_profile_image = !!form_edit.profile_image;
 };
 
 const updateInstructors = () => {
     form_edit
         .transform((data) => ({
             ...data,
+            old_profile_image: (data.profile_image instanceof File) === false && !!form_edit.profile_image?.filename,
             _method: "put",
         }))
         .post(route("partner.instructors.update", form_edit.id), {
