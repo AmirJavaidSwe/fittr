@@ -73,6 +73,9 @@ const form_item = useForm({
     email: null,
     profile_description: "",
     phone: null,
+    profile_description: null,
+    profile_image: null,
+    old_profile_image: false,
 });
 
 const showCreateModal = ref(false);
@@ -90,14 +93,6 @@ const storeInstructor = () => {
         onSuccess: () => [form_item.reset(), closeCreateModal()],
     });
 };
-
-let form_edit = useForm({
-    id: "",
-    name: "",
-    email: "",
-    profile_description: "",
-    profile_image: null,
-});
 
 const showEditModal = ref(false);
 const closeEditModal = () => {
@@ -121,10 +116,12 @@ const updateInstructors = () => {
         .transform((data) => ({
             ...data,
             profile_image: form_item.profile_image,
+            old_profile_image: (data.profile_image instanceof File) === false && !!form_item.profile_image?.filename,
             _method: "put",
         }));
         form_item.post(route("partner.instructors.update", form_item.id), {
         preserveScroll: true,
+
             onSuccess: () => [form_item.reset(), closeEditModal()],
         });
 };

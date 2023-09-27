@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('instructor_profiles', function (Blueprint $table) {
             $table->id();
-            $table->longText('description');
+            $table->longText('description')->nullable();
             $table->unsignedBigInteger('user_id')->index('user_id');
             $table->timestamps();
         });

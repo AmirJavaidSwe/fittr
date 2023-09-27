@@ -5,8 +5,9 @@ namespace App\Http\Controllers\Partner;
 use App\Enums\PartnerUserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Partner\InstructorFormRequest;
-use App\Models\Partner\User;
 use App\Models\Partner\Instructor;
+use App\Models\Partner\InstructorProfile;
+use App\Models\Partner\User;
 use App\Traits\ImageableTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -167,26 +168,17 @@ class PartnerInstructorController extends Controller
     public function update(InstructorFormRequest $request, Instructor $instructor)
     {
         $instructor->update($request->validated());
-
-        $instructor->load('profile');
-
-        if ($instructor->profile) {
-            $instructor->profile->update([
+        $profile = InstructorProfile::updateOrCreate(
+            [
                 'user_id' => $instructor->id,
-                'description' => $request->profile_description,
-            ]);
-        } else {
-            $instructor->profile()->create([
-                'user_id' => $instructor->id,
-                'description' => $request->profile_description,
-            ]);
-
-            $instructor->load('profile');
-        }
+            ],
+            ['description' => $request->profile_description]
+        );
 
         try {
-            if($request->hasFile('profile_image')) {
-                $this->updateFiles($request->file('profile_image'), [], $instructor->profile, 'images/instructor_photos');
+            //upload new and/or delete existing
+            if($request->hasFile('profile_image') || !$request->old_profile_image) {
+                $this->updateFiles($request->file('profile_image'), [], $profile, 'images/instructor_photos');
             }
         } catch(\Exception $e) {
             Log::error($e->getMessage());

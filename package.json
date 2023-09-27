@@ -36,6 +36,7 @@
         "signature_pad": "^4.1.6",
         "sweetalert2": "^11.4.8",
         "vue-advanced-cropper": "^2.8.8",
-        "vue3-dropzone": "^2.0.1"
+        "vue3-dropzone": "^2.0.1",
+        "vuedraggable": "^4.1.0"
     }
 }
