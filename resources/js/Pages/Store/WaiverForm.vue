@@ -128,7 +128,7 @@ const signatureError = computed(() => {
                 <div class="w-full flex items-center">
                     <InputLabel :value="'Signature'" />
                 </div>
-                <div class="w-full mt-12 mb-2">
+                <div class="w-full mt-2">
                     <SignaturePad @on-signature-update="onSignatureUpdate" :sign="form.sign" />
                     <InputError v-if="signatureError.error" :message="signatureError.msg" class="mb-10" />
                 </div>

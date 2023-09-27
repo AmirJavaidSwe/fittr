@@ -11,14 +11,12 @@ import TextInput from "@/Components/TextInput.vue";
 import ActionMessage from "@/Components/ActionMessage.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
 import Multiselect from "@vueform/multiselect";
+import "@vueform/multiselect/themes/tailwind.css";
 import RichTextInput from "@/Components/RichTextInput.vue";
-import {
-    faPlus,
-    faArrowUp,
-    faArrowDown,
-} from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faGripVertical } from "@fortawesome/free-solid-svg-icons";
 import DeleteIcon from "@/Icons/Delete.vue";
 import Switcher from "@/Components/Switcher.vue";
+import draggable from 'vuedraggable';
 
 const props = defineProps({
     editWaiver: Object,
@@ -70,23 +68,6 @@ const removeLine = (index) => {
 };
 
 const questionTypes = helpers.questionTypes();
-
-const moveDown = (index) => {
-    if (index >= 0 && index < questionsData.value.length - 1) {
-        const itemToMove = questionsData.value[index];
-        questionsData.value.splice(index, 1); // Remove the item from its current position
-        questionsData.value.splice(index + 1, 0, itemToMove); // Insert it one index down
-    }
-};
-
-const moveUp = (index) => {
-    if (index > 0 && index < questionsData.value.length) {
-        const itemToMove = questionsData.value[index];
-        questionsData.value.splice(index, 1); // Remove the item from its current position
-        questionsData.value.splice(index - 1, 0, itemToMove); // Insert it one index up
-    }
-};
-
 const showConfitmationModal = ref(false);
 const closeConfitmationModal = (param) => {
     if (param === false) {
@@ -111,8 +92,8 @@ watch(
         <template #title> Waiver Information </template>
         <template #description> Edit Waiver Information </template>
         <template #form>
-            <div class="flex flex-col space-y-4">
-                <div class="col-span-6 sm:col-span-4">
+            <div class="space-y-4">
+                <div>
                     <InputLabel for="title" value="Title" />
                     <TextInput
                         id="title"
@@ -123,7 +104,7 @@ watch(
                     />
                     <InputError :message="form.errors.name" class="mt-2" />
                 </div>
-                <div class="col-span-6 sm:col-span-4">
+                <div>
                     <InputLabel for="show_at" value="Show At" />
                     <Multiselect
                         autocomplete="off"
@@ -134,8 +115,8 @@ watch(
                     />
                     <InputError :message="form.errors.show_at" class="mt-2" />
                 </div>
-                <div class="col-span-6 sm:col-span-4">
-                    <InputLabel for="description" value="Description" />
+                <div>
+                    <InputLabel for="description" value="Contents" />
                     <RichTextInput v-model="form.description" />
                     <InputError
                         :message="form.errors.description"
@@ -143,94 +124,75 @@ watch(
                     />
                 </div>
 
-                <div class="w-full flex items-center">
-                    <div class="w-96 pr-2">
+                <div class="flex items-center">
+                    <div class="flex-grow">
                         <div class="bg-blue-100">
-                            <label for="question" class="block font-medium p-2"
-                                >Question</label
-                            >
+                            <label for="question" class="block font-medium p-2">Question</label>
                         </div>
                     </div>
-                    <div class="w-40 pr-2">
+                    <div class="w-40 mr-1">
                         <div class="bg-green-100">
-                            <label
-                                for="questionType"
-                                class="block font-medium p-2"
-                                >Question Type</label
-                            >
+                            <label for="questionType" class="block font-medium p-2">Question Type</label>
                         </div>
                     </div>
                     <div class="w-10"></div>
                 </div>
 
-                <div
-                    class="items-center w-full flex"
-                    v-for="(options, i) in questionsData"
-                    :key="i"
-                >
-                    <div
-                        class="w-4 pr-1"
-                        v-if="i != questionsData.length - 1"
-                        @click="moveDown(i)"
-                    >
-                        <span class="cursor-pointer">
-                            <font-awesome-icon
-                                :icon="faArrowDown"
-                                style="color: #333"
-                            />
-                        </span>
-                    </div>
-                    <div class="w-4 pr-1" v-if="i != 0" @click="moveUp(i)">
-                        <span class="cursor-pointer">
-                            <font-awesome-icon
-                                :icon="faArrowUp"
-                                style="color: #333"
-                            />
-                        </span>
-                    </div>
-                    <div class="w-96 pr-2">
-                        <TextInput
-                            :id="'question--' + i"
-                            v-model="questionsData[i].question"
-                            type="text"
-                            class="mt-1 block w-full"
-                            :class="'question--' + i"
-                            autocomplete="off"
-                            placeholder="Add Question here"
-                        />
-                    </div>
-                    <div class="w-40 pr-2">
-                        <Multiselect
-                            class="w-full"
-                            mode="single"
-                            v-model="questionsData[i].selectedQuestionType"
-                            :options="questionTypes"
-                            placeholder="Choose an option"
-                        />
-                    </div>
-                    <div class="w-10 ml-4">
-                        <span
-                            class="text-danger-500 flex items-center cursor-pointer"
-                            @click="removeLine(i)"
+                <transition-group>
+                    <draggable
+                        item-key="name"
+                        key="dragggable"
+                        :list="questionsData"
+                        :animation="300"
+                        ghostClass="opacity-50"
+                        @start="drag = true"
+                        @end="drag = false"
                         >
-                            <DeleteIcon
-                                class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
-                            />
-                        </span>
-                    </div>
-                </div>
+                        <template #item="{ element }">
+                            <div :key="element.question" class="flex items-center gap-1 mb-2">
+                                <font-awesome-icon class="cursor-move p-1" :icon="faGripVertical" />
+                                <div class="flex-grow">
+                                    <TextInput
+                                        v-model="element.question"
+                                        type="text"
+                                        class="w-full"
+                                        placeholder="Add Question here"
+                                    />
+                                </div>
+                                <div class="w-40">
+                                    <Multiselect
+                                        class="w-full"
+                                        mode="single"
+                                        v-model="element.selectedQuestionType"
+                                        :options="questionTypes"
+                                        placeholder="Select"
+                                    />
+                                </div>
+                                <ButtonLink 
+                                        @click="removeLine(element.question)"
+                                        styling="transparent"
+                                        size="small"
+                                        class=""
+                                        type="button"
+                                        >
+                                    <DeleteIcon class="w-4 h-4 text-danger-500"/>
+                                </ButtonLink>
+                            </div>
+                        </template>
+                    </draggable>
+                </transition-group>
 
-                <div
-                    class="flex flex-row items-center justify-start text-blue-800"
-                >
-                    <font-awesome-icon class="mx-2" :icon="faPlus" />
-                    <label
-                        class="mr-3 w-full text-blue-800 cursor-pointer"
-                        @click="addQuestion"
+                <ButtonLink 
+                    @click="addQuestion"
+                    styling="primary"
+                    size="small"
+                    class=""
+                    type="button"
                     >
-                        Add Question
-                    </label>
-                </div>
+                    <font-awesome-icon class="mr-2" :icon="faPlus" />
+                    Add Question
+                </ButtonLink>
+                
                 <div>
                     <Switcher
                         v-model="form.is_active"
@@ -247,11 +209,11 @@ watch(
                         :show-labels="['No', 'Yes']"
                     />
                 </div>
-                {{ form.sign_again }}
+
                 <div v-if="form.is_signature_needed">
                     <Switcher
                         v-model="form.sign_again"
-                        title="Old users need to sign this?"
+                        title="Require existing users to sign this?"
                         description=""
                         :show-labels="['No', 'Yes']"
                     />
@@ -306,4 +268,3 @@ watch(
         </ConfirmationModal>
     </template>
 </template>
-<style src="@vueform/multiselect/themes/tailwind.css"></style>
