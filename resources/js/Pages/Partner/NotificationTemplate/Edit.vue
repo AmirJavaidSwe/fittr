@@ -6,6 +6,7 @@ import ButtonLink from "@/Components/ButtonLink.vue";
 import FormSection from "@/Components/FormSection.vue";
 import PreviewNotificationTemplate from "./PreviewNotificationTemplate.vue";
 import { ref } from "vue";
+import axios from "axios";
 
 const updateNotificationTemplate = () => {
     form.transform((data) => ({
@@ -52,7 +53,7 @@ const previewHtml = ref('');
 
 const showPreview = async () => {
     preivewProcessing.value = true;
-    const res = await axios.post(route('partner.notification-templates.preview', {content: form.content}))
+    const res = await axios.post(route('partner.notification-templates.preview'), { ...form.data() })
         .catch(console.error);
 
     previewHtml.value = res.data;

@@ -17,6 +17,7 @@ import StatusLabel from "@/Components/StatusLabel.vue";
 import PreviewNotificationTemplate from "./PreviewNotificationTemplate.vue";
 
 import { hideAllPoppers } from 'floating-vue';
+import axios from "axios";
 
 const props = defineProps({
     disableSearch: {
@@ -138,7 +139,7 @@ const previewHtml = ref('');
 
 const showPreview = async () => {
     preivewProcessing.value = true;
-    const res = await axios.post(route('partner.notification-templates.preview', {content: form.content}))
+    const res = await axios.post(route('partner.notification-templates.preview'), { ...editForm.data() })
         .catch(console.error);
 
     previewHtml.value = res.data;

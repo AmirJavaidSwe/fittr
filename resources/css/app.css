@@ -155,6 +155,17 @@ div.iti .input-field {
 }
 
 /* CKEditor */
+
+.ck.ck-content.ck-editor__editable {
+    @apply border border-gray-300 focus:border-[1.5px] focus:border-primary-500 focus:outline-none focus:shadow-none focus:ring-0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+    /* text-align: center !important; */
+}
+
+.ck.ck-content.ck-editor__editable * {
+    line-height: 1.5em;
+}
+
 .ck-editor__editable_inline {
     min-height: 200px;
 }
