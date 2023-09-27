@@ -8,6 +8,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -75,4 +76,9 @@ class Instructor extends Authenticatable implements MustVerifyEmail
      {
          return Str::of($this->first_name)->ucfirst()->append(' ').Str::of($this->last_name)->ucfirst();
      }
+
+    public function profile(): HasOne
+    {
+        return $this->hasOne(InstructorProfile::class, 'user_id');
+    }
 }

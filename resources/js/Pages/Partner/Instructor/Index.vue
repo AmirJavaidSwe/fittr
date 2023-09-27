@@ -72,6 +72,9 @@ const form_item = useForm({
     last_name: null,
     email: null,
     phone: null,
+    profile_description: null,
+    profile_image: null,
+    old_profile_image: false,
 });
 
 const showCreateModal = ref(false);
@@ -103,13 +106,22 @@ const handleUpdateForm = (data) => {
     form_item.last_name = data.last_name;
     form_item.email = data.email;
     form_item.phone = data.phone;
+    form_item.profile_description = data.profile?.description;
+    form_item.profile_image = data.profile?.images?.length ? { ...data.profile?.images[0] } : null;
+    form_item.old_profile_image = !!form_item.profile_image;
 };
 
 const updateInstructors = () => {
-    form_item.put(route("partner.instructors.update", form_item.id), {
-        preserveScroll: true,
-        onSuccess: () => [form_item.reset(), closeEditModal()],
-    });
+    form_item
+        .transform((data) => ({
+            ...data,
+            old_profile_image: (data.profile_image instanceof File) === false && !!form_item.profile_image?.filename,
+            _method: "put",
+        }))
+        .post(route("partner.instructors.update", form_item.id), {
+            preserveScroll: true,
+            onSuccess: () => [form_item.reset(), closeEditModal()],
+        });
 };
 
 //delete confiramtion modal:
@@ -299,7 +311,7 @@ const deleteItem = () => {
         <template #title> Update instructor </template>
 
         <template #content>
-            <Form :form="form_item" :submitted="updateInstructors" modal />
+            <Form :form="form_item" :submitted="updateInstructors" :isEdit="true" modal />
         </template>
     </SideModal>
 
