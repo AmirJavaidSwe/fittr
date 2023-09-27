@@ -240,6 +240,8 @@ Route::domain('{subdomain}.'.$domain)->middleware(['auth.subdomain'])->name('ss.
     Route::get('/classes/{class}', [StoreClassController::class, 'show'])->name('classes.show');
 
     Route::get('/instructors', [StoreInstructorController::class, 'index'])->name('instructors.index');
+    Route::get('/instructor-profile/{id}', [StoreInstructorController::class, 'show'])->name('instructor.profile.show');
+    Route::get('/instructor-class/{id}', [StoreInstructorController::class, 'showInstructorClass'])->name('instructor.profile.showclass');
     Route::get('/locations', [StoreLocationController::class, 'index'])->name('locations.index');
     Route::get('/memberships', [StorePackController::class, 'index'])->name('memberships.index');
     Route::get('/membership-private/{url}', [StorePackController::class, 'showPrivate'])->name('memberships.private');
