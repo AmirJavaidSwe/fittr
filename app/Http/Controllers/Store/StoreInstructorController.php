@@ -17,11 +17,12 @@ class StoreInstructorController extends Controller
 {
     public function index(Request $request)
     {
-        $instructors = User::instructor()->get()->each(function ($instructor) {
+        $instructors = User::instructor()->with('profile.images')->get()->each(function ($instructor) {
             $instructor->email = Str::mask($instructor->email, '*', 3);
         });
 
-        return Inertia::render('Store/Instructors', [
+
+        return Inertia::render('Store/Instructor/InstructorsList', [
             'page_title' => __('Instructors'),
             'header' => __('Instructors'),
             'instructors' => $instructors,

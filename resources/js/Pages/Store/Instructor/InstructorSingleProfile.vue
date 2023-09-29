@@ -1,6 +1,5 @@
 
 <script setup>
-import InstructorNavMenu from '@/Layouts/InstructorNavMenu.vue';
 import { useWindowSize } from '@/Composables/window_size';
 import { computed, onBeforeMount, onMounted, ref, reactive } from 'vue';
 import { useForm, usePage } from '@inertiajs/vue3';
