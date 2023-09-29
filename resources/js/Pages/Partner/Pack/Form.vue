@@ -18,6 +18,7 @@ import { faCircle, faCircleDot } from '@fortawesome/free-regular-svg-icons';
 import { RadioGroup, RadioGroupOption } from '@headlessui/vue';
 import '@vueform/multiselect/themes/tailwind.css';
 import '@vuepic/vue-datepicker/dist/main.css';
+import draggable from 'vuedraggable';
 
 const props = defineProps({
     pack_types: Array,
@@ -43,6 +44,17 @@ const props = defineProps({
     },
     pack_id: Number
 });
+
+// draggable sorting order
+const sortPacks = (e) => {
+    console.log(sorted.value)
+    axios.post(route("partner.packs.price.sort"), sorted.value);
+};
+const sorted = computed(() => {
+  return props.pack_prices.map((pack_price, index) => {
+        return {id: pack_price.id, ordering: index};
+    });
+})
 
 props.form.restrictions = reactive({
      offpeak: props.form.restrictions?.offpeak ?? false,
@@ -324,20 +336,30 @@ const showEditPrice = (price) => {
 
                 </div>
                 <!-- Existing prices list: -->
-                <div v-if="pack_prices.length" class="flex flex-wrap gap-4">
-                    <PriceCard
-                        v-for="price in pack_prices"
-                        :key="price.id"
-                        :price="price"
-                        :pack_type="form.type"
-                        :label="price_types.find(element => element.value == price.type).label"
-                        @toggle="toggleOrDeletePrice('toggle', price.id)"
-                        @edit="showEditPrice(price)"
-                        @delete="toggleOrDeletePrice('delete', price.id)"
-                    >
-                    </PriceCard>
-                </div>
-
+                <transition-group>
+                    <draggable
+                        item-key="id"
+                        key="transition-group-key"
+                        :list="pack_prices"
+                        :animation="200"
+                        ghostClass="opacity-50"
+                        @end="sortPacks"
+                        class="flex flex-wrap gap-4"
+                        >
+                        <template #item="{element}">
+                            <PriceCard
+                                :key="element.id"
+                                :price="element"
+                                :pack_type="form.type"
+                                :label="price_types.find(el => el.value == element.type).label"
+                                @toggle="toggleOrDeletePrice('toggle', element.id)"
+                                @edit="showEditPrice(element)"
+                                @delete="toggleOrDeletePrice('delete', element.id)"
+                            >
+                            </PriceCard>
+                        </template>
+                    </draggable>
+                </transition-group>
                 <!-- Edit price Modal -->
                 <SideModal :show="shown_price_form" @close="shown_price_form = false">
                     <template #title>{{is_new_price ? 'Create new pricing option' : 'Update pricing option'}}</template>

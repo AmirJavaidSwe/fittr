@@ -1,15 +1,29 @@
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useForm } from "@inertiajs/vue3";
 import PackCard from "@/Pages/Partner/Pack/PackCard.vue";
 import ConfirmationModal from '@/Components/ConfirmationModal.vue';
 import ButtonLink from '@/Components/ButtonLink.vue';
+import draggable from 'vuedraggable';
 
 const props = defineProps({
     business_settings: Object,
     price_types: Object,
     packs: Object,
 });
+
+// draggable sorting order
+const sortPacks = (e) => {
+    axios.post(route("partner.packs.sort"), sorted.value);
+};
+const sorted = computed(() => {
+  return Object.keys(props.packs).map((pack_group) => {
+        return props.packs[pack_group].packs.map((pack, index) => {
+            return {id: pack.id, ordering: index};
+        });
+    }).flat();
+})
+
 const form = useForm({});
 
 //delete confirmation modal:
@@ -79,18 +93,29 @@ const toggleActive = (id) => {
                 <span class="bg-white border flex h-8 items-center justify-center rounded-full text-sm w-8">{{group.pack_count}}</span>
             </div>
             <div class="border-b-2 text-grey mb-4" v-tooltip.left="'PackType.description'">{{group.label.description}}</div>
-            <div class="flex flex-wrap gap-4">
-                <PackCard
-                    v-for="pack in group.packs" :key="pack.id"
-                    :pack="pack"
-                    :price_types="price_types"
-                    :business_settings="business_settings"
-                    @copy=confirmDuplication
-                    @delete=confirmDeletion
-                    @toggle=toggleActive
-                    class="bg-white rounded-md border-t-8 shadow w-80"
-                />
-            </div>
+                <transition-group>
+                    <draggable
+                        item-key="id"
+                        key="transition-group-key"
+                        :list="group.packs"
+                        :animation="200"
+                        ghostClass="opacity-50"
+                        @end="sortPacks"
+                        class="flex flex-wrap gap-4"
+                        >
+                        <template #item="{element}">
+                            <PackCard
+                                :pack="element"
+                                :price_types="price_types"
+                                :business_settings="business_settings"
+                                @copy=confirmDuplication
+                                @delete=confirmDeletion
+                                @toggle=toggleActive
+                                class="bg-white rounded-md border-t-8 shadow w-80"
+                            />
+                        </template>
+                    </draggable>
+                </transition-group>
         </div>
     </div>
 

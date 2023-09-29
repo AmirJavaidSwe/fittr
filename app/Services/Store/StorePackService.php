@@ -24,26 +24,27 @@ class StorePackService
                 },
                 'pack_prices.locations'
             ])
-        ->get()
-        ->map(function($pack) {
-            //copy related collection
-            $pack_prices = $pack->pack_prices;
-            //remove original related collection
-            unset($pack->pack_prices);
-            //inject new collection for related
-            $pack->pack_prices = $pack_prices->filter(function($pack_price){
-                if($pack_price->locations->isEmpty()){
-                    //keep location unrestricted prices
-                    return true;
-                }
-                //remove the price unless at least one location is active, pack_price locations will have full set, including inactive locations
-                return $pack_price->locations->where('status', true)->isNotEmpty();
-            })
-            //reset for json
-            ->values();
+            ->orderBy('ordering', 'asc')
+            ->get()
+            ->map(function($pack) {
+                //copy related collection
+                $pack_prices = $pack->pack_prices;
+                //remove original related collection
+                unset($pack->pack_prices);
+                //inject new collection for related
+                $pack->pack_prices = $pack_prices->filter(function($pack_price){
+                    if($pack_price->locations->isEmpty()){
+                        //keep location unrestricted prices
+                        return true;
+                    }
+                    //remove the price unless at least one location is active, pack_price locations will have full set, including inactive locations
+                    return $pack_price->locations->where('status', true)->isNotEmpty();
+                })
+                //reset for json
+                ->values();
 
-            return $pack;
-        });
+                return $pack;
+            });
     }
 
     public function buttonsText(): array

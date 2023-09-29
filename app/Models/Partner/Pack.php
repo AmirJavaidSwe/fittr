@@ -47,7 +47,7 @@ class Pack extends Model
     // Relationships
     public function pack_prices(): MorphMany
     {
-        return $this->morphMany(PackPrice::class, 'priceable');
+        return $this->morphMany(PackPrice::class, 'priceable')->orderBy('ordering', 'asc');
     }
 
     public function memberships(): HasMany
