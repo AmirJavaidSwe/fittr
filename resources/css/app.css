@@ -1,40 +1,21 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss/base";
 
-@layer utilities {
-    /* Hide scrollbar for Chrome, Safari and Opera */
-    .no-scrollbar::-webkit-scrollbar {
-        display: none;
-    }
+@import "tailwindcss/components";
+@import "./components/ck-editor.css";
+@import "./components/tabs.css";
+@import "./components/timetable.css";
+@import "./components/sweetalert.css";
+@import "./components/vue-datepicker.css";
+@import "./components/multiselect.css";
 
-    /* Hide scrollbar for IE, Edge and Firefox */
-    .no-scrollbar {
-        -ms-overflow-style: none;  /* IE and Edge */
-        scrollbar-width: none;  /* Firefox */
-    }
+@import "tailwindcss/utilities";
+@import "./utilities/scrollbar.css";
 
-    /* width/height */
-    ::-webkit-scrollbar {
-        @apply w-2 h-2;
-    }
-
-    /* Track */
-    ::-webkit-scrollbar-track {
-        /* @apply bg-primary-500; */
-        @apply bg-mainbg;
-    }
-
-    /* Handle */
-    ::-webkit-scrollbar-thumb {
-        @apply bg-primary-500;
-    }
-}
+/* TODO: Split other styles: */
 
 :root {
     --input-bg: #f6f7f6;
 }
-
 
 /* Form Common Styles */
 .input-field,
@@ -42,22 +23,7 @@
 select {
     @apply rounded-md flex items-center lg:text-base border border-gray-300 focus:border-[1.5px] focus:border-primary-500 focus:outline-none focus:shadow-none focus:ring-0;
 }
-.multiselect-tag{
-    @apply bg-primary-500 !important;
-}
-.multiselect-option.is-selected{
-    @apply bg-primary-500 !important;
-}
-.multiselect-tag-remove-icon{
-    @apply opacity-60 w-4 h-4 bg-[#d6dfd9] hover:bg-[#de331d] hover:opacity-100 !important;
-}
-.dp__theme_light input {
-    @apply lg:text-base border border-gray-300 focus:border-primary-500 rounded-md focus:ring-0 !important;
-}
 
-.multiselect.is-active {
-    @apply border border-primary-500 ring-0 !important;
-}
 .input-checkbox {
     @apply rounded border-gray-300 text-primary-500 hover:border-primary-500 hover:outline-none hover:shadow-none hover:ring-offset-0 hover:ring-8 hover:ring-primary-100;
 }
@@ -71,31 +37,9 @@ select {
 .switcher-nob {
     @apply pointer-events-none inline-block h-6 w-6 relative -top-1.5 transform rounded-full transition duration-200 ease-in-out focus:ring-offset-0 focus:ring-4 focus:ring-primary-100;
 }
-.multiselect-caret{
-    @apply bg-multiselect-caret bg-center bg-no-repeat w-2.5 h-4 py-px box-content mr-3.5 relative z-10 opacity-100 flex-shrink-0 flex-grow-0 transition-transform transform pointer-events-none rtl:mr-0 rtl:ml-3.5 !important;
-}
-.multiselect .multiselect-dropdown{
-    overflow-y: auto;
-}
-/* Tabs Styles */
-.tabs-wrapper {
-    @apply inline-flex flex-wrap items-center bg-white rounded-xl font-medium text-base mb-3;
-}
-.tabs-wrapper li a, .vertical-tabs li a {
-    @apply py-3 px-4 block rounded-xl !no-underline flex items-center;
-}
-.tabs-wrapper li a svg {
-    @apply mr-2;
-}
-.tabs-wrapper li a.active, .vertical-tabs li a.active {
-    @apply bg-primary-500 text-white;
-}
+
 .start-radius-none{
     @apply rounded-s-none !important;
-}
-/* App Layout */
-.settingicons_bg{
-    background-color: rgb(214 223 217 / var(--tw-bg-opacity));
 }
 
 div.iti__selected-flag {
@@ -104,67 +48,4 @@ div.iti__selected-flag {
 
 div.iti .input-field {
     @apply pl-20 !important
-}
-
-/* Store Front Classes */
-
-.classes-timetable {
-    @apply mb-4 md:bg-white rounded-lg cursor-grab no-scrollbar;
-}
-
-.classes-timetable::-webkit-scrollbar {
-    width: auto;
-    height: 14px;
-}
-
-.classes-timetable::-webkit-scrollbar-track {
-  background: #fff;
-  border-radius: 20px;
-}
-
-.classes-timetable::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.6);
-  height: 5px;
-  border-radius: 10px;
-  border: 3px solid #fff;
-}
-
-/* Sweetalert */
-.swal2-actions:not(.swal2-loading) .swal2-styled:hover {
-    background-image: none;
-}
-
-.swal2-styled.swal2-confirm:focus, .swal2-styled.swal2-deny:focus, .swal2-styled.swal2-cancel:focus {
-    box-shadow: none;
-}
-
-.swal2-styled.swal2-confirm, .swal2-styled.swal2-deny, .swal2-styled.swal2-cancel {
-    border: 1px solid transparent;
-}
-
-.swal2-styled.swal2-confirm {
-    @apply inline-flex items-center disabled:opacity-25 transition font-semibold bg-secondary-500 hover:bg-secondary-100 focus:bg-secondary-100 active:bg-secondary-600 text-dark active:text-white rounded-md border border-secondary-500 hover:bg-secondary-100 hover:text-secondary-500 focus:text-secondary-500 px-4 h-11 text-sm;
-}
-
-.swal2-styled.swal2-deny {
-    @apply inline-flex items-center disabled:opacity-25 transition font-semibold bg-danger-500 hover:bg-danger-100 focus:bg-danger-100 active:bg-danger-600 text-white active:text-white rounded-md border border-danger-500 hover:text-danger-500 hover:bg-danger-100 focus:text-danger-500 px-4 h-11 text-sm;
-}
-
-.swal2-styled.swal2-cancel {
-    @apply inline-flex items-center disabled:opacity-25 transition font-semibold bg-white rounded-md border border-grey hover:border-secondary-500 hover:bg-secondary-100 hover:text-secondary-500 focus:bg-secondary-100 focus:text-secondary-500 active:bg-white active:text-secondary-500 active:border-secondary-500 text-gray-900 px-4 h-11 text-sm;
-}
-
-/* CKEditor */
-.ck-editor__editable_inline {
-    min-height: 200px;
-}
-
-.ck-content ol, .ck-content ul {
-    padding: 0 0 0 1.25rem;
-}
-
-.waiver-desc ol {
-    list-style: initial !important;
-    margin-left: 10px !important;
-    margin-right: 10px !important;
 }

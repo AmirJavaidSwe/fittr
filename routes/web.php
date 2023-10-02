@@ -192,10 +192,12 @@ Route::domain('app.'.$domain)->group(function () {
             Route::resource('users', PartnerUserController::class);
 
             Route::resource('packs', PartnerPackController::class);
+            Route::post('/packs/sort', [PartnerPackController::class, 'sortPacks'])->name('packs.sort');
             Route::post('/packs/{pack}/duplicate', [PartnerPackController::class, 'duplicate'])->name('packs.duplicate');
             Route::post('/packs/{pack}/toggle', [PartnerPackController::class, 'toggle'])->name('packs.toggle');
             Route::post('/packs/{pack}/price', [PartnerPackController::class, 'storePrice'])->name('packs.price.store');
             Route::put('/packs/price/{price}', [PartnerPackController::class, 'updatePrice'])->name('packs.price.update');
+            Route::post('/packs/price/sort', [PartnerPackController::class, 'sortPackPrices'])->name('packs.price.sort');
 
             Route::get('/exports', [PartnerExportController::class, 'index'])->name('exports.index');
             Route::get('/exports/{export}', [PartnerExportController::class, 'show'])->name('exports.show');

@@ -1,0 +1,5 @@
+/* Not wrapping with @layer components {... because .dp_ class isn't used in the project directly and will be tree-shaken */
+
+.dp__main input {
+    @apply border-gray-300 focus:border-primary-500 rounded-md;
+}

@@ -35,7 +35,7 @@ class PackService
                 $query->where('status', StateType::get('active'));
             },
         ])
-        ->orderBy('created_at', 'desc')
+        ->orderBy('ordering', 'asc')
         ->get()
         ->groupBy('type')
         ->map(function ($collection, $key) use ($labels) {

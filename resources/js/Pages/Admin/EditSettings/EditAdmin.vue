@@ -105,5 +105,3 @@ onMounted(() => {
         </template>
     </FormSection>
 </template>
-
-<style src="@vueform/multiselect/themes/tailwind.css"></style>

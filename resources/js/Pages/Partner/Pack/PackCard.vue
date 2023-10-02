@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue';
 import { DateTime } from 'luxon';
-import { faEllipsis, faUserGroup, faPencil, faCopy, faTrashCan, faLock, faLocationPinLock, faPowerOff, faMask, faCalendarDays } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsis, faUserGroup, faPencil, faCopy, faTrashCan, faLock, faLocationPinLock, faPowerOff, faMask, faCalendarDays, faGrip } from '@fortawesome/free-solid-svg-icons';
 import ButtonLink from '@/Components/ButtonLink.vue';
 import DonutText from '@/Components/Charts/DonutText.vue';
 import { hideAllPoppers } from 'floating-vue';
@@ -30,7 +30,7 @@ defineEmits(['copy', 'toggle', 'delete']);
 
 <template>
     <div 
-        class="relative flex flex-col"
+        class="relative"
         :class="{
                 'border-secondary-600': pack.type == 'class_lesson',
                 'border-blue-600': pack.type == 'service',
@@ -39,51 +39,56 @@ defineEmits(['copy', 'toggle', 'delete']);
                 'border-cyan-500': pack.type == 'corporate',
             }">
         <div v-if="pack.type == 'hybrid'" class="absolute bg-gradient-to-r from-secondary-600 h-2 inset-x-0 top-[-8px] rounded-tl-md rounded-tr-md to-blue-600 w-full"></div>
-        <VDropdown placement="bottom-end" :distance="0" class="self-end">
-            <ButtonLink>
-                <font-awesome-icon :icon="faEllipsis" class="w-6 h-6 mx-2" :class="{'text-white': !pack.is_active, 'z-10': !pack.is_active}" />
-            </ButtonLink>
-            <template #popper>
-                <div class="p-2 w-40 space-y-4">
-                    <ButtonLink 
-                        :href="route('partner.packs.edit', pack)"
-                        size="small"
-                        class="flex justify-between w-full"
-                        styling="default"
-                        >
-                        <font-awesome-icon :icon="faPencil" />
-                        Edit
-                    </ButtonLink>
-                    <ButtonLink 
-                        @click="$emit('copy', pack.id); hideAllPoppers();"
-                        size="small"
-                        class="flex justify-between w-full"
-                        styling="secondary"
-                        >
-                        <font-awesome-icon :icon="faCopy" />
-                        Duplicate
-                    </ButtonLink>
-                    <ButtonLink 
-                        @click="$emit('toggle', pack.id); hideAllPoppers();"
-                        size="small"
-                        class="flex justify-between w-full"
-                        :styling="pack.is_active ? 'default' : 'primary'"
-                        >
-                        <font-awesome-icon :icon="faPowerOff" />
-                        {{pack.is_active ? 'Deactive' : 'Make active'}} 
-                    </ButtonLink>
-                    <ButtonLink 
-                        @click="$emit('delete', pack.id); hideAllPoppers();"
-                        size="small"
-                        class="flex justify-between w-full"
-                        styling="danger"
-                        >
-                        <font-awesome-icon :icon="faTrashCan" />
-                        Delete
-                    </ButtonLink>
-                </div>
-            </template>
-        </VDropdown>
+        <div class="flex justify-between">
+            <div class="flex-grow cursor-move">
+                <font-awesome-icon class="px-2 py-1 text-gray-400" :icon="faGrip" />
+            </div>
+            <VDropdown placement="bottom-end" :distance="0" class="">
+                <ButtonLink>
+                    <font-awesome-icon :icon="faEllipsis" class="w-6 h-6 mx-2" :class="{'text-white': !pack.is_active, 'z-10': !pack.is_active}" />
+                </ButtonLink>
+                <template #popper>
+                    <div class="p-2 w-40 space-y-4">
+                        <ButtonLink 
+                            :href="route('partner.packs.edit', pack)"
+                            size="small"
+                            class="flex justify-between w-full"
+                            styling="default"
+                            >
+                            <font-awesome-icon :icon="faPencil" />
+                            Edit
+                        </ButtonLink>
+                        <ButtonLink 
+                            @click="$emit('copy', pack.id); hideAllPoppers();"
+                            size="small"
+                            class="flex justify-between w-full"
+                            styling="secondary"
+                            >
+                            <font-awesome-icon :icon="faCopy" />
+                            Duplicate
+                        </ButtonLink>
+                        <ButtonLink 
+                            @click="$emit('toggle', pack.id); hideAllPoppers();"
+                            size="small"
+                            class="flex justify-between w-full"
+                            :styling="pack.is_active ? 'default' : 'primary'"
+                            >
+                            <font-awesome-icon :icon="faPowerOff" />
+                            {{pack.is_active ? 'Deactive' : 'Make active'}} 
+                        </ButtonLink>
+                        <ButtonLink 
+                            @click="$emit('delete', pack.id); hideAllPoppers();"
+                            size="small"
+                            class="flex justify-between w-full"
+                            styling="danger"
+                            >
+                            <font-awesome-icon :icon="faTrashCan" />
+                            Delete
+                        </ButtonLink>
+                    </div>
+                </template>
+            </VDropdown>
+        </div>
         <div class="flex items-center">
             <DonutText 
                     class="w-24 flex-shrink-0 ml-1"
@@ -163,7 +168,7 @@ defineEmits(['copy', 'toggle', 'delete']);
             </VTooltip>
         </div>
 
-        <div class="bg-gray-50 border border-gray-50 font-bold place-self-start px-2 rounded-tr-lg text-sm mt-2">Pricing options</div>
+        <div class="bg-gray-50 border border-gray-50 font-bold px-2 rounded-tr-lg text-sm mt-2 inline-block">Pricing options</div>
 
         <div class="bg-gray-50 px-2 py-4 space-y-2 flex-grow">
             <div v-if="pack.pack_prices.length" v-for="pack_price in pack.pack_prices" :key="pack_price.id" class="capitalize flex justify-between border-b last:border-none">

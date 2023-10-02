@@ -14,7 +14,6 @@ import ActionMessage from "@/Components/ActionMessage.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
 import Switcher from "@/Components/Switcher.vue";
 import Multiselect from "@vueform/multiselect";
-import "@vueform/multiselect/themes/tailwind.css";
 import CalendarIcon from "@/Icons/CalendarIcon.vue";
 import TimeIcon from "@/Icons/TimeIcon.vue";
 import intlTelInput from "intl-tel-input";

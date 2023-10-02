@@ -1,0 +1,13 @@
+.ck-editor__editable_inline {
+    min-height: 200px;
+}
+
+.ck-content ol, .ck-content ul {
+    padding: 0 0 0 1.25rem;
+}
+
+.waiver-desc ol {
+    list-style: initial !important;
+    margin-left: 10px !important;
+    margin-right: 10px !important;
+}

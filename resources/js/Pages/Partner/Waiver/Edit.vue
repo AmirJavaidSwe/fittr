@@ -11,7 +11,6 @@ import TextInput from "@/Components/TextInput.vue";
 import ActionMessage from "@/Components/ActionMessage.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
 import Multiselect from "@vueform/multiselect";
-import "@vueform/multiselect/themes/tailwind.css";
 import RichTextInput from "@/Components/RichTextInput.vue";
 import { faPlus, faGripVertical } from "@fortawesome/free-solid-svg-icons";
 import DeleteIcon from "@/Icons/Delete.vue";

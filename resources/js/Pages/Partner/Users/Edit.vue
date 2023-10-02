@@ -174,5 +174,3 @@ const newPasswordLabel = computed(() =>
         </template>
     </FormSection>
 </template>
-
-<style src="@vueform/multiselect/themes/tailwind.css"></style>

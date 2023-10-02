@@ -11,7 +11,6 @@ import InputError from "@/Components/InputError.vue";
 import ActionMessage from "@/Components/ActionMessage.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
 import Multiselect from "@vueform/multiselect";
-import "@vueform/multiselect/themes/tailwind.css";
 import GeneralSettingsVerticalTabs from "@/Pages/Partner/Settings/GeneralSettingsVerticalTabs.vue";
 import FormSectionVertical from "@/Components/FormSectionVertical.vue";
 

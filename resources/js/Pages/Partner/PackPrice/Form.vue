@@ -14,7 +14,6 @@ import Multiselect from '@vueform/multiselect';
 import ColoredValue from "@/Components/DataTable/ColoredValue.vue";
 import { RadioGroup, RadioGroupOption } from '@headlessui/vue';
 import '@vuepic/vue-datepicker/dist/main.css';
-import '@vueform/multiselect/themes/tailwind.css';
 
 const props = defineProps({
     pack_types: Array,

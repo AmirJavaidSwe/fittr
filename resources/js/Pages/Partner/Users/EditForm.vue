@@ -14,7 +14,6 @@ import Multiselect from "@vueform/multiselect";
 import Avatar from "@/Components/Avatar.vue";
 import ColoredValue from "@/Components/DataTable/ColoredValue.vue";
 import MapMarker from "@/Icons/MapMarker.vue";
-import "@vueform/multiselect/themes/tailwind.css";
 
 const props = defineProps({
     form: {

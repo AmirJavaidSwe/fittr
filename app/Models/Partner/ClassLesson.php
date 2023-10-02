@@ -46,6 +46,7 @@ class ClassLesson extends Model
         'is_booked',
         'on_waitlist',
         'user_bookings',
+        'url',
     ];
 
     //Local scopes
@@ -148,5 +149,12 @@ class ClassLesson extends Model
             //     $query->active();
             // }]);
         return $this->bookings()->with('user')->where('status', BookingStatus::get('active'))->where('user_id', auth()->user()?->id)->get();
+    }
+
+    public function getUrlAttribute()
+    {
+        $subdomain = config('subdomain.name');
+
+        return empty($subdomain) ? null : route('ss.classes.show', ['subdomain' => $subdomain, 'class' => $this]);
     }
 }

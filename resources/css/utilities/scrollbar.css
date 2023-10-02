@@ -1,0 +1,28 @@
+@layer utilities {
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Hide scrollbar for IE, Edge and Firefox */
+    .no-scrollbar {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+    }
+
+    /* width/height */
+    ::-webkit-scrollbar {
+        @apply w-2 h-2;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+        /* @apply bg-primary-500; */
+        @apply bg-mainbg;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        @apply bg-primary-500;
+    }
+}
