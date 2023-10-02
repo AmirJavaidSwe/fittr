@@ -4,8 +4,8 @@ import ButtonLink from '@/Components/ButtonLink.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import { useForm, usePage } from '@inertiajs/vue3';
 import Multiselect from '@vueform/multiselect';
-import '@vueform/multiselect/themes/tailwind.css'
 import ClockIcon from '@/Icons/ClockIcon.vue';
+import LinkIcon from "@/Icons/LinkIcon.vue";
 import LocationIcon from '@/Icons/LocationIcon.vue';
 import { DateTime, Duration, Interval } from 'luxon';
 import Avatar from '@/Components/Avatar.vue';
@@ -21,13 +21,39 @@ import DateValue from "@/Components/DataTable/DateValue.vue";
 import ArrowLeft from '@/Components/ArrowLeft.vue';
 import ArrowRight from '@/Components/ArrowRight.vue';
 
-const props = defineProps(["is_cancel_able_booking", "business_settings", "class_types", "instructors", 'show', 'classDetails', 'user', 'is_family_booking', 'bookingForm', 'selected_family_members', 'other_family_member_booking_ids'])
-const emit = defineEmits(['close', 'isFamilyBooking', 'bookForOtherFamilyMembers', 'addRemoveFromWaitlist', 'cancelBooking', 'handleBooking'])
+const props = defineProps([
+    "is_cancel_able_booking",
+    "business_settings",
+    "class_types",
+    "instructors",
+    'show',
+    'classDetails',
+    'user',
+    'is_family_booking',
+    'bookingForm',
+    'selected_family_members',
+    'other_family_member_booking_ids'
+]);
+const emit = defineEmits([
+    'close',
+    'isFamilyBooking',
+    'bookForOtherFamilyMembers',
+    'addRemoveFromWaitlist',
+    'cancelBooking',
+    'handleBooking'
+]);
 
 </script>
 <template>
     <SideModal :show="props.show" @close="$emit('close')">
-        <template #title>Details</template>
+        <template #title>
+            <div class="flex items-center gap-2">
+                <ButtonLink v-if="classDetails.url" :href="classDetails.url" :ext="true">
+                    <LinkIcon v-tooltip="'Class link'" />
+                </ButtonLink>
+                <span>Details</span>
+            </div>
+        </template>
         <template #content>
             <!-- <div class="w-full mb-4">
                 <img class="w-full rounded-md" v-if="props.classDetails.studio?.location?.images?.length"
