@@ -9,7 +9,6 @@ import MultiselectInput from "@/Components/MultiselectInput.vue";
 import Switcher from "@/Components/Switcher.vue";
 import Multiselect from "@vueform/multiselect";
 import Avatar from "@/Components/Avatar.vue";
-import "@vueform/multiselect/themes/tailwind.css";
 // import UploadFileIcon from "@/Icons/Upload.vue";
 // import UploadingIcon from "@/Icons/Uploading.vue";
 

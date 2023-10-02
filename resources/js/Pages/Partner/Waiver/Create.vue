@@ -268,4 +268,3 @@ const moveUp = (index) => {
             </template>
         </ConfirmationModal> -->
 </template>
-<style src="@vueform/multiselect/themes/tailwind.css"></style>

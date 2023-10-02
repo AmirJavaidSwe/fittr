@@ -25,7 +25,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import Multiselect from "@vueform/multiselect";
-import "@vueform/multiselect/themes/tailwind.css";
 
 const props = defineProps({
     business_settings: Object,

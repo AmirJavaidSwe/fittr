@@ -16,7 +16,6 @@ import PriceCard from "../PackPrice/Card.vue";
 import PriceForm from "../PackPrice/Form.vue";
 import { faCircle, faCircleDot } from '@fortawesome/free-regular-svg-icons';
 import { RadioGroup, RadioGroupOption } from '@headlessui/vue';
-import '@vueform/multiselect/themes/tailwind.css';
 import '@vuepic/vue-datepicker/dist/main.css';
 import draggable from 'vuedraggable';
 

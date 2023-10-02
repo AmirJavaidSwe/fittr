@@ -2,7 +2,6 @@
 import { computed, ref } from "vue";
 import Multiselect from "@vueform/multiselect";
 import "@vuepic/vue-datepicker/dist/main.css";
-import "@vueform/multiselect/themes/tailwind.css";
 import InputLabel from "@/Components/InputLabel.vue";
 import InputError from "@/Components/InputError.vue";
 import ActionMessage from "@/Components/ActionMessage.vue";
