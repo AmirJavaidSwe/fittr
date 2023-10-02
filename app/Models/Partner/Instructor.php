@@ -13,6 +13,7 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * @method static orderBy(string $string, string $order)
@@ -70,14 +71,19 @@ class Instructor extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasOne(InstructorProfile::class, 'user_id');
     }
-     // Accessors
-     public function getInitialsAttribute()
-     {
-         return Str::of($this->first_name)->upper()->substr(0, 1).Str::of($this->last_name)->upper()->substr(0, 1);
-     }
+    // Accessors
+    public function getInitialsAttribute()
+    {
+        return Str::of($this->first_name)->upper()->substr(0, 1) . Str::of($this->last_name)->upper()->substr(0, 1);
+    }
 
-     public function getFullNameAttribute()
-     {
-         return Str::of($this->first_name)->ucfirst()->append(' ').Str::of($this->last_name)->ucfirst();
-     }
+    public function getFullNameAttribute()
+    {
+        return Str::of($this->first_name)->ucfirst()->append(' ') . Str::of($this->last_name)->ucfirst();
+    }
+
+    public function classes(): BelongsToMany
+    {
+        return $this->belongsToMany(ClassLesson::class, 'class_instructor', 'instructor_id', 'class_id');
+    }
 }

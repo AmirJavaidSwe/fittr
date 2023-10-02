@@ -38,8 +38,13 @@ class StoreClassController extends Controller
                 'bookings' => function (Builder $query) {
                     $query->active();
                 }
-            ])
-            ->where('start_date', '>=', $startDate)
+            ]);
+            if($request->has('incoming_request_from_instructor_profile_page')) {
+                $classes = $classes->whereHas('instructors', function($q) use ($request) {
+                    $q->where('id', $request->instructor_id);
+                });
+            }
+            $classes = $classes->where('start_date', '>=', $startDate)
             ->where('end_date', '<=', $endDate)
             ->orderBy('start_date', 'asc')
             ->get();
@@ -49,7 +54,7 @@ class StoreClassController extends Controller
         $class_types = $classes->pluck('classType', 'class_type_id')->sortBy('title');
         $instructors = $classes->pluck('instructors')->flatten()->sortBy('first_name')->keyBy('id');
 
-        return Inertia::render('Store/Classes/Index', [
+        $data = [
             'page_title' => __('Classes'),
             'header' => __('Classes'),
             'classes' => $classes->groupBy(function($item) {
@@ -64,7 +69,17 @@ class StoreClassController extends Controller
             'waivers' => auth()->user() ? $waivers : [],
             'signed_waiver_ids' => auth()->user() ? UserWaiver::where('user_id', auth()?->user()?->id)->whereIn('waiver_id', $waivers->pluck('id'))->pluck('waiver_id')->toArray() : [],
             'user_waiver_ids' => auth()->user() ? UserWaiver::where('user_id', auth()?->user()?->id)->whereIn('waiver_id', $waivers->pluck('id'))->pluck('id')->toArray() : [],
-        ]);
+        ];
+
+        if($request->has('incoming_request_from_instructor_profile_page')) {
+            return $data;
+        }
+
+
+        $data['page_title'] = __('Classes');
+        $data['header'] = __('Classes');
+
+        return Inertia::render('Store/Classes/Index', $data);
     }
 
     public function show(Request $request, $subdomain, ClassLesson $class)
