@@ -9,6 +9,10 @@ const CKEditorComponent = CKEditor.component;
 
 const props = defineProps({
     modelValue: String,
+    readonly: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 const htmlContent = ref(props.modelValue);
@@ -40,6 +44,7 @@ const setEditorData = (data) => {
     <CKEditorComponent
         v-model="htmlContent"
         :editor="editor"
+        :disabled="readonly"
         :config="{
             minHeight: 400,
             toolbar: {
@@ -54,6 +59,13 @@ const setEditorData = (data) => {
         @input="setEditorData"
         @ready="(editor) => {
             // Insert the toolbar before the editable area.
+            const classNames  = editor.ui.view.toolbar.element.getAttribute('class');
+            const toolbar = editor.ui.getEditableElement().parentElement.getElementsByClassName(classNames);
+
+            if (toolbar.length) {
+                toolbar[0].remove();
+            }
+
             editor.ui.getEditableElement().parentElement.insertBefore(
                 editor.ui.view.toolbar.element,
                 editor.ui.getEditableElement()

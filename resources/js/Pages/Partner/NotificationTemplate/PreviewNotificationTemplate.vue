@@ -4,7 +4,7 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import SideModal from '@/Components/SideModal.vue';
 import TextInput from '@/Components/TextInput.vue';
-import { useForm } from '@inertiajs/vue3';
+import { useForm, usePage } from '@inertiajs/vue3';
 import { onUpdated } from 'vue';
 
 const props = defineProps({
@@ -17,9 +17,9 @@ const props = defineProps({
         required: true,
         type: Object,
     },
-    previewHtml: {
+    previewData: {
         required: true,
-        type: String,
+        type: Object,
     },
 });
 
@@ -42,7 +42,7 @@ const testForm = useForm({
     bypass: false,
     status: true,
     notes: "",
-    recipient_email: '',
+    recipient_email: usePage().props.user.email,
 });
 
 onUpdated(() => {
@@ -78,7 +78,7 @@ const handleTest = () => {
         <template #title>Preview Notification Template</template>
         <template #content>
             <div class="mb-4">
-                <InputLabel for="">Recipient Email:</InputLabel>
+                <InputLabel for="recipient_email" v-tooltip="'Comma separated list of email addresses'">Send test to:</InputLabel>
                 <TextInput
                     id="recipient_email"
                     v-model="testForm.recipient_email"
@@ -90,13 +90,13 @@ const handleTest = () => {
 
             <div class="mb-4">
                 <InputLabel>Subject:</InputLabel>
-                <div>{{ notificationDetails.subject }}</div>
+                <div>{{ previewData?.subject }}</div>
             </div>
 
             <div class="mb-4">
                 <InputLabel>Content:</InputLabel>
                 <iframe
-                    :src="'data:text/html;charset=utf-8,'+encodeURIComponent(previewHtml)"
+                    :src="'data:text/html;charset=utf-8,'+encodeURIComponent(previewData?.content)"
                     class="w-full h-80 mt-2"
                 ></iframe>
             </div>
@@ -118,7 +118,7 @@ const handleTest = () => {
                     type="submit"
                     @click="handleTest"
                 >
-                    <span>Test</span>
+                    <span>Send Test Email</span>
                 </ButtonLink>
             </div>
         </template>

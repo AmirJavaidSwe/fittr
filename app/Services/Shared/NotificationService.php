@@ -5,10 +5,12 @@ namespace App\Services\Shared;
 use App\Enums\NotificationMailDriver;
 use App\Models\Partner\NotificationTemplate;
 use Exception;
+use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\HtmlString;
-use Illuminate\Support\Str;
+use Soundasleep\Html2Text;
 use TijsVerkoyen\CssToInlineStyles\CssToInlineStyles;
 
 class NotificationService
@@ -67,10 +69,9 @@ class NotificationService
         $this->replaceParams()
             ->applyTheme();
 
-        $this->template['content_plain'] = strip_tags($this->template['content']);
-        $this->template['content_plain'] = html_entity_decode(preg_replace("/[\r\n]{2,}/", "\n\n", $this->template['content_plain']), ENT_QUOTES, 'UTF-8');
 
-        $this->template['to_email'] = $email;
+        $this->template['to_email'] = collect(Arr::wrap(explode(',', $email)))
+            ->map(fn($item) => trim($item));
 
         switch($this->template['mail_driver']) {
             case NotificationMailDriver::get('sendgrid'):
@@ -80,11 +81,13 @@ class NotificationService
                 //
                 break;
             default: // smtp
-                Mail::send(['emails.html_template', 'emails.text_template'], $this->template, function ($message) {
-                    $message->to($this->template['to_email'])
-                        ->from($this->template['from_email'], $this->template['from_name'])
-                        ->subject($this->template['subject']);
-                });
+                foreach ($this->template['to_email'] as $to_email) {
+                    Mail::send(['emails.html_template', 'emails.text_template'], $this->template, function ($message) use ($to_email) {
+                        $message->to($to_email)
+                            ->from($this->template['from_email'], $this->template['from_name'])
+                            ->subject($this->template['subject']);
+                    });
+                }
                 break;
         }
     }
@@ -132,10 +135,12 @@ class NotificationService
             $this->template['content'], View::make('emails.theme.default', [])->render()
         ));
 
+        $this->template['content_plain'] = Html2Text::convert($this->template['content']);
+
         return $this;
     }
 
-    public function preview()
+    public function preview(): array
     {
 
         $this->business_settings = session('business_settings');
@@ -160,6 +165,22 @@ class NotificationService
             ->replaceParams()
             ->applyTheme();
 
-        return View::make('emails.html_template', $this->template);
+        return [
+            'subject' => $this->template['subject'],
+            'content' => View::make('emails.html_template', $this->template)->render(),
+        ];
+    }
+
+    public function buildMailMessage(): MailMessage
+    {
+        $this->business_settings = session('business_settings');
+
+        $this->replaceParams()
+            ->applyTheme();
+
+        return (new MailMessage)
+            ->view(['emails.html_template', 'emails.text_template'], $this->template)
+            ->from($this->template['from_email'], $this->template['from_name'])
+            ->subject($this->template['subject']);
     }
 }

@@ -44,19 +44,20 @@ let form = useForm({
     unsubscribe: props.notificationTemplate?.unsubscribe,
     bypass: props.notificationTemplate?.bypass,
     status: props.notificationTemplate?.status,
+    readonly: props.notificationTemplate?.readonly,
     notes: props.notificationTemplate?.notes,
 });
 
 const preview = ref(false);
 const preivewProcessing = ref(false);
-const previewHtml = ref('');
+const previewData = ref({});
 
 const showPreview = async () => {
     preivewProcessing.value = true;
     const res = await axios.post(route('partner.notification-templates.preview'), { ...form.data() })
         .catch(console.error);
 
-    previewHtml.value = res.data;
+    previewData.value = res.data;
     preview.value = true;
     preivewProcessing.value = false;
 }
@@ -95,7 +96,7 @@ const showPreview = async () => {
     <PreviewNotificationTemplate
         :show="preview"
         :notificationDetails="form"
-        :previewHtml="previewHtml"
+        :previewData="previewData"
         @close="preview = false"
     />
 </template>

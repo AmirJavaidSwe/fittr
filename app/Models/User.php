@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\AppUserSource;
 use App\Models\Partner\Export;
+use App\Traits\CanResetPassword as CanResetPasswordTrait;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,6 +15,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use App\Traits\Jetstream\HasProfilePhoto;
+use App\Traits\MustVerifyEmail as MustVerifyEmailTrait;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Contracts\Database\Eloquent\Builder;
@@ -32,6 +34,8 @@ class User extends Authenticatable implements MustVerifyEmail
     use Notifiable;
     use TwoFactorAuthenticatable;
     use SoftDeletes;
+    use MustVerifyEmailTrait;
+    use CanResetPasswordTrait;
 
     /**
      * The database connection that should be used by the model.

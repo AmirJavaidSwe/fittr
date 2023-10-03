@@ -55,6 +55,7 @@ const editForm = useForm({
     unsubscribe: false,
     bypass: false,
     status: true,
+    readonly: false,
     notes: "",
 });
 
@@ -126,6 +127,7 @@ const showEditModal = (data) => {
     editForm.unsubscribe = data.unsubscribe;
     editForm.bypass = data.bypass;
     editForm.status = data.status;
+    editForm.readonly = data.readonly;
     editForm.notes = data.notes;
 
     editId.value = data.id;
@@ -135,14 +137,14 @@ const showEditModal = (data) => {
 
 const preview = ref(false);
 const preivewProcessing = ref(false);
-const previewHtml = ref('');
+const previewData = ref({});
 
 const showPreview = async () => {
     preivewProcessing.value = true;
     const res = await axios.post(route('partner.notification-templates.preview'), { ...editForm.data() })
         .catch(console.error);
 
-    previewHtml.value = res.data;
+    previewData.value = res.data;
     preview.value = true;
     preivewProcessing.value = false;
 }
@@ -326,7 +328,7 @@ const showPreview = async () => {
     <PreviewNotificationTemplate
         :show="preview"
         :notificationDetails="editForm"
-        :previewHtml="previewHtml"
+        :previewData="previewData"
         @close="preview = false"
     />
 </template>

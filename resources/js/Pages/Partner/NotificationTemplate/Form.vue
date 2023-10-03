@@ -79,7 +79,7 @@ const props = defineProps({
 
     <div class="my-3">
         <InputLabel for="content" value="Content" />
-        <RichTextInput v-model="form.content" @setPlainText="data => (form.content_plain = data)" />
+        <RichTextInput v-model="form.content" @setPlainText="data => (form.content_plain = data)" :readonly="form.readonly" />
         <!-- <textarea v-model="form.content" class="input-field mt-1 block w-full" id="content" rows="10"></textarea> -->
         <InputError :message="form.errors.content" class="mt-2" />
     </div>

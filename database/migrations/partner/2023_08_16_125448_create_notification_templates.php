@@ -29,6 +29,7 @@ return new class extends Migration
             $table->boolean('unsubscribe')->default(false);
             $table->boolean('bypass')->default(false);
             $table->boolean('status')->default(true);
+            $table->boolean('readonly')->default(false);
             $table->string('notes', 500)->nullable();
             $table->timestamps();
             $table->softDeletes();

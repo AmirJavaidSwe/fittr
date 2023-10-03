@@ -4,10 +4,8 @@ namespace App\Listeners;
 
 use App\Events\TestTemplateNotification;
 use App\Services\Shared\NotificationService;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Support\Facades\Mail;
 
-class TestTemplateNotificationListener extends PartnerListener implements ShouldQueue
+class TestTemplateNotificationListener extends PartnerListener
 {
     /**
      * Create the event listener.
