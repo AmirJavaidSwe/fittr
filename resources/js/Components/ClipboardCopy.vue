@@ -2,6 +2,7 @@
 import { computed, ref } from "vue";
 import { faClipboard, faClipboardCheck } from '@fortawesome/free-solid-svg-icons';
 import ButtonLink from '@/Components/ButtonLink.vue';
+import ActionMessage from "@/Components/ActionMessage.vue";
 
 const props = defineProps({
     text: {
@@ -28,8 +29,11 @@ const styling = computed(() => {
 </script>
 
 <template>
-    <ButtonLink type="button" size="small" class="text-xl" :styling="styling" @click="copy" v-tooltip="{content:'Copy to Clipboard', triggers: [], shown: shown}">
-            <font-awesome-icon :icon="copied ? faClipboardCheck : faClipboard" @mouseenter.stop="shown = true" @mouseleave="shown = false" />
+    <ButtonLink type="button" size="small" class="text-xl relative" :styling="styling" @click="copy" v-tooltip="{content:'Copy to Clipboard', triggers: [], shown: shown}">
+        <ActionMessage :on="copied" class="absolute bottom-[-20px] right-0">
+            Copied!
+        </ActionMessage>
+        <font-awesome-icon :icon="copied ? faClipboardCheck : faClipboard" @mouseenter.stop="shown = true" @mouseleave="shown = false" />
     </ButtonLink>
-    <input ref="copyInput" type="text" class="fixed" readonly :value="props.text">
+    <input ref="copyInput" type="text" class="fixed bottom-[-100px]" readonly :value="props.text">
 </template>

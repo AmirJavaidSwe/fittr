@@ -57,7 +57,7 @@ defineEmits(['toggle', 'edit', 'delete']);
             'bg-secondary-500': price.type == 'recurring',
             }"
         >
-            <div class="p-2 font-bold">{{label}}</div>
+            <div class="cursor-move flex-grow font-bold p-2">{{label}}</div>
             <Dropdown align="right" width="48" :content-classes="['bg-gray-100', 'p-1', 'space-y-4']">
                 <template #trigger>
                 <font-awesome-icon :icon="faGear" class="cursor-pointer p-2" />

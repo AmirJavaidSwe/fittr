@@ -284,6 +284,50 @@ class PartnerPackController extends Controller
     }
 
     /**
+     * Sort the packs.
+     *
+     * @param  \App\Models\Partner\Pack  $pack
+     * @return \Illuminate\Http\Response
+     */
+    public function sortPacks(Request $request)
+    {
+        $data = collect($request->all())->keyBy('id');
+        $packs = Pack::whereIn('id', $data->keys())->each(function($pack) use ($data) {
+            $sort = $data[$pack->id] ?? null;
+            if(!empty($sort)){
+                $pack->update(['ordering' => $sort['ordering']]);
+            };
+        });
+
+        return response()->json([
+            'data' => $request->all(),
+            'success' => $packs, //bool
+        ]);
+    }
+
+    /**
+     * Sort the pack prices.
+     *
+     * @param  \App\Models\Partner\Pack  $pack
+     * @return \Illuminate\Http\Response
+     */
+    public function sortPackPrices(Request $request)
+    {
+        $data = collect($request->all())->keyBy('id');
+        $pack_prices = PackPrice::whereIn('id', $data->keys())->each(function($pack_price) use ($data) {
+            $sort = $data[$pack_price->id] ?? null;
+            if(!empty($sort)){
+                $pack_price->update(['ordering' => $sort['ordering']]);
+            }
+        });
+
+        return response()->json([
+            'data' => $request->all(),
+            'success' => $pack_prices, //bool
+        ]);
+    }
+
+    /**
      * Create new Price for Pack.
      *
      * @param  \App\Models\Partner\Pack  $pack
@@ -340,7 +384,7 @@ class PartnerPackController extends Controller
 
         switch ($request->action) {
             case 'edit': //only local fields (no api call) excluding: type, status, price, interval...
-                $price->locations()->sync($data->location_ids ?? []);
+                $price->locations()->sync($data['location_ids'] ?? []);
                 $price->update($data);
                 $msg = __('Price updated successfully.');
 

@@ -6,7 +6,6 @@ import Section from '@/Components/Section.vue';
 import ButtonLink from '@/Components/ButtonLink.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import Multiselect from '@vueform/multiselect';
-import '@vueform/multiselect/themes/tailwind.css'
 import ClockIcon from '@/Icons/ClockIcon.vue';
 import LocationIcon from '@/Icons/LocationIcon.vue';
 import Avatar from '@/Components/Avatar.vue';

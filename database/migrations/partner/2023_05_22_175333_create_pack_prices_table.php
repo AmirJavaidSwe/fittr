@@ -38,6 +38,7 @@ return new class extends Migration
             $table->integer('fixed_count')->unsigned()->nullable()->comment('recurring only'); // The number of billing cycles to complete before subscription termination
             $table->boolean('is_renewable')->default(false)->comment('bool'); //Auto purchase enabled (with saved card) when sessions ran out or expired (one_time only)
             $table->boolean('is_intro')->default(false)->comment('bool'); //Available to members never made a purchase before. If true, is_renewable should be set false (one_time only)
+            $table->integer('ordering')->default(0); //within parent pack
             $table->timestamps();
             $table->softDeletes();
         });

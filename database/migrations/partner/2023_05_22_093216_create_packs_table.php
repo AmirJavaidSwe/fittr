@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('private_url', 512)->nullable(); //must be set if is_private
             $table->date('active_from')->nullable()->comment('available'); // for purchase from (not publicly listed/available for purchase until this date)
             $table->date('active_to')->nullable()->comment('available'); // for purchase to (not publicly listed/available for purchase after this date)
+            $table->integer('ordering')->default(0); //within the group of same type
             $table->timestamps();
             $table->softDeletes();
         });
