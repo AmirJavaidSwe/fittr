@@ -19,50 +19,53 @@ defineProps({
 </script>
 
 <template>
-    <single-view title="Details" description="second line">
-        <template #head>
-            <div class="flex flex-row items-center mr-10">
-                <ButtonLink
-                    styling="primary"
-                    size="default"
-                    :href="route('partner.classtypes.edit', classtype)"
+    <div class="flex flex-wrap">
+        <single-view title="Details" description="class type" class="w-full lg:w-1/2">
+            <template #head>
+                <div class="flex flex-row items-center mr-10">
+                    <ButtonLink
+                        styling="primary"
+                        size="default"
+                        :href="route('partner.classtypes.edit', classtype)"
+                    >
+                        Edit
+                    </ButtonLink>
+                </div>
+            </template>
+            <template #item>
+                <single-view-row
+                    label="Status"
                 >
-                    Edit
-                </ButtonLink>
+                    <template #value>
+                        <ColoredValue :color="statuses.find(el => el.value == classtype.status).color" :title="statuses.find(el => el.value == classtype.status).label " />
+                    </template>
+                </single-view-row>
+
+                <single-view-row
+                    label="Title"
+                    :value="classtype.title"
+                />
+
+                <single-view-row
+                    label="Description"
+                    :value="classtype.description"
+                />
+
+                <single-view-row
+                    label="Created At"
+                    :value="DateTime.fromISO(classtype.created_at).toLocaleString(DateTime.DATETIME_HUGE)"
+                />
+
+                <single-view-row
+                    label="Updated At"
+                    :value="DateTime.fromISO(classtype.updated_at).toRelative()"
+                />
+            </template>
+        </single-view>
+        <div v-if="classtype.images.length" class="flex-grow">
+            <div class="w-80">
+                <img v-for="image in classtype.images" :src="image.url" :alt="image.filename">
             </div>
-        </template>
-        <template #item>
-            <single-view-row 
-                label="ID"
-                :value="classtype.id" />
-
-            <single-view-row
-                label="Status"
-            >
-                <template #value>
-                    <ColoredValue :color="statuses.find(el => el.value == classtype.status).color" :title="statuses.find(el => el.value == classtype.status).label " />
-                </template>
-            </single-view-row>
-
-            <single-view-row
-                label="Title"
-                :value="classtype.title"
-            />
-
-            <single-view-row
-                label="Description"
-                :value="classtype.description"
-            />
-
-            <single-view-row
-                label="Created At"
-                :value="DateTime.fromISO(classtype.created_at).toLocaleString(DateTime.DATETIME_HUGE)"
-            />
-
-            <single-view-row
-                label="Updated At"
-                :value="DateTime.fromISO(classtype.updated_at).toRelative()"
-            />
-        </template>
-    </single-view>
+        </div>
+    </div>
 </template>

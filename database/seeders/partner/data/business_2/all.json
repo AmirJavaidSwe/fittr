@@ -259,249 +259,72 @@
             "first_name": "LAUREN",
             "last_name": "K",
             "email": "lauren@knappfamily.co.uk",
-            "password": "lauren"
+            "password": "lauren",
+            "image": "lauren_k.webp",
+            "description": "Having grown up competing in sport, Lauren has recognised the importance of health and fitness on both your physical and mental well being. This early immersion into a world of sport has led her to follow an education and career within the fitness industry. First graduating with a Bsc degree in Sport and Exercise Science, specialising in physiology and strength and conditioning, followed by obtaining her Level 2 and 3 Personal Training qualifications."
         },
         {
             "role": "instructor",
             "first_name": "DAVID",
             "last_name": "Instructor",
             "email": "david@handstandman.co.uk",
-            "password": "david"
+            "password": "david",
+            "image": "david.webp",
+            "description": "Handstand training is a tough skill to learn and can require a detailed approach to learning it. My coaching style is to get you to understand the basic concepts of a handstand and to be able to implement it as fast and as safely as possible."
         },
         {
             "role": "instructor",
             "first_name": "LAUREN",
             "last_name": "R",
             "email": "laurenhalseypt@gmail.com",
-            "password": "laurenhalseypt"
+            "password": "laurenhalseypt",
+            "image": "lauren_r.webp",
+            "description": "With over 10 years of experience, Lauren started in the fitness industry as a Personal Trainer and then added yoga and mobility into the mix, so has a broad list of skills to pull from and a whole lot of knowledge and understanding."
         },
         {
             "role": "instructor",
             "first_name": "JESSICA",
             "last_name": "H",
             "email": "info@the-font.co.uk",
-            "password": "info"
+            "password": "info",
+            "image": "jessica_h.webp",
+            "description": "After graduating, she took an unusual route into the fitness industry by joining the world's first all female cycling Shake spare company.Cycling a total of 1,100miles from London to Edinburgh, across the rolling hills of the UK with 60kg of set, props and costumes on the back of her bike. She pushed her body to its extremes which ignited a fire within her. Seeing the immense wear and tear her body and mind went through and yet the ability it had to constantly bounce back made her want to learn more."
         },
         {
             "role": "instructor",
             "first_name": "JOE",
             "last_name": "A",
             "email": "joe@the-font.co.uk",
-            "password": "joe"
+            "password": "joe",
+            "image": "joe_a.webp",
+            "description": "Joe is a recent recruit to the fitness team, beginning his Font career as a crew member before fluttering his wings and moving into his now PT role. Alongside his average ability to climb (Joe wrote this), Joe brings a wealth of knowledge from completing his degree in Strength and Conditioning alongside working within elite sports like cricket, tennis, and running. Currently working as a Strength Coach for Middlesex CCC and regional women's cricket team, The Sunrisers. Joe's main goal for his teams and clients is to help build a robust body to withstand both day to day life and the physical strain of sport. As a result, he specialises in sport specific training and injury prevention, believing that creating an athlete, they must first be strong enough to tolerate the stress of your sport.⁠ ⁠ Joe is also completing his level 3 sports massage course."
         },
         {
             "role": "instructor",
             "first_name": "BEN",
             "last_name": "C",
             "email": "ben@the-font.co.uk",
-            "password": "ben"
+            "password": "ben",
+            "image": "ben_c.webp",
+            "description": "Following numerous injuries as an international gymnast, Ben has developed a deep appreciation for injuries and the importance of rehabilitation towards function and health. Following a BSc in Physiotherapy, Ben pursued his passion for tailored rehabilitation within the NHS and amongst close friends within the climbing world. Now an avid rock climber himself, he aims to provide accessible physiotherapy for the wider community through Benefit Physiotherapy."
         },
         {
             "role": "instructor",
             "first_name": "PHILIP",
             "last_name": "C",
             "email": "phil@the-font.co.uk",
-            "password": "phil"
+            "password": "phil",
+            "image": "philip_c.webp",
+            "description": "As someone who has always had a passion for fitness and many sports including rock climbing, athletics and gymnastics, Philip is confident he can help individuals from a wide range of backgrounds reach their goals. This love of sport from a young age has led to him gaining his Level 3 Diploma in Personal Training."
         },
         {
             "role": "instructor",
             "first_name": "ALEX",
             "last_name": "W",
             "email": "alex@warrentherapyfitness.com",
-            "password": "alex"
-        },
-        {
-            "role": "instructor",
-            "first_name": "Giulio",
-            "last_name": "De Mennato",
-            "email": "giulio@the-font.co.uk",
-            "password": "giulio"
-        },
-        {
-            "role": "instructor",
-            "first_name": "Tobias",
-            "last_name": "Bharucha",
-            "email": "tobias@the-font.co.uk",
-            "password": "tobias"
-        },
-        {
-            "role": "instructor",
-            "first_name": "Alec",
-            "last_name": "Harper",
-            "email": "alec@the-font.co.uk",
-            "password": "alec"
-        },
-        {
-            "role": "instructor",
-            "first_name": "Ian",
-            "last_name": "Pollington",
-            "email": "ian@the-font.co.uk",
-            "password": "ian"
-        },
-        {
-            "role": "instructor",
-            "first_name": "Els",
-            "last_name": "Cook",
-            "email": "els@the-font.co.uk",
-            "password": "els"
-        },
-        {
-            "role": "instructor",
-            "first_name": "Oli",
-            "last_name": "Towse",
-            "email": "oli@the-font.co.uk",
-            "password": "oli"
-        },
-        {
-            "role": "instructor",
-            "first_name": "Lucy",
-            "last_name": "Mabbitt",
-            "email": "lucy@the-font.co.uk",
-            "password": "lucy"
-        },
-        {
-            "role": "instructor",
-            "first_name": "Olwen",
-            "last_name": "Smith",
-            "email": "olwen@the-font.co.uk",
-            "password": "olwen"
-        },
-        {
-            "role": "instructor",
-            "first_name": "Paul",
-            "last_name": "Quinn",
-            "email": "paul@the-font.co.uk",
-            "password": "paul"
-        },
-        {
-            "role": "instructor",
-            "first_name": "Jamie",
-            "last_name": "Singleton",
-            "email": "jamie@the-font.co.uk",
-            "password": "jamie"
-        },
-        {
-            "role": "instructor",
-            "first_name": "Darcy",
-            "last_name": "Gabriel",
-            "email": "darcy@the-font.co.uk",
-            "password": "darcy"
-        },
-        {
-            "role": "instructor",
-            "first_name": "Lewis",
-            "last_name": "Patrick",
-            "email": "lewis@the-font.co.uk",
-            "password": "lewis"
-        },
-        {
-            "role": "instructor",
-            "first_name": "Eileen",
-            "last_name": "Kiernan",
-            "email": "eileen@the-font.co.uk",
-            "password": "eileen"
-        },
-        {
-            "role": "instructor",
-            "first_name": "James",
-            "last_name": "Goodey",
-            "email": "james@the-font.co.uk",
-            "password": "james"
-        },
-        {
-            "role": "instructor",
-            "first_name": "Raf",
-            "last_name": "Azevedo",
-            "email": "raf@the-font.co.uk",
-            "password": "raf"
-        },
-        {
-            "role": "instructor",
-            "first_name": "Jake",
-            "last_name": "Fazzio",
-            "email": "jake@the-font.co.uk",
-            "password": "jake"
-        },
-        {
-            "role": "instructor",
-            "first_name": "Ned",
-            "last_name": "Porteous",
-            "email": "ned@the-font.co.uk",
-            "password": "ned"
-        },
-        {
-            "role": "instructor",
-            "first_name": "Konstantinos",
-            "last_name": "Paschalis",
-            "email": "konstantinos@the-font.co.uk",
-            "password": "konstantinos"
-        },
-        {
-            "role": "instructor",
-            "first_name": "Alex",
-            "last_name": "Prescott",
-            "email": "alex@the-font.co.uk",
-            "password": "alex"
-        },
-        {
-            "role": "instructor",
-            "first_name": "Horace",
-            "last_name": "Moy",
-            "email": "horace@the-font.co.uk",
-            "password": "horace"
-        },
-        {
-            "role": "instructor",
-            "first_name": "Alex",
-            "last_name": "Agnoli",
-            "email": "alex.a@the-font.co.uk",
-            "password": "alex"
-        },
-        {
-            "role": "instructor",
-            "first_name": "Jonny",
-            "last_name": "White",
-            "email": "jonny@the-font.co.uk",
-            "password": "jonny"
-        },
-        {
-            "role": "instructor",
-            "first_name": "Ben",
-            "last_name": "Nor",
-            "email": "ben.n@the-font.co.uk",
-            "password": "ben"
-        },
-        {
-            "role": "instructor",
-            "name": "Csaba",
-            "first_name": "Csaba",
-            "last_name": "Instructor",
-            "email": "csaba@the-font.co.uk",
-            "password": "csaba"
-        },
-        {
-            "role": "instructor",
-            "name": "Nathan",
-            "first_name": "Nathan",
-            "last_name": "Instructor",
-            "email": "nathan@the-font.co.uk",
-            "password": "nathan"
-        },
-        {
-            "role": "instructor",
-            "name": "Ben L",
-            "first_name": "Ben",
-            "last_name": "L",
-            "email": "ben.l@the-font.co.uk",
-            "password": "ben"
-        },
-        {
-            "role": "instructor",
-            "name": "Lauren H",
-            "first_name": "Lauren",
-            "last_name": "H",
-            "email": "lauren.h@the-font.co.uk",
-            "password": "lauren"
+            "password": "alex",
+            "image": "alex_w.webp",
+            "description": "I have tried and tested many forms of training over the last 11 years of experience, but this form of training combined with HIIT and some endurance is the best for all the areas. In my opinion it is not only the best form of training, but highly enjoyable too, pushing the boundaries of your body and your mind, whilst keeping you motivated every step of the way."
         },
         {
             "role": "member",
@@ -522,31 +345,38 @@
     "class_types": [
         {
             "title": "introduction to bouldering",
-            "description": "If it’s your first-time bouldering then why not join one of our Intro to Bouldering classes where you’ll learn the basics in a fun and controlled manner. You’ll then be free to use the climbing wall unsupervised as and when you like."
+            "description": "If it's your first-time bouldering then why not join one of our Intro to Bouldering classes where you'll learn the basics in a fun and controlled manner. You'll then be free to use the climbing wall unsupervised as and when you like.",
+            "image": "introduction_to_bouldering.webp"
         },
         {
             "title": "bouldering",
-            "description": "If you're an experienced climber and are confident to attend unsupervised, then you’re free to just turn up and start climbing. Note, you’ll need to create an account before accessing the centre's facilities."
+            "description": "If you're an experienced climber and are confident to attend unsupervised, then you're free to just turn up and start climbing. Note, you'll need to create an account before accessing the centre's facilities.",
+            "image": "bouldering.webp"
         },
         {
             "title": "junior climbing",
-            "description": "Juniors are welcome to attend the centre under the supervision of an experienced parent or guardian. Alternatively, juniors can join an under 18's coached session."
+            "description": "Juniors are welcome to attend the centre under the supervision of an experienced parent or guardian. Alternatively, juniors can join an under 18's coached session.",
+            "image": "junior_climbing.webp"
         },
         {
             "title": "fitness session",
-            "description": "Our team of coaches and PT’s have curated a range of weekly group sessions to build strength and endurance."
+            "description": "Our team of coaches and PT's have curated a range of weekly group sessions to build strength and endurance.",
+            "image": "fitness_session.webp"
         },
         {
             "title": "personal training",
-            "description": "If you're looking to boost climbing performance, maximise fitness or in need of rehabilitation, we’re here for you!"
+            "description": "If you're looking to boost climbing performance, maximise fitness or in need of rehabilitation, we're here for you!",
+            "image": "personal_trainer.webp"
         },
         {
             "title": "yoga and mobility",
-            "description": "Our studio space hosts a range of classes focusing on active mobility drills and Vinyasa style flow."
+            "description": "Our studio space hosts a range of classes focusing on active mobility drills and Vinyasa style flow.",
+            "image": "yoga.webp"
         },
         {
             "title": "impovers sessions",
-            "description": "For climbers that have already"
+            "description": "For climbers that have already",
+            "image": "impovers_yoga.webp"
         },
         {
             "title": "development programme",
@@ -560,11 +390,13 @@
     "service_types": [
         {
             "title": "gym classes",
-            "description": "Our team of coaches and PT's have curated a range of weekly group sessions to build strength and endurance."
+            "description": "Our team of coaches and PT's have curated a range of weekly group sessions to build strength and endurance.",
+            "image": "gym.webp"
         },
         {
             "title": "personal training",
-            "description": "If you're looking to boost climbing performance, maximise fitness or in need of rehabilitation, we're here for you!"
+            "description": "If you're looking to boost climbing performance, maximise fitness or in need of rehabilitation, we're here for you!",
+            "image": "personal_trainer.webp"
         }
     ],
     "locations": [

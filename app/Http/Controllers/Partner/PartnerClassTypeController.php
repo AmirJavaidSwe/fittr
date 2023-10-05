@@ -6,12 +6,14 @@ use App\Enums\StateType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Partner\ClasstypeFormRequest;
 use App\Models\Partner\ClassType;
+use App\Traits\ImageableTrait;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class PartnerClassTypeController extends Controller
 {
+    use ImageableTrait;
 
     public $search ;
     public $per_page ;
@@ -31,6 +33,7 @@ class PartnerClassTypeController extends Controller
 
         return Inertia::render('Partner/Classtype/Index', [
             'classtypes' => ClassType::orderBy($this->order_by, $this->order_dir)
+                ->with(['images'])
                 ->when($this->search, function ($query) {
                     $query->where(function($query) {
                         $query->orWhere('id', intval($this->search))
@@ -108,6 +111,15 @@ class PartnerClassTypeController extends Controller
     {
         $class_type = ClassType::create($request->validated());
 
+        try {
+            //upload new and/or delete existing
+            if($request->hasFile('image')) {
+                $this->updateFiles($request->file('image'), [], $class_type, session('business.id').'/class_types');
+            }
+        } catch(\Exception $e) {
+            logger()->error($e->getMessage());
+        }
+
         if(request()->has('returnTo')) {
             $extra = array('class_type' => $class_type);
             return redirect()->route(request()->returnTo)->with('extra', $extra);
@@ -148,7 +160,7 @@ class PartnerClassTypeController extends Controller
                     'link' => null,
                 ],
             ),
-            'classtype' => $classtype,
+            'classtype' => $classtype->load(['images']),
             'statuses' => StateType::labels(),
         ]);
     }
@@ -185,7 +197,7 @@ class PartnerClassTypeController extends Controller
                     'link' => null,
                 ],
             ),
-            'classtype' => $classtype,
+            'classtype' => $classtype->load(['images']),
             'statuses' => StateType::labels(),
         ]);
     }
@@ -200,6 +212,16 @@ class PartnerClassTypeController extends Controller
     public function update(ClasstypeFormRequest $request, ClassType $classtype)
     {
         $classtype->update($request->validated());
+
+        try {
+            //upload new and/or delete existing
+            if($request->hasFile('image') || !$request->old_image) {
+                $this->updateFiles($request->file('image'), [], $classtype, session('business.id').'/class_types');
+            }
+        } catch(\Exception $e) {
+            logger()->error($e->getMessage());
+            return $this->redirectBackError(__('Something went wrong!'));
+        }
 
         return $this->redirectBackSuccess(__('Class Type updated successfully'));
     }

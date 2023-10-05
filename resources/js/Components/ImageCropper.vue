@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { Cropper } from 'vue-advanced-cropper';
 import 'vue-advanced-cropper/dist/style.css';
 import Dropzone from './Dropzone.vue';
@@ -11,8 +11,33 @@ import { onUpdated } from 'vue';
 const props = defineProps({
     modelValue: {
         type: [Object],
-    }
+    },
+    minWidth: {
+        type: Number,
+        default: 200,
+    },
+    minHeight: {
+        type: Number,
+        default: 200,
+    },
+    maxWidth: {
+        type: Number,
+        default: 1920,
+    },
+    maxHeight: {
+        type: Number,
+        default: 1920,
+    },
+    aspectRatio: {
+        type: Number,
+        default: 1,
+    },
 });
+const stencilProps = computed(() => {
+    return {
+        aspectRatio: props.aspectRatio ?? props.aspectRatio.default,
+    }
+})
 
 const emit = defineEmits(['update:modelValue']);
 
@@ -60,19 +85,22 @@ watch(image, async () => {
 <template>
     <div class="flex relative mt-2 items-center" :class="{'bg-black': imageBase64, 'aspect-square': imageBase64}">
         <img v-if="image?.url" :src="image.url" class="w-full" />
-        <Dropzone v-else-if="!image" v-model="image" :accept="['.jpg', '.png', '.bmp']" buttonText="Select Photo" />
+        <Dropzone v-else-if="!image" v-model="image" :accept="['.jpg', '.png', '.webp']" buttonText="Select Photo" />
         <Cropper
             v-else
             class="align-middle w-full"
-            :stencil-props="{
-                aspectRatio: 1,
-            }"
-            imageRestriction="fit-area"
+            :stencil-props="stencilProps"
+            imageRestriction="stencil"
             :src="imageBase64"
+            :min-width="minWidth"
+            :min-height="minHeight"
+            :max-width="maxWidth"
+            :max-height="maxHeight"
+            :auto-zoom="true"
             @change="onCropChange"
         />
-        <span v-if="image || image?.url" class="absolute right-0 top-0 px-1 bg-gray-700/70 cursor-pointer" @click="image = null">
-            <FontAwesomeIcon :icon="faClose" class="text-white" />
+        <span v-if="image || image?.url" class="absolute right-0 top-[-24px] bg-gray-700/70 cursor-pointer flex" @click="image = null">
+            <FontAwesomeIcon :icon="faClose" class="text-white text-xl px-4 py-0.5" v-tooltip="'Clear'" />
         </span>
     </div>
 </template>

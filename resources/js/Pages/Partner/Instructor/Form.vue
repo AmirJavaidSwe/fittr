@@ -15,10 +15,6 @@ defineProps({
     submitted: {
         type: Function,
         required: true,
-    },
-    isEdit: {
-        type: Boolean,
-        default: false,
     }
 });
 </script>
@@ -74,21 +70,19 @@ defineProps({
                 <InputError :message="form.errors.email" class="mt-2" />
             </div>
 
-            <template v-if="isEdit">
-                <div class="text-lg font-semibold">Profile</div>
+            <div class="text-lg font-semibold">Profile</div>
 
-                <div class="col-span-6 sm:col-span-4">
-                    <InputLabel for="image" value="Photo" />
-                    <ImageCropper v-model="form.profile_image" />
-                    <InputError :message="form.errors?.profile_image" class="mt-2" />
-                </div>
+            <div class="col-span-6 sm:col-span-4">
+                <InputLabel for="image" value="Photo" />
+                <ImageCropper v-model="form.profile_image" />
+                <InputError :message="form.errors?.profile_image" class="mt-2" />
+            </div>
 
-                <div class="col-span-6 sm:col-span-4">
-                    <InputLabel for="description" value="Description" />
-                    <textarea v-model="form.profile_description" class="input-field w-full mt-2" id="description" rows="6"></textarea>
-                    <InputError :message="form.errors.profile_description" class="mt-2" />
-                </div>
-            </template>
+            <div class="col-span-6 sm:col-span-4">
+                <InputLabel for="description" value="Description" />
+                <textarea v-model="form.profile_description" class="input-field w-full mt-2" id="description" rows="6"></textarea>
+                <InputError :message="form.errors.profile_description" class="mt-2" />
+            </div>
         </template>
 
         <template #actions>

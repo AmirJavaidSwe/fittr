@@ -17,7 +17,6 @@ return new class extends Migration
             $table->enum('status', StateType::all())->default(StateType::INACTIVE->value);
             $table->string('title', 255);
             $table->text('description')->nullable();
-            $table->string('image', 1024)->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

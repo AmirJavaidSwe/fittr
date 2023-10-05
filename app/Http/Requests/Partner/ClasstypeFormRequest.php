@@ -4,7 +4,9 @@ namespace App\Http\Requests\Partner;
 
 use App\Enums\StateType;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
+use Illuminate\Validation\Rules\File;
 
 class ClasstypeFormRequest extends FormRequest
 {
@@ -29,6 +31,15 @@ class ClasstypeFormRequest extends FormRequest
             'title' => 'required|string|max:255|unique:mysql_partner.class_types,title,'.$this->classtype?->id,
             'description' => 'nullable|max:65355',
             'status' => ['required', new Enum(StateType::class)],
+            'old_image' => 'boolean',
+            'image' => [
+                'nullable',
+                'exclude_if:old_image,true',
+                File::image()
+                ->min(1) //KB
+                ->max(2 * 1024) //KB
+                ->dimensions(Rule::dimensions([1920, 1920])),
+            ],
         ];
 
         return $rules;

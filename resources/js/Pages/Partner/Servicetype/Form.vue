@@ -8,6 +8,7 @@ import ActionMessage from "@/Components/ActionMessage.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
 import ColoredValue from "@/Components/DataTable/ColoredValue.vue";
 import Multiselect from "@vueform/multiselect";
+import ImageCropper from "@/Components/ImageCropper.vue";
 
 defineProps({
     form: {
@@ -70,6 +71,12 @@ defineProps({
                     </template>
                 </Multiselect>
                 <InputError :message="form.errors.status" class="mt-2" />
+            </div>
+
+            <div>
+                <InputLabel for="image" value="Image" />
+                <ImageCropper v-model="form.image" />
+                <InputError :message="form.errors?.image" class="mt-2" />
             </div>
         </template>
 
