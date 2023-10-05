@@ -6,12 +6,15 @@ use App\Enums\StateType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Partner\ServiceTypeFormRequest;
 use App\Models\Partner\ServiceType;
+use App\Traits\ImageableTrait;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class PartnerServiceTypeController extends Controller
 {
+    use ImageableTrait;
+
     public $search;
     public $per_page;
     public $order_by;
@@ -30,6 +33,7 @@ class PartnerServiceTypeController extends Controller
 
         return Inertia::render('Partner/Servicetype/Index', [
             'servicetypes' => ServiceType::orderBy($this->order_by, $this->order_dir)
+                ->with(['images'])
                 ->when($this->search, function ($query) {
                     $query->where(function($query) {
                         $query->orWhere('id', intval($this->search))
@@ -105,7 +109,16 @@ class PartnerServiceTypeController extends Controller
      */
     public function store(ServiceTypeFormRequest $request)
     {
-        ServiceType::create($request->validated());
+        $service_type = ServiceType::create($request->validated());
+
+        try {
+            //upload new and/or delete existing
+            if($request->hasFile('image')) {
+                $this->updateFiles($request->file('image'), [], $service_type, session('business.id').'/service_types');
+            }
+        } catch(\Exception $e) {
+            logger()->error($e->getMessage());
+        }
 
         if(request()->has('returnTo')) {
             return redirect()->route(request()->returnTo);
@@ -146,7 +159,7 @@ class PartnerServiceTypeController extends Controller
                     'link' => null,
                 ],
             ),
-            'servicetype' => $servicetype,
+            'servicetype' => $servicetype->load(['images']),
             'statuses' => StateType::labels(),
         ]);
     }
@@ -179,11 +192,11 @@ class PartnerServiceTypeController extends Controller
                     'link' => null,
                 ],
                 [
-                    'title' => __('Edit Service Type'),
+                    'title' => __('Edit'),
                     'link' => null,
                 ],
             ),
-            'servicetype' => $servicetype,
+            'servicetype' => $servicetype->load(['images']),
             'statuses' => StateType::labels(),
         ]);
     }
@@ -198,6 +211,16 @@ class PartnerServiceTypeController extends Controller
     public function update(ServiceTypeFormRequest $request, ServiceType $servicetype)
     {
         $servicetype->update($request->validated());
+
+        try {
+            //upload new and/or delete existing
+            if($request->hasFile('image') || !$request->old_image) {
+                $this->updateFiles($request->file('image'), [], $servicetype, session('business.id').'/service_types');
+            }
+        } catch(\Exception $e) {
+            logger()->error($e->getMessage());
+            return $this->redirectBackError(__('Unable processing image.'));
+        }
 
         return $this->redirectBackSuccess(__('Service type updated successfully'));
     }

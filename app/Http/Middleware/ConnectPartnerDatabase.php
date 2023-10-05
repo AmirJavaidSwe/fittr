@@ -7,6 +7,7 @@ use App\Enums\SettingGroup;
 use App\Services\Partner\BusinessSettingService;
 use App\Services\Partner\DatabaseConnectionService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 use Symfony\Component\HttpFoundation\Response;
 
 class ConnectPartnerDatabase
@@ -53,6 +54,12 @@ class ConnectPartnerDatabase
             $settings = $this->business_settings_service->getByGroups(array_column($groups, 'name'));
             $request->session()->put('business_settings', $settings);
         }
+
+         // set subdomain to runtime config, used by 'auth.subdomain' middleware
+         Config::set('subdomain', [
+            'name' => session('business_settings.subdomain'),
+            'business_id' => $business->id,
+        ]);
 
         //Set connection to database: (run time)
         $this->db_service->connect($business);

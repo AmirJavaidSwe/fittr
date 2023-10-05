@@ -19,14 +19,17 @@ const storeItem = () => {
 const form = useForm({
     status: false,
     title: null,
-    description: null
+    description: null,
+    image: null
 });
 
 </script>
 
 <template>
-    <Form :form="form"
-          :submitted="storeItem"
-          :statuses="statuses"
-          />
+    <div class="w-full lg:w-1/2">
+        <Form :form="form"
+                :submitted="storeItem"
+                :statuses="statuses"
+                />
+    </div>
 </template>

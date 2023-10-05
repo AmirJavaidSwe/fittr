@@ -36,6 +36,8 @@ class AppServiceProvider extends ServiceProvider
             'pack' => 'App\Models\Partner\Pack',
             'location' => 'App\Models\Partner\Location',
             'instructor_profile' => 'App\Models\Partner\InstructorProfile',
+            'class_type' => 'App\Models\Partner\ClassType',
+            'service_type' => 'App\Models\Partner\ServiceType',
         ]);
 
         VerifyEmail::createUrlUsing(function ($notifiable) {

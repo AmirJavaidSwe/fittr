@@ -15,22 +15,31 @@ const props = defineProps({
 });
 
 const form = useForm({
+    id: props.servicetype.id,
     status: props.servicetype.status,
     title: props.servicetype.title,
-    description: props.servicetype.description
+    description: props.servicetype.description,
+    image: props.servicetype.images?.length ? { ...props.servicetype.images[0] } : null,
 });
 
 const storeItem = () => {
-    form.put(route('partner.servicetypes.update', props.servicetype), {
+    form
+        .transform((data) => ({
+            ...data,
+            old_image: (data.image instanceof File) === false && !!form.image?.filename,
+            _method: "put",
+        }))
+        .post(route("partner.servicetypes.update", form), {
         preserveScroll: true,
     });
 };
-
 </script>
 
 <template>
-    <Form :form="form"
-          :submitted="storeItem"
-          :statuses="statuses"
-          />
+    <div class="w-full lg:w-1/2">
+        <Form :form="form"
+            :submitted="storeItem"
+            :statuses="statuses"
+            />
+    </div>
 </template>

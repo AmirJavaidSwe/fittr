@@ -63,7 +63,12 @@ class PartnerInstructorController extends Controller
             'order_by' => $this->order_by,
             'order_dir' => $this->order_dir,
             'page_title' => __('Instructors'),
-            'header' => __('Instructors'),
+            'header' => array(
+                [
+                    'title' => __('Instructors'),
+                    'link' => route('partner.instructors.index'),
+                ],
+            )
         ]);
     }
 
@@ -109,9 +114,23 @@ class PartnerInstructorController extends Controller
             ]
         );
 
-        $instructor = Instructor::create($fields); //TODO: Security issue
+        $instructor = Instructor::create($fields);
 
         $instructor->sendEmailVerificationNotification();
+
+        $profile = InstructorProfile::create([
+                'user_id' => $instructor->id,
+                'description' => $request->profile_description
+            ]);
+
+        try {
+            //upload new and/or delete existing
+            if($request->hasFile('profile_image')) {
+                $this->updateFiles($request->file('profile_image'), [], $profile, session('business.id').'/instructors');
+            }
+        } catch(\Exception $e) {
+            logger()->error($e->getMessage());
+        }
 
         if(request()->has('returnTo')) {
             $extra = array('instructor' => $instructor);
@@ -141,11 +160,11 @@ class PartnerInstructorController extends Controller
                     'link' => null,
                 ],
                 [
-                    'title' => __('Instructor details'),
+                    'title' => __('Details'),
                     'link' => null,
                 ],
             ),
-            'instructor' => $instructor,
+            'instructor' => $instructor->load(['profile.images']),
         ]);
     }
 
@@ -154,7 +173,21 @@ class PartnerInstructorController extends Controller
         return Inertia::render('Partner/Instructor/Edit', [
             'page_title' => __('Edit Instructor'),
             'header' => __('Edit Instructor'),
-            'instructor' => $instructor
+            'header' => array(
+                [
+                    'title' => __('Instructors'),
+                    'link' => route('partner.instructors.index'),
+                ],
+                [
+                    'title' => '/',
+                    'link' => null,
+                ],
+                [
+                    'title' => __('Edit'),
+                    'link' => null,
+                ],
+            ),
+            'instructor' => $instructor->load(['profile.images']),
         ]);
     }
 

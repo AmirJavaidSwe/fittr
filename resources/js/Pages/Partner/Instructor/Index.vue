@@ -311,7 +311,7 @@ const deleteItem = () => {
         <template #title> Update instructor </template>
 
         <template #content>
-            <Form :form="form_item" :submitted="updateInstructors" :isEdit="true" modal />
+            <Form :form="form_item" :submitted="updateInstructors" modal />
         </template>
     </SideModal>
 
