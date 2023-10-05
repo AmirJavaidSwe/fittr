@@ -211,7 +211,7 @@ class PartnerInstructorController extends Controller
         try {
             //upload new and/or delete existing
             if($request->hasFile('profile_image') || !$request->old_profile_image) {
-                $this->updateFiles($request->file('profile_image'), [], $profile, 'images/instructor_photos');
+                $this->updateFiles($request->file('profile_image'), [], $profile, session('business.id').'/instructors');
             }
         } catch(\Exception $e) {
             Log::error($e->getMessage());

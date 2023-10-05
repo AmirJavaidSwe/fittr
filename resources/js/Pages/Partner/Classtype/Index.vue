@@ -211,6 +211,7 @@ const deleteItem = () => {
                 :arrowSide="form_search.order_dir"
                 :currentSort="form_search.order_by === 'description'"
             />
+            <TableHead title="Image" />
             <TableHead
                 @click="setOrdering('created_at')"
                 :arrowSide="form_search.order_dir"
@@ -260,6 +261,11 @@ const deleteItem = () => {
                     <span v-else>
                         {{ classtype.description }}
                     </span>
+                </TableData>
+                <TableData>
+                    <div v-if="classtype.images.length" class="h-10">
+                        <img :src="classtype.images[0].url" alt="image" class="h-full">
+                    </div>
                 </TableData>
                 <TableData>
                     <DateValue :date="DateTime.fromISO(classtype.created_at)

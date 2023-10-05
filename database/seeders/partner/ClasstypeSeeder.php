@@ -35,11 +35,21 @@ class ClasstypeSeeder extends Seeder
         }
 
         foreach ($class_types as $class_type) {
-            ClassType::create([
+            $model = ClassType::create([
                 'status' => StateType::get('active'),
                 'title' => $class_type->title,
                 'description' => $class_type->title,
             ]);
+
+            if(!empty($class_type->image)) {
+                $model->images()->create([
+                    'original_filename' => $class_type->image,
+                    'filename' => $class_type->image,
+                    'path' => 'DEMO_IMAGES',
+                    'disk' => 'public-remote',
+                    'size' => 0
+                ]);
+            }
         }
 
     }
