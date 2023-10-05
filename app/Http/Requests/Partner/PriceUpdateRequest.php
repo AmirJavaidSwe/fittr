@@ -28,6 +28,7 @@ class PriceUpdateRequest extends FormRequest
     public function rules()
     {
         $rules =  [
+            'type' => ['required', Rule::in(StripePriceType::all())],
             'location_ids' => [
                 'nullable',
                 'exists:mysql_partner.locations,id'
@@ -81,6 +82,7 @@ class PriceUpdateRequest extends FormRequest
                 'min:1'
             ],
             'is_fap' => 'boolean|required_if:is_unlimited,true',
+            'fap_description' => 'required_if:is_fap,true|string|max:150',
             'fap_value' => [
                 Rule::excludeIf($this->type == StripePriceType::get('one_time')),
                 Rule::requiredIf($this->type == StripePriceType::get('recurring') && $this->is_fap),

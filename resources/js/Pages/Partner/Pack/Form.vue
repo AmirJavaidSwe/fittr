@@ -95,7 +95,8 @@ const default_price_fields = {
     min_term: null,
     is_unlimited: false,
     is_fap: false,
-    fap_value: null,
+    fap_description: 'Unlimited option is a subject for [Fair Use Policy].',
+    fap_value: 1, // min: 1
     is_ongoing: true,
     fixed_count: null,
     is_renewable: true,
@@ -127,7 +128,7 @@ const showEditPrice = (price) => {
             <InputLabel value="Membership Type"/>
             <div v-if="isNew" class="text-gray-500 text-xs">Membership type can be changed to Class, Service or Hybrid. Pass or Corporate type can not be changed once created.</div>
             <RadioGroup v-model="form.type" class="cursor-pointer flex flex-wrap gap-4">
-                <RadioGroupOption 
+                <RadioGroupOption
                     as="template"
                     v-for="option in pack_types"
                     :key="option.value"

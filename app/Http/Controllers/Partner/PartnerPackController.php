@@ -23,6 +23,9 @@ use Inertia\Inertia;
 class PartnerPackController extends Controller
 {
 
+    protected $pack_service;
+    protected $stripe_product_service;
+
     public function __construct(PackService $pack_service, ProductService $stripe_product_service)
     {
         $this->middleware('business.ready');

@@ -29,7 +29,7 @@ defineEmits(['priceSelected']);
 
 </script>
 <template>
-    <div 
+    <div
         class="flex flex-wrap justify-between items-center mb-4 last:mb-0 border-b-2"
         :class="{'text-primary-400': state_buttons[pack.id] ? state_buttons[pack.id].selected_price_id == price.id : false}"
         >
@@ -87,7 +87,7 @@ defineEmits(['priceSelected']);
                         <button>Fair Use Policy</button>
                         <template #popper>
                             <div class="p-2 w-80">
-                                Unlimited option is a subject for [Fair Use Policy].<br>
+                                {{price.fap_description}}<br>
                                 Maximum number of classes running same day you can book is: {{price.fap_value}}
                             </div>
                         </template>
