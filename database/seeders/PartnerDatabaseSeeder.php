@@ -115,8 +115,6 @@ class PartnerDatabaseSeeder extends Seeder
         //run fresh migrations on each of partner database, we have to switch connection (so that migrations table be used inside partner db)
         DB::purge('mysql'); //Disconnect from master database
 
-        // first partner only:
-        $first_partner_id = $partners->first()->id;
         foreach ($partners as $partner) {
             $business = $partner->business;
             $db_name = $business->db_name;

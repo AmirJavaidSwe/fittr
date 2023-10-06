@@ -57,7 +57,7 @@ class ClassParticipantListener extends PartnerListener implements ShouldQueue
                     Arr::only($data, ['subject', 'content', 'content_plain'])
             )
             ->setParams($params)
-            ->send($booking->user->email);
+            ->send($booking->user->email, $business_settings);
         }
     }
 }

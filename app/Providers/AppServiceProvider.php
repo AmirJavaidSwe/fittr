@@ -2,12 +2,8 @@
 
 namespace App\Providers;
 
-use Carbon\Carbon;
-use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Database\Eloquent\Relations\Relation;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -36,32 +32,8 @@ class AppServiceProvider extends ServiceProvider
             'pack' => 'App\Models\Partner\Pack',
             'location' => 'App\Models\Partner\Location',
             'instructor_profile' => 'App\Models\Partner\InstructorProfile',
+            'class_type' => 'App\Models\Partner\ClassType',
+            'service_type' => 'App\Models\Partner\ServiceType',
         ]);
-
-        VerifyEmail::createUrlUsing(function ($notifiable) {
-
-            $verifyUrl = URL::temporarySignedRoute(
-                'verification.verify',
-                Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60)),
-                [
-                    'id' => $notifiable->getKey(),
-                    'hash' => sha1($notifiable->getEmailForVerification()),
-                ],
-                false
-            );
-
-            $subdomain = session('business_settings.subdomain');
-            $baseLink = '';
-
-            if ($subdomain && ! $notifiable->source) {
-                $baseLink = route('ss.home', ['subdomain' => $subdomain]);
-            } else {
-                $baseLink = route('root');
-            }
-
-            $verifyUrl = $baseLink . $verifyUrl;
-
-            return $verifyUrl;
-        });
     }
 }

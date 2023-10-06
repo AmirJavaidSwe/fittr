@@ -35,11 +35,21 @@ class ServicetypeSeeder extends Seeder
         }
 
         foreach ($service_types as $service_type) {
-            ServiceType::create([
+            $model = ServiceType::create([
                 'status' => StateType::get('active'),
                 'title' => $service_type->title,
                 'description' => $service_type->description,
             ]);
+
+            if(!empty($service_type->image)) {
+                $model->images()->create([
+                    'original_filename' => $service_type->image,
+                    'filename' => $service_type->image,
+                    'path' => 'DEMO_IMAGES',
+                    'disk' => 'public-remote',
+                    'size' => 0
+                ]);
+            }
         }
     }
 }

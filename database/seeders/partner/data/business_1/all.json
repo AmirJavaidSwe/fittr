@@ -226,88 +226,105 @@
             "first_name": "Frances",
             "last_name": "Merry",
             "email": "francesevemerry@gmail.com",
-            "password": "francesevemerry"
+            "password": "francesevemerry",
+            "image": "frances_merry.webp",
+            "description": "Frances is our Ride Team Coordinator and one of our Ride Master Trainers. She has been teaching with Digme since 2018, you can find her on the timetable in Richmond, Moorgate and on Digme at Home. Frances' classes are always musically driven, expect heavy climbs, euphoric flat roads and the occasional challenge! Frances took up running and road cycling during lockdown and completed her first marathon in 2022, look out for her running along the river or cycling in Richmond Park on Sunday mornings!"
         },
         {
             "role": "instructor",
             "first_name": "Dan",
             "last_name": "Little",
             "email": "danlittle1@me.com",
-            "password": "danlittle1"
+            "password": "danlittle1",
+            "image": "dan_little.webp",
+            "description": "Dan, our Director of Talent, stands as a true industry pioneer with an illustrious 25-year journey. Since the inception of Digme, he has been an integral part, shaping our classes, concepts, and teams. As a World-Class instructor, he embodies a blend of high-performance, dynamic energy, and unwavering motivation. Renowned for his exceptional music curation, Dan crafts a phenomenal class experience that transcends Studio sessions to the immersive realm of Digme at Home's online platform."
         },
         {
             "role": "instructor",
             "first_name": "Chloe",
             "last_name": "Laureyns",
             "email": "chloelaureyns@hotmail.com",
-            "password": "chloelaureyn"
+            "password": "chloelaureyn",
+            "image": "chloe_laureyns.webp",
+            "description": "Chloe is a firm favourite in all studios, As a Master Instructor of Ride you can find her across all of our studios. Chloe loves speed workouts with a few hills thrown in for good measure, and she always has a banging playlist that will have you leaving the studio with a smile and a whole lot of sweat! Well known for motivating her riders with cries of \"one more gear\"!"
         },
         {
             "role": "instructor",
             "first_name": "Paul",
             "last_name": "Gascoyne",
             "email": "ucanfitness@gmail.com",
-            "password": "ucanfitness"
+            "password": "ucanfitness",
+            "image": "paul_gascoyne.webp",
+            "description": "Paul is an impressive triathlete, seven times an Ironman, an Xterra competitor and all-round adventure racer. He coaches with London Dynamo, the capital’s largest cycling club, and also provides personal training, sports injury therapy and nutrition advice to clients around the world. He leads our 75-minute endurance ride on a Saturday morning, and if you're looking to improve your cycling performance, Paul is your man."
         }
     ],
     "class_types": [
         {
             "title": "cycle",
-            "description": "Clip in and join us in the saddle for our signature Ride, Rhythm and Perform class. Get lost in the music and ride to the rhythm, or focus on the data. It's the ultimate endorphin booster!"
+            "description": "Clip in and join us in the saddle for our signature Ride, Rhythm and Perform class. Get lost in the music and ride to the rhythm, or focus on the data. It's the ultimate endorphin booster!",
+            "image": "cycle.webp"
         },
         {
             "title": "circuits",
-            "description": "A pumping, endorphin-inducing 50-minute Circuit workout that will ignite your metabolism, light a fire in your muscles and pumped for the day! You’ll be treated to a fast-paced, full-body Strength, Conditioning and Cardio workout featuring Assault Bikes, Ski Ergs, Weights and Bodyweight plyometric exercises."
+            "description": "A pumping, endorphin-inducing 50-minute Circuit workout that will ignite your metabolism, light a fire in your muscles and pumped for the day! You’ll be treated to a fast-paced, full-body Strength, Conditioning and Cardio workout featuring Assault Bikes, Ski Ergs, Weights and Bodyweight plyometric exercises.",
+            "image": "circuits.webp"
         },
         {
             "title": "yoga",
-            "description": "Digme’s mix of yoga and breathwork classes welcomes practitioners of all levels. From beginners to advanced, meet us on the mat in studio, or Live and On Demand via our Digme at Home app, so you can join anytime, anywhere."
+            "description": "Digme’s mix of yoga and breathwork classes welcomes practitioners of all levels. From beginners to advanced, meet us on the mat in studio, or Live and On Demand via our Digme at Home app, so you can join anytime, anywhere.",
+            "image": "yoga.webp"
         },
         {
             "title": "barre",
-            "description": "In a Barre class at Digme, expect 50 minutes of full body intense sculpting, featuring elements of ballet, pilates and yoga. All our Barre instructors are exceptional and have a strong background in ballet. However, to participate no dance experience is necessary!"
+            "description": "In a Barre class at Digme, expect 50 minutes of full body intense sculpting, featuring elements of ballet, pilates and yoga. All our Barre instructors are exceptional and have a strong background in ballet. However, to participate no dance experience is necessary!",
+            "image": "barre.webp"
         },
         {
             "title": "f.i.t",
-            "description": "Experience the ultimate functional workout in our thrilling new concept, F.I.T. Standing for Functional Intensity Training. It is a new 3-zone workout featuring cardio (Treads and Rowers), strength and unconventional zones."
+            "description": "Experience the ultimate functional workout in our thrilling new concept, F.I.T. Standing for Functional Intensity Training. It is a new 3-zone workout featuring cardio (Treads and Rowers), strength and unconventional zones.",
+            "image": "hiit.webp"
         },
         {
             "title": "strength",
-            "description": "Efficient, effective, and explosive. Bullet proof your body with this full body and controlled workout with our expert coaching through your screens."
-        },
-        {
-            "title": "fusion",
-            "description": "FUSION classes are split between 25 minutes of RIDE and 25 minutes of MATRIX HIIT. Designed to strip fat, tone muscle and improve mobility. AND best of all you get to try TWO Digme experiences in one go!"
+            "description": "Efficient, effective, and explosive. Bullet proof your body with this full body and controlled workout with our expert coaching through your screens.",
+            "image": "strenght.webp"
         },
         {
             "title": "breathwork",
-            "description": "You do it about 23,000 a day, but are you breathing properly?"
+            "description": "You do it about 23,000 a day, but are you breathing properly?",
+            "image": "breathwork.webp"
         },
         {
             "title": "stretch & mobility",
-            "description": "Our Stretch & Mobility classes are the perfect combination of strength, flexibility and stability as we bridge the gap between fitness and yoga. Compliment your routine and your workouts, whilst allowing your body the release from the day-to-day and sitting at your desk for long periods of time."
+            "description": "Our Stretch & Mobility classes are the perfect combination of strength, flexibility and stability as we bridge the gap between fitness and yoga. Compliment your routine and your workouts, whilst allowing your body the release from the day-to-day and sitting at your desk for long periods of time.",
+            "image": ""
         },
         {
             "title": "high performance",
-            "description": "Our brand new High Performance structured workout sessions are power-based zonal training workouts on the very latest Wattbike Atom X bikes. The workouts are designed by our team of world class, highly qualified cycle coaches to help you push your training results."
+            "description": "Our brand new High Performance structured workout sessions are power-based zonal training workouts on the very latest Wattbike Atom X bikes. The workouts are designed by our team of world class, highly qualified cycle coaches to help you push your training results.",
+            "image": "hp.webp"
         }
     ],
     "service_types": [
         {
             "title": "myo-rehab",
-            "description": "MYO-REHAB (Muscle Recovery) combines advanced Sports Massage and Soft Tissue Therapy with Rehabilitation"
+            "description": "MYO-REHAB (Muscle Recovery) combines advanced Sports Massage and Soft Tissue Therapy with Rehabilitation",
+            "image": "myo.webp"
         },
         {
             "title": "recover by hyperice",
-            "description": "Unlock your potential and enhance your movement, preparation and recovery. Recover by Hyperice will enable you to move better by focusing on activating, soothing and loosening your muscles whenever you need it the most. Ideal either before a class, a race, a break whilst WFH to energise and refresh or even as part of your wind down routine before bed to aid recovery. Try the NormaTec compression boots today at Digme Moorgate to take your recovery to the next level."
+            "description": "Unlock your potential and enhance your movement, preparation and recovery. Recover by Hyperice will enable you to move better by focusing on activating, soothing and loosening your muscles whenever you need it the most. Ideal either before a class, a race, a break whilst WFH to energise and refresh or even as part of your wind down routine before bed to aid recovery. Try the NormaTec compression boots today at Digme Moorgate to take your recovery to the next level.",
+            "image": "hyperice.webp"
         },
         {
             "title": "1 to 1 reformer & rehab pilates",
-            "description": "This is for a 1 hour private 1 to 1 Reformer & Rehab Pilates session with Aileen."
+            "description": "This is for a 1 hour private 1 to 1 Reformer & Rehab Pilates session with Aileen.",
+            "image": "rehab_pilates.webp"
         },
         {
             "title": "personal training",
-            "description": "Foundational, functional and inspirational, our personal training focuses on the basics of fitness: building strength, improving cardiovascular fitness, boosting muscular endurance and enhancing mobility."
+            "description": "Foundational, functional and inspirational, our personal training focuses on the basics of fitness: building strength, improving cardiovascular fitness, boosting muscular endurance and enhancing mobility.",
+            "image": "personal_trainer.webp"
         }
     ],
     "locations": [

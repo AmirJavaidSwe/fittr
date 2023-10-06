@@ -4,10 +4,8 @@ namespace App\Listeners;
 
 use App\Events\TestTemplateNotification;
 use App\Services\Shared\NotificationService;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Support\Facades\Mail;
 
-class TestTemplateNotificationListener extends PartnerListener implements ShouldQueue
+class TestTemplateNotificationListener extends PartnerListener
 {
     /**
      * Create the event listener.
@@ -32,21 +30,22 @@ class TestTemplateNotificationListener extends PartnerListener implements Should
         $data = $event->data;
         $business_settings = $this->business_settings;
 
-        $params = [
-            "SUBJECT" => "FAKE_SUBJECT",
-            "CLASS_TITLE" => "FAKE_CLASS_TITLE",
-            "CLASS_DATE" => "FAKE_CLASS_DATE",
-            "CLASS_START" => "FAKE_CLASS_START",
-            "CLASS_END" => "FAKE_CLASS_END",
-            "MEMBER_NAME" => "FAKE_MEMBER_NAME",
-            "CLASS_TYPE" => "FAKE_CLASS_TYPE",
-            "CLASS_STUDIO" => "FAKE_CLASS_STUDIO",
-            "CLASS_LOCATION" => "FAKE_CLASS_LOCATION",
-        ];
+        foreach ($data['placeholders'] as $placeholder) {
+            if ($placeholder == 'ACTION_BUTTON') {
+                $buttonHtml = view('emails.partials.button', [
+                    'buttonLink' => '#FAKE_'.$placeholder,
+                    'buttonText' => 'FAKE_'.$placeholder,
+                    'buttonColor' => 'primary',
+                ])->render();
+                $params[$placeholder] = $buttonHtml;
+            } else {
+                $params[$placeholder] = "FAKE_" . $placeholder;
+            }
+        }
 
         $mailService = new NotificationService;
         $mailService->setTemplate($data)
             ->setParams($params)
-            ->send($data['recipient_email']);
+            ->send($data['recipient_email'], $business_settings);
     }
 }

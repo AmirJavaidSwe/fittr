@@ -7,6 +7,8 @@ use DB;
 use Hash;
 use Str;
 use Storage;
+use App\Models\Partner\Instructor;
+use App\Models\Partner\InstructorProfile;
 use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
@@ -59,7 +61,7 @@ class UserSeeder extends Seeder
         }
 
         foreach ($instructors as $instructor) {
-            DB::table('users')->insert([
+            $model = Instructor::create([
                 'first_name' => $instructor->first_name,
                 'last_name' => $instructor->last_name,
                 'email' => $instructor->email,
@@ -70,6 +72,20 @@ class UserSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now()
             ]);
+            $profile = InstructorProfile::create([
+                'user_id' => $model->id,
+                'description' => $instructor->description ?? null
+            ]);
+
+            if(!empty($instructor->image)) {
+                $profile->images()->create([
+                    'original_filename' => $instructor->image,
+                    'filename' => $instructor->image,
+                    'path' => 'DEMO_IMAGES/instructors',
+                    'disk' => 'public-remote',
+                    'size' => 0
+                ]);
+            }
         }
 
         // User::factory()->count(5)->create();

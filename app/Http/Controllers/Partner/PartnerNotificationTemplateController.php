@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use App\Models\Partner\NotificationTemplate;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Partner\NotificationTemplateFormRequest;
+use App\Rules\CommaSeparatedEmails;
+use App\Services\Shared\NotificationService;
 
 class PartnerNotificationTemplateController extends Controller
 {
@@ -115,13 +117,15 @@ class PartnerNotificationTemplateController extends Controller
 
     public function preview(Request $request)
     {
-        return view('emails.html_template', ['content' => $request->content]);
+        return (new NotificationService())
+            ->setTemplate($request->all())
+            ->preview();
     }
 
     public function test(Request $request)
     {
         $request->validate([
-            'recipient_email' => 'required|email',
+            'recipient_email' => ['required', new CommaSeparatedEmails],
         ],
         [],
         [

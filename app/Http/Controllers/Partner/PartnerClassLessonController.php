@@ -346,7 +346,7 @@ class PartnerClassLessonController extends Controller
                     'link' => null,
                 ],
             ),
-            'class_lesson' => $class->load(['studio.class_type_studios', 'classType', 'instructors', 'waitlists.user', 'bookings.user']),
+            'class_lesson' => $class->load(['studio.location', 'studio.class_type_studios', 'classType', 'instructors', 'waitlists.user', 'bookings.user']),
             'bookings' => $bookings,
             'waitlists' => $waitlists,
             'cancellations' => $cancellations,

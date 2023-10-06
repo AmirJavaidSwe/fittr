@@ -31,6 +31,7 @@ class NotificationTemplateSeeder extends Seeder
                 'subject' => $notificationTemplate->subject,
                 'content' => $notificationTemplate->content,
                 'content_plain' => $notificationTemplate->content_plain,
+                'readonly' => $notificationTemplate->readonly ?? false,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

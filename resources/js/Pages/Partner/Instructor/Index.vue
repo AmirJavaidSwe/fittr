@@ -179,6 +179,7 @@ const deleteItem = () => {
         </template>
 
         <template #tableHead>
+            <TableHead title="Image" />
             <TableHead
                 title="First Name"
                 @click="setOrdering('first_name')"
@@ -220,6 +221,11 @@ const deleteItem = () => {
 
         <template #tableData>
             <tr v-for="(instructor, index) in instructors.data" :key="index">
+                <TableData>
+                    <div v-if="instructor.profile?.images.length" class="h-10">
+                        <img :src="instructor.profile.images[0].url" alt="image" class="h-full">
+                    </div>
+                </TableData>
                 <TableData>
                     {{ instructor.first_name }}
                 </TableData>
@@ -313,7 +319,7 @@ const deleteItem = () => {
         <template #title> Update instructor </template>
 
         <template #content>
-            <Form :form="form_item" :submitted="updateInstructors" :isEdit="true" modal />
+            <Form :form="form_item" :submitted="updateInstructors" modal />
         </template>
     </SideModal>
 

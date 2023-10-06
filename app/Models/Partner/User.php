@@ -3,6 +3,7 @@
 namespace App\Models\Partner;
 
 use App\Enums\PartnerUserRole;
+use App\Traits\CanResetPassword as CanResetPasswordTrait;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -13,6 +14,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use App\Traits\Jetstream\HasProfilePhoto;
+use App\Traits\MustVerifyEmail as MustVerifyEmailTrait;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
@@ -28,6 +30,8 @@ class User extends Authenticatable implements MustVerifyEmail
     use Notifiable;
     use TwoFactorAuthenticatable;
     use SoftDeletes;
+    use MustVerifyEmailTrait;
+    use CanResetPasswordTrait;
 
     /**
      * The database connection that should be used by the model.

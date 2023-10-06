@@ -24,6 +24,7 @@ class NotificationTemplate extends Model
         'unsubscribe' => 'boolean',
         'bypass' => 'boolean',
         'status' => 'boolean',
+        'readonly' => 'boolean',
         'placeholders' => 'array',
         'deleted_at' => 'datetime',
     ];

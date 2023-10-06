@@ -17,7 +17,7 @@ const form = useForm({
 });
 
 const submit = () => {
-    form.post(route('password.email'));
+    form.post(route('verification.send'));
 };
 
 const logout = () => {
@@ -26,7 +26,7 @@ const logout = () => {
 </script>
 
 <template>
-    <Head title="Forgot Password" />
+    <Head title="Email Verification" />
 
     <div class="flex flex-col lg:flex-row rounded-xl mx-auto min-h-screen">
 

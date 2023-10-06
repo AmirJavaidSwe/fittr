@@ -4,6 +4,7 @@ import TextInput from "@/Components/TextInput.vue";
 import InputError from "@/Components/InputError.vue";
 import Switcher from "@/Components/Switcher.vue";
 import RichTextInput from "@/Components/RichTextInput.vue";
+import { faLock } from "@fortawesome/free-solid-svg-icons";
 
 const props = defineProps({
     form: {
@@ -78,15 +79,17 @@ const props = defineProps({
     </div>
 
     <div class="my-3">
-        <InputLabel for="content" value="Content" />
-        <RichTextInput v-model="form.content" @setPlainText="data => (form.content_plain = data)" />
+        <InputLabel for="content">
+            Content <font-awesome-icon v-if="form.readonly" v-tooltip="'Content is readonly'" class="ml-2" :icon="faLock" />
+        </InputLabel>
+        <RichTextInput v-model="form.content" @setPlainText="data => (form.content_plain = data)" :readonly="form.readonly" />
         <!-- <textarea v-model="form.content" class="input-field mt-1 block w-full" id="content" rows="10"></textarea> -->
         <InputError :message="form.errors.content" class="mt-2" />
     </div>
 
     <div class="my-3">
         <InputLabel for="content_plain" value="Content Plain" />
-        <textarea v-model="form.content_plain" class="input-field mt-1 block w-full" id="content_plain" rows="10" readonly></textarea>
+        <textarea v-model="form.content_plain" class="input-field mt-1 block w-full read-only:bg-gray-100" id="content_plain" rows="10" readonly></textarea>
         <InputError :message="form.errors.content_plain" class="mt-2" />
     </div>
 
