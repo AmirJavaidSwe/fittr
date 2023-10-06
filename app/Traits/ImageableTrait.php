@@ -64,7 +64,13 @@ trait ImageableTrait
             if($diff->count()) {
                 $images = $model->images()->whereIn('id', $diff)->get();
                 $images->each(function ($image){
-                    $this->deleteImage($image);
+                    //keep demo images
+                    if( strpos($image->path, 'DEMO_IMAGES') === false){
+                        $this->deleteImage($image);
+                    } else {
+                        //delete the model only if this is demo image
+                        $image->delete();
+                    }
                 });
             }
 

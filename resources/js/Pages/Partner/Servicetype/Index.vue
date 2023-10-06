@@ -34,7 +34,7 @@ const props = defineProps({
     order_dir: String,
 });
 
-const form = useForm({
+const form_search = useForm({
     search: props.search,
     per_page: props.per_page,
     order_by: props.order_by,
@@ -42,7 +42,7 @@ const form = useForm({
 });
 
 const runSearch = () => {
-    form.get(route("partner.servicetypes.index"), {
+    form_search.get(route("partner.servicetypes.index"), {
         preserveScroll: true,
         preserveState: true,
         replace: true,
@@ -51,67 +51,73 @@ const runSearch = () => {
 
 const setOrdering = (col) => {
     //reverse same col order
-    if (form.order_by == col) {
-        form.order_dir = form.order_dir == "asc" ? "desc" : "asc";
+    if (form_search.order_by == col) {
+        form_search.order_dir = form_search.order_dir == "asc" ? "desc" : "asc";
     }
-    form.order_by = col;
+    form_search.order_by = col;
     runSearch();
 };
 
 const setPerPage = (n) => {
-    form.per_page = n;
+    form_search.per_page = n;
     runSearch();
 };
 
-// form.search getter only;
-watch(() => form.search, runSearch);
+// form_search.search getter only;
+watch(() => form_search.search, runSearch);
 
 // Create/Edit servicetypes Queries
-let form_new = useForm({
+let form_item = useForm({
+    id: null,
     status: false,
     title: null,
     description: null,
+    image: null,
 });
 
 const showCreateModal = ref(false);
+const handleCreateForm = () => {
+    form_item.reset();
+    showCreateModal.value = true;
+};
 const closeCreateModal = () => {
     showCreateModal.value = false;
-    form_new.reset().clearErrors();
+    form_item.reset().clearErrors();
 };
 
 const storeItem = () => {
-    form_new.post(route("partner.servicetypes.store"), {
+    form_item.post(route("partner.servicetypes.store"), {
         preserveScroll: true,
         onSuccess: () => closeCreateModal()
     });
 };
 
-let form_edit = useForm({
-    id: "",
-    status: false,
-    title: null,
-    description: null,
-});
-
 const showEditModal = ref(false);
 const closeEditModal = () => {
     showEditModal.value = false;
-    form_edit.clearErrors();
+    form_item.reset().clearErrors();
 };
 
 const handleUpdateForm = (data) => {
     hideAllPoppers();
     showEditModal.value = true;
-    form_edit.id = data.id;
-    form_edit.status = data.status;
-    form_edit.title = data.title;
-    form_edit.description = data.description;
+    form_item.id = data.id;
+    form_item.status = data.status;
+    form_item.title = data.title;
+    form_item.description = data.description;
+    form_item.image = data.images?.length ? { ...data.images[0] } : null;
 };
 
 const updateItem = () => {
-    form_edit.put(route("partner.servicetypes.update", form_edit), {
+    form_item
+        .transform((data) => ({
+            ...data,
+            old_image: (data.image instanceof File) === false && !!form_item.image?.filename,
+            _method: "put",
+        }))
+        .post(route("partner.servicetypes.update", form_item), {
         preserveScroll: true,
-        onSuccess: () => closeEditModal(),
+        onSuccess: () => closeEditModal()
     });
 };
 
@@ -120,16 +126,16 @@ const showDuplicateModal = ref(false);
 const handleDuplicateForm = (data) => {
     hideAllPoppers();
     showDuplicateModal.value = true;
-    form_new.status = data.status;
-    form_new.title = data.title;
-    form_new.description = data.description;
+    form_item.status = data.status;
+    form_item.title = data.title;
+    form_item.description = data.description;
 };
 const closeDuplicateModal = () => {
     showDuplicateModal.value = false;
-    form_new.reset().clearErrors();
+    form_item.reset().clearErrors();
 };
 const storeDuplicate = () => {
-    form_new.post(route("partner.servicetypes.store"), {
+    form_item.post(route("partner.servicetypes.store"), {
         preserveScroll: true,
         onSuccess: () => closeDuplicateModal(),
     });
@@ -144,7 +150,7 @@ const confirmDeletion = (id) => {
     itemDeleting.value = true;
 };
 const deleteItem = () => {
-    form.delete(
+    form_item.delete(
         route("partner.servicetypes.destroy", { id: itemIdDeleting.value }),
         {
             preserveScroll: true,
@@ -163,7 +169,7 @@ const deleteItem = () => {
             <ButtonLink
                 styling="secondary"
                 size="default"
-                @click="showCreateModal = true"
+                @click="handleCreateForm"
             >
                 Create new
                 <font-awesome-icon class="ml-2" :icon="faPlus" />
@@ -179,43 +185,38 @@ const deleteItem = () => {
         </template>
         <template #search>
             <Search
-                v-model="form.search"
+                v-model="form_search.search"
                 :disable-search="disableSearch"
-                @reset="form.search = null"
+                @reset="form_search.search = null"
                 @pp_changed="setPerPage"
                 noFilter
             />
         </template>
 
         <template #tableHead>
-            <!-- <table-head
-                title="Id"
-                @click="setOrdering('id')"
-                :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'id'"
-            /> -->
             <TableHead
                 title="Status"
                 @click="setOrdering('status')"
-                :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'status'"
+                :arrowSide="form_search.order_dir"
+                :currentSort="form_search.order_by === 'status'"
             />
             <TableHead
                 title="Title"
                 @click="setOrdering('title')"
-                :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'title'"
+                :arrowSide="form_search.order_dir"
+                :currentSort="form_search.order_by === 'title'"
             />
             <TableHead
                 title="Description"
                 @click="setOrdering('description')"
-                :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'description'"
+                :arrowSide="form_search.order_dir"
+                :currentSort="form_search.order_by === 'description'"
             />
+            <TableHead title="Image" />
             <TableHead
                 @click="setOrdering('created_at')"
-                :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'created_at'"
+                :arrowSide="form_search.order_dir"
+                :currentSort="form_search.order_by === 'created_at'"
             >
                 <div>
                     Created
@@ -227,8 +228,8 @@ const deleteItem = () => {
             <TableHead
                 title="Updated At"
                 @click="setOrdering('updated_at')"
-                :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'updated_at'"
+                :arrowSide="form_search.order_dir"
+                :currentSort="form_search.order_by === 'updated_at'"
             />
             <TableHead title="Action" class="flex justify-end" />
         </template>
@@ -253,7 +254,7 @@ const deleteItem = () => {
                 </TableData>
                 <TableData>
                     <span
-                        v-if="servicetype.description.length > 25"
+                        v-if="servicetype.description?.length > 25"
                         v-tooltip="servicetype.description"
                     >
                         {{ servicetype.description.substring(0, 25) }}...
@@ -261,6 +262,11 @@ const deleteItem = () => {
                     <span v-else>
                         {{ servicetype.description }}
                     </span>
+                </TableData>
+                <TableData>
+                    <div v-if="servicetype.images.length" class="h-10">
+                        <img :src="servicetype.images[0].url" alt="image" class="h-full">
+                    </div>
                 </TableData>
                 <TableData>
                     <DateValue :date="DateTime.fromISO(servicetype.created_at)
@@ -322,10 +328,10 @@ const deleteItem = () => {
 
     <!-- Create new servicetype Modal -->
     <SideModal :show="showCreateModal" @close="closeCreateModal">
-        <template #title> Create new service type </template>
+        <template #title> Create new Service type </template>
 
         <template #content>
-            <Form :form="form_new" :submitted="storeItem" modal :statuses="statuses" />
+            <Form :form="form_item" :submitted="storeItem" modal :statuses="statuses" />
         </template>
     </SideModal>
 
@@ -334,17 +340,17 @@ const deleteItem = () => {
         <template #title> Update Service Type </template>
 
         <template #content>
-            <Form :form="form_edit" :submitted="updateItem" modal :statuses="statuses" />
+            <Form :form="form_item" :submitted="updateItem" modal :statuses="statuses" />
         </template>
     </SideModal>
 
     <!-- Duplicate Modal -->
     <SideModal :show="showDuplicateModal" @close="closeDuplicateModal">
-        <template #title> Duplicate service type </template>
+        <template #title> Duplicate Service type </template>
 
         <template #content>
             <Form
-                :form="form_new"
+                :form="form_item"
                 :submitted="storeDuplicate"
                 :statuses="statuses" 
             />
@@ -372,8 +378,8 @@ const deleteItem = () => {
                 size="default"
                 styling="danger"
                 class="ml-3"
-                :class="{ 'opacity-25': form.processing }"
-                :disabled="form.processing"
+                :class="{ 'opacity-25': form_item.processing }"
+                :disabled="form_item.processing"
                 @click="deleteItem"
             >
                 Delete

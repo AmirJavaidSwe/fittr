@@ -88,6 +88,7 @@ class PriceFormRequest extends FormRequest
                 Rule::excludeIf($this->type == StripePriceType::get('one_time')),
             ],
             'is_fap' => 'boolean',
+            'fap_description' => 'required_if:is_fap,true|string|max:150',
             'fap_value' => [
                 Rule::excludeIf($this->pack->type == PackType::get('location_pass') || $this->type == StripePriceType::get('one_time') || empty($this->is_fap)),
                 Rule::requiredIf($this->type == StripePriceType::get('recurring') && $this->is_fap),

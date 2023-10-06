@@ -47,20 +47,20 @@ const upsertPrice = () => {
         // #1 location_pass (Membership Type), one_time
         //  is_renewable (is_renewable or is_intro but not both on)
         //  is_intro
-        //  expiration (multiplier) 
-        //  expiration_period (day, week, month, year) 
+        //  expiration (multiplier)
+        //  expiration_period (day, week, month, year)
 
         // #1.1 location_pass (Membership Type), recurring
         //  is_ongoing
         //  fixed_count
-        //  expiration (multiplier) 
-        //  expiration_period (day, week, month, year) 
+        //  expiration (multiplier)
+        //  expiration_period (day, week, month, year)
 
         // #2 [class_lesson, service, hybrid],  (Membership Type), one_time
         //  sessions (number of)
         //  is_expiring (credits, bool)
-        //  expiration (multiplier) 
-        //  expiration_period (day, week, month, year) 
+        //  expiration (multiplier)
+        //  expiration_period (day, week, month, year)
         //  is_renewable (is_renewable or is_intro but not both on)
         //  is_intro
 
@@ -68,18 +68,18 @@ const upsertPrice = () => {
         //  sessions (number of)
         //  is_unlimited (bool)
         //  is_fap (bool)
-        //  fap_value (Number) 
+        //  fap_value (Number)
         //  is_expiring (credits, bool)
-        //  expiration (multiplier) 
-        //  expiration_period (day, week, month, year) 
+        //  expiration (multiplier)
+        //  expiration_period (day, week, month, year)
         //  is_ongoing
         //  fixed_count
 
         // #3 corporate (Membership Type), one_time
         //  sessions (number of)
         //  is_expiring (credits, bool)
-        //  expiration (multiplier) 
-        //  expiration_period (day, week, month, year) 
+        //  expiration (multiplier)
+        //  expiration_period (day, week, month, year)
 
 
         formPrice
@@ -167,17 +167,17 @@ const expirationDescription = computed(() => {
         if(formPrice.is_expiring){
             return 'Unused passes will expire';
         }
-        return isRecurring.value ? 
+        return isRecurring.value ?
             'Unused passes from each billing cycle will remain active and carried over':
             'Unused passes will remain active indefinitely';
-    } 
+    }
     if(pass_mode.value === false){
         if(formPrice.is_expiring){
-            return isRecurring.value ? 
+            return isRecurring.value ?
             'Membership will expire on the next day of selected period':
             'Membership will expire';
         }
-        return isRecurring.value ? 
+        return isRecurring.value ?
             'Membership will expire on the next day of paid period':
             'Membership will remain active indefinitely';
     }
@@ -196,7 +196,7 @@ const hasMinTerm = ref(isRecurring.value && formPrice.min_term > 0);
             <!-- Type -->
             <div v-if="is_new_price" class="flex">
                 <RadioGroup v-model="formPrice.type" class="cursor-pointer space-y-4">
-                    <RadioGroupOption 
+                    <RadioGroupOption
                         as="template"
                         v-for="option in price_types"
                         :key="option.value"
@@ -283,6 +283,13 @@ const hasMinTerm = ref(isRecurring.value && formPrice.min_term > 0);
                 <InputError :message="formPrice.errors.is_fap" class="mt-2"/>
             </div>
 
+            <!-- FAP Description -->
+            <div v-if="showFapValue">
+                <InputLabel for="fap_description" value="Description" />
+                <TextInput type="text" v-model="formPrice.fap_description" id="fap_description" class="mt-1 w-full" />
+                <InputError :message="formPrice.errors.fap_description" class="mt-2"/>
+            </div>
+
             <!-- FAP value -->
             <div v-if="showFapValue">
                 <InputLabel for="fap_value" value="Max classes" />
@@ -320,7 +327,7 @@ const hasMinTerm = ref(isRecurring.value && formPrice.min_term > 0);
                         />
                         <!-- Expiry period selection -->
                         <RadioGroup v-model="formPrice.expiration_period" class="flex cursor-pointer rounded-lg shadow-md">
-                            <RadioGroupOption 
+                            <RadioGroupOption
                             as="template"
                             v-for="option in periods"
                             :key="option.value"
@@ -355,7 +362,7 @@ const hasMinTerm = ref(isRecurring.value && formPrice.min_term > 0);
                         />
                         <!-- interval calendar period string -->
                         <RadioGroup v-model="formPrice.interval" class="flex cursor-pointer rounded-lg shadow-md">
-                            <RadioGroupOption 
+                            <RadioGroupOption
                             as="template"
                             v-for="option in periods"
                             :key="option.value"
@@ -377,7 +384,7 @@ const hasMinTerm = ref(isRecurring.value && formPrice.min_term > 0);
                 <Switcher
                     v-model="hasMinTerm"
                     title="Subscription min term"
-                    :description="hasMinTerm ? 
+                    :description="hasMinTerm ?
                     'Member must complete min term, subscription charges will continue until min term is served' :
                     'Member can cancel anytime'
                     "/>

@@ -36,8 +36,8 @@ class InstructorFormRequest extends FormRequest
                 'exclude_if:old_profile_image,true',
                 File::image()
                 ->min(1) //KB
-                ->max(20 * 1024) //KB
-                ->dimensions(Rule::dimensions([1920, 1280])),
+                ->max(2 * 1024) //KB
+                ->dimensions(Rule::dimensions([1920, 1920])),
             ],
             'profile_description' => 'nullable|max:5000',
         ];

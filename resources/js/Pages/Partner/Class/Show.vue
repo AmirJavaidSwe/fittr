@@ -113,6 +113,11 @@ const emailClass = (classLesson) => {
             />
 
             <single-view-row
+                label="Location"
+                :value="class_lesson.studio?.location?.title"
+            />
+
+            <single-view-row
                 label="Studio"
                 :value="class_lesson.studio?.title"
             />
