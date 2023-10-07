@@ -1,14 +1,17 @@
 <script setup>
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faCamera } from "@fortawesome/free-solid-svg-icons"
-
+import { faCamera, faUser } from "@fortawesome/free-solid-svg-icons"
+    
 
 
 </script>
 
 <template>
-   <div class="text-2xl font-extrabold">Account </div>
-        <div class="flex flex-row justify-between bg-slate-200 pt-7 pb-3 p-2 pr-4 pl-4 my-4 border-b-2 border-gray-300">
+   <div class="text-2xl font-extrabold pl-4 pr-4 flex justify-between">
+        <span>Account</span>
+        <span class="md:hidden lg:hidden xxlg:hidden"><a href="#">Log Out</a></span>
+    </div>
+        <div class=" flex-row justify-between bg-slate-200 pt-7 pb-3 p-2 pr-4 pl-4 my-4 border-b-2 border-gray-300 hidden md:flex">
             <div class="grow">
                 <ul class="flex gap-10 ">
                     <li><a href="#" class="active">Profile</a></li>
@@ -28,23 +31,32 @@ import { faCamera } from "@fortawesome/free-solid-svg-icons"
                 </ul>
             </div>
         </div>
-        <div class="w-full visible  sm:hidden md:hidden lg:hidden xxlg:hidden">
-                <label for="country" class="block text-sm font-medium leading-6 text-gray-900">Country</label>
+        <div class="w-full visible md:hidden lg:hidden xxlg:hidden pl-3 pr-3 md:pl-0,pr-0">
                 <div class="mt-2">
-                <select id="country" name="country" autocomplete="country-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
-                    <option>United States</option>
-                    <option>Canada</option>
-                    <option>Mexico</option>
+                <select id="country" name="country" autocomplete="country-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-full sm:text-sm sm:leading-6">
+                    <option>Profile</option>
+                    <option>Booking History</option>
+                    <option>Credits</option>
+                    <option>Classes</option>
+                    <option>Subscriptions</option>
+                    <option>Documents</option>
+                    <option>Family</option>
+                    <option>Payment Methods</option>
+                    <option>Notes</option>
                 </select>
                 </div>
             </div>
+           
         <div class="flex flex-col md:flex-row justify-between">
             <div class="grow border-r-2 border-zinc-300 p-4 basis-1/4">
                 <div class="m-auto block text-center">
-                    <div class="rounded-full w-24 h-24 bg-sky-500/100 text-center m-auto relative">
-                        <font-awesome-icon :icon="faEyeSlash" style="color: #b0b2b5"/>
+                    
+                    <div class="rounded-full w-24 h-24 bg-slate-300 text-center m-auto relative pt-5">
+                        <input type="file" name="file" id="file" class="hidden" />
+                        <img :src="image" style="width:100%;" alt="">
+                        <font-awesome-icon :icon="faUser" style="color: #ffffff"  class="text-5xl"/>
                         <span class="shadow-2xl w-8 h-8 block bg-white rounded-full absolute top-[56px] right-[-8px]">
-                            <font-awesome-icon :icon="faCamera" style="color: #5667DD" class="pt-2"/>
+                           <label for="file" class="cursor-pointer"><font-awesome-icon :icon="faCamera" style="color: #5667DD" class="pt-2"/></label>
                         </span>
                     </div>
                     <h4 class="text-3xl font-extrabold mt-5 mb-5">Phil Parker</h4>
