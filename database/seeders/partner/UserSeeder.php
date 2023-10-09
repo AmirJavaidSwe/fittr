@@ -7,6 +7,7 @@ use DB;
 use Hash;
 use Str;
 use Storage;
+use App\Models\Partner\ClassType;
 use App\Models\Partner\Instructor;
 use App\Models\Partner\InstructorProfile;
 use Illuminate\Database\Seeder;
@@ -60,6 +61,8 @@ class UserSeeder extends Seeder
             return;
         }
 
+        $class_types = ClassType::all();
+
         foreach ($instructors as $instructor) {
             $model = Instructor::create([
                 'first_name' => $instructor->first_name,
@@ -86,6 +89,8 @@ class UserSeeder extends Seeder
                     'size' => 0
                 ]);
             }
+            //assign 1-3 random class_types
+            $model->classTypes()->sync($class_types->random(rand(1, 3))->pluck('id'));
         }
 
         // User::factory()->count(5)->create();

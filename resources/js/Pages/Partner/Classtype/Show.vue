@@ -5,6 +5,7 @@ import SingleView from "@/Components/DataTable/SingleView.vue";
 import SingleViewRow from "@/Components/DataTable/SingleViewRow.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
 import ColoredValue from "@/Components/DataTable/ColoredValue.vue";
+import CardBasic from "@/Components/CardBasic.vue";
 
 defineProps({
     classtype: {
@@ -66,6 +67,14 @@ defineProps({
             <div class="w-80">
                 <img v-for="image in classtype.images" :src="image.url" :alt="image.filename">
             </div>
+        </div>
+    </div>
+    <div v-if="classtype.instructors.length" class="mt-4">
+        <h3 class="text-lg font-bold">Class type Instructors</h3>
+        <div class="flex flex-wrap gap-4">
+            <CardBasic v-for="instructor in classtype.instructors" class="mt-4" width="xs">
+                <template #header> {{instructor.full_name}} </template>
+            </CardBasic>
         </div>
     </div>
 </template>

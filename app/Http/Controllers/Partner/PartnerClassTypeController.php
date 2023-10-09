@@ -160,7 +160,7 @@ class PartnerClassTypeController extends Controller
                     'link' => null,
                 ],
             ),
-            'classtype' => $classtype->load(['images']),
+            'classtype' => $classtype->load(['instructors', 'images']),
             'statuses' => StateType::labels(),
         ]);
     }

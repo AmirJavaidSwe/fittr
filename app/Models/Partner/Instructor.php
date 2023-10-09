@@ -67,10 +67,6 @@ class Instructor extends Authenticatable implements MustVerifyEmail
         return parent::newBaseQueryBuilder()->where('role', PartnerUserRole::INSTRUCTOR->value);
     }
 
-    public function profile(): HasOne
-    {
-        return $this->hasOne(InstructorProfile::class, 'user_id');
-    }
     // Accessors
     public function getInitialsAttribute()
     {
@@ -82,8 +78,19 @@ class Instructor extends Authenticatable implements MustVerifyEmail
         return Str::of($this->first_name)->ucfirst()->append(' ') . Str::of($this->last_name)->ucfirst();
     }
 
+    // Relationships
+    public function profile(): HasOne
+    {
+        return $this->hasOne(InstructorProfile::class, 'user_id');
+    }
+
     public function classes(): BelongsToMany
     {
         return $this->belongsToMany(ClassLesson::class, 'class_instructor', 'instructor_id', 'class_id');
+    }
+
+    public function classTypes(): BelongsToMany
+    {
+        return $this->belongsToMany(ClassType::class);
     }
 }

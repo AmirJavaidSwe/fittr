@@ -35,7 +35,7 @@ const classes = computed(() => {
     >
         <div
             v-if="$slots.header"
-            class="text-xl 2xl:text-3xl font-bold tracking-tight text-gray-900"
+            class="text-xl font-bold tracking-tight text-gray-900"
         >
             <slot name="header"></slot>
         </div>
