@@ -3,68 +3,53 @@
 namespace App\Http\Controllers\Store;
 
 use Inertia\Inertia;
-use App\Enums\ClassStatus;
-use App\Models\Partner\User;
 use Illuminate\Http\Request;
 use App\Models\Partner\Waiver;
-use App\Models\Partner\ClassType;
 use App\Models\Partner\UserWaiver;
 use App\Models\Partner\ClassLesson;
 use App\Http\Controllers\Controller;
-use Illuminate\Contracts\Database\Eloquent\Builder;
+use App\Services\Store\StoreClassService;
 
 class StoreClassController extends Controller
 {
+    public function __construct(StoreClassService $store_class_service)
+    {
+        $this->store_class_service = $store_class_service;
+    }
+
     public function index(Request $request)
     {
+        $classes = $this->store_class_service->timetableClasses();
 
-        $maxDaysTimetable = (session('business_settings.days_max_timetable') ?? 30) - 1;
-
-        $startDate = now(session('business_settings.timezone'))->startOfDay();
-        $endDate = $startDate->copy()->addDays($maxDaysTimetable)->endOfDay()->utc();
-        $startDate = $startDate->utc();
-
-        $waivers = Waiver::where('show_at', 'checkout')->where('is_active', 1)->get();
-        $classes = ClassLesson::active()
-            ->public()
-            ->with([
-                'studio' => [
-                    'location',
-                    'class_type_studios',
-                ],
-                'instructors',
-                'classType',
-                'waitlists',
-                'bookings' => function (Builder $query) {
-                    $query->active();
-                }
-            ])
-            ->where('start_date', '>=', $startDate)
-            ->where('end_date', '<=', $endDate)
-            ->orderBy('start_date', 'asc')
-            ->get();
-
+        /* 4 filters */
         $studios = $classes->pluck('studio', 'studio_id');
         $locations = $studios->pluck('location', 'location_id')->sortBy('title');
         $class_types = $classes->pluck('classType', 'class_type_id')->sortBy('title');
         $instructors = $classes->pluck('instructors')->flatten()->sortBy('first_name')->keyBy('id');
 
-        return Inertia::render('Store/Classes/Index', [
+        //TODO check waivers, possible duplication! 1 Query can be enough. Refactor vue also
+        if(auth()->user()){
+            $waivers = Waiver::where('show_at', 'checkout')->where('is_active', 1)->get();
+            $user_waivers = UserWaiver::where('user_id', auth()?->user()?->id)->whereIn('waiver_id', $waivers->pluck('id'))->get();
+            $signed_waiver_ids = $user_waivers->pluck('waiver_id')->toArray();
+            $user_waiver_ids = $user_waivers->pluck('id')->toArray();
+        }
+
+        $data = [
             'page_title' => __('Classes'),
             'header' => __('Classes'),
             'classes' => $classes->groupBy(function($item) {
-                    return $item->start_date
-                    ->tz(session('business_settings.timezone'))
-                    ->format('Y-m-d');
-                }),
+                return $item->start_date->tz(session('business_settings.timezone'))->format('Y-m-d');
+            }),
             'locations' => $locations->values(),
-            // 'studios' => $studios->values(), not needed
             'class_types' => $class_types->values(),
             'instructors' => $instructors->values(),
-            'waivers' => auth()->user() ? $waivers : [],
-            'signed_waiver_ids' => auth()->user() ? UserWaiver::where('user_id', auth()?->user()?->id)->whereIn('waiver_id', $waivers->pluck('id'))->pluck('waiver_id')->toArray() : [],
-            'user_waiver_ids' => auth()->user() ? UserWaiver::where('user_id', auth()?->user()?->id)->whereIn('waiver_id', $waivers->pluck('id'))->pluck('id')->toArray() : [],
-        ]);
+            'waivers' => $waivers ?? [],
+            'signed_waiver_ids' => $signed_waiver_ids ?? [],
+            'user_waiver_ids' => $user_waiver_ids ?? [],
+        ];
+
+        return Inertia::render('Store/Classes/Index', $data);
     }
 
     public function show(Request $request, $subdomain, ClassLesson $class)

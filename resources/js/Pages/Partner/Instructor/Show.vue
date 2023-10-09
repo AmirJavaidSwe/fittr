@@ -4,6 +4,7 @@ import { DateTime } from "luxon";
 import SingleView from "@/Components/DataTable/SingleView.vue";
 import SingleViewRow from "@/Components/DataTable/SingleViewRow.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
+import CardBasic from "@/Components/CardBasic.vue";
 
 defineProps({
     instructor: {
@@ -48,6 +49,14 @@ defineProps({
             <div class="w-80">
                 <img v-for="image in instructor.profile.images" :src="image.url" :alt="image.filename">
             </div>
+        </div>
+    </div>
+    <div v-if="instructor.class_types.length" class="mt-4">
+        <h3 class="text-lg font-bold">Instructor Class types</h3>
+        <div class="flex flex-wrap gap-4">
+            <CardBasic v-for="class_type in instructor.class_types" class="mt-4" width="xs">
+                <template #header> {{class_type.title}} </template>
+            </CardBasic>
         </div>
     </div>
 </template>

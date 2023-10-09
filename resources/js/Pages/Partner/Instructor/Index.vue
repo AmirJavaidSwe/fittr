@@ -27,6 +27,7 @@ const props = defineProps({
     },
     business_settings: Object,
     instructors: Object,
+    classtypes: Array,
     search: String,
     per_page: Number,
     order_by: String,
@@ -75,6 +76,7 @@ const form_item = useForm({
     profile_description: null,
     profile_image: null,
     old_profile_image: false,
+    classtypes: null,
 });
 
 const showCreateModal = ref(false);
@@ -109,6 +111,7 @@ const handleUpdateForm = (data) => {
     form_item.profile_description = data.profile?.description;
     form_item.profile_image = data.profile?.images?.length ? { ...data.profile?.images[0] } : null;
     form_item.old_profile_image = !!form_item.profile_image;
+    form_item.classtypes = data.classtypes.map((o) => o.id);
 };
 
 const updateInstructors = () => {
@@ -308,7 +311,12 @@ const deleteItem = () => {
         <template #title> Create new instructor </template>
 
         <template #content>
-            <Form :form="form_item" :submitted="storeInstructor" modal />
+            <Form
+                :form="form_item"
+                :classtypes="classtypes"
+                :submitted="storeInstructor"
+                modal 
+            />
         </template>
     </SideModal>
 
@@ -317,7 +325,12 @@ const deleteItem = () => {
         <template #title> Update instructor </template>
 
         <template #content>
-            <Form :form="form_item" :submitted="updateInstructors" modal />
+            <Form
+                :form="form_item"
+                :classtypes="classtypes"
+                :submitted="updateInstructors"
+                modal
+            />
         </template>
     </SideModal>
 

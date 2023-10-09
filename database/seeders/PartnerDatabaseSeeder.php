@@ -112,6 +112,8 @@ class PartnerDatabaseSeeder extends Seeder
         }
         dump('---FINISHED PARTNER DB CREATIONS---');
 
+        DB::table('sessions')->truncate();
+
         //run fresh migrations on each of partner database, we have to switch connection (so that migrations table be used inside partner db)
         DB::purge('mysql'); //Disconnect from master database
 

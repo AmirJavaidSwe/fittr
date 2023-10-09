@@ -16,6 +16,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use App\Traits\Jetstream\HasProfilePhoto;
 use App\Traits\MustVerifyEmail as MustVerifyEmailTrait;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * @method static instructor()
@@ -143,8 +144,8 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->familyMember()->get()->toArray();
     }
 
-    public function profile(): HasOne
+    public function classes(): BelongsToMany
     {
-        return $this->hasOne(InstructorProfile::class, 'user_id');
+        return $this->belongsToMany(ClassLesson::class, 'class_instructor', 'instructor_id', 'class_id');
     }
 }

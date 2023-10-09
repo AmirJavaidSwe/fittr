@@ -13,6 +13,7 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * @method static orderBy(string $string, string $order)
@@ -66,19 +67,30 @@ class Instructor extends Authenticatable implements MustVerifyEmail
         return parent::newBaseQueryBuilder()->where('role', PartnerUserRole::INSTRUCTOR->value);
     }
 
-     // Accessors
-     public function getInitialsAttribute()
-     {
-         return Str::of($this->first_name)->upper()->substr(0, 1).Str::of($this->last_name)->upper()->substr(0, 1);
-     }
- 
-     public function getFullNameAttribute()
-     {
-         return Str::of($this->first_name)->ucfirst()->append(' ').Str::of($this->last_name)->ucfirst();
-     }
+    // Accessors
+    public function getInitialsAttribute()
+    {
+        return Str::of($this->first_name)->upper()->substr(0, 1) . Str::of($this->last_name)->upper()->substr(0, 1);
+    }
 
+    public function getFullNameAttribute()
+    {
+        return Str::of($this->first_name)->ucfirst()->append(' ') . Str::of($this->last_name)->ucfirst();
+    }
+
+    // Relationships
     public function profile(): HasOne
     {
         return $this->hasOne(InstructorProfile::class, 'user_id');
+    }
+
+    public function classes(): BelongsToMany
+    {
+        return $this->belongsToMany(ClassLesson::class, 'class_instructor', 'instructor_id', 'class_id');
+    }
+
+    public function classTypes(): BelongsToMany
+    {
+        return $this->belongsToMany(ClassType::class);
     }
 }

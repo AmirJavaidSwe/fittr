@@ -2,6 +2,7 @@
 import FormSection from "@/Components/FormSection.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
+import Multiselect from "@vueform/multiselect";
 import InputError from "@/Components/InputError.vue";
 import ActionMessage from "@/Components/ActionMessage.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
@@ -15,6 +16,10 @@ defineProps({
     submitted: {
         type: Function,
         required: true,
+    },
+    classtypes: {
+        type: Array,
+        required: false,
     }
 });
 </script>
@@ -68,6 +73,39 @@ defineProps({
                     autocomplete="one-time-code"
                 />
                 <InputError :message="form.errors.email" class="mt-2" />
+            </div>
+
+            <!-- Instructor Class types -->
+            <div class="">
+                <InputLabel for="classtypes" value="Class types" />
+                <Multiselect
+                    id="classtypes"
+                    :mode="'tags'"
+                    v-model="form.classtypes"
+                    :options="classtypes"
+                    valueProp="id"
+                    trackBy="title"
+                    :searchable="true"
+                    :closeOnSelect="true"
+                    placeholder="Select"
+                >
+                    <template v-slot:tag="{ option, handleTagRemove }">
+                        <div class="multiselect-tag flex items-center">
+                            <span>{{ option.title }}</span>
+                            <span
+                                class="multiselect-tag-remove"
+                                @mousedown.prevent="handleTagRemove(option, $event)"
+                                >
+                                <span class="multiselect-tag-remove-icon"></span>
+                            </span>
+                        </div>
+                    </template>
+
+                    <template v-slot:option="{ option }">
+                        <span class="ml-4">{{ option.title }}</span>
+                    </template>
+                </Multiselect>
+                <InputError :message="form.errors.instructor_id" class="mt-2" />
             </div>
 
             <div class="text-lg font-semibold">Profile</div>

@@ -5,12 +5,12 @@ namespace App\Http\Controllers\Partner;
 use App\Enums\PartnerUserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Partner\InstructorFormRequest;
+use App\Models\Partner\ClassType;
 use App\Models\Partner\Instructor;
 use App\Models\Partner\InstructorProfile;
-use App\Models\Partner\User;
 use App\Traits\ImageableTrait;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+// use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
@@ -32,8 +32,7 @@ class PartnerInstructorController extends Controller
         $this->order_dir = $request->query('order_dir', 'asc');
 
         return Inertia::render('Partner/Instructor/Index', [
-            'instructors' => User::with('profile.images')
-                ->instructor()
+            'instructors' => Instructor::with(['classTypes', 'profile.images'])
                 ->orderBy($this->order_by, $this->order_dir)
                 ->when($this->search, function ($query) {
                     $query->where(function($query) {
@@ -57,7 +56,9 @@ class PartnerInstructorController extends Controller
                     'created_at' => $user->created_at,
                     'updated_at' => $user->updated_at,
                     'profile' => $user->profile,
+                    'classtypes' => $user->classTypes,
                 ]),
+            'classtypes' => ClassType::select('id', 'title')->get(),
             'search' => $this->search,
             'per_page' => intval($this->per_page),
             'order_by' => $this->order_by,
@@ -109,14 +110,18 @@ class PartnerInstructorController extends Controller
         $fields = array_merge(
             $request->validated(),
             [
-                'role' => PartnerUserRole::INSTRUCTOR->value,
+                'role' => PartnerUserRole::get('instructor'),
                 // 'password' => Hash::make('password'),
             ]
         );
 
         $instructor = Instructor::create($fields);
+        $instructor->classTypes()->sync($request->classtypes ?? []);
 
-        $instructor->sendEmailVerificationNotification();
+        //TODO: We need better logic here
+        //ALSO: when activation occurs instructor needs proper redirection
+
+        // $instructor->sendEmailVerificationNotification();
 
         $profile = InstructorProfile::create([
                 'user_id' => $instructor->id,
@@ -143,7 +148,7 @@ class PartnerInstructorController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Partner\User  $member
+     * @param  \App\Models\Partner\Instructor  $instructor
      * @return \Illuminate\Http\Response
      */
     public function show(Instructor $instructor)
@@ -164,7 +169,7 @@ class PartnerInstructorController extends Controller
                     'link' => null,
                 ],
             ),
-            'instructor' => $instructor->load(['profile.images']),
+            'instructor' => $instructor->load(['classTypes', 'profile.images']),
         ]);
     }
 
@@ -187,7 +192,7 @@ class PartnerInstructorController extends Controller
                     'link' => null,
                 ],
             ),
-            'instructor' => $instructor->load(['profile.images']),
+            'instructor' => $instructor->load(['classTypes', 'profile.images']),
         ]);
     }
 
@@ -201,6 +206,7 @@ class PartnerInstructorController extends Controller
     public function update(InstructorFormRequest $request, Instructor $instructor)
     {
         $instructor->update($request->validated());
+        $instructor->classTypes()->sync($request->classtypes ?? []);
         $profile = InstructorProfile::updateOrCreate(
             [
                 'user_id' => $instructor->id,
@@ -224,7 +230,7 @@ class PartnerInstructorController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Partner\User  $member
+     * @param  \App\Models\Partner\Instructor  $instructor
      * @return \Illuminate\Http\Response
      */
     public function destroy(Instructor $instructor)
