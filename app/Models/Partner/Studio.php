@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Builder;
 
 class Studio extends Model
 {
@@ -30,5 +30,11 @@ class Studio extends Model
     public function class_type_studios(): HasMany
     {
         return $this->hasMany(ClassTypeStudio::class);
+    }
+
+    //Local scopes
+    public function scopeOrphan(Builder $query): void
+    {
+        $query->whereNull('location_id');
     }
 }

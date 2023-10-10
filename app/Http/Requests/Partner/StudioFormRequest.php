@@ -32,7 +32,10 @@ class StudioFormRequest extends FormRequest
                 'max:250',
                 Rule::unique('App\Models\Partner\Studio')->where(fn (Builder $query) => $query->where('location_id', $this->location_id))->ignore($this->studio?->id),
             ],
-            'location_id' => 'required|numeric',
+            'location_id' => [
+                'nullable',
+                'exists:mysql_partner.locations,id'
+            ],
         ];
 
         if($this->class_type_studios) {
