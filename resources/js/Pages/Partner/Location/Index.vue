@@ -42,27 +42,26 @@ const props = defineProps({
     roles: Array,
 });
 
-const form = useForm({
+const form_search = useForm({
     search: props.search,
     per_page: props.per_page,
     order_by: props.order_by,
     order_dir: props.order_dir,
 });
 
-const createForm = useForm({
-    title: "",
-    brief: "",
-    manager_id: "",
-    manager_email: "",
-    address_line_1: "",
-    address_line_2: "",
-    country_id: "",
-    city: "",
-    postcode: "",
-    map_latitude: "",
-    map_longitude: "",
-    tel: "",
-    email: "",
+const form_item = useForm({
+    title: null,
+    brief: null,
+    manager_id: null,
+    address_line_1: null,
+    address_line_2: null,
+    country_id: null,
+    city: null,
+    postcode: null,
+    map_latitude: null,
+    map_longitude: null,
+    tel: null,
+    email: null,
     amenity_ids: [],
     image: null,
     uploaded_images: [],
@@ -71,7 +70,7 @@ const createForm = useForm({
 });
 
 const runSearch = () => {
-    form.get(route("partner.locations.index"), {
+    form_search.get(route("partner.locations.index"), {
         preserveScroll: true,
         preserveState: true,
         replace: true,
@@ -80,20 +79,20 @@ const runSearch = () => {
 
 const setOrdering = (col) => {
     //reverse same col order
-    if (form.order_by == col) {
-        form.order_dir = form.order_dir == "asc" ? "desc" : "asc";
+    if (form_search.order_by == col) {
+        form_search.order_dir = form_search.order_dir == "asc" ? "desc" : "asc";
     }
-    form.order_by = col;
+    form_search.order_by = col;
     runSearch();
 };
 
 const setPerPage = (n) => {
-    form.per_page = n;
+    form_search.per_page = n;
     runSearch();
 };
 
 // form.search getter only;
-watch(() => form.search, runSearch);
+watch(() => form_search.search, runSearch);
 
 //delete confiramtion modal:
 const itemDeleting = ref(false);
@@ -104,7 +103,7 @@ const confirmDeletion = (id) => {
     itemDeleting.value = true;
 };
 const deleteItem = () => {
-    form.delete(
+    form_item.delete(
         route("partner.locations.destroy", { id: itemIdDeleting.value }),
         {
             preserveScroll: true,
@@ -124,7 +123,7 @@ const editId = ref(null);
 
 const saveForm = () => {
     if (editMode.value) {
-        createForm
+        form_item
             .transform((data) => ({
                 ...data,
                 _method: "put",
@@ -134,20 +133,16 @@ const saveForm = () => {
                 onSuccess: () => {
                     modal.value = false;
                     editId.value = null;
-                    createForm.reset().clearErrors();
+                    form_item.reset().clearErrors();
                 },
             });
     } else {
-        createForm
-            .transform((data) => ({
-                ...data,
-                studio_ids: null,
-            }))
+        form_item
             .post(route("partner.locations.store"), {
                 preserveScroll: true,
                 onSuccess: () => {
                     modal.value = false;
-                    createForm.reset().clearErrors();
+                    form_item.reset().clearErrors();
                 },
             });
     }
@@ -155,39 +150,42 @@ const saveForm = () => {
 
 const showCreateModal = () => {
     hideAllPoppers();
-    createForm.reset().clearErrors();
+    form_item.reset().clearErrors();
     editMode.value = false;
     modal.value = true;
     editId.value = null;
 };
 
+const studio_options = ref(props.studios);
 const showEditModal = (data) => {
     hideAllPoppers();
-    createForm.reset().clearErrors();
+    form_item.reset().clearErrors();
 
     data = Object.assign({}, data);
 
-    createForm.title = data.title;
-    createForm.brief = data.brief;
-    createForm.manager_id = data.manager?.id;
-    createForm.manager_email = data.manager?.email;
-    createForm.address_line_1 = data.address_line_1;
-    createForm.address_line_2 = data.address_line_2;
-    createForm.country_id = data.country_id;
-    createForm.city = data.city;
-    createForm.postcode = data.postcode;
-    createForm.map_latitude = data.map_latitude;
-    createForm.map_longitude = data.map_longitude;
-    createForm.tel = data.tel;
-    createForm.email = data.email;
-    createForm.amenity_ids = data.amenities.map((item) => item.id);
-    createForm.uploaded_images = [...data.images];
-    createForm.status = !!data.status;
-    createForm.studio_ids = data.studios.map((item) => item.id);
+    form_item.title = data.title;
+    form_item.brief = data.brief;
+    form_item.manager_id = data.manager?.id;
+    form_item.address_line_1 = data.address_line_1;
+    form_item.address_line_2 = data.address_line_2;
+    form_item.country_id = data.country_id;
+    form_item.city = data.city;
+    form_item.postcode = data.postcode;
+    form_item.map_latitude = data.map_latitude;
+    form_item.map_longitude = data.map_longitude;
+    form_item.tel = data.tel;
+    form_item.email = data.email;
+    form_item.amenity_ids = data.amenities.map((item) => item.id);
+    form_item.uploaded_images = [...data.images];
+    form_item.status = !!data.status;
+    form_item.studio_ids = data.studios.map((item) => item.id);
 
     editId.value = data.id;
     editMode.value = true;
     modal.value = true;
+
+    //list of studio options should include currently assigned to location + orphans from props
+    studio_options.value = props.studios.concat(...data.studios.map((studio) => ({value: studio.id, label: studio.title})));
 };
 
 const fileRemoveForm = useForm({
@@ -215,27 +213,25 @@ const showGMCreateForm = ref(false);
 const showAmenityCreateForm = ref(false);
 const showStudioCreateForm = ref(false);
 const closeGMCreateForm = (data = false) => {
-    createForm.manager_id = data && data.id ? data.id : '';
+    form_item.manager_id = data && data.id ? data.id : '';
     showGMCreateForm.value = false;
 };
 const closeStudioCreateForm = (data = false) => {
-    const studio_ids = createForm.studio_ids.filter(
-        (item) => item != "create_new_studio"
-    );
-    createForm.studio_ids = studio_ids;
+    form_item.studio_ids = form_item.studio_ids.filter( (item) => item != "create_new_studio" );
     if(data && data.id) {
-        createForm.studio_ids.unshift(data.id)
+        studio_options.value.push({value: data.id, label: data.title});
+        form_item.studio_ids.unshift(data.id)
     }
     showStudioCreateForm.value = false;
 };
 
 const closeAmenityCreateForm = (data = false) => {
-    const amenity_ids = createForm.amenity_ids.filter(
+    const amenity_ids = form_item.amenity_ids.filter(
         (item) => item != "create_new_amenity"
     );
-    createForm.amenity_ids = amenity_ids;
+    form_item.amenity_ids = amenity_ids;
     if(data && data.id) {
-        createForm.amenity_ids.unshift(data.id);
+        form_item.amenity_ids.unshift(data.id);
     }
     showAmenityCreateForm.value = false;
 };
@@ -265,43 +261,39 @@ const closeAmenityCreateForm = (data = false) => {
 
         <template #search>
             <Search
-                v-model="form.search"
+                v-model="form_search.search"
                 :disable-search="disableSearch"
-                @reset="form.search = null"
+                @reset="form_search.search = null"
                 :noFilter="true"
             />
         </template>
 
         <template #tableHead>
-            <!-- <table-head
-                title="Id"
-                @click="setOrdering('id')"
-                :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'id'"
-            /> -->
+            <TableHead title="Image" />
             <TableHead
                 title="Title"
                 @click="setOrdering('title')"
-                :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'title'"
+                :arrowSide="form_search.order_dir"
+                :currentSort="form_search.order_by === 'title'"
             />
+            <TableHead title="Studios" />
             <TableHead
                 title="General Manager"
                 @click="setOrdering('manager_id')"
-                :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'manager_id'"
+                :arrowSide="form_search.order_dir"
+                :currentSort="form_search.order_by === 'manager_id'"
             />
             <TableHead
                 title="Created At"
                 @click="setOrdering('created_at')"
-                :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'created_at'"
+                :arrowSide="form_search.order_dir"
+                :currentSort="form_search.order_by === 'created_at'"
             />
             <TableHead
                 title="Updated At"
                 @click="setOrdering('updated_at')"
-                :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'updated_at'"
+                :arrowSide="form_search.order_dir"
+                :currentSort="form_search.order_by === 'updated_at'"
             />
             <TableHead title="Action" class="justify-end flex" />
         </template>
@@ -309,8 +301,18 @@ const closeAmenityCreateForm = (data = false) => {
         <template #tableData>
             <tr v-for="(location, index) in locations.data">
                 <TableData>
+                    <div v-if="location.images.length" class="h-10">
+                        <img :src="location.images[0].url" alt="image" class="h-full">
+                    </div>
+                </TableData>
+                <TableData>
                     <ButtonLink :href="route('partner.locations.show', location)">
                         {{ location.title }}
+                    </ButtonLink>
+                </TableData>
+                <TableData>
+                    <ButtonLink v-for="studio in location.studios" :key="studio.id" :href="route('partner.studios.show', studio)" size="small">
+                        {{ studio.title }}
                     </ButtonLink>
                 </TableData>
                 <TableData>
@@ -331,7 +333,7 @@ const closeAmenityCreateForm = (data = false) => {
                 <TableData>
                     <DateValue :date="DateTime.fromISO(location.updated_at).toRelative()" />
                 </TableData>
-                <TableData class="justify-end flex">
+                <TableData class="text-right">
                     <VDropdown placement="bottom-end">
                         <button><ActionsIcon /></button>
                         <template #popper>
@@ -391,15 +393,15 @@ const closeAmenityCreateForm = (data = false) => {
                 styling="danger"
                 size="default"
                 class="ml-3"
-                :class="{ 'opacity-25': form.processing }"
-                :disabled="form.processing"
+                :class="{ 'opacity-25': form_item.processing }"
+                :disabled="form_item.processing"
                 @click="deleteItem"
                 >Delete</ButtonLink
             >
         </template>
     </ConfirmationModal>
 
-    <!-- Create Location Modal -->
+    <!-- Create/Edit Location Modal -->
     <SideModal :show="modal" @close="modal = false">
         <template #title>
             {{ editMode ? "Edit" : "Create" }} Location
@@ -407,12 +409,11 @@ const closeAmenityCreateForm = (data = false) => {
 
         <template #content>
             <Form
-                :form="createForm"
+                :form="form_item"
                 :users="users"
                 :amenities="amenities"
                 :countries="countries"
-                :studios="studios"
-                :editMode="editMode"
+                :studios="studio_options"
                 @remove_uploaded_file="removeUploadedFile"
                 @create_new_gm="showGMCreateForm = true"
                 @create_new_amenity="showAmenityCreateForm = true"
@@ -422,8 +423,8 @@ const closeAmenityCreateForm = (data = false) => {
         </template>
         <template #footer>
             <ButtonLink
-                :class="{ 'opacity-25': createForm.processing }"
-                :disabled="createForm.processing"
+                :class="{ 'opacity-25': form_item.processing }"
+                :disabled="form_item.processing"
                 styling="secondary"
                 size="default"
                 type="submit"
