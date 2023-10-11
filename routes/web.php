@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\StripeEventController;
 use App\Http\Controllers\Shared\RoleController;
 use App\Http\Controllers\Shared\StripeWebhookController;
 use App\Http\Controllers\Shared\UserProfileController;
+use App\Http\Controllers\Shared\Member\MemberAccountController;
 
 use App\Http\Controllers\Partner\BusinessSettingController;
 use App\Http\Controllers\Partner\PartnerAmenityController;
@@ -278,6 +279,11 @@ Route::domain('{subdomain}.'.$domain)->middleware(['auth.subdomain'])->name('ss.
 
             Route::post('/store-family-waiver', [WaiverVerificationController::class, 'storeFamilyWaiver'])->name('store.family.waiver');
             // Route::get('/gotodashboard', [WaiverVerificationController::class, 'goToDashboard'])->name('gotodashboard');
+            Route::get('profile', [MemberAccountController::class, 'index'])->name('profile');
+            Route::post('profile', [MemberAccountController::class, 'store'])
+            ->name('profile.store');
+            Route::put('update-photo', [MemberAccountController::class, 'updatePhoto'])
+            ->name('update-photo');
         });
 
         // INSTRUCTOR

@@ -43,7 +43,7 @@ class UserProfileController extends JetstreamUserProfileController
             ]
         );
     }
-    
+
     //get requests to this route may come from app. (admins and partners app) of from any connected service store subdomain
     //google will not accept any requests from service store subdomains, only app.fittr.tech
     // get /auth/google
@@ -63,7 +63,7 @@ class UserProfileController extends JetstreamUserProfileController
 
         return Socialite::driver('google')->redirect();
     }
-    
+
     // get /auth/google-callback
     public function googleAuth(Request $request)
     {
@@ -114,7 +114,7 @@ class UserProfileController extends JetstreamUserProfileController
         $protocol = config('app.env') === 'production' ? 'https://' : 'http://';
         $url = $protocol.$subdomain.'.'.config('app.domain').'/auth/google-callback';
 
-        //make request to subdomain POST /auth/google-callback (processSubdomainRequest()) 
+        //make request to subdomain POST /auth/google-callback (processSubdomainRequest())
         $response = Http::post($url, [
             'subdomain' => $subdomain,
             'signature' => $signature,
@@ -165,7 +165,7 @@ class UserProfileController extends JetstreamUserProfileController
         if(!$user){
             abort(401);
         }
-        
+
         // create short live signed url to authenticate
         $redirect = URL::temporarySignedRoute('ss.home', now()->addSeconds(5), ['subdomain' => $subdomain, 'uid' => Crypt::encryptString($user->id)]);
 

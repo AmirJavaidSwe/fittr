@@ -17,6 +17,8 @@ use App\Traits\Jetstream\HasProfilePhoto;
 use App\Traits\MustVerifyEmail as MustVerifyEmailTrait;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+
 
 /**
  * @method static instructor()
@@ -147,5 +149,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function classes(): BelongsToMany
     {
         return $this->belongsToMany(ClassLesson::class, 'class_instructor', 'instructor_id', 'class_id');
+    }
+
+    public function images(): MorphMany
+    {
+        return $this->morphMany(Image::class, 'imageable')->orderBy('id', 'desc');
     }
 }
