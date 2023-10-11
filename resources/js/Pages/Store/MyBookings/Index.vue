@@ -8,14 +8,12 @@ import DataTableLayout from "@/Components/DataTable/Layout.vue";
 import ButtonLink from '@/Components/ButtonLink.vue';
 import Search from '@/Components/DataTable/Search.vue';
 import SelectInput from '@/Components/SelectInput.vue';
-import { Link, useForm, usePage } from '@inertiajs/vue3';
-import Dropdown from '@/Components/Dropdown.vue';
-import DropdownLink from '@/Components/DropdownLink.vue';
+import { useForm, usePage } from '@inertiajs/vue3';
 import DateValue from '@/Components/DataTable/DateValue.vue';
-import { faCog } from '@fortawesome/free-solid-svg-icons';
 import { DateTime } from 'luxon';
 import ColoredValue from '@/Components/DataTable/ColoredValue.vue';
 import Avatar from '@/Components/Avatar.vue';
+import ActionsIcon from "@/Icons/ActionsIcon.vue";
 
 const props = defineProps({
     disableSearch: {
@@ -137,7 +135,8 @@ const optionsList= computed(() => {
         })
     }
     return data
-})
+});
+
 </script>
 <template>
     <Section bg="bg-transparent" class="flex flex-col">
@@ -170,6 +169,9 @@ const optionsList= computed(() => {
             </template>
 
             <template #tableHead>
+                <table-head
+                    title="Name"
+                />
                 <table-head
                     title="Class Title"
                 />
@@ -204,8 +206,8 @@ const optionsList= computed(() => {
 
             <template #tableData>
                 <tr v-for="(booking, index) in bookings.data">
-                    <table-data>{{ booking.class?.title }}</table-data>
-                    <!-- <table-data :title="booking.class?.class_type?.title"/> -->
+                    <table-data :title="booking.user?.full_name"/>
+                    <table-data>{{ booking.class?.title }}</table-data>''
                     <table-data>
                         <ColoredValue :title="booking.class?.class_type?.title" color="#ccc" />
                     </table-data>
@@ -233,7 +235,26 @@ const optionsList= computed(() => {
                     <table-data> {{ booking.class?.studio?.location?.title }} </table-data>
                     <table-data> {{ booking.status_text }} </table-data>
                     <table-data class="text-right">
-                        <Dropdown
+                        <VDropdown
+                            placement="bottom-end"
+                            v-if="booking.status_text.toLowerCase() == 'active'"
+                        >
+                            <button><ActionsIcon /></button>
+                            <template #popper>
+                                <div class="p-2 w-40 space-y-4">
+                                    <ButtonLink
+                                        styling="transparent"
+                                        size="small"
+                                        class="w-full flex justify-between text-danger-700 hover:bg-danger-100 hover:text-danger-700"
+                                        @click="cancelBooking(booking.class?.id,booking?.id)"
+                                    >
+                                        <!-- <FontAwesomeIcon :icon="faClock" class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2" /> -->
+                                        <span> Cancel </span>
+                                    </ButtonLink>
+                                </div>
+                            </template>
+                        </VDropdown>
+                        <!-- <Dropdown
                             v-if="booking.status_text.toLowerCase() == 'active'"
                             align="right"
                             width="48"
@@ -249,17 +270,23 @@ const optionsList= computed(() => {
                             <template #content>
                                 <DropdownLink
                                     as="button"
+                                    @click="handleCheckin(booking)"
+                                >
+                                    <span class="text-danger-500 flex items-center">
+                                        Checkin
+                                    </span>
+                                </DropdownLink>
+                                <DropdownLink
+                                    as="button"
                                     @click="cancelBooking(booking.class?.id,booking?.id)"
                                 >
                                     <span class="text-danger-500 flex items-center">
-                                        <!-- <DeleteIcon
-                                            class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
-                                        /> -->
+
                                         <span> Cancel </span>
                                     </span>
                                 </DropdownLink>
                             </template>
-                        </Dropdown>
+                        </Dropdown> -->
                     </table-data>
                 </tr>
             </template>

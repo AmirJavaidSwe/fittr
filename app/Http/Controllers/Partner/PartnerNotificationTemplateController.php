@@ -118,7 +118,7 @@ class PartnerNotificationTemplateController extends Controller
     public function preview(Request $request)
     {
         return (new NotificationService())
-            ->setTemplate($request->all())
+            ->setTemplate($request->template_id ?? $request->all())
             ->preview();
     }
 
