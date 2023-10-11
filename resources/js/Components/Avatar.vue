@@ -50,7 +50,7 @@ const classes = computed(() => {
 
 <template>
     <div v-if="imageUrl" :class="classes">
-        <img class="w-full rounded-full object-cover" :src="imageUrl" />
+        <img class="w-full rounded-full object-cover" :class="classes" :src="imageUrl" />
     </div>
     <FontAwesomeIcon v-else-if="useIcon" :icon="faUserCircle" :class="classes" />
     <div v-else :class="classes">

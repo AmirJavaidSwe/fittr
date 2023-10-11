@@ -39,7 +39,7 @@ const swal = useSwal();
 
 const steps = ref(['participants', 'email-class', 'message-preview']);
 const currentStep = ref(steps.value[0]);
-const previewHtml = ref('');
+const preview = ref({subject: '', content: ''});
 
 const handleNext = async () => {
     const nextStepIndex = steps.value.indexOf(currentStep.value) + 1;
@@ -57,9 +57,10 @@ const handleNext = async () => {
         currentStep.value = steps.value[nextStepIndex];
     } else if(steps.value[nextStepIndex] == 'message-preview') {
         processing.value = true;
-        const res = await axios.post(route('partner.notification-templates.preview', {content: form.content}))
+        const res = await axios.post(route('partner.notification-templates.preview'), {...form.data()})
             .catch(console.error);
-        previewHtml.value = res.data;
+        preview.value.subject = res.data.subject;
+        preview.value.content = res.data.content;
         processing.value = false;
         currentStep.value = steps.value[nextStepIndex];
     } else {
@@ -87,7 +88,8 @@ const handleFinish = () => {
         onSuccess: () => {
             participants.value = [];
             currentStep.value = steps.value[0];
-            previewHtml.value = '';
+            preview.value.subject = '';
+            preview.value.content = '';
             form.reset();
             classId.value = null;
             emit('close');
@@ -120,7 +122,8 @@ onUpdated(() => {
     if(classId.value != props.classDetails?.id) {
         participants.value = [];
         currentStep.value = steps.value[0];
-        previewHtml.value = '';
+        preview.value.subject = '';
+        preview.value.content = '';
         form.reset();
         classId.value = props.classDetails?.id;
     }
@@ -232,13 +235,13 @@ const selectAllCheckboxes = () => {
             <div v-if="currentStep == 'message-preview'">
                 <div class="mb-4">
                     <InputLabel>Subject:</InputLabel>
-                    <div>{{ form.subject }}</div>
+                    <div>{{ preview.subject }}</div>
                 </div>
 
                 <div class="mb-4">
                     <InputLabel>Content:</InputLabel>
                     <iframe
-                        :src="'data:text/html;charset=utf-8,'+encodeURIComponent(previewHtml)"
+                        :src="'data:text/html;charset=utf-8,'+encodeURIComponent(preview.content)"
                         class="w-full h-80 mt-2"
                     ></iframe>
                 </div>

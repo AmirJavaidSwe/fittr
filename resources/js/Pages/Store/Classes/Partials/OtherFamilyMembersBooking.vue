@@ -4,6 +4,7 @@ import ButtonLink from '@/Components/ButtonLink.vue';
 import Modal from "@/Components/Modal.vue";
 import CloseModal from "@/Components/CloseModal.vue";
 import CardBasic from "@/Components/CardBasic.vue";
+import Avatar from '@/Components/Avatar.vue';
 const props = defineProps(['selected_family_members', 'form', 'show_book_for_other_family_members_modal', 'current_class', 'side_modal_opened', 'user', 'other_family_member_booking_ids'])
 const emit = defineEmits(['closeBookForOtherFamilyMembersModal', 'addRemoveFamilyMemberForOtherBookings'])
 
@@ -37,10 +38,10 @@ const alreadyBooked = (isParent, id) => {
             <template #default>
                 <div class="flex items-center justify-between my-4 mx-4">
                     <div class="flex items-center">
-                        <img :src="props.user.profile_photo_url" :alt="props.user.name" class="rounded-full h-10 w-10 object-cover" />
+                        <Avatar :imageUrl="user.profile_photo_url" size="medium" :useIcon="true" />
                         <div class="pl-2">
                             <div class="block pl-2 font-semibold mb-2">
-                                {{ props.user.name }}
+                                {{ user.full_name }}
                             </div>
                         </div>
                     </div>
@@ -53,14 +54,13 @@ const alreadyBooked = (isParent, id) => {
                     </div>
                 </div>
                 <hr />
-                <template v-for="(familyMember, fmindex1) in props.user.family" :key="fmindex1">
+                <template v-for="(familyMember, fmindex1) in user.family" :key="fmindex1">
                     <div class="flex items-center justify-between my-4 mx-4">
                         <div class="flex items-center">
-                            <img :src="familyMember.profile_photo_url" :alt="familyMember.name"
-                                class="rounded-full h-10 w-10 object-cover" />
+                            <Avatar :imageUrl="familyMember.profile_photo_url" size="medium" :useIcon="true" />
                             <div class="pl-2">
                                 <div class="block pl-2 font-semibold mb-2">
-                                    {{ familyMember.name }}
+                                    {{ familyMember.full_name }}
                                 </div>
                             </div>
                         </div>
