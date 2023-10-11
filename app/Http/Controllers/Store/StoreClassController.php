@@ -54,7 +54,7 @@ class StoreClassController extends Controller
 
     public function show(Request $request, $subdomain, ClassLesson $class)
     {
-        $loadRelations = ['studio.location.images', 'instructors', 'classType'];
+        $loadRelations = ['studio.location.images', 'instructors.profile.images', 'classType.images'];
 
         if(auth()->user()) {
             $loadRelations['bookings'] = function($query) {

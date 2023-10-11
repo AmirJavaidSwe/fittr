@@ -35,8 +35,8 @@ const cancelBooking = () => {
 
 <template>
     <div class="container mx-auto">
-        <Section bg="bg-transparent" class="flex flex-col">
-            <div class="flex flex-row bg-white w-full p-4 rounded-lg">
+        <Section class="mx-auto max-w-6xl bg-white">
+            <div class="flex flex-row  w-full p-4 rounded-lg">
                 <div class="w-3/6 mb-4 mr-6">
                     <img class="w-full rounded-md" v-if="classDetail.studio?.location?.images?.length" :src="classDetail.studio?.location?.images[0].url" :alt="classDetail.studio?.location?.images[0].original_filename">
                 </div>
