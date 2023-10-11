@@ -33,7 +33,14 @@ class StoreBookingController extends Controller
         $this->order_by = $request->query('order_by', 'id');
         $this->order_dir = $request->query('order_dir', 'desc');
 
-        $bookings = Booking::with(['class.classType', 'class.instructors', 'class.studio.location'])
+        $bookings = Booking::with([
+            'user',
+            'class' => [
+                'classType',
+                'instructors',
+                'studio.location',
+            ]
+        ])
         ->where('user_id', auth()->user()->id);
         if($request->is_parent == "false" && $request->search_member_id) {
             $bookings = $bookings->where('family_member_id', $request->search_member_id);

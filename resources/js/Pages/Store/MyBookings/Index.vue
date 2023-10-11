@@ -169,59 +169,59 @@ const optionsList= computed(() => {
             </template>
 
             <template #tableHead>
-                <table-head
+                <TableHead
                     title="Name"
                 />
-                <table-head
+                <TableHead
                     title="Class Title"
                 />
-                <table-head
+                <TableHead
                     title="Class Type"
                 />
-                <table-head
+                <TableHead
                     title="Date"
                 />
-                <table-head
+                <TableHead
                     title="Start Time"
                 />
-                <table-head
+                <TableHead
                     title="End Time"
                 />
-                <table-head
+                <TableHead
                     title="Duration"
                 />
-                <table-head
+                <TableHead
                     title="Instructor"
                 />
-                <table-head
+                <TableHead
                     title="Location"
                 />
 
-                <table-head
+                <TableHead
                     title="Status"
                 />
 
-                <table-head title="Action" class="text-right" />
+                <TableHead title="Action" class="text-right" />
             </template>
 
             <template #tableData>
                 <tr v-for="(booking, index) in bookings.data">
-                    <table-data :title="booking.user?.full_name"/>
-                    <table-data>{{ booking.class?.title }}</table-data>''
-                    <table-data>
+                    <TableData :title="booking.user?.full_name"/>
+                    <TableData>{{ booking.class?.title }}</TableData>
+                    <TableData>
                         <ColoredValue :title="booking.class?.class_type?.title" color="#ccc" />
-                    </table-data>
-                    <table-data>
+                    </TableData>
+                    <TableData>
                         <DateValue :date="DateTime.fromISO(booking.class?.start_date).setZone(business_settings.timezone).toFormat(business_settings.date_format.format_js)" />
-                    </table-data>
-                    <table-data>
+                    </TableData>
+                    <TableData>
                         <DateValue :date="DateTime.fromISO(booking.class?.start_date).setZone(business_settings.timezone).toFormat(business_settings.time_format.format_js)" />
-                    </table-data>
-                    <table-data>
+                    </TableData>
+                    <TableData>
                         <DateValue :date="DateTime.fromISO(booking.class?.end_date).setZone(business_settings.timezone).toFormat(business_settings.time_format.format_js)" />
-                    </table-data>
-                    <table-data> {{ booking.class?.duration }} minutes</table-data>
-                    <table-data>
+                    </TableData>
+                    <TableData> {{ booking.class?.duration }} minutes</TableData>
+                    <TableData>
                          <div v-if="booking.class?.instructors.length" class="flex items-center gap-1" v-for="instructor in booking.class.instructors" :key="instructor.id">
                             <Avatar
                                 :initials="instructor.initials"
@@ -231,10 +231,10 @@ const optionsList= computed(() => {
                             />
                             {{instructor.full_name}}
                         </div>
-                    </table-data>
-                    <table-data> {{ booking.class?.studio?.location?.title }} </table-data>
-                    <table-data> {{ booking.status_text }} </table-data>
-                    <table-data class="text-right">
+                    </TableData>
+                    <TableData> {{ booking.class?.studio?.location?.title }} </TableData>
+                    <TableData> {{ booking.status_text }} </TableData>
+                    <TableData class="text-right">
                         <VDropdown
                             placement="bottom-end"
                             v-if="booking.status_text.toLowerCase() == 'active'"
@@ -287,7 +287,7 @@ const optionsList= computed(() => {
                                 </DropdownLink>
                             </template>
                         </Dropdown> -->
-                    </table-data>
+                    </TableData>
                 </tr>
             </template>
 
