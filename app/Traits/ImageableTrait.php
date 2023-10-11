@@ -43,12 +43,9 @@ trait ImageableTrait
         }
     }
 
-    public function deleteImage($image, $disk = null)
+    public function deleteImage($image)
     {
-        if(!$disk) {
-            $disk = config('filesystems.default');
-        }
-        Storage::disk(config('filesystems.default'))->delete($image->path.'/'.$image->filename);
+        Storage::disk($image->disk ?? config('filesystems.default'))->delete($image->path.'/'.$image->filename);
         $image->delete();
     }
 

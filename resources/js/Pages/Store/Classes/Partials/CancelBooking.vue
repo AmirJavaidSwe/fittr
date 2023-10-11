@@ -4,6 +4,7 @@ import ButtonLink from '@/Components/ButtonLink.vue';
 import Modal from "@/Components/Modal.vue";
 import CloseModal from "@/Components/CloseModal.vue";
 import CardBasic from "@/Components/CardBasic.vue";
+import Avatar from '@/Components/Avatar.vue';
 
 
 const props = defineProps(['show_cancel_booking_modal', 'booking_form', 'side_modal_opened', 'user', 'current_class', 'ids_cancellation'])
@@ -25,10 +26,10 @@ const emit = defineEmits(['hideCancelBookingModal', 'addRemoveMemberForCancellat
             <template #default>
                 <div class="flex items-center justify-between my-4 mx-4">
                     <div class="flex items-center">
-                        <img :src="props.user.profile_photo_url" :alt="props.user.name" class="rounded-full h-10 w-10 object-cover" />
+                        <Avatar :imageUrl="user.profile_photo_url" size="medium" :useIcon="true" />
                         <div class="pl-2">
                             <div class="block pl-2 font-semibold mb-2">
-                                {{ props.user.name }}
+                                {{ user.full_name }}
                             </div>
                         </div>
                     </div>
@@ -37,14 +38,13 @@ const emit = defineEmits(['hideCancelBookingModal', 'addRemoveMemberForCancellat
                     </div>
                 </div>
                 <hr />
-                <template v-for="(familyMember, fmIndex2) in props.user.family" :key="fmIndex2">
+                <template v-for="(familyMember, fmIndex2) in user.family" :key="fmIndex2">
                     <div class="flex items-center justify-between my-4 mx-4">
                         <div class="flex items-center">
-                            <img :src="familyMember.profile_photo_url" :alt="familyMember.name"
-                                class="rounded-full h-10 w-10 object-cover" />
+                            <Avatar :imageUrl="familyMember.profile_photo_url" size="medium" :useIcon="true" />
                             <div class="pl-2">
                                 <div class="block pl-2 font-semibold mb-2">
-                                    {{ familyMember.name }}
+                                    {{ familyMember.full_name }}
                                 </div>
                             </div>
                         </div>

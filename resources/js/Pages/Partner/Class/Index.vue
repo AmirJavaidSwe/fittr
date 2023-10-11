@@ -737,7 +737,7 @@ const emailClass = (classLesson) => {
                 </TableData>
 
                 <!-- location -->
-                <TableData :title="class_lesson.studio.location.title" />
+                <TableData :title="class_lesson?.studio?.location?.title" />
 
                 <!-- studio -->
                 <TableData :title="class_lesson?.studio?.title ?? class_lesson?.studio?.id"/>

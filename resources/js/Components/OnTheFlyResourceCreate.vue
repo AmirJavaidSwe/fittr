@@ -247,7 +247,8 @@ const closeGMCreateForm = (data = false) => {
     emit('closeGmCreateForm', data)
 };
 const createGmFrom = useForm({
-    name: "",
+    first_name: "",
+    last_name: "",
     email: "",
     password: "",
     is_super: true,

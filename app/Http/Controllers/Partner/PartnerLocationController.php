@@ -4,18 +4,17 @@ namespace App\Http\Controllers\Partner;
 
 use App\Models\Role;
 use App\Models\User;
-use Inertia\Inertia;
-use Inertia\Response;
 use App\Models\Country;
 use App\Models\SystemModule;
-use Illuminate\Http\Request;
 use App\Models\Partner\Studio;
-use App\Traits\ImageableTrait;
 use App\Models\Partner\Amenity;
 use App\Models\Partner\Location;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Partner\LocationFormRequest;
+use App\Traits\ImageableTrait;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class PartnerLocationController extends Controller
 {
@@ -52,9 +51,10 @@ class PartnerLocationController extends Controller
             'users' => User::select('id', 'first_name', 'last_name', 'email')->partner()->where('business_id', auth()->user()->business_id)->get(),
             'countries' => Country::select('id', 'name')->whereStatus(1)->get(),
             'amenities' => Amenity::select('id', 'title')->get()->map(fn($item) => ['label' => $item->title, 'value' => $item->id]),
-            'studios' => Studio::select('id', 'title')->get()->map(fn($item) => ['label' => $item->title, 'value' => $item->id]),
+            'studios' => Studio::orphan()->select('id', 'title')->get()->map(fn($item) => ['value' => $item->id, 'label' => $item->title]),
             'roles' => Role::select('id', 'title')->where('source', auth()->user()->source)->where('business_id', auth()->user()->business_id)->get(),
             'systemModules' => SystemModule::with('permissions')->where('is_for', auth()->user()->source)->get(),
+            'google_maps_key' => config('services.google_maps'),
             'search' => $this->search,
             'per_page' => intval($this->per_page),
             'order_by' => $this->order_by,
@@ -71,7 +71,7 @@ class PartnerLocationController extends Controller
                 ],
                 [
                     'title' => __('Locations'),
-                    'link' => null,
+                    'link' => route('partner.locations.index'),
                 ],
             ),
         ]);
@@ -89,6 +89,7 @@ class PartnerLocationController extends Controller
             'users' => User::select('id', 'first_name', 'last_name', 'email')->partner()->where('business_id', auth()->user()->business_id)->get(),
             'countries' => Country::select('id', 'name')->whereStatus(1)->get(),
             'amenities' => Amenity::select('id', 'title')->get()->map(fn($item) => ['label' => $item->title, 'value' => $item->id]),
+            'google_maps_key' => config('services.google_maps'),
             'header' => array(
                 [
                     'title' => __('Settings'),
@@ -127,27 +128,29 @@ class PartnerLocationController extends Controller
 
         $location = Location::create($validated);
 
-        if(@$validated['amenity_ids'] && count($validated['amenity_ids'])) {
+        if(!empty($validated['amenity_ids'])) {
             $location->amenities()->sync($validated['amenity_ids'] ?? []);
         }
 
-        try {
+        //list of studios contains orphans only
+        if(!empty($validated['studio_ids'])) {
+            Studio::whereNull('location_id')->whereIn('id', $validated['studio_ids'])->update(['location_id' => $location->id]);
+        }
 
-            $this->uploadFiles($request->file('image'), $location, 'images/location');
+        try {
+            $this->uploadFiles($request->file('image'), $location, session('business.id').'/locations');
 
             if(request()->has('returnTo')) {
                 $extra = array('location' => $location);
                 return redirect()->route(request()->returnTo)->with('extra', $extra);
             }
-
-            return $this->redirectBackSuccess(__('Location created successfully'), 'partner.locations.index');
-
         } catch(\Exception $e) {
             if(request()->has('returnTo')) {
                 return $this->redirectBackError(__('Something went wrong!'), request()->returnTo);
             }
             return $this->redirectBackError(__('Something went wrong!'), 'partner.locations.index');
         }
+        return $this->redirectBackSuccess(__('Location created successfully'));
     }
 
     /**
@@ -158,7 +161,6 @@ class PartnerLocationController extends Controller
      */
     public function show(Location $location)
     {
-
         return Inertia::render('Partner/Location/Show', [
             'page_title' => __('Location details'),
             'header' => array(
@@ -184,6 +186,7 @@ class PartnerLocationController extends Controller
                 ],
             ),
             'location' => $location->load(['manager', 'country', 'amenities', 'images', 'studios']),
+            'google_maps_key' => config('services.google_maps'),
         ]);
     }
 
@@ -223,7 +226,8 @@ class PartnerLocationController extends Controller
                     'link' => null,
                 ],
             ),
-            'location' => $location->load('manager', 'country', 'amenities', 'images', 'studios')
+            'location' => $location->load('manager', 'country', 'amenities', 'images', 'studios'),
+            'google_maps_key' => config('services.google_maps'),
         ]);
     }
 
@@ -255,16 +259,14 @@ class PartnerLocationController extends Controller
         }
 
         try {
-
             if($request->hasFile('image')) {
-                $this->updateFiles($request->file('image'), $request->uploaded_images, $location, 'images/location');
+                $this->updateFiles($request->file('image'), $request->uploaded_images, $location, session('business.id').'/locations');
             }
-
-            return $this->redirectBackSuccess(__('Location updated successfully'), 'partner.locations.index');
 
         } catch(\Exception $e) {
             return $this->redirectBackError(__('Something went wrong!'), 'partner.locations.index');
         }
+        return $this->redirectBackSuccess(__('Location updated successfully'));
     }
 
     /**
@@ -275,14 +277,21 @@ class PartnerLocationController extends Controller
      */
     public function destroy(Location $location)
     {
+        $location->images->each(function($image){
+            $this->deleteImage($image);
+        });
+        Studio::whereIn('id', $location->studios->pluck('id'))->update(['location_id' => null]);
         $location->delete();
 
         return $this->redirectBackSuccess(__('Location deleted successfully'), 'partner.locations.index');
     }
 
-    public function deleteImage(Request $request, Location $location)
+    public function deleteImages(Request $request, Location $location)
     {
-        $location->images()->where('id', $request->image_id)->delete();
+        $image = $location->images()->where('id', $request->image_id)->first();
+        if($image){
+            $this->deleteImage($image);
+        }
 
         return $this->redirectBackSuccess(__('Image deleted successfully'));
     }

@@ -7,6 +7,7 @@ import Modal from "@/Components/Modal.vue";
 import CloseModal from "@/Components/CloseModal.vue";
 import CardBasic from "@/Components/CardBasic.vue";
 import { storeClassHelper } from "./../Helpers/storeClassHelper.js";
+import Avatar from "@/Components/Avatar.vue";
 
 const emit = defineEmits(["hide", "hideBoth", "disableButton", "enableButton"]);
 
@@ -198,14 +199,10 @@ console.log(waitlistIds.value)
             <template #default>
                 <div class="flex items-center justify-between my-4 mx-4">
                     <div class="flex items-center">
-                        <img
-                            :src="user.profile_photo_url"
-                            :alt="user.name"
-                            class="rounded-full h-10 w-10 object-cover"
-                        />
+                        <Avatar :imageUrl="user.profile_photo_url" size="medium" :useIcon="true" />
                         <div class="pl-2">
                             <div class="block pl-2 font-semibold mb-2">
-                                {{ user.name }}
+                                {{ user.full_name }}
                             </div>
                         </div>
                     </div>
@@ -237,14 +234,10 @@ console.log(waitlistIds.value)
                 <template v-for="(familyMember, index) in user.family" :key="index">
                     <div class="flex items-center justify-between my-4 mx-4">
                         <div class="flex items-center">
-                            <img
-                                :src="familyMember.profile_photo_url"
-                                :alt="familyMember.name"
-                                class="rounded-full h-10 w-10 object-cover"
-                            />
+                            <Avatar :imageUrl="familyMember.profile_photo_url" size="medium" :useIcon="true" />
                             <div class="pl-2">
                                 <div class="block pl-2 font-semibold mb-2">
-                                    {{ familyMember.name }}
+                                    {{ familyMember.full_name }}
                                 </div>
                             </div>
                         </div>

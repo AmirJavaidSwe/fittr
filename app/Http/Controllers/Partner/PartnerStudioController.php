@@ -31,7 +31,8 @@ class PartnerStudioController extends Controller
         $this->order_dir = $request->query('order_dir', 'asc');
 
         return Inertia::render('Partner/Studio/Index', [
-            'studios' => Studio::with('location', 'class_type_studios')->orderBy($this->order_by, $this->order_dir)
+            'studios' => Studio::withAggregate('location', 'title')
+            ->with('location', 'class_type_studios')->orderBy($this->order_by, $this->order_dir)
                 ->when($this->search, function ($query) {
                     $query->where(function($query) {
                         $query->orWhere('id', intval($this->search))
@@ -58,7 +59,7 @@ class PartnerStudioController extends Controller
                 ],
                 [
                     'title' => __('Studios'),
-                    'link' => null,
+                    'link' => route('partner.studios.index'),
                 ],
             ),
         ]);

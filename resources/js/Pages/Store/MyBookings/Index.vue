@@ -8,14 +8,12 @@ import DataTableLayout from "@/Components/DataTable/Layout.vue";
 import ButtonLink from '@/Components/ButtonLink.vue';
 import Search from '@/Components/DataTable/Search.vue';
 import SelectInput from '@/Components/SelectInput.vue';
-import { Link, useForm, usePage } from '@inertiajs/vue3';
-import Dropdown from '@/Components/Dropdown.vue';
-import DropdownLink from '@/Components/DropdownLink.vue';
+import { useForm, usePage } from '@inertiajs/vue3';
 import DateValue from '@/Components/DataTable/DateValue.vue';
-import { faCog } from '@fortawesome/free-solid-svg-icons';
 import { DateTime } from 'luxon';
 import ColoredValue from '@/Components/DataTable/ColoredValue.vue';
 import Avatar from '@/Components/Avatar.vue';
+import ActionsIcon from "@/Icons/ActionsIcon.vue";
 
 const props = defineProps({
     disableSearch: {
@@ -137,7 +135,8 @@ const optionsList= computed(() => {
         })
     }
     return data
-})
+});
+
 </script>
 <template>
     <Section bg="bg-transparent" class="flex flex-col">
@@ -170,56 +169,59 @@ const optionsList= computed(() => {
             </template>
 
             <template #tableHead>
-                <table-head
+                <TableHead
+                    title="Name"
+                />
+                <TableHead
                     title="Class Title"
                 />
-                <table-head
+                <TableHead
                     title="Class Type"
                 />
-                <table-head
+                <TableHead
                     title="Date"
                 />
-                <table-head
+                <TableHead
                     title="Start Time"
                 />
-                <table-head
+                <TableHead
                     title="End Time"
                 />
-                <table-head
+                <TableHead
                     title="Duration"
                 />
-                <table-head
+                <TableHead
                     title="Instructor"
                 />
-                <table-head
+                <TableHead
                     title="Location"
                 />
 
-                <table-head
+                <TableHead
                     title="Status"
                 />
 
-                <table-head title="Action" class="text-right" />
+                <TableHead title="Action" class="text-right" />
             </template>
 
             <template #tableData>
                 <tr v-for="(booking, index) in bookings.data">
-                    <table-data>{{ booking.class?.title }}</table-data>
-                    <!-- <table-data :title="booking.class?.class_type?.title"/> -->
-                    <table-data>
+                    <TableData :title="booking.user?.full_name"/>
+                    <TableData>{{ booking.class?.title }}</TableData>
+                    <TableData>
                         <ColoredValue :title="booking.class?.class_type?.title" color="#ccc" />
-                    </table-data>
-                    <table-data>
+                    </TableData>
+                    <TableData>
                         <DateValue :date="DateTime.fromISO(booking.class?.start_date).setZone(business_settings.timezone).toFormat(business_settings.date_format.format_js)" />
-                    </table-data>
-                    <table-data>
+                    </TableData>
+                    <TableData>
                         <DateValue :date="DateTime.fromISO(booking.class?.start_date).setZone(business_settings.timezone).toFormat(business_settings.time_format.format_js)" />
-                    </table-data>
-                    <table-data>
+                    </TableData>
+                    <TableData>
                         <DateValue :date="DateTime.fromISO(booking.class?.end_date).setZone(business_settings.timezone).toFormat(business_settings.time_format.format_js)" />
-                    </table-data>
-                    <table-data> {{ booking.class?.duration }} minutes</table-data>
-                    <table-data>
+                    </TableData>
+                    <TableData> {{ booking.class?.duration }} minutes</TableData>
+                    <TableData>
                          <div v-if="booking.class?.instructors.length" class="flex items-center gap-1" v-for="instructor in booking.class.instructors" :key="instructor.id">
                             <Avatar
                                 :initials="instructor.initials"
@@ -229,11 +231,30 @@ const optionsList= computed(() => {
                             />
                             {{instructor.full_name}}
                         </div>
-                    </table-data>
-                    <table-data> {{ booking.class?.studio?.location?.title }} </table-data>
-                    <table-data> {{ booking.status_text }} </table-data>
-                    <table-data class="text-right">
-                        <Dropdown
+                    </TableData>
+                    <TableData> {{ booking.class?.studio?.location?.title }} </TableData>
+                    <TableData> {{ booking.status_text }} </TableData>
+                    <TableData class="text-right">
+                        <VDropdown
+                            placement="bottom-end"
+                            v-if="booking.status_text.toLowerCase() == 'active'"
+                        >
+                            <button><ActionsIcon /></button>
+                            <template #popper>
+                                <div class="p-2 w-40 space-y-4">
+                                    <ButtonLink
+                                        styling="transparent"
+                                        size="small"
+                                        class="w-full flex justify-between text-danger-700 hover:bg-danger-100 hover:text-danger-700"
+                                        @click="cancelBooking(booking.class?.id,booking?.id)"
+                                    >
+                                        <!-- <FontAwesomeIcon :icon="faClock" class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2" /> -->
+                                        <span> Cancel </span>
+                                    </ButtonLink>
+                                </div>
+                            </template>
+                        </VDropdown>
+                        <!-- <Dropdown
                             v-if="booking.status_text.toLowerCase() == 'active'"
                             align="right"
                             width="48"
@@ -249,18 +270,24 @@ const optionsList= computed(() => {
                             <template #content>
                                 <DropdownLink
                                     as="button"
+                                    @click="handleCheckin(booking)"
+                                >
+                                    <span class="text-danger-500 flex items-center">
+                                        Checkin
+                                    </span>
+                                </DropdownLink>
+                                <DropdownLink
+                                    as="button"
                                     @click="cancelBooking(booking.class?.id,booking?.id)"
                                 >
                                     <span class="text-danger-500 flex items-center">
-                                        <!-- <DeleteIcon
-                                            class="w-4 lg:w-5 h-4 lg:h-5 mr-0 md:mr-2"
-                                        /> -->
+
                                         <span> Cancel </span>
                                     </span>
                                 </DropdownLink>
                             </template>
-                        </Dropdown>
-                    </table-data>
+                        </Dropdown> -->
+                    </TableData>
                 </tr>
             </template>
 

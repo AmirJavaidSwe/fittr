@@ -1,5 +1,6 @@
 <script setup>
 import { watchEffect, watch, computed, ref, onMounted } from "vue";
+import { usePage } from '@inertiajs/vue3';
 import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
 import InputError from "@/Components/InputError.vue";
@@ -9,12 +10,10 @@ import MultiselectInput from "@/Components/MultiselectInput.vue";
 import Switcher from "@/Components/Switcher.vue";
 import Multiselect from "@vueform/multiselect";
 import Avatar from "@/Components/Avatar.vue";
-// import UploadFileIcon from "@/Icons/Upload.vue";
-// import UploadingIcon from "@/Icons/Uploading.vue";
-
 import intlTelInput from "intl-tel-input";
 import "intl-tel-input/build/css/intlTelInput.css";
 import { parsePhoneNumber, AsYouType } from "libphonenumber-js";
+import { Loader } from '@googlemaps/js-api-loader';
 
 const emit = defineEmits([
     "remove_uploaded_file",
@@ -32,16 +31,13 @@ const props = defineProps({
     amenities: Array,
     countries: Array,
     studios: Array,
-    editMode: Boolean,
     modal: Boolean,
 });
 
 const { form } = props;
 const phoneNumber = ref(null);
 phoneNumber.value = form.tel;
-// const manager = computed(() => {
-//   return props.users.find((item) => item.id == props.form.manager_id);
-// });
+
 
 const amenitiesList = computed(() => {
     let amenities = [];
@@ -83,10 +79,12 @@ watchEffect(() => {
 });
 
 const usersList = computed(() => {
-    let users = props.users;
-    users.push({id: 'create_new_user', full_name: 'Add New'});
+    const found = props.users.find((element) => element.id == 'create_new_user');
+    if(!!found === false){
+        props.users.push({id: 'create_new_user', full_name: 'Add New'});
+    }
 
-    return users;
+    return props.users;
 });
 
 const studioList = computed(() => {
@@ -140,31 +138,137 @@ const formatPhoneInput = () => {
         }
     }, 100);
 };
+
+//GOOGLE MAPS + Autocomplete
+const apiKey = usePage().props.google_maps_key;
+const loader = new Loader({
+    apiKey: apiKey,
+    version: "weekly",
+    language: "en",
+    region: "GB",
+    libraries: ["places", "maps", "marker"]
+});
+
+let googlemaps; //google.maps library
+let autocomplete;//Autocomplete
+let map; //Map
+let marker; //AdvancedMarkerElement
+const showMap = computed(() => {
+  return props.form.map_latitude && props.form.map_longitude;
+});
+loader
+    .load()
+    .then(async () => {
+        googlemaps = await google.maps;
+        initAutocomplete();
+        initMap();
+    })
+    .catch((e) => {
+        console.log(e)
+    });
+
+const initAutocomplete = () => {
+    const input = document.querySelector("#address_line_1");
+    autocomplete = new googlemaps.places.Autocomplete(
+        input,
+        {
+            componentRestrictions: { country: "uk" }, //either remove restrictions or use business settings
+            language: "en",
+            types: ["geocode"], //https://developers.google.com/maps/documentation/javascript/supported_types
+            fields: ["geometry", "address_components"],
+        }
+    );
+
+    autocomplete.addListener("place_changed", () => {
+        //defaults when no results from getPlace()
+        let place = {
+            address_components: [],
+            geometry: null,
+            ...autocomplete.getPlace()
+        };
+
+        place.address_components.forEach((component) => {
+            component.types.forEach((type) => {
+                if(type == 'street_number'){
+                    props.form.address_line_1 = component.long_name;
+                }
+                if(type == 'route'){
+                    props.form.address_line_1 = props.form.address_line_1 + ' ' + component.long_name;
+                }
+                if(type == 'postal_town'){
+                    props.form.city = component.long_name;
+                }
+                if(type == 'postal_code'){
+                    props.form.postcode = component.long_name;
+                }
+                if(type == 'country'){
+                    props.form.country_id = props.countries.find((element) => element.name = component.long_name).id;
+                }
+            });
+        });
+        //set input visible text to v-model:
+        input.value = props.form.address_line_1;
+
+        //set coordinates
+        if(place.geometry?.location){
+            props.form.map_latitude = place.geometry.location.lat();
+            props.form.map_longitude = place.geometry.location.lng();
+        }
+    });
+};
+
+const initMap = () => {
+    const map_area = document.getElementById('map_area');
+    const myLatLng = { lat: parseFloat(props.form.map_latitude ?? 51.5281798), lng: parseFloat(props.form.map_longitude ?? -0.4312316) };
+    map = new googlemaps.Map(map_area, {
+        center: myLatLng,
+        zoom: 13,
+    });
+    marker = new googlemaps.Marker({
+        position: myLatLng,
+        map: map,
+  });
+};
+//watch changes to lat and lng made from new place found or manual coordinates change: move map and marker
+watch(
+  [
+    () => form.map_latitude,
+    () => form.map_longitude
+  ],
+  ([newLat, NewLng]) => {
+    let lat = newLat.length === 0 ? 51.5281798 : parseFloat(newLat);
+    let lng = NewLng.length === 0 ? -0.4312316 : parseFloat(NewLng);
+
+    map.panTo({ lat, lng });
+    marker.setPosition({ lat, lng });
+  }
+);
 </script>
 
 <template>
-    <div class="my-3">
+<div class="space-y-4">
+    <div>
         <InputLabel for="title" value="Title" />
         <TextInput
             id="name"
             v-model="form.title"
             type="text"
-            class="mt-1 block w-full"
+            class="block w-full"
         />
         <InputError :message="form.errors.title" class="mt-2" />
     </div>
-    <div class="my-3">
+    <div>
         <InputLabel for="description" value="Description" />
         <TextInput
             id="description"
             v-model="form.brief"
             type="text"
-            class="mt-1 block w-full"
+            class="block w-full"
         />
         <InputError :message="form.errors.brief" class="mt-2" />
     </div>
-    <div class="my-3">
-        <div class="">
+    <div>
+        <div>
             <InputLabel for="manager" value="General Manager" />
             <Multiselect
                 id="manager"
@@ -192,77 +296,84 @@ const formatPhoneInput = () => {
             <InputError :message="form.errors.manager_id" class="mt-2" />
         </div>
     </div>
-    <!-- <div class="my-3">
-    <InputLabel for="manager_email" value="Email (General Manager)" />
-    <TextInput
-      id="manager_email"
-      :value="manager?.email"
-      type="text"
-      class="mt-1 block w-full"
-      disabled="true"
-    />
-  </div> -->
-    <div class="my-3">
+
+    
+
+    <!-- <div class="relative">
+        <input type="text" ref="ainput" placeholder="search" class="w-full" />
+
+    </div> -->
+
+    
+
+
+    <div>
         <InputLabel for="address_line_1" value="Address Line 1" />
         <TextInput
             id="address_line_1"
             v-model="form.address_line_1"
+            autocomplete="one-time-code"
             type="text"
-            class="mt-1 block w-full"
+            placeholder="Search"
+            class="block w-full"
         />
         <InputError :message="form.errors.address_line_1" class="mt-2" />
     </div>
-    <div class="my-3">
+    <div>
         <InputLabel for="address_line_2" value="Address Line 2" />
         <TextInput
             id="address_line_2"
             v-model="form.address_line_2"
             type="text"
-            class="mt-1 block w-full"
+            class="block w-full"
         />
         <InputError :message="form.errors.address_line_2" class="mt-2" />
     </div>
-    <div class="my-3">
-        <InputLabel for="country_id" value="Country" />
-        <SelectInput
-            id="country_id"
-            v-model="form.country_id"
-            :options="countries"
-            option_value="id"
-            option_text="name"
-            class="mt-1 block w-full"
-        >
-        </SelectInput>
-        <InputError :message="form.errors.country_id" class="mt-2" />
+    <div class="flex flex-wrap gap-2">
+        <div>
+            <InputLabel for="country_id" value="Country" />
+            <SelectInput
+                id="country_id"
+                v-model="form.country_id"
+                :options="countries"
+                option_value="id"
+                option_text="name"
+                class="block w-full"
+            >
+            </SelectInput>
+            <InputError :message="form.errors.country_id" class="mt-2" />
+        </div>
+        <div class="flex-1">
+            <InputLabel for="city" value="City/Town" />
+            <TextInput
+                id="city"
+                v-model="form.city"
+                type="text"
+                class="block w-full"
+            />
+            <InputError :message="form.errors.city" class="mt-2" />
+        </div>
+        <div class="w-28">
+            <InputLabel for="postcode" value="Postcode" />
+            <TextInput
+                id="postcode"
+                v-model="form.postcode"
+                type="text"
+                class="block w-full"
+            />
+            <InputError :message="form.errors.postcode" class="mt-2" />
+        </div>
     </div>
-    <div class="my-3">
-        <InputLabel for="city" value="City/Town" />
-        <TextInput
-            id="city"
-            v-model="form.city"
-            type="text"
-            class="mt-1 block w-full"
-        />
-        <InputError :message="form.errors.city" class="mt-2" />
-    </div>
-    <div class="my-3">
-        <InputLabel for="postcode" value="Postcode" />
-        <TextInput
-            id="postcode"
-            v-model="form.postcode"
-            type="text"
-            class="mt-1 block w-full"
-        />
-        <InputError :message="form.errors.postcode" class="mt-2" />
-    </div>
-    <div class="my-3">
+
+
+    <div>
         <div class="inline-block w-1/2 pr-2">
             <InputLabel for="map_latitude" value="Latitude" />
             <TextInput
                 id="map_latitude"
                 v-model="form.map_latitude"
                 type="text"
-                class="mt-1 block w-full"
+                class="block w-full"
             />
             <InputError :message="form.errors.map_latitude" class="mt-2" />
         </div>
@@ -272,41 +383,46 @@ const formatPhoneInput = () => {
                 id="map_longitude"
                 v-model="form.map_longitude"
                 type="text"
-                class="mt-1 block w-full"
+                class="block w-full"
             />
             <InputError :message="form.errors.map_longitude" class="mt-2" />
         </div>
     </div>
-    <div class="my-3">
-        <InputLabel for="phone" value="Phone" />
+    <div id="map_area" v-show="showMap" class="h-80"></div>
+    
+    <div class="flex flex-wrap gap-2">
+        <div>
+            <InputLabel for="phone" value="Phone" />
 
-        <TextInput
-            id="phone"
-            v-model="phoneNumber"
-            type="text"
-            maxlength="16"
-            class="mt-1 block w-full"
-        />
-        <InputError :message="form.errors.tel" class="mt-2" />
+            <TextInput
+                id="phone"
+                v-model="phoneNumber"
+                type="text"
+                maxlength="16"
+                class="block w-full"
+            />
+            <InputError :message="form.errors.tel" class="mt-2" />
+        </div>
+        <div class="flex-grow">
+            <InputLabel for="email" value="Contact Email" />
+            <TextInput
+                id="email"
+                v-model="form.email"
+                autocomplete="one-time-code"
+                type="text"
+                class="block w-full"
+            />
+            <InputError :message="form.errors.email" class="mt-2" />
+        </div>
     </div>
-    <div class="my-3">
-        <InputLabel for="email" value="Email" />
-        <TextInput
-            id="email"
-            v-model="form.email"
-            type="text"
-            class="mt-1 block w-full"
-        />
-        <InputError :message="form.errors.email" class="mt-2" />
-    </div>
-    <div class="my-3">
+    <div>
         <InputLabel for="image" value="Image" />
         <Dropzone
             id="image"
             v-model="form.image"
             :modal="props.modal"
             :uploaded_files="form.uploaded_images ? form.uploaded_images : []"
-            :accept="['.jpg', '.png', '.bmp', '.svg']"
+            :accept="['.jpg', '.png', '.webp', '.svg']"
             max_width="200"
             max_height="200"
             :buttonText="'Select new image'"
@@ -314,7 +430,7 @@ const formatPhoneInput = () => {
         />
         <InputError :message="form.errors.image" class="mt-2" />
     </div>
-    <div class="my-3">
+    <div>
         <InputLabel for="amenities" value="Amenities" />
         <MultiselectInput
             :options="amenitiesList"
@@ -323,7 +439,7 @@ const formatPhoneInput = () => {
         />
         <InputError :message="form.errors.amenity_ids" class="mt-2" />
     </div>
-    <div class="my-3" v-if="editMode">
+    <div>
         <InputLabel for="studios" value="Studios" />
         <MultiselectInput
             :options="studioList"
@@ -332,8 +448,14 @@ const formatPhoneInput = () => {
         />
         <InputError :message="form.errors.studio_ids" class="mt-2" />
     </div>
-    <div class="my-3">
+    <div>
         <Switcher v-model="form.status" title="Status" />
         <InputError :message="form.errors.status" class="mt-2" />
     </div>
+</div>
 </template>
+<style>
+    .pac-container {
+        z-index: 2000;
+    }
+</style>

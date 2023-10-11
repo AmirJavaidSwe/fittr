@@ -17,8 +17,6 @@ return new class extends Migration
             $table->increments('id');
             $table->boolean('status')->default(0);
             $table->string('title', 255);
-            $table->string('page_title', 255)->nullable();
-            $table->string('brief', 500)->nullable();
             $table->integer('ordering')->default(0);
             $table->integer('location_id')->index('location_id')->nullable();
             $table->timestamps();

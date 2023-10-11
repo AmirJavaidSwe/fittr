@@ -218,13 +218,11 @@ const locationList = computed(() => {
                 :arrowSide="form.order_dir"
                 :currentSort="form.order_by === 'title'"
             />
-            <TableHead title="Location" />
-            <TableHead
-                title="Ordering"
-                @click="setOrdering('ordering')"
+            <TableHead title="Location"
+                @click="setOrdering('location_title')"
                 :arrowSide="form.order_dir"
-                :currentSort="form.order_by === 'ordering'"
-            />
+                :currentSort="form.sort_by === 'location_title'"
+                 />
             <TableHead
                 title="Created At"
                 @click="setOrdering('created_at')"
@@ -248,7 +246,6 @@ const locationList = computed(() => {
                     </ButtonLink>
                 </TableData>
                 <TableData :title="studio.location?.title" />
-                <TableData :title="studio.ordering" />
                 <TableData>
                     <DateValue
                         :date="DateTime.fromISO(studio.created_at)
